@@ -20,7 +20,8 @@ import org.jspecify.annotations.Nullable;
 
 @NullMarked
 // Extends RegistryAware so the holder-based key lookups here override its Keyed-based defaults for every
-// API type that is both (Silkard's API gives RegistryAware default methods). interface Holderable<M> extends Handleable<M>, org.bukkit.registry.RegistryAware {
+// API type that is both (Silkard's API gives RegistryAware default methods).
+public interface Holderable<M> extends Handleable<M>, org.bukkit.registry.RegistryAware {
 
     Holder<M> getHolder();
 
