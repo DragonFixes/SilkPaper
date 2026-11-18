@@ -14,7 +14,7 @@ public class CraftTrimPattern extends HolderableBase<net.minecraft.world.item.eq
 
     @Override
     public org.bukkit.NamespacedKey getKeyOrNull() {
-        return io.papermc.paper.util.Holderable.super.getKeyOrNull();
+        return super.getKeyOrNull();
     }
 
     public static TrimPattern minecraftHolderToBukkit(Holder<net.minecraft.world.item.equipment.trim.TrimPattern> minecraft) {

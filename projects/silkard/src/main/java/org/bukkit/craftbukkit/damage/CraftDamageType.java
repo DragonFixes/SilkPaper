@@ -15,7 +15,7 @@ public class CraftDamageType extends HolderableBase<net.minecraft.world.damageso
 
     @Override
     public org.bukkit.NamespacedKey getKeyOrNull() {
-        return io.papermc.paper.util.Holderable.super.getKeyOrNull();
+        return super.getKeyOrNull();
     }
 
     public CraftDamageType(final Holder<net.minecraft.world.damagesource.DamageType> holder) {

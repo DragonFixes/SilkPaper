@@ -44,6 +44,7 @@ public final class CraftPlayerProfile implements PlayerProfile, com.destroystoky
 
     private final PropertyMap properties = new MutablePropertyMap();
     private final CraftPlayerTextures textures = new CraftPlayerTextures(this);
+    private CraftPlayerSkinPatch skinPatch = new CraftPlayerSkinPatch(); // Silkard - Spigot skin patch API
 
     private CraftPlayerProfile(@Nullable UUID uniqueId, @Nullable String name, boolean applyPreconditions) {
         if (applyPreconditions) {
@@ -68,6 +69,7 @@ public final class CraftPlayerProfile implements PlayerProfile, com.destroystoky
             false
         );
         this.properties.putAll(resolvableProfile.partialProfile().properties());
+        this.skinPatch = new CraftPlayerSkinPatch(resolvableProfile.skinPatch()); // Silkard
     }
 
     // The Map of properties of the given GameProfile is not immutable. This captures a snapshot of the properties of
@@ -81,6 +83,7 @@ public final class CraftPlayerProfile implements PlayerProfile, com.destroystoky
         this(other.uniqueId, other.name);
         this.properties.putAll(other.properties);
         this.textures.copyFrom(other.textures);
+        this.skinPatch = new CraftPlayerSkinPatch(other.skinPatch); // Silkard
     }
 
     @Override
@@ -146,7 +149,7 @@ public final class CraftPlayerProfile implements PlayerProfile, com.destroystoky
         // If missing, look up the uuid by name:
         if (profile.id().equals(Util.NIL_UUID)) {
             profile = server.services().nameToIdCache().get(profile.name())
-                .map(NameAndId::toUncompletedGameProfile)
+                .map(nameAndId -> new GameProfile(nameAndId.id(), nameAndId.name()))
                 .orElse(profile);
         }
 
@@ -166,6 +169,14 @@ public final class CraftPlayerProfile implements PlayerProfile, com.destroystoky
     @Override
     public ResolvableProfile buildResolvableProfile() {
         this.rebuildDirtyProperties();
+        // Silkard start - a skin patch needs the explicit Static/Dynamic forms, the factory methods drop it
+        if (!this.skinPatch.isEmpty()) {
+            if (this.properties.isEmpty() && (this.name == null) != (this.uniqueId == null)) {
+                return new ResolvableProfile.Dynamic(this.name == null ? com.mojang.datafixers.util.Either.right(this.uniqueId) : com.mojang.datafixers.util.Either.left(this.name), this.skinPatch.toMinecraft());
+            }
+            return new ResolvableProfile.Static(com.mojang.datafixers.util.Either.left(this.buildGameProfile()), this.skinPatch.toMinecraft());
+        }
+        // Silkard end
         if (this.properties.isEmpty() && (this.name == null) != (this.uniqueId == null)) { // Heuristic copied from ResolvableProfile.create
             if (this.name == null) {
                 return ResolvableProfile.createUnresolved(this.uniqueId);
@@ -198,6 +209,8 @@ public final class CraftPlayerProfile implements PlayerProfile, com.destroystoky
         builder.append(this.getName());
         builder.append(", properties=");
         builder.append(this.properties);
+        builder.append(", skinPatch="); // Silkard
+        builder.append(this.skinPatch); // Silkard
         builder.append("]");
         return builder.toString();
     }
@@ -212,6 +225,7 @@ public final class CraftPlayerProfile implements PlayerProfile, com.destroystoky
         this.rebuildDirtyProperties();
         other.rebuildDirtyProperties();
         if (!CraftPlayerProfile.equals(this.properties, other.properties)) return false;
+        if (!Objects.equals(this.skinPatch, other.skinPatch)) return false; // Silkard
         return true;
     }
 
@@ -239,6 +253,7 @@ public final class CraftPlayerProfile implements PlayerProfile, com.destroystoky
         result = 31 * result + Objects.hashCode(this.uniqueId);
         result = 31 * result + Objects.hashCode(this.name);
         result = 31 * result + CraftPlayerProfile.hashCode(this.properties);
+        result = 31 * result + Objects.hashCode(this.skinPatch); // Silkard
         return result;
     }
 
@@ -270,6 +285,11 @@ public final class CraftPlayerProfile implements PlayerProfile, com.destroystoky
             this.properties.forEach((propertyName, property) -> propertiesData.add(CraftProfileProperty.serialize(property)));
             map.put("properties", propertiesData);
         }
+        // Silkard start
+        if (!this.skinPatch.isEmpty()) {
+            map.put("patch", this.skinPatch);
+        }
+        // Silkard end
         return map;
     }
 
@@ -287,6 +307,12 @@ public final class CraftPlayerProfile implements PlayerProfile, com.destroystoky
                 profile.properties.put(property.name(), property);
             }
         }
+        // Silkard start
+        org.bukkit.profile.PlayerSkinPatch patch = ConfigSerializationUtil.getObject(org.bukkit.profile.PlayerSkinPatch.class, map, "patch", true);
+        if (patch != null) {
+            profile.skinPatch = new CraftPlayerSkinPatch(patch);
+        }
+        // Silkard end
         return profile;
     }
 
@@ -356,4 +382,16 @@ public final class CraftPlayerProfile implements PlayerProfile, com.destroystoky
     public boolean complete(final boolean textures, final boolean onlineMode) {
         throw new UnsupportedOperationException("Do not cast to com.destroystokyo.paper.profile.PlayerProfile");
     }
+
+    // Silkard start - Spigot skin patch API
+    @Override
+    public org.bukkit.profile.PlayerSkinPatch getSkinPatch() {
+        return this.skinPatch;
+    }
+
+    @Override
+    public void setSkinPatch(org.bukkit.profile.PlayerSkinPatch patch) {
+        this.skinPatch = (patch == null) ? new CraftPlayerSkinPatch() : new CraftPlayerSkinPatch(patch);
+    }
+    // Silkard end
 }

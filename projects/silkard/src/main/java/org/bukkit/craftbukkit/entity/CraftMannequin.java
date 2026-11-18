@@ -1,5 +1,9 @@
 package org.bukkit.craftbukkit.entity;
 
+import org.bukkit.craftbukkit.profile.CraftPlayerProfile;
+import org.bukkit.craftbukkit.util.CraftChatMessage;
+import org.bukkit.entity.model.PlayerModelPart;
+import org.bukkit.profile.PlayerProfile;
 import com.destroystokyo.paper.PaperSkinParts;
 import com.destroystokyo.paper.SkinParts;
 import com.google.common.base.Preconditions;

@@ -27,7 +27,7 @@ public class CraftPotionEffectType extends PotionEffectType implements Holderabl
 
     @Override
     public org.bukkit.NamespacedKey getKeyOrNull() {
-        return io.papermc.paper.util.Holderable.super.getKeyOrNull();
+        return super.getKeyOrNull();
     }
 
     public static PotionEffectType minecraftHolderToBukkit(Holder<MobEffect> minecraft) {

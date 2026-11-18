@@ -16,7 +16,7 @@ public class CraftAttribute extends OldEnumHolderable<Attribute, net.minecraft.w
 
     @Override
     public org.bukkit.NamespacedKey getKeyOrNull() {
-        return io.papermc.paper.util.Holderable.super.getKeyOrNull();
+        return super.getKeyOrNull();
     }
 
     private static int count = 0;

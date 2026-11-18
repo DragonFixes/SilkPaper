@@ -29,7 +29,7 @@ public class CraftMenuType<V extends @NonNull InventoryView, B extends Inventory
 
     @Override
     public org.bukkit.NamespacedKey getKeyOrNull() {
-        return io.papermc.paper.util.Holderable.super.getKeyOrNull();
+        return super.getKeyOrNull();
     }
 
     @Override

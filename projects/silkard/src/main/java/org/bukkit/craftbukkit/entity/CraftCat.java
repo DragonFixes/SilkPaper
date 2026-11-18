@@ -61,7 +61,7 @@ public class CraftCat extends CraftTameableAnimal implements Cat {
 
         @Override
         public org.bukkit.NamespacedKey getKeyOrNull() {
-            return io.papermc.paper.util.Holderable.super.getKeyOrNull();
+            return super.getKeyOrNull();
         }
         private static int count = 0;
 

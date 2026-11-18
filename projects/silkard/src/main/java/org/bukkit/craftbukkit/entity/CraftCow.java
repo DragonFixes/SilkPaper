@@ -51,7 +51,7 @@ public class CraftCow extends CraftAbstractCow implements Cow {
 
         @Override
         public org.bukkit.NamespacedKey getKeyOrNull() {
-            return io.papermc.paper.util.Holderable.super.getKeyOrNull();
+            return super.getKeyOrNull();
         }
 
         public static Variant minecraftHolderToBukkit(Holder<CowVariant> minecraft) {

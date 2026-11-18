@@ -115,7 +115,7 @@ public class CraftMetaSkull extends CraftMetaItem implements SkullMeta {
                 ownerProfile.update().thenAcceptAsync((filledProfile) -> { // Paper - run on main thread
                     this.setOwnerProfile(filledProfile);
                     tag.skullCallback(this.profile); // Paper - actually set profile on itemstack
-                }, MinecraftServer.getServer()); // Paper - run on main thread
+                }, com.mohistmc.silkard.bukkit.BukkitUtils.getServer()); // Paper - run on main thread
             }
         }
 
@@ -185,7 +185,7 @@ public class CraftMetaSkull extends CraftMetaItem implements SkullMeta {
             this.setProfile(null);
         } else {
             // Attempt to fetch an already resolved player profile in case the player is currently online.
-            net.minecraft.server.level.ServerPlayer player = net.minecraft.server.MinecraftServer.getServer().getPlayerList().getPlayerByName(name);
+            net.minecraft.server.level.ServerPlayer player = com.mohistmc.silkard.bukkit.BukkitUtils.getServer().getPlayerList().getPlayerByName(name);
             this.setProfile(
                 player != null
                     ? ResolvableProfile.createResolved(player.getGameProfile())

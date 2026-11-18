@@ -56,7 +56,7 @@ public class CraftItemType<M extends ItemMeta> extends HolderableBase<Item> impl
 
     @Override
     public org.bukkit.NamespacedKey getKeyOrNull() {
-        return io.papermc.paper.util.Holderable.super.getKeyOrNull();
+        return super.getKeyOrNull();
     }
 
     private final Supplier<CraftItemMetas.ItemMetaData<M>> itemMetaData;
@@ -192,11 +192,11 @@ public class CraftItemType<M extends ItemMeta> extends HolderableBase<Item> impl
 
         // this is cursed but given the future API require a ton of rework not ready it's the best compromise
         if (cookingFuel.burnTime() instanceof ResolvableInt.Reference burnTime) {
-            if (MinecraftServer.getServer() == null) {
+            if (com.mohistmc.silkard.bukkit.BukkitUtils.getServer() == null) {
                 throw new IllegalArgumentException("Too early to call this method");
             }
 
-            Holder.Reference<ContextIntProvider> provider = MinecraftServer.getServer().reloadableRegistries().lookup().getOrThrow(burnTime.key());
+            Holder.Reference<ContextIntProvider> provider = com.mohistmc.silkard.bukkit.BukkitUtils.getServer().reloadableRegistries().lookup().getOrThrow(burnTime.key());
             LootContext fakeContext = new LootContext.Builder(new LootParams.Builder(null).create(LootContextParamSets.EMPTY))
                 .withOptionalRandomSeed(42L)
                 .createWithoutLevel();
@@ -217,11 +217,11 @@ public class CraftItemType<M extends ItemMeta> extends HolderableBase<Item> impl
 
         // this is cursed but given the future API require a ton of rework not ready it's the best compromise
         if (compostable.layers() instanceof ResolvableInt.Reference reference) {
-            if (MinecraftServer.getServer() == null) {
+            if (com.mohistmc.silkard.bukkit.BukkitUtils.getServer() == null) {
                 throw new IllegalArgumentException("Too early to call this method");
             }
 
-            Holder.Reference<ContextIntProvider> provider = MinecraftServer.getServer().reloadableRegistries().lookup().getOrThrow(reference.key());
+            Holder.Reference<ContextIntProvider> provider = com.mohistmc.silkard.bukkit.BukkitUtils.getServer().reloadableRegistries().lookup().getOrThrow(reference.key());
             ConstantValue oneLayerValue = new ConstantValue(1);
             if (provider.value().equals(oneLayerValue)) {
                 return 1.0F;

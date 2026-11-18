@@ -1,5 +1,14 @@
 package org.bukkit.craftbukkit.inventory;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.MapItem;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.map.CraftMapCursor;
+import org.bukkit.craftbukkit.util.CraftLocation;
+import org.bukkit.map.MapCursor;
+import org.bukkit.map.MapView;
 import com.google.common.base.Preconditions;
 import com.mohistmc.silkard.bukkit.BukkitUtils;
 import com.mojang.brigadier.StringReader;
@@ -304,7 +313,7 @@ public final class CraftItemFactory implements ItemFactory {
                 // NON_TREASURE, which does contain all enchantments not in the treasure tag.
                 // Additionally, the allowTreasure boolean is more intended to configure this method to behave like
                 // an enchanting table.
-                : net.minecraft.server.MinecraftServer.getServer().registryAccess().lookupOrThrow(Registries.ENCHANTMENT).get(EnchantmentTags.IN_ENCHANTING_TABLE),
+                : com.mohistmc.silkard.bukkit.BukkitUtils.getServer().registryAccess().lookupOrThrow(Registries.ENCHANTMENT).get(EnchantmentTags.IN_ENCHANTING_TABLE),
             random
         );
     }
@@ -339,7 +348,7 @@ public final class CraftItemFactory implements ItemFactory {
         if (internalStack.isEnchanted()) {
             internalStack.set(net.minecraft.core.component.DataComponents.ENCHANTMENTS, net.minecraft.world.item.enchantment.ItemEnchantments.EMPTY);
         }
-        final net.minecraft.core.RegistryAccess registryAccess = net.minecraft.server.MinecraftServer.getServer().registryAccess();
+        final net.minecraft.core.RegistryAccess registryAccess = com.mohistmc.silkard.bukkit.BukkitUtils.getServer().registryAccess();
         final net.minecraft.world.item.ItemStack enchanted = net.minecraft.world.item.enchantment.EnchantmentHelper.enchantItem(
             new org.bukkit.craftbukkit.util.RandomSourceWrapper(random),
             internalStack,

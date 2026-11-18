@@ -2772,18 +2772,18 @@ public class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDat
 
     @Override
     public boolean hasSwingAnimation() {
-        return this.silkard$component(net.minecraft.core.component.DataComponents.SWING_ANIMATION) != null;
+        return this.silkard$component(net.minecraft.core.component.DataComponents.ATTACK_ANIMATION) != null;
     }
 
     @Override
     public org.bukkit.inventory.meta.components.SwingAnimationComponent getSwingAnimation() {
-        final net.minecraft.world.item.component.SwingAnimation value = this.silkard$component(net.minecraft.core.component.DataComponents.SWING_ANIMATION);
+        final net.minecraft.world.item.component.SwingAnimation value = this.silkard$component(net.minecraft.core.component.DataComponents.ATTACK_ANIMATION);
         return new org.bukkit.craftbukkit.inventory.components.CraftSwingAnimationComponent(value != null ? value : net.minecraft.world.item.component.SwingAnimation.DEFAULT);
     }
 
     @Override
     public void setSwingAnimation(final org.bukkit.inventory.meta.components.SwingAnimationComponent component) {
-        this.silkard$component(net.minecraft.core.component.DataComponents.SWING_ANIMATION, (component == null) ? null : ((org.bukkit.craftbukkit.inventory.components.CraftSwingAnimationComponent) component).getHandle());
+        this.silkard$component(net.minecraft.core.component.DataComponents.ATTACK_ANIMATION, (component == null) ? null : ((org.bukkit.craftbukkit.inventory.components.CraftSwingAnimationComponent) component).getHandle());
     }
 
     @Override

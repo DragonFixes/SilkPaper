@@ -37,7 +37,7 @@ public class CraftZombieNautilus extends CraftAbstractNautilus implements org.bu
 
         @Override
         public org.bukkit.NamespacedKey getKeyOrNull() {
-            return io.papermc.paper.util.Holderable.super.getKeyOrNull();
+            return super.getKeyOrNull();
         }
 
         public static org.bukkit.entity.ZombieNautilus.Variant minecraftHolderToBukkit(Holder<ZombieNautilusVariant> minecraft) {

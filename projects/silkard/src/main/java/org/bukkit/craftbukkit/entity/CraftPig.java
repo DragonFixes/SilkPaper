@@ -99,7 +99,7 @@ public class CraftPig extends CraftAnimals implements Pig {
 
         @Override
         public org.bukkit.NamespacedKey getKeyOrNull() {
-            return io.papermc.paper.util.Holderable.super.getKeyOrNull();
+            return super.getKeyOrNull();
         }
 
         public static Variant minecraftHolderToBukkit(Holder<PigVariant> minecraft) {
