@@ -80,20 +80,6 @@ public abstract class CraftAbstractArrow extends AbstractProjectile implements A
     }
 
     @Override
-<<<<<<< silkard
-    public ProjectileSource getShooter() {
-        return getHandle().silkard_projectileSource();
-    }
-
-    @Override
-    public void setShooter(ProjectileSource shooter) {
-        if (shooter instanceof Entity) {
-            getHandle().setOwner(((CraftEntity) shooter).getHandle());
-        } else {
-            getHandle().setOwner(null);
-        }
-        getHandle().silkard_projectileSource(shooter);
-=======
     public boolean isOnGround() {
         return this.getHandle().isInGround();
     }
@@ -101,7 +87,6 @@ public abstract class CraftAbstractArrow extends AbstractProjectile implements A
     @Override
     public boolean isInBlock() {
         return this.getHandle().isInGround();
->>>>>>> paper
     }
 
     @Override
@@ -202,7 +187,7 @@ public abstract class CraftAbstractArrow extends AbstractProjectile implements A
         } else {
             this.getHandle().setOwner(null, resetPickupStatus);
         }
-        this.getHandle().projectileSource = shooter;
+        this.getHandle().silkard_projectileSource(shooter);
     }
     // Paper end - Fix PickupStatus getting reset
 }

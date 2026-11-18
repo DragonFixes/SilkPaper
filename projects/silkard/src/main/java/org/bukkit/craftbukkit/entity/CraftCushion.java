@@ -13,29 +13,8 @@ public class CraftCushion extends CraftBlockAttachedEntity implements Cushion {
     }
 
     @Override
-<<<<<<< silkard
-    public boolean setFacingDirection(BlockFace face, boolean force) {
-        Preconditions.checkArgument(face == BlockFace.UP, "%s is not a valid facing direction", face);
-
-        return force || getHandle().silkard_generation() || getHandle().survives();
-    }
-
-    @Override
-    public BlockFace getFacing() {
-        return BlockFace.UP;
-    }
-
-    @Override
-    public BlockFace getAttachedFace() {
-        return BlockFace.UP;
-    }
-
-    @Override
-    public void setFacingDirection(BlockFace face) {
-=======
     public net.minecraft.world.entity.decoration.Cushion getHandle() {
         return (net.minecraft.world.entity.decoration.Cushion) this.entity;
->>>>>>> paper
     }
 
     @Override

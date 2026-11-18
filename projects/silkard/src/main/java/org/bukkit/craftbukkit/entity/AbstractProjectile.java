@@ -67,11 +67,11 @@ public abstract class AbstractProjectile extends CraftEntity implements Projecti
 
         // Refresh the source if unset
         Entity owner = handle.getOwner();
-        if (owner != null && handle.projectileSource == null && owner.getBukkitEntity() instanceof org.bukkit.projectiles.ProjectileSource projSource) {
-            handle.projectileSource = projSource;
+        if (owner != null && handle.silkard_projectileSource() == null && owner.getBukkitEntity() instanceof org.bukkit.projectiles.ProjectileSource projSource) {
+            handle.silkard_projectileSource(projSource);
         }
 
-        return this.getHandle().projectileSource;
+        return this.getHandle().silkard_projectileSource();
     }
 
     @Override
@@ -81,7 +81,7 @@ public abstract class AbstractProjectile extends CraftEntity implements Projecti
         } else {
             this.getHandle().setOwner(null);
         }
-        this.getHandle().projectileSource = shooter;
+        this.getHandle().silkard_projectileSource(shooter);
     }
 
     @Override

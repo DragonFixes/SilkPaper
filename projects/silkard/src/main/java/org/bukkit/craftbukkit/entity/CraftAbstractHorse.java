@@ -48,11 +48,7 @@ public abstract class CraftAbstractHorse extends CraftAnimals implements Abstrac
     @Override
     public void setMaxDomestication(int value) {
         Preconditions.checkArgument(value > 0, "Max domestication (%s) cannot be zero or less", value);
-<<<<<<< silkard
         getHandle().silkard$maxDomestication(value);
-=======
-        this.getHandle().maxDomestication = value;
->>>>>>> paper
     }
 
     @Override

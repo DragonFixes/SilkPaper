@@ -30,13 +30,8 @@ public class CraftItemFrame extends CraftHanging implements ItemFrame {
 
         Preconditions.checkArgument(newDir != null, "%s is not a valid facing direction", face);
 
-<<<<<<< silkard
         getHandle().setDirection(newDir);
         if (!force && !getHandle().silkard_generation() && !hanging.survives()) {
-=======
-        this.getHandle().setDirection(newDir);
-        if (!force && !this.getHandle().generation && !hanging.survives()) {
->>>>>>> paper
             hanging.setDirection(oldDir);
             return false;
         }
@@ -51,13 +46,8 @@ public class CraftItemFrame extends CraftHanging implements ItemFrame {
         super.update();
 
         // update redstone
-<<<<<<< silkard
         if (!getHandle().silkard_generation()) {
             getHandle().level().updateNeighbourForOutputSignal(getHandle().getPos(), Blocks.AIR);
-=======
-        if (!this.getHandle().generation) {
-            this.getHandle().level().updateNeighbourForOutputSignal(this.getHandle().getPos(), Blocks.AIR);
->>>>>>> paper
         }
     }
 
@@ -69,11 +59,7 @@ public class CraftItemFrame extends CraftHanging implements ItemFrame {
     @Override
     public void setItem(org.bukkit.inventory.ItemStack item, boolean playSound) {
         // only updated redstone and play sound when it is not in generation
-<<<<<<< silkard
         getHandle().setItem(CraftItemStack.asNMSCopy(item), !getHandle().silkard_generation(), !getHandle().silkard_generation() && playSound);
-=======
-        this.getHandle().setItem(CraftItemStack.asNMSCopy(item), !this.getHandle().generation, !this.getHandle().generation && playSound);
->>>>>>> paper
     }
 
     @Override

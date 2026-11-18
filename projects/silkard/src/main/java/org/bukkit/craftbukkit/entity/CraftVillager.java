@@ -3,13 +3,8 @@ package org.bukkit.craftbukkit.entity;
 import com.destroystokyo.paper.entity.villager.Reputation;
 import com.destroystokyo.paper.entity.villager.ReputationType;
 import com.google.common.base.Preconditions;
-<<<<<<< silkard
-import com.google.common.collect.Maps;
-import com.mohistmc.silkard.bukkit.BukkitUtils;
-=======
 import io.papermc.paper.util.OldEnumHolderable;
 import java.util.EnumMap;
->>>>>>> paper
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -102,23 +97,11 @@ public class CraftVillager extends CraftAbstractVillager implements Villager {
     }
 
     @Override
-<<<<<<< silkard
-    public boolean sleep(Location location) {
-        Preconditions.checkArgument(location != null, "Location cannot be null");
-        Preconditions.checkArgument(location.getWorld() != null, "Location needs to be in a world");
-        Preconditions.checkArgument(location.getWorld().equals(getWorld()), "Cannot sleep across worlds");
-        Preconditions.checkState(!getHandle().silkard_generation(), "Cannot sleep during world generation");
-
-        BlockPos position = CraftLocation.toBlockPosition(location);
-        BlockState blockstate = getHandle().level().getBlockState(position);
-        if (!(blockstate.getBlock() instanceof BedBlock)) {
-=======
     public boolean increaseLevel(int amount) {
         Preconditions.checkArgument(amount > 0, "Level earned must be positive");
         int currentLevel = this.getVillagerLevel();
         int newLevel = Math.clamp(currentLevel + amount, VillagerData.MIN_VILLAGER_LEVEL, VillagerData.MAX_VILLAGER_LEVEL);
         if (currentLevel == newLevel) {
->>>>>>> paper
             return false;
         }
         amount = newLevel - currentLevel;
@@ -131,46 +114,9 @@ public class CraftVillager extends CraftAbstractVillager implements Villager {
     }
 
     @Override
-<<<<<<< silkard
-    public void wakeup() {
-        Preconditions.checkState(isSleeping(), "Cannot wakeup if not sleeping");
-        Preconditions.checkState(!getHandle().silkard_generation(), "Cannot wakeup during world generation");
-
-        getHandle().stopSleeping();
-    }
-
-    @Override
-    public void shakeHead() {
-        getHandle().setUnhappy();
-    }
-
-    @Override
-    public ZombieVillager zombify() {
-        net.minecraft.world.entity.monster.zombie.ZombieVillager zombievillager = BukkitUtils.convertVillagerToZombieVillager(getHandle().level().getMinecraftWorld(), getHandle(), getHandle().blockPosition(), isSilent(), EntityTransformEvent.TransformReason.INFECTION, CreatureSpawnEvent.SpawnReason.CUSTOM);
-        return (zombievillager != null) ? (ZombieVillager) zombievillager.getBukkitEntity() : null;
-    }
-
-    @Override
-    public int getReputation(UUID uuid, ReputationType reputationType) {
-        Preconditions.checkArgument(uuid != null, "UUID cannot be null");
-        Preconditions.checkArgument(reputationType != null, "Reputation type cannot be null");
-        return getHandle().getGossips().getReputation(uuid,
-                Predicate.isEqual(CraftReputationType.bukkitToMinecraft(reputationType)),
-                false);
-    }
-
-    @Override
-    public int getWeightedReputation(UUID uuid, ReputationType reputationType) {
-        Preconditions.checkArgument(uuid != null, "UUID cannot be null");
-        Preconditions.checkArgument(reputationType != null, "Reputation type cannot be null");
-        return getHandle().getGossips().getReputation(uuid,
-                Predicate.isEqual(CraftReputationType.bukkitToMinecraft(reputationType)),
-                true);
-=======
     public boolean addTrades(int amount) {
         Preconditions.checkArgument(amount > 0, "Number of trades unlocked must be positive");
         return this.getHandle().updateTrades((ServerLevel) this.getHandle().level(), amount);
->>>>>>> paper
     }
 
     @Override
@@ -188,7 +134,7 @@ public class CraftVillager extends CraftAbstractVillager implements Villager {
         Preconditions.checkArgument(location != null, "Location cannot be null");
         Preconditions.checkArgument(location.getWorld() != null, "Location needs to be in a world");
         Preconditions.checkArgument(location.getWorld().equals(this.getWorld()), "Cannot sleep across worlds");
-        Preconditions.checkState(!this.getHandle().generation, "Cannot sleep during world generation");
+        Preconditions.checkState(!this.getHandle().silkard_generation(), "Cannot sleep during world generation");
 
         BlockPos position = CraftLocation.toBlockPos(location);
         BlockState state = this.getHandle().level().getBlockState(position);
@@ -203,30 +149,20 @@ public class CraftVillager extends CraftAbstractVillager implements Villager {
     @Override
     public void wakeup() {
         Preconditions.checkState(this.isSleeping(), "Cannot wakeup if not sleeping");
-        Preconditions.checkState(!this.getHandle().generation, "Cannot wakeup during world generation");
+        Preconditions.checkState(!this.getHandle().silkard_generation(), "Cannot wakeup during world generation");
 
         this.getHandle().stopSleeping();
     }
 
     @Override
-<<<<<<< silkard
-    public void setGossipDecayTime(long ticks) {
-        getHandle().silkard$gossipDecayInterval(ticks);
-    }
-
-    @Override
-    public long getGossipDecayTime() {
-        return getHandle().silkard$gossipDecayInterval();
-=======
     public void shakeHead() {
         this.getHandle().setUnhappy();
     }
 
     @Override
     public ZombieVillager zombify() {
-        net.minecraft.world.entity.monster.zombie.ZombieVillager zombie = Zombie.convertVillagerToZombieVillager(this.getHandle().level().getMinecraftWorld(), this.getHandle(), this.getHandle().blockPosition(), this.isSilent(), EntityTransformEvent.TransformReason.INFECTION, CreatureSpawnEvent.SpawnReason.CUSTOM);
+        net.minecraft.world.entity.monster.zombie.ZombieVillager zombie = com.mohistmc.silkard.bukkit.BukkitUtils.convertVillagerToZombieVillager(this.getHandle().level().getMinecraftWorld(), this.getHandle(), this.getHandle().blockPosition(), this.isSilent(), EntityTransformEvent.TransformReason.INFECTION, CreatureSpawnEvent.SpawnReason.CUSTOM);
         return (zombie != null) ? (ZombieVillager) zombie.getBukkitEntity() : null;
->>>>>>> paper
     }
 
     public static class CraftType extends OldEnumHolderable<Type, VillagerType> implements Type {

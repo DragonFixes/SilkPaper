@@ -26,7 +26,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -136,13 +135,8 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         // Paper end
 
         // during world generation, we don't want to run logic for dropping items and xp
-<<<<<<< silkard
-        if (getHandle().silkard_generation() && health == 0) {
-            getHandle().discard(null); // Add Bukkit remove cause
-=======
-        if (this.getHandle().generation && health == 0) {
+        if (this.getHandle().silkard_generation() && health == 0) {
             this.getHandle().discard(null); // Add Bukkit remove cause
->>>>>>> paper
             return;
         }
 
@@ -202,11 +196,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     }
 
     private List<Block> getLineOfSight(Set<Material> transparent, int maxDistance, int maxLength) {
-<<<<<<< silkard
-        Preconditions.checkState(!getHandle().silkard_generation(), "Cannot get line of sight during world generation");
-=======
-        Preconditions.checkState(!this.getHandle().generation, "Cannot get line of sight during world generation");
->>>>>>> paper
+        Preconditions.checkState(!this.getHandle().silkard_generation(), "Cannot get line of sight during world generation");
 
         if (transparent == null) {
             transparent = Sets.newHashSet(Material.AIR, Material.CAVE_AIR, Material.VOID_AIR);
@@ -314,11 +304,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
 
     @Override
     public RayTraceResult rayTraceBlocks(double maxDistance, FluidCollisionMode fluidCollisionMode) {
-<<<<<<< silkard
-        Preconditions.checkState(!getHandle().silkard_generation(), "Cannot ray tray blocks during world generation");
-=======
-        Preconditions.checkState(!this.getHandle().generation, "Cannot ray tray blocks during world generation");
->>>>>>> paper
+        Preconditions.checkState(!this.getHandle().silkard_generation(), "Cannot ray tray blocks during world generation");
 
         Location eyeLocation = this.getEyeLocation();
         Vector direction = eyeLocation.getDirection();
@@ -337,20 +323,12 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
 
     @Override
     public int getMaximumAir() {
-<<<<<<< silkard
-        return getHandle().silkard_maxAirTicks();
-=======
-        return this.getHandle().maxAirTicks;
->>>>>>> paper
+        return this.getHandle().silkard_maxAirTicks();
     }
 
     @Override
     public void setMaximumAir(int ticks) {
-<<<<<<< silkard
-        getHandle().silkard_maxAirTicks(ticks);
-=======
-        this.getHandle().maxAirTicks = ticks;
->>>>>>> paper
+        this.getHandle().silkard_maxAirTicks(ticks);
     }
 
     @Override
@@ -425,7 +403,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
 
     @Override
     public void kill(org.bukkit.damage.DamageSource damageSource) {
-        Preconditions.checkState(!this.getHandle().generation, "Cannot kill entity during world generation");
+        Preconditions.checkState(!this.getHandle().silkard_generation(), "Cannot kill entity during world generation");
         Preconditions.checkArgument(damageSource != null, "damageSource cannot be null");
 
         this.getHandle().setHealth(0);
@@ -457,12 +435,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     }
 
     private void damage(double amount, DamageSource damageSource) {
-<<<<<<< silkard
-        Preconditions.checkArgument(damageSource != null, "damageSource cannot be null");
-        Preconditions.checkState(!getHandle().silkard_generation(), "Cannot damage entity during world generation");
-=======
-        Preconditions.checkState(!this.getHandle().generation, "Cannot damage entity during world generation");
->>>>>>> paper
+        Preconditions.checkState(!this.getHandle().silkard_generation(), "Cannot damage entity during world generation");
 
         this.entity.hurtServer((ServerLevel) this.getHandle().level(), damageSource, (float) amount);
     }
@@ -476,20 +449,12 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
 
     @Override
     public int getMaximumNoDamageTicks() {
-<<<<<<< silkard
-        return getHandle().invulnerableDuration();
-=======
-        return this.getHandle().invulnerableDuration;
->>>>>>> paper
+        return this.getHandle().invulnerableDuration(); // Silkard - injected accessor
     }
 
     @Override
     public void setMaximumNoDamageTicks(int ticks) {
-<<<<<<< silkard
-        getHandle().invulnerableDuration(ticks);
-=======
-        this.getHandle().invulnerableDuration = ticks;
->>>>>>> paper
+        this.getHandle().invulnerableDuration(ticks); // Silkard - injected accessor
     }
 
     @Override
@@ -509,11 +474,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
 
     @Override
     public void setNoDamageTicks(int ticks) {
-<<<<<<< silkard
-        getHandle().invulnerableTime = ticks;
-=======
         this.getHandle().damageCooldownTime = ticks;
->>>>>>> paper
     }
 
     @Override
@@ -591,13 +552,8 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
 
     @Override
     @SuppressWarnings("unchecked")
-<<<<<<< silkard
-    public <T extends Projectile> T launchProjectile(Class<? extends T> projectile, Vector velocity) {
-        Preconditions.checkState(!getHandle().silkard_generation(), "Cannot launch projectile during world generation");
-=======
     public <T extends Projectile> T launchProjectile(Class<? extends T> projectile, Vector velocity, java.util.function.Consumer<? super T> function) {
-        Preconditions.checkState(!this.getHandle().generation, "Cannot launch projectile during world generation");
->>>>>>> paper
+        Preconditions.checkState(!this.getHandle().silkard_generation(), "Cannot launch projectile during world generation");
 
         net.minecraft.world.level.Level world = ((CraftWorld) this.getWorld()).getHandle();
         net.minecraft.world.entity.Entity launch = null;
@@ -659,11 +615,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
                 launch = new LargeFireball(world, this.getHandle(), vec, 1);
             }
 
-<<<<<<< silkard
-            ((AbstractHurtingProjectile) launch).silkard_projectileSource(this);
-=======
-            launch.projectileSource = this;
->>>>>>> paper
+            launch.silkard_projectileSource(this);
             launch.snapTo(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
         } else if (LlamaSpit.class.isAssignableFrom(projectile)) {
             Location location = this.getEyeLocation();
@@ -719,10 +671,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
 
     @Override
     public boolean hasLineOfSight(Entity other) {
-<<<<<<< silkard
-        Preconditions.checkState(!getHandle().silkard_generation(), "Cannot check line of sight during world generation");
-=======
-        Preconditions.checkState(!this.getHandle().generation, "Cannot check line of sight during world generation");
+        Preconditions.checkState(!this.getHandle().silkard_generation(), "Cannot check line of sight during world generation");
 
         return this.getHandle().hasLineOfSight(((CraftEntity) other).getHandle());
     }
@@ -738,7 +687,6 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         if (end.distanceToSqr(start) > Mth.square(128.0)) {
             return false; // Return early if the distance is greater than 128 blocks
         }
->>>>>>> paper
 
         return this.getHandle().level().clipDirect(start, end, net.minecraft.world.phys.shapes.CollisionContext.of(this.getHandle())) == net.minecraft.world.phys.HitResult.Type.MISS;
     }
@@ -765,11 +713,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         if (this.getHandle() instanceof Mob mob) {
             mob.setCanPickUpLoot(pickup);
         } else {
-<<<<<<< silkard
-            getHandle().silkard_bukkitPickUpLoot(pickup);
-=======
-            this.getHandle().bukkitPickUpLoot = pickup;
->>>>>>> paper
+            this.getHandle().silkard_bukkitPickUpLoot(pickup);
         }
     }
 
@@ -778,18 +722,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         if (this.getHandle() instanceof Mob) {
             return this.getHandle().canPickUpLoot();
         } else {
-<<<<<<< silkard
-            return getHandle().silkard_bukkitPickUpLoot();
-        }
-    }
-
-    @Override
-    public boolean teleport(Location location, PlayerTeleportEvent.TeleportCause cause) {
-        if (getHealth() == 0) {
-            return false;
-=======
-            return this.getHandle().bukkitPickUpLoot;
->>>>>>> paper
+            return this.getHandle().silkard_bukkitPickUpLoot();
         }
     }
 
@@ -805,25 +738,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
 
     @Override
     public boolean setLeashHolder(Entity holder) {
-<<<<<<< silkard
-        if (getHandle().silkard_generation() || !(getHandle() instanceof Leashable)) {
-            return false;
-        }
-
-        if (holder == null) {
-            return unleash();
-        }
-
-        if (holder.isDead()) {
-            return false;
-        }
-
-        unleash();
-        ((Leashable) getHandle()).setLeashedTo(((CraftEntity) holder).getHandle(), true);
-        return true;
-=======
         return false; // Paper - implement in CraftMob & PaperLeashable
->>>>>>> paper
     }
 
     @Override
@@ -863,27 +778,19 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
 
     @Override
     public boolean isClimbing() {
-<<<<<<< silkard
-        Preconditions.checkState(!getHandle().silkard_generation(), "Cannot check if climbing during world generation");
-=======
-        Preconditions.checkState(!this.getHandle().generation, "Cannot check if climbing during world generation");
->>>>>>> paper
+        Preconditions.checkState(!this.getHandle().silkard_generation(), "Cannot check if climbing during world generation");
 
         return this.getHandle().onClimbable();
     }
 
     @Override
     public AttributeInstance getAttribute(Attribute attribute) {
-<<<<<<< silkard
-        return getHandle().silkard_craftAttributes().getAttribute(attribute);
-=======
-        return this.getHandle().craftAttributes.getAttribute(attribute);
+        return this.getHandle().silkard_craftAttributes().getAttribute(attribute);
     }
 
     @Override
     public void registerAttribute(Attribute attribute) {
-        this.getHandle().craftAttributes.registerAttribute(attribute);
->>>>>>> paper
+        this.getHandle().silkard_craftAttributes().registerAttribute(attribute);
     }
 
     @Override
@@ -901,11 +808,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     @Override
     public void attack(Entity target) {
         Preconditions.checkArgument(target != null, "target == null");
-<<<<<<< silkard
-        Preconditions.checkState(!getHandle().silkard_generation(), "Cannot attack during world generation");
-=======
-        Preconditions.checkState(!this.getHandle().generation, "Cannot attack during world generation");
->>>>>>> paper
+        Preconditions.checkState(!this.getHandle().silkard_generation(), "Cannot attack during world generation");
 
         if (this.getHandle() instanceof net.minecraft.world.entity.player.Player) {
             ((net.minecraft.world.entity.player.Player) this.getHandle()).attack(((CraftEntity) target).getHandle());
@@ -916,29 +819,19 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
 
     @Override
     public void swingMainHand() {
-<<<<<<< silkard
-        Preconditions.checkState(!getHandle().silkard_generation(), "Cannot swing hand during world generation");
-
-        getHandle().swing(InteractionHand.MAIN_HAND, SwingAnimation.DEFAULT, true);
-=======
-        Preconditions.checkState(!this.getHandle().generation, "Cannot swing hand during world generation");
+        Preconditions.checkState(!this.getHandle().silkard_generation(), "Cannot swing hand during world generation");
         this.getHandle().swing(InteractionHand.MAIN_HAND, this.getSwingAnimation(InteractionHand.MAIN_HAND), true);
->>>>>>> paper
     }
 
     @Override
     public void swingOffHand() {
-<<<<<<< silkard
-        Preconditions.checkState(!getHandle().silkard_generation(), "Cannot swing hand during world generation");
-=======
-        Preconditions.checkState(!this.getHandle().generation, "Cannot swing hand during world generation");
+        Preconditions.checkState(!this.getHandle().silkard_generation(), "Cannot swing hand during world generation");
         this.getHandle().swing(InteractionHand.OFF_HAND, this.getSwingAnimation(InteractionHand.OFF_HAND), true);
     }
->>>>>>> paper
 
     @Override
     public void swingHand(org.bukkit.inventory.EquipmentSlot hand, io.papermc.paper.datacomponent.item.SwingAnimation swingAnimation) {
-        Preconditions.checkState(!this.getHandle().generation, "Cannot swing hand during world generation");
+        Preconditions.checkState(!this.getHandle().silkard_generation(), "Cannot swing hand during world generation");
         this.getHandle().swing(CraftEquipmentSlot.getHand(hand), ((io.papermc.paper.datacomponent.item.PaperSwingAnimation) swingAnimation).getHandle(), true);
     }
 
@@ -965,29 +858,17 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
 
     @Override
     public void setCollidable(boolean collidable) {
-<<<<<<< silkard
-        getHandle().silkard_collides(collidable);
-=======
-        this.getHandle().collides = collidable;
->>>>>>> paper
+        this.getHandle().silkard_collides(collidable);
     }
 
     @Override
     public boolean isCollidable() {
-<<<<<<< silkard
-        return getHandle().silkard_collides();
-=======
-        return this.getHandle().collides;
->>>>>>> paper
+        return this.getHandle().silkard_collides();
     }
 
     @Override
     public Set<UUID> getCollidableExemptions() {
-<<<<<<< silkard
-        return getHandle().silkard_collidableExemptions();
-=======
-        return this.getHandle().collidableExemptions;
->>>>>>> paper
+        return this.getHandle().silkard_collidableExemptions();
     }
 
     @Override
@@ -1238,11 +1119,6 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     }
 
     @Override
-<<<<<<< silkard
-    public void setInvisible(boolean invisible) {
-        getHandle().silkard_persistentInvisibility(invisible);
-        getHandle().setSharedFlag(5, invisible);
-=======
     public void setBodyYaw(final float bodyYaw) {
         this.getHandle().setYBodyRot(bodyYaw);
     }
@@ -1255,7 +1131,6 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     @Override
     public CombatTracker getCombatTracker() {
         return this.getHandle().getCombatTracker().paperCombatTracker;
->>>>>>> paper
     }
 
     @Override
