@@ -16,8 +16,6 @@ import io.papermc.paper.configuration.GlobalConfiguration;
 import io.papermc.paper.configuration.PaperServerConfiguration;
 import io.papermc.paper.configuration.ServerConfiguration;
 import io.papermc.paper.util.MCUtil;
-import io.papermc.paper.world.PaperWorldLoader;
-import io.papermc.paper.world.migration.WorldFolderMigration;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -247,6 +245,24 @@ import org.yaml.snakeyaml.LoaderOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 import org.yaml.snakeyaml.error.MarkedYAMLException;
+import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.Lifecycle;
+import net.minecraft.nbt.NbtException;
+import net.minecraft.nbt.ReportedNbtException;
+import net.minecraft.server.WorldLoader;
+import net.minecraft.util.worldupdate.UpgradeProgress;
+import net.minecraft.world.Difficulty;
+import net.minecraft.world.level.LevelSettings;
+import net.minecraft.world.level.storage.LevelDataAndDimensions;
+import net.minecraft.world.level.storage.LevelSummary;
+import net.minecraft.world.level.validation.ContentValidationException;
+import net.minecraft.world.phys.Vec3;
+import org.bukkit.ChatColor;
+import org.bukkit.event.player.PlayerChatTabCompleteEvent;
+import org.bukkit.event.server.TabCompleteEvent;
+import org.bukkit.event.world.WorldLoadEvent;
+import org.bukkit.util.StringUtil;
+import org.jline.terminal.Terminal;
 
 public final class CraftServer implements Server {
     private final String serverName = io.papermc.paper.ServerBuildInfo.buildInfo().brandName();
@@ -827,6 +843,11 @@ public final class CraftServer implements Server {
     }
 
     @Override
+    public Map<String, String> getCodeOfConducts() {
+        return this.getServer().getCodeOfConducts();
+    }
+
+    @Override
     public ResourcePack getServerResourcePack() {
         return this.getServer().getServerResourcePack().map(CraftResourcePack::new).orElse(null);
     }
@@ -914,7 +935,7 @@ public final class CraftServer implements Server {
 
     @Override
     public boolean isTickingWorlds() {
-        return console.isIteratingOverLevels;
+        return console.paper$isIteratingOverLevels();
     }
 
     public DedicatedPlayerList getHandle() {
@@ -943,7 +964,7 @@ public final class CraftServer implements Server {
                 return false;
             }
             Commands.validateParseResults(results);
-            commands.performCommand(results, command, true);
+            commands.performCommand(results, command, command);
             return true;
         } catch (CommandException ex) {
             new com.destroystokyo.paper.event.server.ServerExceptionEvent(new com.destroystokyo.paper.exception.ServerCommandException(ex, target, sender, args)).callEvent(); // Paper
@@ -1195,11 +1216,6 @@ public final class CraftServer implements Server {
         List<CustomSpawner> list = ImmutableList.of(new PhantomSpawner(), new PatrolSpawner(), new CatSpawner(), new VillageSiege(), new WanderingTraderSpawner(dimensiondatastorage));
         LevelStem levelstem = registry.getValue(actualDimension);
 
-        WorldInfo worldInfo = new CraftWorldInfo(serverleveldata, worldoptions, worldSession, creator.environment(), levelstem.type().value());
-        if (biomeProvider == null && generator != null) {
-            biomeProvider = generator.getDefaultBiomeProvider(worldInfo);
-        }
-
         ResourceKey<net.minecraft.world.level.Level> worldKey;
         String levelName = this.getServer().getProperties().levelName;
         if (name.equals(levelName + "_nether")) {
@@ -1208,6 +1224,21 @@ public final class CraftServer implements Server {
             worldKey = net.minecraft.world.level.Level.END;
         } else {
             worldKey = ResourceKey.create(Registries.DIMENSION, Identifier.withDefaultNamespace(name.toLowerCase(Locale.ROOT)));
+        }
+
+        WorldInfo worldInfo = new CraftWorldInfo(
+            serverleveldata.getLevelName(),
+            CraftNamespacedKey.fromMinecraft(worldKey.identifier()),
+            worldoptions.seed(),
+            serverleveldata.enabledFeatures(),
+            creator.environment(),
+            levelstem.type().value(),
+            levelstem.generator(),
+            this.console.registryAccess(),
+            org.bukkit.craftbukkit.util.WorldUUID.getUUID(worldSession.levelDirectory.path().toFile())
+        );
+        if (biomeProvider == null && generator != null) {
+            biomeProvider = generator.getDefaultBiomeProvider(worldInfo);
         }
 
         ServerLevel internal = (ServerLevel) new ServerLevel(console, console.executor, worldSession, serverleveldata, worldKey, levelstem,
@@ -1294,8 +1325,8 @@ public final class CraftServer implements Server {
     public void setRespawnWorld(final World world) {
         Preconditions.checkArgument(world != null, "world cannot be null");
 
-        ((PrimaryLevelData) this.console.getWorldData()).respawnDimension = ((CraftWorld) world).getHandle().dimension();
-        this.console.updateEffectiveRespawnData();
+        final net.minecraft.world.level.storage.LevelData.RespawnData current = this.console.getRespawnData();
+        this.console.setRespawnData(net.minecraft.world.level.storage.LevelData.RespawnData.of(((CraftWorld) world).getHandle().dimension(), current.pos(), current.yaw(), current.pitch()));
     }
 
     public DedicatedServer getServer() {
@@ -1954,7 +1985,7 @@ public final class CraftServer implements Server {
 
         OfflinePlayer result = getPlayerExact(name);
         if (result == null) {
-            NameAndId profile = this.console.services().nameToIdCache().getIfCached(name);
+            NameAndId profile = com.mohistmc.silkard.paper.server.PaperServerHooks.nameToIdIfCached(this.console.services().nameToIdCache(), name);
 
             if (profile != null) {
                 result = getOfflinePlayer(profile);
@@ -2304,12 +2335,12 @@ public final class CraftServer implements Server {
 
     @Override
     public net.kyori.adventure.text.Component motd() {
-        return this.console.motd();
+        return net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection().deserialize(java.util.Objects.requireNonNullElse(this.console.getMotd(), ""));
     }
 
     @Override
     public void motd(final net.kyori.adventure.text.Component motd) {
-        this.console.motd(motd);
+        this.console.setMotd(net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection().serialize(motd));
     }
 
     @Override
@@ -2753,13 +2784,13 @@ public final class CraftServer implements Server {
 
     @Override
     public long[] getTickTimes() {
-        final TickData.MSPTData reportData = this.getServer().getMSPTData5s();
+        final TickData.MSPTData reportData = com.mohistmc.silkard.paper.server.PaperServerHooks.msptData5s(this.getServer());
         return reportData == null ? new long[0] : reportData.rawData().clone();
     }
 
     @Override
     public double getAverageTickTime() {
-        final TickData.MSPTData reportData = this.getServer().getMSPTData5s();
+        final TickData.MSPTData reportData = com.mohistmc.silkard.paper.server.PaperServerHooks.msptData5s(this.getServer());
         return reportData == null ? 0.0 : reportData.avg();
     }
 
@@ -2783,7 +2814,7 @@ public final class CraftServer implements Server {
 
         @Override
         public YamlConfiguration getPaperConfig() {
-            return CraftServer.this.console.paperConfigurations.createLegacyObject(CraftServer.this.console);
+            return CraftServer.this.console.paperConfigurations().createLegacyObject(CraftServer.this.console);
         }
 
         // Purpur start - Purpur config files
@@ -2802,7 +2833,7 @@ public final class CraftServer implements Server {
         @Override
         public YamlConfiguration getGaleConfig()
         {
-            return CraftServer.this.console.galeConfigurations.createLegacyObject(CraftServer.this.console);
+            return CraftServer.this.console.galeConfigurations().createLegacyObject(CraftServer.this.console);
         }
         // Gale end - Gale configuration - API
 
@@ -2844,7 +2875,7 @@ public final class CraftServer implements Server {
     // Gale start - Purpur - 5-second TPS average
     @Override
     public double[] getTPSIncluding5SecondAverage() {
-        return com.mohistmc.silkard.bukkit.BukkitUtils.getServer().getTPSIncluding5Seconds();
+        return com.mohistmc.silkard.bukkit.BukkitUtils.getServer().getTPSIncluding5SecondsReadOnly();
     }
     // Gale end - Purpur - 5-second TPS average
 
@@ -3039,7 +3070,7 @@ public final class CraftServer implements Server {
 
     @Override
     public int getCurrentTick() {
-        return net.minecraft.server.MinecraftServer.currentTick;
+        return this.console.silkard$currentTick();
     }
 
     @Override
@@ -3066,42 +3097,42 @@ public final class CraftServer implements Server {
 
     @Override
     public boolean isPaused() {
-        return this.console.isTickPaused();
+        return this.console.isPaused();
     }
 
     @Override
     public void allowPausing(final Plugin plugin, final boolean value) {
-        this.console.addPluginAllowingSleep(plugin.getName(), value);
+        com.mohistmc.silkard.paper.server.PaperServerHooks.allowPausing(plugin, value); // TODO Silkard - vanilla pause-when-empty has no per-plugin override
     }
 
     // Purpur start - Bring back server name
     @Override
     public String getServerName() {
-        return this.getProperties().serverName;
+        return com.mohistmc.silkard.paper.server.PaperServerHooks.serverName();
     }
     // Purpur end - Bring back server name
 
     // Purpur start - Lagging threshold
     @Override
     public boolean isLagging() {
-        return getServer().lagging;
+        return com.mohistmc.silkard.paper.server.PaperServerHooks.isLagging(getServer());
     }
     // Purpur end - Lagging threshold
 
     // Gale start - YAPFA - last tick time - API
     @Override
     public long getLastTickTotalTime() {
-        return MinecraftServer.lastTickProperTime + MinecraftServer.lastTickOversleepTime;
+        return com.mohistmc.silkard.paper.server.PaperServerHooks.lastTickProperTime(this.console) + com.mohistmc.silkard.paper.server.PaperServerHooks.lastTickOversleepTime(this.console);
     }
 
     @Override
     public long getLastTickProperTime() {
-        return MinecraftServer.lastTickProperTime;
+        return com.mohistmc.silkard.paper.server.PaperServerHooks.lastTickProperTime(this.console);
     }
 
     @Override
     public long getLastTickOversleepTime() {
-        return MinecraftServer.lastTickOversleepTime;
+        return com.mohistmc.silkard.paper.server.PaperServerHooks.lastTickOversleepTime(this.console);
     }
     // Gale end - YAPFA - last tick time - API
 
@@ -3111,4 +3142,15 @@ public final class CraftServer implements Server {
         return org.dreeam.leaf.config.modules.async.SparklyPaperParallelWorldTicking.enabled;
     }
     // Fish end - Parallel World Ticking API
+
+    // Spigot's data pack API, created on first use because the pack repository exists only once the server has started.
+    private org.bukkit.craftbukkit.packs.CraftDataPackManager spigotDataPackManager;
+
+    @Override
+    public org.bukkit.packs.DataPackManager getDataPackManager() {
+        if (this.spigotDataPackManager == null) {
+            this.spigotDataPackManager = new org.bukkit.craftbukkit.packs.CraftDataPackManager(this.getServer().getPackRepository());
+        }
+        return this.spigotDataPackManager;
+    }
 }

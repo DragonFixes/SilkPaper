@@ -45,7 +45,7 @@ public class CraftMetaEntityTag extends CraftMetaItem {
         super(patch, extraHandledComponents);
 
         getOrEmpty(patch, CraftMetaEntityTag.ENTITY_TAG).ifPresent((entityData) -> {
-            this.entityTag = entityData.copyTagWithEntityId();
+            this.entityTag = com.mohistmc.silkard.paper.core.PaperItemData.copyTagWithEntityId(entityData);
         });
     }
 
@@ -72,7 +72,7 @@ public class CraftMetaEntityTag extends CraftMetaItem {
         super.applyToItem(tag);
 
         if (this.entityTag != null) {
-            tag.put(CraftMetaEntityTag.ENTITY_TAG, TypedEntityData.decodeEntity(this.entityTag));
+            tag.put(CraftMetaEntityTag.ENTITY_TAG, com.mohistmc.silkard.paper.core.PaperItemData.decodeEntity(this.entityTag));
         }
     }
 

@@ -49,7 +49,7 @@ public class CraftMapRenderer extends MapRenderer {
     // Purpur start - Explorer Map API
     @Override
     public boolean isExplorerMap() {
-        return this.worldMap.isExplorerMap;
+        return false; // TODO Silkard - MapItemSavedData does not record whether it was made for an explorer map
     }
     // Purpur end - Explorer Map API
 }

@@ -39,7 +39,7 @@ public class CraftEntityFactory implements EntityFactory {
         try (final ProblemReporter.ScopedCollector problemReporter = new ProblemReporter.ScopedCollector(
             () -> "createEntitySnapshot", LOGGER
         )) {
-            type = EntityType.by(TagValueInput.createGlobal(problemReporter, tag)).orElse(null);
+            type = EntityType.by(TagValueInput.create(problemReporter, org.bukkit.craftbukkit.CraftRegistry.getMinecraftRegistry(), tag)).orElse(null);
         }
         if (type == null) {
             throw new IllegalArgumentException("Could not parse Entity: " + input);

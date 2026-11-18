@@ -46,6 +46,11 @@ public class CraftGoat extends CraftAnimals implements Goat {
 
     @Override
     public void ram(@org.jetbrains.annotations.NotNull org.bukkit.entity.LivingEntity entity) {
-        this.getHandle().ram(((CraftLivingEntity) entity).getHandle());
+        final net.minecraft.world.entity.ai.Brain<net.minecraft.world.entity.animal.goat.Goat> brain = this.getHandle().getBrain();
+        brain.setMemory(net.minecraft.world.entity.ai.memory.MemoryModuleType.RAM_TARGET, ((CraftLivingEntity) entity).getHandle().position());
+        brain.eraseMemory(net.minecraft.world.entity.ai.memory.MemoryModuleType.RAM_COOLDOWN_TICKS);
+        brain.eraseMemory(net.minecraft.world.entity.ai.memory.MemoryModuleType.BREED_TARGET);
+        brain.eraseMemory(net.minecraft.world.entity.ai.memory.MemoryModuleType.TEMPTING_PLAYER);
+        brain.setActiveActivityIfPossible(net.minecraft.world.entity.schedule.Activity.RAM);
     }
 }

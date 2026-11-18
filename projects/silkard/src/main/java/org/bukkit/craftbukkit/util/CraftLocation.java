@@ -76,4 +76,9 @@ public final class CraftLocation {
     public static Vec3 toVec3(Location loc) {
         return new Vec3(loc.getX(), loc.getY(), loc.getZ());
     }
+
+    /** CraftBukkit's name for {@link #toBlockPos(Location)}, still used by Silkard code written against Spigot. */
+    public static BlockPos toBlockPosition(Location loc) {
+        return toBlockPos(loc);
+    }
 }

@@ -19,7 +19,7 @@ public class CraftBlockInventoryHolder implements BlockInventoryHolder {
     }
     // Paper start - Add missing InventoryHolders
     public CraftBlockInventoryHolder(net.minecraft.world.inventory.ContainerLevelAccess levelAccess, Inventory inventory) {
-        com.google.common.base.Preconditions.checkArgument(levelAccess.isBlock());
+        com.google.common.base.Preconditions.checkArgument(levelAccess != net.minecraft.world.inventory.ContainerLevelAccess.NULL);
         this.block = CraftBlock.at(levelAccess.getWorld(), levelAccess.getPosition());
         this.inventory = inventory;
     }

@@ -63,4 +63,9 @@ public class CraftCopperGolemStatue extends CraftBlockData implements CopperGole
     public void setWaterlogged(final boolean waterlogged) {
         this.set(WATERLOGGED, waterlogged);
     }
+
+    @Override
+    public void setCopperGolemPose(final org.bukkit.block.data.type.CopperGolemStatue.CopperGolemPose copperGolemPose) {
+        this.setCopperGolemPose(org.bukkit.block.data.type.CopperGolemStatue.Pose.valueOf(copperGolemPose.name()));
+    }
 }

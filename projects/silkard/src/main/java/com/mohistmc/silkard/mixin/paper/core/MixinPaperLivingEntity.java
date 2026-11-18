@@ -33,6 +33,14 @@ public abstract class MixinPaperLivingEntity implements PaperLivingEntity {
         }
     }
 
+    /** An armor stand whose ticking is switched off through Paper's API skips its whole tick. */
+    @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
+    private void paper$armorStandTick(CallbackInfo ci) {
+        if ((Object) this instanceof net.minecraft.world.entity.decoration.ArmorStand stand && !stand.paper$canTick()) {
+            ci.cancel();
+        }
+    }
+
     @Inject(method = "shouldDiscardFriction", at = @At("HEAD"), cancellable = true)
     private void paper$frictionOverride(CallbackInfoReturnable<Boolean> cir) {
         if (this.paper$frictionState != TriState.NOT_SET) {

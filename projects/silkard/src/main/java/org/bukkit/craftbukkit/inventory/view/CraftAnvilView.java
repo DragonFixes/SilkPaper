@@ -52,12 +52,12 @@ public class CraftAnvilView extends CraftInventoryView<AnvilMenu, AnvilInventory
 
     @Override
     public boolean bypassesEnchantmentLevelRestriction() {
-        return this.container.bypassEnchantmentLevelRestriction;
+        return this.container.paper$bypassEnchantmentLevelRestriction();
     }
 
     @Override
     public void bypassEnchantmentLevelRestriction(final boolean bypassEnchantmentLevelRestriction) {
-        this.container.bypassEnchantmentLevelRestriction = bypassEnchantmentLevelRestriction;
+        this.container.paper$setBypassEnchantmentLevelRestriction(bypassEnchantmentLevelRestriction);
     }
 
     public void updateFromLegacy(CraftInventoryAnvil legacy) {
@@ -77,22 +77,22 @@ public class CraftAnvilView extends CraftInventoryView<AnvilMenu, AnvilInventory
     // Purpur start - Anvil API
     @Override
     public boolean canBypassCost() {
-        return this.container.bypassCost;
+        return this.container.paper$bypassCost();
     }
 
     @Override
     public void setBypassCost(boolean bypassCost) {
-        this.container.bypassCost = bypassCost;
+        this.container.paper$setBypassCost(bypassCost);
     }
 
     @Override
     public boolean canDoUnsafeEnchants() {
-        return this.container.canDoUnsafeEnchants;
+        return this.container.paper$canDoUnsafeEnchants();
     }
 
     @Override
     public void setDoUnsafeEnchants(boolean canDoUnsafeEnchants) {
-        this.container.canDoUnsafeEnchants = canDoUnsafeEnchants;
+        this.container.paper$setCanDoUnsafeEnchants(canDoUnsafeEnchants);
     }
     // Purpur end - Anvil API
 }

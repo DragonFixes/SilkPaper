@@ -279,4 +279,9 @@ public final class CraftEquippableComponent implements EquippableComponent {
     public String toString() {
         return "CraftEquippableComponent{component" + this.handle + '}';
     }
+
+    @Override
+    public boolean isCanBeSheared() {
+        return this.canBeSheared();
+    }
 }

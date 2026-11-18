@@ -42,6 +42,7 @@ public abstract class CraftThrownPotion extends CraftThrowableProjectile impleme
 
     @Override
     public void splash() {
-        this.getHandle().splash(null);
+        final net.minecraft.world.entity.projectile.throwableitemprojectile.AbstractThrownPotion potion = this.getHandle();
+        potion.onHit(net.minecraft.world.phys.BlockHitResult.miss(potion.position(), net.minecraft.core.Direction.DOWN, potion.blockPosition()));
     }
 }

@@ -216,7 +216,7 @@ public final class CraftItemStack extends ItemStack {
             this.handle = new net.minecraft.world.item.ItemStack(CraftItemType.bukkitToMinecraft(type), 1);
         } else {
             final Material oldType = CraftMagicNumbers.getMaterial(this.handle.getItem()); // Paper
-            this.handle.setItem(CraftItemType.bukkitToMinecraft(type));
+            this.handle.setItem(CraftItemType.bukkitToMinecraft(type).builtInRegistryHolder());
             if (this.hasItemMeta()) {
                 // This will create the appropriate item meta, which will contain all the data we intend to keep
                 this.adjustTagForItemMeta(oldType); // Paper
@@ -292,7 +292,7 @@ public final class CraftItemStack extends ItemStack {
 
         EnchantmentHelper.updateEnchantments(this.handle, mutable -> { // data component api doesn't really support mutable things once already set yet
             mutable.set(CraftEnchantment.bukkitToMinecraftHolder(enchant), level);
-        }, true);
+        });
     }
 
     @Override
@@ -577,7 +577,7 @@ public final class CraftItemStack extends ItemStack {
         final CustomData customData = this.handle.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
         // getUnsafe is OK here because we are only ever *reading* the data so immutability is preserved
         //noinspection deprecation
-        return customData.getUnsafe().getCompound(PDC_CUSTOM_DATA_KEY).orElse(null); // Leaf - Create tag instance for pdc view only when necessary
+        return com.mohistmc.silkard.paper.core.PaperItemData.unsafeTag(customData).getCompound(PDC_CUSTOM_DATA_KEY).orElse(null); // Leaf - Create tag instance for pdc view only when necessary
     }
 
     private static final CraftPersistentDataTypeRegistry REGISTRY = new CraftPersistentDataTypeRegistry();
@@ -619,14 +619,14 @@ public final class CraftItemStack extends ItemStack {
         final CraftPersistentDataContainer container = new CraftPersistentDataContainer(REGISTRY);
         CustomData customData = this.handle.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
         //noinspection deprecation // we copy only the pdc tag
-        final CompoundTag pdcTag = customData.getUnsafe().getCompoundOrEmpty(PDC_CUSTOM_DATA_KEY).copy();
+        final CompoundTag pdcTag = com.mohistmc.silkard.paper.core.PaperItemData.unsafeTag(customData).getCompoundOrEmpty(PDC_CUSTOM_DATA_KEY).copy();
         container.putAll(pdcTag);
         consumer.accept(container);
 
         final CompoundTag newPdcTag = container.toTagCompound();
         if (!newPdcTag.isEmpty()) {
             customData = customData.update(tag -> tag.put(PDC_CUSTOM_DATA_KEY, newPdcTag));
-        } else if (customData.contains(PDC_CUSTOM_DATA_KEY)) {
+        } else if (com.mohistmc.silkard.paper.core.PaperItemData.unsafeTag(customData).contains(PDC_CUSTOM_DATA_KEY)) {
             customData = customData.update(tag -> tag.remove(PDC_CUSTOM_DATA_KEY));
         }
 

@@ -1,7 +1,5 @@
 package org.bukkit.craftbukkit.inventory;
 
-import com.mohistmc.silkard.bukkit.BukkitUtils;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.DyeRecipe;
@@ -25,16 +23,14 @@ public class CraftDyeRecipe extends DyeRecipe implements CraftRecipe {
     }
 
     @Override
-    public void addToCraftingManager() {
-        BukkitUtils.getServer().getRecipeManager().addRecipe(
-                new RecipeHolder<>(CraftRecipe.toMinecraft(this.getKey()),
-                        new net.minecraft.world.item.crafting.DyeRecipe(getCommon(),
-                                CraftRecipe.getBook(this),
-                                toNMS(this.getInput(), true),
-                                toNMS(this.getMaterial(), true),
-                                CraftItemStack.asNMSTemplate(this.getResult())
-                        )
-                )
-        );
+    public RecipeHolder<?> toMinecraftRecipe() {
+        return new RecipeHolder<>(org.bukkit.craftbukkit.util.CraftNamespacedKey.toResourceKey(net.minecraft.core.registries.Registries.RECIPE, this.getKey()),
+            new net.minecraft.world.item.crafting.DyeRecipe(
+                new net.minecraft.world.item.crafting.Recipe.CommonInfo(true),
+                new net.minecraft.world.item.crafting.CraftingRecipe.CraftingBookInfo(CraftRecipe.getCategory(this.getCategory()), this.getGroup()),
+                CraftRecipe.toIngredient(this.getInput(), true),
+                CraftRecipe.toIngredient(this.getMaterial(), true),
+                CraftItemStack.asTemplate(this.getResult())
+            ));
     }
 }

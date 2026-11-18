@@ -2,7 +2,6 @@ package io.papermc.paper.connection;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.logging.LogUtils;
-import com.mohistmc.silkard.paper.paper.LoginResult;
 import io.papermc.paper.adventure.PaperAdventure;
 import io.papermc.paper.util.StackWalkerUtil;
 import java.net.InetSocketAddress;
@@ -47,7 +46,7 @@ public class HorriblePlayerLoginEventHack {
         return true;
     }
 
-    public static @Nullable Component execute(final Connection connection, MinecraftServer server, GameProfile profile, LoginResult result) {
+    public static @Nullable Component execute(final Connection connection, MinecraftServer server, GameProfile profile, com.mohistmc.silkard.paper.server.LoginResult result) {
         if (PlayerLoginEvent.getHandlerList().getRegisteredListeners().length == 0) {
             return result.message();
         }

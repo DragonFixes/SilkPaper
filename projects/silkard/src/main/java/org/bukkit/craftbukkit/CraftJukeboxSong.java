@@ -13,6 +13,12 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public class CraftJukeboxSong extends HolderableBase<net.minecraft.world.item.JukeboxSong> implements JukeboxSong {
 
+    // Paper's Holderable and the Spigot-compat RegistryAware both default getKeyOrNull; Paper's wins.
+    @Override
+    public org.bukkit.NamespacedKey getKeyOrNull() {
+        return this.getHolder().unwrapKey().map(org.bukkit.craftbukkit.util.CraftNamespacedKey::fromResourceKey).orElse(null);
+    }
+
     public static JukeboxSong minecraftHolderToBukkit(Holder<net.minecraft.world.item.JukeboxSong> minecraft) {
         return CraftRegistry.minecraftHolderToBukkit(minecraft, Registries.JUKEBOX_SONG);
     }

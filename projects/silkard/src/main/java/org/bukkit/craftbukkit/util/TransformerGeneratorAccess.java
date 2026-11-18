@@ -72,7 +72,7 @@ public class TransformerGeneratorAccess extends DelegatedGeneratorAccess {
         }
         BlockEntity tileEntity = getBlockEntity(position);
         if (tileEntity != null && craftBlockState instanceof CraftBlockEntityState<?> craftEntityState) {
-            tileEntity.loadWithComponents(craftEntityState.getSnapshotInput());
+            tileEntity.loadWithComponents(net.minecraft.world.level.storage.TagValueInput.create(net.minecraft.util.ProblemReporter.DISCARDING, craftEntityState.getRegistryAccess(), craftEntityState.getSnapshotNBT()));
         }
         return result;
     }

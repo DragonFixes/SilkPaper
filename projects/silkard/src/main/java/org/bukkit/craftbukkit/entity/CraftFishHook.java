@@ -229,7 +229,7 @@ public class CraftFishHook extends CraftProjectile implements FishHook {
     @Override
     public void resetFishingState() {
         final FishingHook hook = this.getHandle();
-        hook.resetTimeUntilLured();
+        hook.timeUntilLured = 0;
         hook.timeUntilHooked = 0; // Reset time until hooked, will be repopulated once lured time is ticked down.
     }
 
@@ -244,6 +244,6 @@ public class CraftFishHook extends CraftProjectile implements FishHook {
         final ItemStack itemInHand = playerOwner.getItemInHand(hand);
         Preconditions.checkState(itemInHand.is(Items.FISHING_ROD), "Item in slot is not a FISHING_ROD");
 
-        return fishingHook.retrieve(itemInHand, hand);
+        return fishingHook.retrieve(itemInHand); // TODO Silkard - PlayerFishEvent does not receive the hand used
     }
 }

@@ -90,7 +90,7 @@ public class CustomChunkGenerator extends InternalChunkGenerator {
         public void setBiome(int x, int y, int z, Biome biome) {
             Holder<net.minecraft.world.level.biome.Biome> b = CraftBiome.bukkitToMinecraftHolder(biome);
             Preconditions.checkArgument(b != null, "Cannot set the biome to %s", biome);
-            this.chunk.setNoiseBiome(QuartPos.fromBlock(x), QuartPos.fromBlock(y), QuartPos.fromBlock(z), b);
+            this.chunk.setBiome(QuartPos.fromBlock(x), QuartPos.fromBlock(y), QuartPos.fromBlock(z), b);
         }
     }
 
@@ -213,7 +213,7 @@ public class CustomChunkGenerator extends InternalChunkGenerator {
             for (int biomeX = 0; biomeX < 4; biomeX++) {
                 for (int biomeY = 0; biomeY < 4; biomeY++) {
                     for (int biomeZ = 0; biomeZ < 4; biomeZ++) {
-                        section.setNoiseBiome(biomeX, biomeY, biomeZ, oldSection.getNoiseBiome(biomeX, biomeY, biomeZ));
+                        section.setBiome(biomeX, biomeY, biomeZ, oldSection.getNoiseBiome(biomeX, biomeY, biomeZ));
                     }
                 }
             }
@@ -271,10 +271,8 @@ public class CustomChunkGenerator extends InternalChunkGenerator {
         final @Nullable WorldGenRegion carverBiomeRegion,
         final Set<Holder<net.minecraft.world.level.biome.Biome>> possibleBiomes
     ) {
-        if (this.delegate instanceof NoiseBasedChunkGenerator noiseBasedChunkGenerator) {
-            return noiseBasedChunkGenerator.buildTerrain(chunk, blender, randomState, structureManager, biomeManager, carverBiomeRegion, possibleBiomes, this);
-        }
-
+        // TODO Silkard - vanilla NoiseBasedChunkGenerator cannot consult the plugin generator per
+        // surface/bedrock/cave step, so noise generation follows the general shouldGenerateNoise path
         CompletableFuture<ChunkAccess> future = null;
         if (this.shouldGenerateNoise(chunk)) {
             future = this.delegate.buildTerrain(chunk, blender, randomState, structureManager, biomeManager, carverBiomeRegion, possibleBiomes);
@@ -287,7 +285,7 @@ public class CustomChunkGenerator extends InternalChunkGenerator {
             return c;
         };
 
-        return future == null ? CompletableFuture.supplyAsync(() -> work.apply(chunk), io.papermc.paper.FeatureHooks.getWorldgenExecutor()) : future.thenApply(work); // Paper - chunk system
+        return future == null ? CompletableFuture.supplyAsync(() -> work.apply(chunk), com.mohistmc.silkard.paper.server.FeatureHooks.getWorldgenExecutor()) : future.thenApply(work); // Paper - chunk system
     }
 
     public boolean shouldGenerateNoise(ChunkAccess chunk) {
@@ -332,12 +330,6 @@ public class CustomChunkGenerator extends InternalChunkGenerator {
         return this.delegate.getMobsAt(level, structureManager, mobCategory, pos);
     }
 
-    // Leaf start - optimize mob spawning
-    @Override
-    public WeightedList<MobSpawnSettings.SpawnerData> getMobsAtChunk(Level level, StructureManager accessor, MobCategory group, BlockPos pos, ChunkAccess chunk) {
-        return this.delegate.getMobsAtChunk(level, accessor, group, pos, chunk);
-    }
-    // Leaf end - optimize mob spawning
 
     @Override
     public void applyBiomeDecoration(WorldGenLevel level, ChunkAccess chunk, StructureManager structureManager) {

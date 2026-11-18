@@ -54,8 +54,9 @@ public interface CraftRecipe extends Recipe {
         } else if (bukkit instanceof final RecipeChoice.ItemTypeChoice itemTypeChoice) {
             stack = Ingredient.of(PaperRegistrySets.convertToNms(Registries.ITEM, Conversions.global().lookup(), itemTypeChoice.itemTypes()));
         } else if (bukkit instanceof final RecipeChoice.PredicateChoice predicateChoice) {
-            stack = Ingredient.ofStacks(Collections.singletonList(CraftItemStack.asNMSCopy(predicateChoice.getItemStack())));
-            stack.stackPredicate = nmsStack -> predicateChoice.test(CraftItemStack.asBukkitCopy(nmsStack));
+            final net.minecraft.world.item.ItemStack example = CraftItemStack.asNMSCopy(predicateChoice.getItemStack());
+            stack = Ingredient.of(example.getItem());
+            stack.paper$setStackPredicate(nmsStack -> predicateChoice.test(CraftItemStack.asBukkitCopy(nmsStack)), example);
         } else if (bukkit instanceof RecipeChoice.MaterialChoice) {
             stack = Ingredient.of(((RecipeChoice.MaterialChoice) bukkit).getChoices().stream().map(CraftItemType::bukkitToMinecraft));
         } else if (bukkit instanceof RecipeChoice.ExactChoice) {
@@ -87,9 +88,10 @@ public interface CraftRecipe extends Recipe {
             return RecipeChoice.empty(); // Paper - null breaks API contracts
         }
 
-        if (ingredient.stackPredicate != null) {
-            net.minecraft.world.item.ItemStack stack = ingredient.itemStacks().iterator().next();
-            Predicate<org.bukkit.inventory.ItemStack> predicate = bukkitStack -> ingredient.stackPredicate.test(CraftItemStack.asNMSCopy(bukkitStack));
+        final java.util.function.Predicate<net.minecraft.world.item.ItemStack> stackPredicate = ingredient.paper$stackPredicate();
+        if (stackPredicate != null) {
+            net.minecraft.world.item.ItemStack stack = ingredient.paper$predicateExample();
+            Predicate<org.bukkit.inventory.ItemStack> predicate = bukkitStack -> stackPredicate.test(CraftItemStack.asNMSCopy(bukkitStack));
             return RecipeChoice.predicateChoice(predicate, CraftItemStack.asBukkitCopy(stack));
         }
 

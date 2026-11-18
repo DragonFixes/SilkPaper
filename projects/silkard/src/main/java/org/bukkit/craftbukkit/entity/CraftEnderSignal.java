@@ -36,7 +36,17 @@ public class CraftEnderSignal extends CraftEntity implements EnderSignal {
     public void setTargetLocation(Location location, boolean update) {
         // Paper end - Change EnderEye target without changing other things
         Preconditions.checkArgument(this.getWorld().equals(location.getWorld()), "Cannot target EnderSignal across worlds");
-        this.getHandle().signalTo(CraftLocation.toVec3(location), update); // Paper - Change EnderEye target without changing other things
+        if (update) {
+            this.getHandle().signalTo(CraftLocation.toVec3(location));
+        } else {
+            // Same clamping as signalTo, keeping life and drop chance unchanged.
+            final net.minecraft.world.phys.Vec3 target = CraftLocation.toVec3(location);
+            final net.minecraft.world.phys.Vec3 delta = target.subtract(this.getHandle().position());
+            final double horizontalDistance = delta.horizontalDistance();
+            this.getHandle().target = horizontalDistance > 12.0
+                ? this.getHandle().position().add(delta.x / horizontalDistance * 12.0, 8.0, delta.z / horizontalDistance * 12.0)
+                : target;
+        }
     }
 
     @Override

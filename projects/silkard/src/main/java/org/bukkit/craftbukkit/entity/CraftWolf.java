@@ -93,12 +93,12 @@ public class CraftWolf extends CraftTameableAnimal implements Wolf {
     // Purpur start - Configurable chance for wolves to spawn rabid
     @Override
     public boolean isRabid() {
-        return getHandle().isRabid();
+        return getHandle().paper$rabid();
     }
 
     @Override
     public void setRabid(boolean isRabid) {
-        getHandle().setRabid(isRabid);
+        getHandle().paper$setRabid(isRabid);
     }
     // Purpur end - Configurable chance for wolves to spawn rabid
 

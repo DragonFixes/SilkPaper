@@ -100,7 +100,7 @@ public class CraftCreeper extends CraftMonster implements Creeper {
     // Paper start
     @Override
     public void setIgnited(boolean ignited) {
-        getHandle().setIgnited(ignited);
+        getHandle().getEntityData().set(net.minecraft.world.entity.monster.Creeper.DATA_IS_IGNITED, ignited);
     }
 
     @Override

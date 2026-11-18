@@ -10,7 +10,9 @@
     "MixinPaperAbstractFurnaceBlockEntity",
     "MixinPaperBeehiveBlockEntity",
     "MixinPaperBeaconBlockEntity",
-    "MixinPaperBlockStateBase"
+    "MixinPaperBlockStateBase",
+    "MixinPaperServerTickTime",
+    "MixinPaperRaid"
   ],
   "injectors": {
     "defaultRequire": 1

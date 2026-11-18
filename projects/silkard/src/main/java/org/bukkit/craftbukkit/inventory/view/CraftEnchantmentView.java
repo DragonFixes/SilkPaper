@@ -28,7 +28,7 @@ public class CraftEnchantmentView extends CraftInventoryView<EnchantmentMenu, En
 
     @Override
     public void setEnchantmentSeed(int seed) {
-        this.container.setEnchantmentSeed(seed);
+        this.container.enchantmentSeed.set(seed);
     }
 
     @NotNull

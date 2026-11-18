@@ -16,12 +16,12 @@ public class CraftEndermite extends CraftMonster implements Endermite {
 
     @Override
     public boolean isPlayerSpawned() {
-        return getHandle().isPlayerSpawned(); // Purpur - Add back player spawned endermite API
+        return getHandle().paper$playerSpawned(); // Purpur - Add back player spawned endermite API
     }
 
     @Override
     public void setPlayerSpawned(boolean playerSpawned) {
-        getHandle().setPlayerSpawned(playerSpawned); // Purpur - Add back player spawned endermite API
+        getHandle().paper$setPlayerSpawned(playerSpawned); // Purpur - Add back player spawned endermite API
     }
 
     @Override

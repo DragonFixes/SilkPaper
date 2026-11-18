@@ -69,7 +69,7 @@ public class CraftEntitySnapshot implements EntitySnapshot {
         try (final ProblemReporter.ScopedCollector problemReporter = new ProblemReporter.ScopedCollector(
             () -> "EntitySnapshot#createEntity", LOGGER
         )) {
-            internal.load(TagValueInput.createGlobal(problemReporter, this.data));
+            internal.load(TagValueInput.create(problemReporter, CraftRegistry.getMinecraftRegistry(), this.data));
         }
 
         return internal;
@@ -87,7 +87,7 @@ public class CraftEntitySnapshot implements EntitySnapshot {
                 problemReporter,
                 CraftRegistry.getMinecraftRegistry()
             );
-            if (!entity.getHandle().saveAsPassenger(output, false, false, false)) {
+            if (!entity.getHandle().saveAsPassenger(output)) {
                 return null;
             }
 
@@ -108,7 +108,7 @@ public class CraftEntitySnapshot implements EntitySnapshot {
             () -> "create", LOGGER
         )) {
             EntityType type = net.minecraft.world.entity.EntityType.by(
-                TagValueInput.createGlobal(problemReporter, tag)
+                TagValueInput.create(problemReporter, CraftRegistry.getMinecraftRegistry(), tag)
             ).map(CraftEntityType::minecraftToBukkit).orElse(null);
             return CraftEntitySnapshot.create(tag, type);
         }

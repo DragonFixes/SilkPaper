@@ -27,6 +27,18 @@ public final class CraftRaid implements Raid {
     }
 
     @Override
+    public void stopRaid(boolean removeSpawnedRaiders) {
+        org.bukkit.craftbukkit.event.CraftEventFactory.callRaidStopEvent(this.level, this.handle, org.bukkit.event.raid.RaidStopEvent.Reason.PLUGIN);
+        this.handle.stop();
+
+        if (removeSpawnedRaiders) {
+            for (Raider raider : this.getRaiders()) {
+                raider.remove();
+            }
+        }
+    }
+
+    @Override
     public boolean isStarted() {
         return this.handle.isStarted();
     }
@@ -111,7 +123,7 @@ public final class CraftRaid implements Raid {
 
     @Override
     public int getId() {
-        return this.handle.idOrNegativeOne;
+        return this.level instanceof net.minecraft.server.level.ServerLevel serverLevel ? serverLevel.getRaids().getId(this.handle).orElse(-1) : -1;
     }
 
     @Override
@@ -121,7 +133,7 @@ public final class CraftRaid implements Raid {
 
     @Override
     public PersistentDataContainer getPersistentDataContainer() {
-        return this.handle.persistentDataContainer;
+        return this.handle.paper$persistentDataContainer();
     }
 
     @Override

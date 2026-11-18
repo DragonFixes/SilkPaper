@@ -82,7 +82,7 @@ public abstract class CraftAbstractHorse extends CraftAnimals implements Abstrac
     public void setOwner(AnimalTamer owner) {
         if (owner != null) {
             this.setTamed(true);
-            this.getHandle().setTarget(null, null);
+            this.getHandle().setTarget(null, null, false);
             this.setOwnerUUID(owner.getUniqueId());
         } else {
             this.setTamed(false);
@@ -148,11 +148,11 @@ public abstract class CraftAbstractHorse extends CraftAnimals implements Abstrac
 
     @Override
     public boolean isEating() {
-        return this.getHandle().isMouthOpen();
+        return this.getHandle().getFlag(net.minecraft.world.entity.animal.equine.AbstractHorse.FLAG_OPEN_MOUTH);
     }
 
     @Override
     public void setEating(boolean eating) {
-       this.getHandle().setMouthOpen(eating);
+       this.getHandle().setFlag(net.minecraft.world.entity.animal.equine.AbstractHorse.FLAG_OPEN_MOUTH, eating);
     }
 }

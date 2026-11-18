@@ -41,7 +41,7 @@ public class CraftMetaSpawnEgg extends CraftMetaItem implements SpawnEggMeta {
         super(patch, extraHandledComponents);
 
         getOrEmpty(patch, CraftMetaSpawnEgg.ENTITY_TAG).ifPresent((entityData) -> {
-            this.entityTag = entityData.copyTagWithEntityId();
+            this.entityTag = com.mohistmc.silkard.paper.core.PaperItemData.copyTagWithEntityId(entityData);
         });
     }
 
@@ -68,7 +68,7 @@ public class CraftMetaSpawnEgg extends CraftMetaItem implements SpawnEggMeta {
         super.applyToItem(tag);
 
         if (this.entityTag != null) {
-            tag.put(CraftMetaSpawnEgg.ENTITY_TAG, TypedEntityData.decodeEntity(this.entityTag));
+            tag.put(CraftMetaSpawnEgg.ENTITY_TAG, com.mohistmc.silkard.paper.core.PaperItemData.decodeEntity(this.entityTag));
         }
     }
 

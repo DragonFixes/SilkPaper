@@ -303,4 +303,14 @@ public final class CraftToolComponent implements ToolComponent {
             return "CraftToolRule{rule=" + this.handle + '}';
         }
     }
+
+    @Override
+    public boolean canDestroyBlocksInCreative() {
+        return this.handle.canDestroyBlocksInCreative();
+    }
+
+    @Override
+    public void setCanDestroyBlocksInCreative(boolean destroy) {
+        this.handle = new Tool(this.handle.rules(), this.handle.defaultMiningSpeed(), this.handle.damagePerBlock(), destroy);
+    }
 }

@@ -38,6 +38,6 @@ public class CraftWitch extends CraftRaider implements Witch, com.destroystokyo.
 
     public void setDrinkingPotion(ItemStack potion) {
         Preconditions.checkArgument(potion == null || potion.getType().isEmpty() || potion.getType() == Material.POTION, "must be potion, air, or null");
-        this.getHandle().setDrinkingPotion(CraftItemStack.asNMSCopy(potion));
+        com.mohistmc.silkard.paper.core.PaperEntities.setWitchDrinkingPotion(this.getHandle(), CraftItemStack.asNMSCopy(potion));
     }
 }

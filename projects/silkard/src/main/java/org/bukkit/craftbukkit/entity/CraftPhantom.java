@@ -30,17 +30,17 @@ public class CraftPhantom extends CraftMob implements Phantom, CraftEnemy {
 
     @Override
     public UUID getSpawningEntity() {
-        return this.getHandle().spawningEntity;
+        return this.getHandle().paper$spawningEntity();
     }
 
     @Override
     public boolean shouldBurnInDay() {
-        return this.getHandle().shouldBurnInDay(); // Purpur - API for any mob to burn daylight
+        return super.shouldBurnInDay(); // Purpur - API for any mob to burn daylight
     }
 
     @Override
     public void setShouldBurnInDay(boolean shouldBurnInDay) {
-        this.getHandle().setShouldBurnInDay(shouldBurnInDay); // Purpur - API for any mob to burn daylight
+        super.setShouldBurnInDay(shouldBurnInDay); // Purpur - API for any mob to burn daylight
     }
 
     @Override

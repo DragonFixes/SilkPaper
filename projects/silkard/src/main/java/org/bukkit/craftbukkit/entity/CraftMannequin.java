@@ -146,7 +146,8 @@ public class CraftMannequin extends CraftLivingEntity implements Mannequin {
 
     @Override
     public String getDescripion() {
-        return getDescription();
+        final net.kyori.adventure.text.Component description = getDescription();
+        return description == null ? null : net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection().serialize(description);
     }
 
     @Override

@@ -73,16 +73,17 @@ public class CraftEnderDragon extends CraftMob implements EnderDragon, CraftEnem
     // Paper start - Allow changing the EnderDragon podium
     @Override
     public org.bukkit.Location getPodium() {
-        return CraftLocation.toBukkit(this.getHandle().getPodium(), this.getWorld());
+        final net.minecraft.core.BlockPos podium = this.getHandle().paper$podium();
+        return CraftLocation.toBukkit(podium != null ? podium : this.getHandle().level().getHeightmapPos(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, net.minecraft.world.level.dimension.end.EnderDragonFight.getPodiumLocation(this.getHandle().getFightOrigin())), this.getWorld());
     }
 
     @Override
     public void setPodium(org.bukkit.Location location) {
         if (location == null) {
-            this.getHandle().setPodium(null);
+            this.getHandle().paper$setPodium(null);
         } else {
             Preconditions.checkArgument(location.getWorld() == null || location.getWorld().equals(getWorld()), "You cannot set a podium in a different world to where the dragon is");
-            this.getHandle().setPodium(CraftLocation.toBlockPos(location));
+            this.getHandle().paper$setPodium(CraftLocation.toBlockPos(location));
         }
     }
     // Paper end - Allow changing the EnderDragon podium

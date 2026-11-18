@@ -116,7 +116,7 @@ public class CraftVillager extends CraftAbstractVillager implements Villager {
     @Override
     public boolean addTrades(int amount) {
         Preconditions.checkArgument(amount > 0, "Number of trades unlocked must be positive");
-        return this.getHandle().updateTrades((ServerLevel) this.getHandle().level(), amount);
+        return com.mohistmc.silkard.paper.core.PaperVillagers.addTrades(this.getHandle(), (ServerLevel) this.getHandle().level(), amount);
     }
 
     @Override
@@ -211,17 +211,17 @@ public class CraftVillager extends CraftAbstractVillager implements Villager {
     public Reputation getReputation(UUID uniqueId) {
         GossipContainer.EntityGossips gossips = this.getHandle().getGossips().gossips.get(uniqueId);
         if (gossips == null) {
-            return new Reputation(new EnumMap<>(ReputationType.class));
+            return new Reputation();
         }
 
-        return gossips.asReputation();
+        return com.mohistmc.silkard.paper.core.PaperVillagers.asReputation(gossips);
     }
 
     @Override
     public Map<UUID, Reputation> getReputations() {
         return this.getHandle().getGossips().gossips.entrySet()
             .stream()
-            .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().asReputation()));
+            .collect(Collectors.toMap(Map.Entry::getKey, entry -> com.mohistmc.silkard.paper.core.PaperVillagers.asReputation(entry.getValue())));
     }
 
     @Override
@@ -229,7 +229,7 @@ public class CraftVillager extends CraftAbstractVillager implements Villager {
         GossipContainer.EntityGossips gossips = this.getHandle().getGossips().gossips.computeIfAbsent(
             uniqueId, _ -> new GossipContainer.EntityGossips()
         );
-        gossips.assignFromReputation(reputation);
+        com.mohistmc.silkard.paper.core.PaperVillagers.assignFromReputation(gossips, reputation);
     }
 
     @Override
@@ -257,7 +257,7 @@ public class CraftVillager extends CraftAbstractVillager implements Villager {
     // Purpur start - Lobotomize stuck villagers
     @Override
     public boolean isLobotomized() {
-        return getHandle().isLobotomized();
+        return false; // TODO Silkard - Purpur villager lobotomization is not ported
     }
     // Purpur end - Lobotomize stuck villagers
 

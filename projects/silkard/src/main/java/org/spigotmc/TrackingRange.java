@@ -35,16 +35,12 @@ public final class TrackingRange {
             return ((ServerLevel) entity.level()).getChunkSource().chunkMap.serverViewDistance << 4;
         }
 
-        switch (entity.activationType) {
-            case RAIDER:
-            case MONSTER:
-            case FLYING_MONSTER:
-                return config.monsterTrackingRange;
-            case WATER:
-            case VILLAGER:
-            case ANIMAL:
-                return config.animalTrackingRange;
-            case MISC:
+        // the categories of Spigot's activation types, which Silkard does not track per entity
+        if (entity instanceof net.minecraft.world.entity.monster.Enemy || entity instanceof net.minecraft.world.entity.raid.Raider) {
+            return config.monsterTrackingRange;
+        }
+        if (entity instanceof net.minecraft.world.entity.PathfinderMob || entity instanceof net.minecraft.world.entity.ambient.AmbientCreature) {
+            return config.animalTrackingRange;
         }
 
         if (entity instanceof ItemFrame || entity instanceof Painting || entity instanceof ItemEntity || entity instanceof ExperienceOrb) {

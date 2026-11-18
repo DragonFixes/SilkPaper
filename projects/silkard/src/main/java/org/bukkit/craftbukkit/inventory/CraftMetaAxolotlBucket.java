@@ -49,7 +49,7 @@ public class CraftMetaAxolotlBucket extends CraftMetaItem implements AxolotlBuck
         super(patch, extraHandledComponents);
 
         getOrEmpty(patch, CraftMetaAxolotlBucket.ENTITY_TAG).ifPresent((entityData) -> {
-            this.entityTag = entityData.copyTagWithEntityId();
+            this.entityTag = com.mohistmc.silkard.paper.core.PaperItemData.copyTagWithEntityId(entityData);
         });
         getOrEmpty(patch, CraftMetaAxolotlBucket.BUCKET_ENTITY_TAG).ifPresent((customData) -> {
             this.bucketEntityTag = customData.copyTag();
@@ -122,7 +122,7 @@ public class CraftMetaAxolotlBucket extends CraftMetaItem implements AxolotlBuck
         super.applyToItem(tag);
 
         if (this.entityTag != null) {
-            tag.put(CraftMetaAxolotlBucket.ENTITY_TAG, TypedEntityData.decodeEntity(this.entityTag));
+            tag.put(CraftMetaAxolotlBucket.ENTITY_TAG, com.mohistmc.silkard.paper.core.PaperItemData.decodeEntity(this.entityTag));
         }
 
         if (this.bucketEntityTag != null) {

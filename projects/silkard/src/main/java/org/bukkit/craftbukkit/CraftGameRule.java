@@ -13,6 +13,12 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public class CraftGameRule<T> extends GameRule<T> implements PaperFeatureDependent<net.minecraft.world.level.gamerules.GameRule<T>> {
 
+    // Paper's Holderable and the Spigot-compat RegistryAware both default getKeyOrNull; Paper's wins.
+    @Override
+    public org.bukkit.NamespacedKey getKeyOrNull() {
+        return this.getHolder().unwrapKey().map(org.bukkit.craftbukkit.util.CraftNamespacedKey::fromResourceKey).orElse(null);
+    }
+
     public static final BiFunction<String, DataResult.Error<?>, IllegalArgumentException> INVALID_VALUE = (value, error) -> {
         return new IllegalArgumentException("Invalid value: %s (%s)".formatted(value, error.message()));
     };
