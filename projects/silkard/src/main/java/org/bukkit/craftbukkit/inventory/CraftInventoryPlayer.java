@@ -258,7 +258,13 @@ public class CraftInventoryPlayer extends CraftInventory implements org.bukkit.i
 
     @Override
     public ItemStack[] getExtraContents() {
-        return this.asCraftMirror(this.getInventory().getExtraContent());
+        final net.minecraft.world.entity.player.Inventory inventory = this.getInventory();
+        // Offhand, body and saddle follow the armor slots.
+        return this.asCraftMirror(java.util.List.of(
+            inventory.getItem(net.minecraft.world.entity.player.Inventory.SLOT_OFFHAND),
+            inventory.getItem(net.minecraft.world.entity.player.Inventory.SLOT_OFFHAND + 1),
+            inventory.getItem(net.minecraft.world.entity.player.Inventory.SLOT_OFFHAND + 2)
+        ));
     }
 
     @Override

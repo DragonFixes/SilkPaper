@@ -368,7 +368,7 @@ public final class CraftItemFactory implements ItemFactory {
         Preconditions.checkArgument(mapIcon != null, "mapIcon cannot be null");
 
         ServerLevel worldServer = ((CraftWorld) world).getHandle();
-        BlockPos structurePosition = CraftLocation.toBlockPosition(structureLocation);
+        BlockPos structurePosition = CraftLocation.toBlockPos(structureLocation);
 
         // Create map with trackPlayer = true, unlimitedTracking = true
         net.minecraft.world.item.ItemStack stack = MapItem.create(worldServer, structurePosition.getX(), structurePosition.getZ(), MapView.Scale.NORMAL.getValue(), true, true);

@@ -72,7 +72,7 @@ public class CraftDamageSource implements DamageSource {
 
     @Override
     public Pointers getDamageContext() {
-        return this.getHandle().getDamageContext();
+        return this.getHandle().paper$damageContext();
     }
 
     @Override
@@ -119,6 +119,10 @@ public class CraftDamageSource implements DamageSource {
 
         Vec3 sourcePos = (damageLocation == null) ? null : CraftLocation.toVec3(damageLocation);
 
-        return new CraftDamageSource(new net.minecraft.world.damagesource.DamageSource(holderDamageType, nmsDirectEntity, nmsCausingEntity, sourcePos, damageContext));
+        final net.minecraft.world.damagesource.DamageSource source = new net.minecraft.world.damagesource.DamageSource(holderDamageType, nmsDirectEntity, nmsCausingEntity, sourcePos);
+        if (damageContext != null) {
+            source.paper$setDamageContext(damageContext);
+        }
+        return new CraftDamageSource(source);
     }
 }

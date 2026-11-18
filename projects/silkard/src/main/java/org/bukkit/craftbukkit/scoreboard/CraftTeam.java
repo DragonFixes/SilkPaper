@@ -256,7 +256,9 @@ final class CraftTeam extends CraftScoreboardComponent implements Team {
         Preconditions.checkArgument(entries != null, "Entries cannot be null");
         this.checkState();
 
-        ((net.minecraft.server.ServerScoreboard) this.getScoreboard().getHandle()).addPlayersToTeam(entries, this.team);
+        for (String entry : entries) {
+            this.getScoreboard().getHandle().addPlayerToTeam(entry, this.team);
+        }
     }
 
     @Override
@@ -291,7 +293,11 @@ final class CraftTeam extends CraftScoreboardComponent implements Team {
 
         for (String entry : entries) {
             if (this.team.getPlayers().contains(entry)) {
-                ((net.minecraft.server.ServerScoreboard) this.getScoreboard().getHandle()).removePlayersFromTeam(entries, this.team);
+                for (String member : entries) {
+                    if (this.team.getPlayers().contains(member)) {
+                        this.getScoreboard().getHandle().removePlayerFromTeam(member, this.team);
+                    }
+                }
                 return true;
             }
         }

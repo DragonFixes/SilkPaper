@@ -41,7 +41,7 @@ public class CraftMetaArmorStand extends CraftMetaItem implements com.destroysto
         super(patch, extraHandledComponents);
 
         getOrEmpty(patch, CraftMetaArmorStand.ENTITY_TAG).ifPresent((entityData) -> {
-            this.entityTag = entityData.copyTagWithEntityId();
+            this.entityTag = com.mohistmc.silkard.paper.core.PaperItemData.copyTagWithEntityId(entityData);
         });
     }
 
@@ -99,7 +99,7 @@ public class CraftMetaArmorStand extends CraftMetaItem implements com.destroysto
         super.applyToItem(tag);
 
         if (this.entityTag != null) {
-            tag.put(CraftMetaArmorStand.ENTITY_TAG, TypedEntityData.decodeEntity(this.entityTag));
+            tag.put(CraftMetaArmorStand.ENTITY_TAG, com.mohistmc.silkard.paper.core.PaperItemData.decodeEntity(this.entityTag));
         }
     }
 

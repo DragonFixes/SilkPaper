@@ -124,12 +124,12 @@ public class CraftMerchantRecipe extends MerchantRecipe {
     // Paper start
     @Override
     public boolean shouldIgnoreDiscounts() {
-        return this.handle.ignoreDiscounts;
+        return this.handle.paper$ignoreDiscounts();
     }
 
     @Override
     public void setIgnoreDiscounts(boolean ignoreDiscounts) {
-        this.handle.ignoreDiscounts = ignoreDiscounts;
+        this.handle.paper$setIgnoreDiscounts(ignoreDiscounts);
     }
     // Paper end
 

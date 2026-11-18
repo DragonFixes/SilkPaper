@@ -30,6 +30,11 @@ public abstract class CraftAbstractInventoryViewBuilder<V extends InventoryView>
         return this;
     }
 
+    @Override
+    public InventoryViewBuilder<V> title(final String title) {
+        return this.title(net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection().deserialize(title));
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public V build(final HumanEntity player) {

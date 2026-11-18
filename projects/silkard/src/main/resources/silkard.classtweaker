@@ -1152,4 +1152,12 @@ accessible field net/minecraft/world/entity/projectile/arrow/ThrownTrident ID_LO
 accessible method net/minecraft/world/entity/projectile/throwableitemprojectile/AbstractThrownPotion onHit (Lnet/minecraft/world/phys/HitResult;)V
 accessible field net/minecraft/world/entity/monster/Witch SPEED_MODIFIER_DRINKING Lnet/minecraft/world/entity/ai/attributes/AttributeModifier;
 accessible field net/minecraft/world/entity/monster/Witch SPEED_MODIFIER_DRINKING_ID Lnet/minecraft/resources/Identifier;
+transitive-inject-interface	net/minecraft/world/item/crafting/Ingredient	com/mohistmc/silkard/injected/paper/core/PaperItemExtras$Ingredient
+transitive-inject-interface	net/minecraft/world/item/trading/MerchantOffer	com/mohistmc/silkard/injected/paper/core/PaperItemExtras$MerchantOffer
+transitive-inject-interface	net/minecraft/world/inventory/AnvilMenu	com/mohistmc/silkard/injected/paper/core/PaperItemExtras$AnvilMenu
+transitive-inject-interface	net/minecraft/world/damagesource/DamageSource	com/mohistmc/silkard/injected/paper/core/PaperItemExtras$DamageSource
+accessible field net/minecraft/world/item/component/CustomData tag Lnet/minecraft/nbt/CompoundTag;
+accessible method net/minecraft/world/entity/ai/attributes/AttributeMap onAttributeModified (Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;)V
+accessible method net/minecraft/world/level/storage/loot/LootContext <init> (Lnet/minecraft/world/level/storage/loot/LootParams;Lnet/minecraft/util/RandomSource;Lnet/minecraft/core/HolderGetter$Provider;)V
+accessible field net/minecraft/world/inventory/EnchantmentMenu enchantmentSeed Lnet/minecraft/world/inventory/DataSlot;
 # Silkard paper-core end

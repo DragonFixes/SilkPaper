@@ -58,7 +58,7 @@ public class CraftMetaTropicalFishBucket extends CraftMetaItem implements Tropic
         super(patch, extraHandledComponents);
 
         getOrEmpty(patch, CraftMetaTropicalFishBucket.ENTITY_TAG).ifPresent((entityData) -> {
-            this.entityTag = entityData.copyTagWithEntityId();
+            this.entityTag = com.mohistmc.silkard.paper.core.PaperItemData.copyTagWithEntityId(entityData);
         });
         getOrEmpty(patch, CraftMetaTropicalFishBucket.BUCKET_ENTITY_TAG).ifPresent((customData) -> {
             this.bucketEntityTag = customData.copyTag();
@@ -156,7 +156,7 @@ public class CraftMetaTropicalFishBucket extends CraftMetaItem implements Tropic
         super.applyToItem(tag);
 
         if (this.entityTag != null) {
-            tag.put(CraftMetaTropicalFishBucket.ENTITY_TAG, TypedEntityData.decodeEntity(this.entityTag));
+            tag.put(CraftMetaTropicalFishBucket.ENTITY_TAG, com.mohistmc.silkard.paper.core.PaperItemData.decodeEntity(this.entityTag));
         }
         if (this.bucketEntityTag != null) {
             tag.put(CraftMetaTropicalFishBucket.BUCKET_ENTITY_TAG, CustomData.of(this.bucketEntityTag));

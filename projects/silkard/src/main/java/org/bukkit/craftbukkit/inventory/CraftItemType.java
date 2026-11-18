@@ -197,9 +197,9 @@ public class CraftItemType<M extends ItemMeta> extends HolderableBase<Item> impl
             }
 
             Holder.Reference<ContextIntProvider> provider = com.mohistmc.silkard.bukkit.BukkitUtils.getServer().reloadableRegistries().lookup().getOrThrow(burnTime.key());
-            LootContext fakeContext = new LootContext.Builder(new LootParams.Builder(null).create(LootContextParamSets.EMPTY))
-                .withOptionalRandomSeed(42L)
-                .createWithoutLevel();
+            LootContext fakeContext = com.mohistmc.silkard.paper.core.PaperItemData.contextWithoutLevel(
+                new LootParams.Builder(null).create(LootContextParamSets.EMPTY), 42L,
+                com.mohistmc.silkard.bukkit.BukkitUtils.getServer().reloadableRegistries().lookup());
             return provider.value().getInt(fakeContext);
         }
         return 0;

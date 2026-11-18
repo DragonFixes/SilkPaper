@@ -31,6 +31,11 @@ public class CraftMerchantInventoryViewBuilder<V extends InventoryView> extends 
     }
 
     @Override
+    public MerchantInventoryViewBuilder<V> title(final String title) {
+        return (MerchantInventoryViewBuilder<V>) super.title(title);
+    }
+
+    @Override
     public MerchantInventoryViewBuilder<V> merchant(final Merchant merchant) {
         this.merchant = ((CraftMerchant) merchant).getMerchant();
         return this;

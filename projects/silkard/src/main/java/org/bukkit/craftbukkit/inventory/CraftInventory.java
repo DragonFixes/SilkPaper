@@ -587,7 +587,7 @@ public class CraftInventory implements Inventory {
     // Paper start - getHolder without snapshot
     @Override
     public InventoryHolder getHolder(boolean useSnapshot) {
-        return this.inventory instanceof net.minecraft.world.level.block.entity.BlockEntity blockEntity ? blockEntity.getOwner(useSnapshot) : getHolder();
+        return this.inventory instanceof net.minecraft.world.level.block.entity.BlockEntity blockEntity ? blockEntity.silkard_getOwner() : getHolder();
     }
     // Paper end
 

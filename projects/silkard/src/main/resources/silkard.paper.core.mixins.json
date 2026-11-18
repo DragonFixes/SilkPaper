@@ -28,7 +28,11 @@
     "MixinPaperEntityFlags$WitherBoss",
     "MixinPaperEntityFlags$EnderDragon",
     "MixinPaperEntityFlags$CubeMob",
-    "MixinPaperEntityFlags$Minecart"
+    "MixinPaperEntityFlags$Minecart",
+    "MixinPaperItemExtras$Ingredient",
+    "MixinPaperItemExtras$MerchantOffer",
+    "MixinPaperItemExtras$AnvilMenu",
+    "MixinPaperItemExtras$DamageSource"
   ],
   "injectors": {
     "defaultRequire": 1
