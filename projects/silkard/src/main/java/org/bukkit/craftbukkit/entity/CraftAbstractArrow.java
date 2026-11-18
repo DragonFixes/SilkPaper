@@ -182,10 +182,11 @@ public abstract class CraftAbstractArrow extends AbstractProjectile implements A
     // Paper start - Fix PickupStatus getting reset - Copy of CraftProjectile#setShooter, calling setOwner(Entity,boolean)
     @Override
     public void setShooter(org.bukkit.projectiles.ProjectileSource shooter, boolean resetPickupStatus) {
-        if (shooter instanceof CraftEntity craftEntity) {
-            this.getHandle().setOwner(craftEntity.getHandle(), resetPickupStatus);
-        } else {
-            this.getHandle().setOwner(null, resetPickupStatus);
+        // Vanilla setOwner derives the pickup status from the new owner; keep the current one unless a reset is requested.
+        final net.minecraft.world.entity.projectile.arrow.AbstractArrow.Pickup pickup = this.getHandle().pickup;
+        this.getHandle().setOwner(shooter instanceof CraftEntity craftEntity ? craftEntity.getHandle() : null);
+        if (!resetPickupStatus) {
+            this.getHandle().pickup = pickup;
         }
         this.getHandle().silkard_projectileSource(shooter);
     }

@@ -304,7 +304,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
     @Override
     public void recalculatePermissions() {
         this.perm.recalculatePermissions();
-        getHandle().canPortalInstant = hasPermission("purpur.portal.instant"); // Purpur - Add portal permission bypass
+        // TODO(silkard-paper): Purpur's purpur.portal.instant bypass needs Purpur's portal patches.
     }
 
     @Override
@@ -396,7 +396,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         if (result.getFirst() != null) adventure$title = result.getFirst(); // Paper - Add titleOverride to InventoryOpenEvent
 
         //player.connection.send(new ClientboundOpenScreenPacket(container.containerId, windowType, CraftChatMessage.fromString(title)[0])); // Paper - comment
-        if (!player.isImmobile()) player.connection.send(new ClientboundOpenScreenPacket(container.containerId, windowType, io.papermc.paper.adventure.PaperAdventure.asVanilla(adventure$title))); // Paper - Prevent opening inventories when frozen
+        if (!player.silkard$isImmobile()) player.connection.send(new ClientboundOpenScreenPacket(container.containerId, windowType, io.papermc.paper.adventure.PaperAdventure.asVanilla(adventure$title))); // Paper - Prevent opening inventories when frozen
         player.containerMenu = container;
         player.initMenu(container);
     }
@@ -439,7 +439,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         if (force) {
             Component title = menuProvider == null ? Component.translatable("container.enchant") : menuProvider.getDisplayName();
             menuProvider = new net.minecraft.world.SimpleMenuProvider((syncId, inventory, player) -> {
-                return new net.minecraft.world.inventory.EnchantmentMenu(syncId, inventory, net.minecraft.world.inventory.ContainerLevelAccess.create(this.getHandle().level(), pos), false);
+                return new net.minecraft.world.inventory.EnchantmentMenu(syncId, inventory, net.minecraft.world.inventory.ContainerLevelAccess.create(this.getHandle().level(), pos));
             }, title);
         } else if (menuProvider == null) {
             return null;
@@ -461,7 +461,8 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         if (((ServerPlayer) this.getHandle()).connection == null) return;
         if (this.getHandle().containerMenu != this.getHandle().inventoryMenu) {
             // fire INVENTORY_CLOSE if one already open
-            ((ServerPlayer) this.getHandle()).connection.handleContainerClose(new ServerboundContainerClosePacket(this.getHandle().containerMenu.containerId), org.bukkit.event.inventory.InventoryCloseEvent.Reason.OPEN_NEW); // Paper - Inventory close reason
+            // TODO(silkard-paper): the close event reports Silkard's default reason, not OPEN_NEW.
+            ((ServerPlayer) this.getHandle()).connection.handleContainerClose(new ServerboundContainerClosePacket(this.getHandle().containerMenu.containerId));
         }
         ServerPlayer player = (ServerPlayer) this.getHandle();
         AbstractContainerMenu container;
@@ -492,7 +493,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         net.kyori.adventure.text.Component adventure$title = inventory.title(); // Paper
         if (adventure$title == null) adventure$title = net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection().deserialize(inventory.getTitle()); // Paper
         if (result.getFirst() != null) adventure$title = result.getFirst(); // Paper - Add titleOverride to InventoryOpenEvent
-        if (!player.isImmobile()) {
+        if (!player.silkard$isImmobile()) {
             if (container instanceof AbstractMountInventoryMenu mountMenu) {
                 player.connection.send(new ClientboundMountScreenOpenPacket(mountMenu.containerId, getMountInventoryColumns(mountMenu), mountMenu.mount.getId()));
             } else {
@@ -610,7 +611,12 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
 
     @Override
     public void closeInventory(org.bukkit.event.inventory.InventoryCloseEvent.Reason reason) {
-        this.getHandle().closeContainer(reason);
+        // TODO(silkard-paper): the close event reports Silkard's default reason, not the requested one.
+        if (this.getHandle() instanceof ServerPlayer serverPlayer) {
+            serverPlayer.closeContainer();
+        } else {
+            this.getHandle().containerMenu = this.getHandle().inventoryMenu;
+        }
     }
 
     @Override
@@ -671,12 +677,20 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         return this.getHandle().getCooldowns().isOnCooldown(CraftItemStack.asNMSCopy(item));
     }
 
+    // Silkard start - Spigot API compat
+    @Override
+    public boolean isModelPartShown(org.bukkit.entity.model.PlayerModelPart part) {
+        Preconditions.checkArgument(part != null, "part cannot be null");
+        return this.getHandle().isModelPartShown(net.minecraft.world.entity.player.PlayerModelPart.valueOf(part.name()));
+    }
+    // Silkard end - Spigot API compat
+
     @Override
     public int getCooldown(ItemStack item) {
         Preconditions.checkArgument(item != null, "Item cannot be null");
 
         Identifier cooldownGroup = this.getHandle().getCooldowns().getCooldownGroup(CraftItemStack.asNMSCopy(item));
-        return this.getHandle().getCooldowns().getRemainingCooldown(cooldownGroup);
+        return remainingCooldown(this.getHandle().getCooldowns(), cooldownGroup);
     }
 
     @Override
@@ -691,7 +705,12 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
     public int getCooldown(Key cooldownGroup) {
         Preconditions.checkArgument(cooldownGroup != null, "cooldownGroup cannot be null");
 
-        return this.getHandle().getCooldowns().getRemainingCooldown(PaperAdventure.asVanilla(cooldownGroup));
+        return remainingCooldown(this.getHandle().getCooldowns(), PaperAdventure.asVanilla(cooldownGroup));
+    }
+
+    private static int remainingCooldown(net.minecraft.world.item.ItemCooldowns cooldowns, Identifier group) {
+        final net.minecraft.world.item.ItemCooldowns.CooldownInstance cooldown = cooldowns.cooldowns.get(group);
+        return cooldown == null ? 0 : Math.max(0, cooldown.endTime() - cooldowns.tickCount);
     }
 
     @Override
@@ -782,10 +801,10 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
     @Override
     public boolean dropItem(boolean dropAll) {
         if (!(this.getHandle() instanceof ServerPlayer player)) return false;
-        boolean success = player.drop(dropAll);
-        if (!success) {
+        if (player.getInventory().getSelectedItem().isEmpty()) {
             return false;
         }
+        player.drop(dropAll);
 
         final net.minecraft.world.entity.player.Inventory inv = player.getInventory();
         final java.util.OptionalInt optionalSlot = player.containerMenu.findSlot(inv, inv.getSelectedSlot());
@@ -814,8 +833,38 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         final net.minecraft.world.item.ItemStack dropContent = nmsItemStack.split(amount);
 
         // This will return the itemstack back to its original amount in case events fail
-        final ItemEntity droppedEntity = this.getHandle().drop(dropContent, true, Prediction.PREDICTED, throwRandomly, true, entityOperation);
-        return droppedEntity == null ? null : (Item) droppedEntity.getBukkitEntity();
+        final ItemEntity droppedEntity = this.dropAndCall(dropContent, throwRandomly, true, entityOperation);
+        if (droppedEntity == null) {
+            nmsItemStack.grow(dropContent.getCount());
+            return null;
+        }
+        return (Item) droppedEntity.getBukkitEntity();
+    }
+
+    /**
+     * Drops a stack the way a player throws it. With {@code callEvent}, a cancelled
+     * PlayerDropItemEvent removes the dropped entity and returns {@code null}.
+     */
+    private @Nullable ItemEntity dropAndCall(final net.minecraft.world.item.ItemStack stack, final boolean throwRandomly, final boolean callEvent, final @Nullable Consumer<Item> entityOperation) {
+        if (!(this.getHandle() instanceof ServerPlayer player)) {
+            return null;
+        }
+        final ItemEntity droppedEntity = player.drop(stack, throwRandomly, Prediction.PREDICTED);
+        if (droppedEntity == null) {
+            return null;
+        }
+        final Item bukkitItem = (Item) droppedEntity.getBukkitEntity();
+        if (callEvent) {
+            final org.bukkit.event.player.PlayerDropItemEvent event = new org.bukkit.event.player.PlayerDropItemEvent((org.bukkit.entity.Player) this, bukkitItem);
+            if (!event.callEvent()) {
+                droppedEntity.discard();
+                return null;
+            }
+        }
+        if (entityOperation != null) {
+            entityOperation.accept(bukkitItem);
+        }
+        return droppedEntity;
     }
 
     @Override
@@ -828,7 +877,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         final net.minecraft.world.item.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
 
         // Do *not* call the event here, the item is not in the player inventory, they are not dropping it / do not need recovering logic (which would be a dupe).
-        final ItemEntity droppedEntity = this.getHandle().drop(nmsItemStack, true, Prediction.PREDICTED, throwRandomly, false, entityOperation);
+        final ItemEntity droppedEntity = this.dropAndCall(nmsItemStack, throwRandomly, false, entityOperation);
         return droppedEntity == null ? null : (Item) droppedEntity.getBukkitEntity();
     }
 
