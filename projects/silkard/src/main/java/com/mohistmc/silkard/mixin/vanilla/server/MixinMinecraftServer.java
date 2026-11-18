@@ -1051,6 +1051,7 @@ public abstract class MixinMinecraftServer extends net.minecraft.util.thread.Ree
     // (CB MinecraftServer.patch ctor hunk 的等价；silkard 经 MixinMain 槽位或 silkard$configure 供值)
     @Inject(method = "<init>", at = @At("TAIL"))
     private void silkard$bukkitServerInit(Thread serverThread, net.minecraft.world.level.storage.LevelStorageSource.LevelStorageAccess levelStorageSource, net.minecraft.server.packs.repository.PackRepository packRepository, net.minecraft.server.WorldStem worldStem, java.util.Optional<net.minecraft.world.level.gamerules.GameRules> gameRules, java.net.Proxy proxy, com.mojang.datafixers.DataFixer fixerUpper, net.minecraft.server.Services services, net.minecraft.server.level.progress.LevelLoadListener levelLoadListener, boolean propagatesCrashes, net.minecraft.server.notifications.NotificationManager notificationManager, CallbackInfo ci) {
+        BukkitUtils.setServer((MinecraftServer) (Object) this); // Paper - MinecraftServer.getServer()
         // CraftBukkit start
         this.options = MainHook.options(); // CraftBukkit - from Main capture
         this.worldLoader = MainHook.worldLoader(); // CraftBukkit - from Main capture
