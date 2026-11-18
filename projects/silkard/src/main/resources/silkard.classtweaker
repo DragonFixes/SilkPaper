@@ -1120,3 +1120,4 @@ accessible field net/minecraft/world/damagesource/CombatTracker combatEndTime I
 transitive-inject-interface	net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity	com/mohistmc/silkard/injected/paper/paper/PaperLootableHolderAccess
 transitive-inject-interface	net/minecraft/world/entity/vehicle/minecart/AbstractMinecartContainer	com/mohistmc/silkard/injected/paper/paper/PaperLootableHolderAccess
 transitive-inject-interface	net/minecraft/world/entity/vehicle/boat/AbstractChestBoat	com/mohistmc/silkard/injected/paper/paper/PaperLootableHolderAccess
+accessible method net/minecraft/server/dedicated/DedicatedServerProperties reload (Lnet/minecraft/core/RegistryAccess;Ljava/util/Properties;)Lnet/minecraft/server/dedicated/DedicatedServerProperties;

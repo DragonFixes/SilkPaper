@@ -96,8 +96,8 @@ public class Conversions {
     ) {
         final ResourceKey<? extends Registry<M>> resourceRegistryKey = PaperRegistries.registryToNms(registryKey);
         // Paper patches a value-copy lookup into RegistryOps; existing values are read from the bound holders instead.
-        return new PaperRegistryBuilderFactory<>(resourceRegistryKey, this, buildableMeta.builderFiller(), key -> this.lookup.lookup(resourceRegistryKey)
-            .flatMap(info -> info.getter().get(key))
+        return new PaperRegistryBuilderFactory<>(resourceRegistryKey, this, buildableMeta.builderFiller(), key -> this.lookup.<M>lookup(resourceRegistryKey)
+            .flatMap(getter -> getter.get(key))
             .filter(Holder::isBound)
             .map(Holder::value));
     }
