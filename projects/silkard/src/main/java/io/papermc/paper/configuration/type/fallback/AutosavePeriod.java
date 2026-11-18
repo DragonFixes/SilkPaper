@@ -30,7 +30,7 @@ public class AutosavePeriod extends FallbackValue.Int {
 
     @Override
     protected int fallback() {
-        return this.get(FallbackValue.MINECRAFT_SERVER).get().autosavePeriod;
+        return this.get(FallbackValue.MINECRAFT_SERVER).get().silkard_autosavePeriod();
     }
 
     public static AutosavePeriod def() {

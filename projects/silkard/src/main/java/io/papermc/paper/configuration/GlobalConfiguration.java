@@ -314,7 +314,7 @@ public class GlobalConfiguration extends ConfigurationPart {
                 }
 
                 if (!org.dreeam.leaf.config.modules.opt.VirtualThreadSupport.asyncChatExecutor) { // Leaf - Virtual thread support for chat executor
-                java.util.concurrent.ThreadPoolExecutor executor = (java.util.concurrent.ThreadPoolExecutor) com.mohistmc.silkard.paper.PaperBootstrap.server().chatExecutor;
+                java.util.concurrent.ThreadPoolExecutor executor = (java.util.concurrent.ThreadPoolExecutor) com.mohistmc.silkard.paper.PaperBootstrap.server().silkard$chatExecutor();
                 executor.setCorePoolSize(_chatExecutorCoreSize);
                 executor.setMaximumPoolSize(_chatExecutorMaxSize);
                 } // Leaf - Virtual thread support for chat executor

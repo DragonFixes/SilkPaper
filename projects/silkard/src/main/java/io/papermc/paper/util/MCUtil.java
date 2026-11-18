@@ -129,7 +129,7 @@ public final class MCUtil {
             if (reason != null) {
                 MinecraftServer.LOGGER.warn("Asynchronous " + reason + "!", new IllegalStateException());
             }
-            com.mohistmc.silkard.paper.PaperBootstrap.server().processQueue.add(run);
+            com.mohistmc.silkard.paper.PaperBootstrap.server().silkard_processQueue().add(run);
             return;
         }
         run.run();
@@ -153,7 +153,7 @@ public final class MCUtil {
                     return run.get();
                 }
             };
-            com.mohistmc.silkard.paper.PaperBootstrap.server().processQueue.add(wait);
+            com.mohistmc.silkard.paper.PaperBootstrap.server().silkard_processQueue().add(wait);
             try {
                 return wait.get();
             } catch (InterruptedException | ExecutionException e) {

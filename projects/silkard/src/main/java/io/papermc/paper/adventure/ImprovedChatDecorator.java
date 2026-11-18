@@ -50,6 +50,6 @@ public final class ImprovedChatDecorator implements ChatDecorator {
             }
 
             return originalMessage;
-        }, server.chatExecutor);
+        }, server.silkard$chatExecutor());
     }
 }

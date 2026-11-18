@@ -25,7 +25,7 @@ public final class PaperCommands {
         COMMANDS.put("paper", new PaperCommand("paper"));
 
         COMMANDS.forEach((s, command) -> {
-            server.server.getCommandMap().register(s, "Paper", command);
+            server.silkard$server().getCommandMap().register(s, "Paper", command);
         });
     }
 

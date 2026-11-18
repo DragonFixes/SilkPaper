@@ -81,10 +81,10 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
         final World.Environment environment;
         if (stemKey == LevelStem.NETHER) {
             environment = World.Environment.NETHER;
-            enabled = this.server.server.getAllowNether();
+            enabled = this.server.silkard$server().getAllowNether();
         } else if (stemKey == LevelStem.END) {
             environment = World.Environment.THE_END;
-            enabled = this.server.server.getAllowEnd();
+            enabled = this.server.silkard$server().getAllowEnd();
         } else if (stemKey == LevelStem.OVERWORLD) {
             environment = World.Environment.NORMAL;
         } else {
@@ -161,8 +161,8 @@ public record PaperWorldLoader(MinecraftServer server, String levelId) {
             primaryLevelData.setModdedInfo(this.server.getServerModName(), this.server.getModdedStatus().shouldReportAsModified());
         }
 
-        if (this.server.options.has("forceUpgrade")) {
-            Main.forceUpgrade(this.server.storageSource, DataFixers.getDataFixer(), this.server.options.has("eraseCache"), () -> true, this.server.registryAccess(), this.server.options.has("recreateRegionFiles"));
+        if (this.server.silkard_options().has("forceUpgrade")) {
+            Main.forceUpgrade(this.server.storageSource, DataFixers.getDataFixer(), this.server.silkard_options().has("eraseCache"), () -> true, this.server.registryAccess(), this.server.silkard_options().has("recreateRegionFiles"));
         }
 
         this.server.createLevel(stem, loading, worldDataAndGenSettings);

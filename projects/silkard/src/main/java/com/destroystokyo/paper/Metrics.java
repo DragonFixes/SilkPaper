@@ -563,7 +563,7 @@ public class Metrics {
     public static class PaperMetrics {
         public static void startMetrics() {
             // Get the config file
-            File configFile = new File(new File((File) com.mohistmc.silkard.paper.PaperBootstrap.server().options.valueOf("plugins"), "bStats"), "config.yml");
+            File configFile = new File(new File((File) com.mohistmc.silkard.paper.PaperBootstrap.server().silkard_options().valueOf("plugins"), "bStats"), "config.yml");
             YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
             // Check if the config file exists

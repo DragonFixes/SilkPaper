@@ -87,7 +87,7 @@ public class HorriblePlayerLoginEventHack {
         connection.handledLegacyLoginEvent = true;
 
         CraftPlayer horribleBukkitPlayer = player.getBukkitEntity();
-        PlayerLoginEvent event = new PlayerLoginEvent(horribleBukkitPlayer, connection.hostname, ((java.net.InetSocketAddress) connection.getRemoteAddress()).getAddress(), connection.channel.remoteAddress());
+        PlayerLoginEvent event = new PlayerLoginEvent(horribleBukkitPlayer, connection.silkard$hostname(), ((java.net.InetSocketAddress) connection.getRemoteAddress()).getAddress(), connection.channel.remoteAddress());
         event.disallow(result.result(), PaperAdventure.asAdventure(result.message()));
         event.callEvent();
 

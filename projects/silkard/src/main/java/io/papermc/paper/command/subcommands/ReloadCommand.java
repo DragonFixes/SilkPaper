@@ -25,8 +25,8 @@ public final class ReloadCommand implements PaperSubcommand {
         Command.broadcastCommandMessage(sender, text("If you encounter any issues please use the /stop command to restart your server.", RED));
 
         MinecraftServer server = ((CraftServer) sender.getServer()).getServer();
-        server.paperConfigurations.reloadConfigs(server);
-        server.server.reloadCount++;
+        server.paperConfigurations().reloadConfigs(server);
+        server.silkard$server().reloadCount++;
 
         Command.broadcastCommandMessage(sender, text("Paper config reload complete.", GREEN));
     }
