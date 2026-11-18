@@ -79,7 +79,10 @@ public class MixinServerLoginPacketListenerImpl implements ContextServerLoginPac
         UUID uniqueId = gameprofile.id();
         final CraftServer server = ((ContextMinecraftServer) this.server).silkard$server();
 
-        AsyncPlayerPreLoginEvent asyncEvent = new AsyncPlayerPreLoginEvent(playerName, address, uniqueId, this.transferred);
+        // Paper's full constructor carries the login connection, so plugins can read cookies or transfer at pre-login.
+        String hostname = ((com.mohistmc.silkard.injected.network.ContextConnection) this.connection).silkard$hostname();
+        AsyncPlayerPreLoginEvent asyncEvent = new AsyncPlayerPreLoginEvent(playerName, address, this.connection.getRemoteAddress(), uniqueId, this.transferred,
+            com.destroystokyo.paper.profile.CraftPlayerProfile.asBukkitCopy(gameprofile), hostname == null ? "" : hostname, ((ServerLoginPacketListenerImpl) (Object) this).paper$loginConnection());
         server.getPluginManager().callEvent(asyncEvent);
 
         if (PlayerPreLoginEvent.getHandlerList().getRegisteredListeners().length != 0) {

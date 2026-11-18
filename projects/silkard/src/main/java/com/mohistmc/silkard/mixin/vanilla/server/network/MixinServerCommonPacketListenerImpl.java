@@ -156,7 +156,7 @@ public abstract class MixinServerCommonPacketListenerImpl implements ContextServ
             try {
                 String channels = payload.toString(com.google.common.base.Charsets.UTF_8);
                 for (String channel : channels.split("\0")) {
-                    getCraftPlayer().addChannel(channel);
+                    com.mohistmc.silkard.paper.paper.PluginMessages.registerChannel(this.connection, getCraftPlayer(), channel);
                 }
             } catch (Exception ex) {
                 LOGGER.error("Couldn't register custom payload", ex);
@@ -166,7 +166,7 @@ public abstract class MixinServerCommonPacketListenerImpl implements ContextServ
             try {
                 String channels = payload.toString(com.google.common.base.Charsets.UTF_8);
                 for (String channel : channels.split("\0")) {
-                    getCraftPlayer().removeChannel(channel);
+                    com.mohistmc.silkard.paper.paper.PluginMessages.unregisterChannel(this.connection, getCraftPlayer(), channel);
                 }
             } catch (Exception ex) {
                 LOGGER.error("Couldn't unregister custom payload", ex);

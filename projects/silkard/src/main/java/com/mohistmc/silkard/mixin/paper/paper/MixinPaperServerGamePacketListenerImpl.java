@@ -39,6 +39,8 @@ public abstract class MixinPaperServerGamePacketListenerImpl implements PaperGam
 
     // Without plugin chat listeners the vanilla broadcast runs unchanged, which keeps Fabric's chat
     // events (fired from PlayerList) in charge of the message.
+    // TODO Silkard - with plugin chat listeners, viewer-aware rendering sends to each player directly and
+    //  bypasses Fabric's PlayerList chat hooks; the unchanged-message path still goes through PlayerList
     @WrapOperation(method = "broadcastChatMessage", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/players/PlayerList;broadcastChatMessage(Lnet/minecraft/network/chat/PlayerChatMessage;Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/network/chat/ChatType$Bound;)V"))
     private void paper$processChat(final PlayerList playerList, final PlayerChatMessage message, final ServerPlayer sender, final ChatType.Bound chatType, final Operation<Void> original) {
         if (!paper$hasChatListeners()) {
