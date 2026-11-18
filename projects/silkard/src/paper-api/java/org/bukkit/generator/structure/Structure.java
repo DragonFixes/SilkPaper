@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
  * there might be additional structures present (for example structures added by
  * data packs), which can be received via {@link io.papermc.paper.registry.RegistryAccess#getRegistry(io.papermc.paper.registry.RegistryKey)} and {@link io.papermc.paper.registry.RegistryKey#STRUCTURE}.
  */
-public abstract class Structure implements Keyed {
+public abstract class Structure implements Keyed, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ {
 
     // Start generate - Structure
     public static final Structure ABANDONED_CAMP_BAMBOO_JUNGLE = getStructure("abandoned_camp_bamboo_jungle");

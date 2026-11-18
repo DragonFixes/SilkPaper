@@ -11,7 +11,7 @@ import org.jspecify.annotations.NullMarked;
  * Represents a song which may play in a Jukebox.
  */
 @NullMarked
-public interface JukeboxSong extends Keyed, Translatable {
+public interface JukeboxSong extends Keyed, Translatable, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ {
 
     // Start generate - JukeboxSong
     JukeboxSong ELEVEN = get("11");

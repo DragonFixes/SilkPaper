@@ -20,7 +20,7 @@ public final class PluginCommand extends Command implements PluginIdentifiableCo
     private CommandExecutor executor;
     private TabCompleter completer;
 
-    PluginCommand(@NotNull String name, @NotNull Plugin owner) {
+    protected PluginCommand(@NotNull String name, @NotNull Plugin owner) { // Silkard - Spigot API compat: protected like Bukkit
         super(name);
         this.executor = owner;
         this.owningPlugin = owner;

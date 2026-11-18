@@ -27,7 +27,7 @@ public interface ZombieNautilus extends AbstractNautilus {
     /**
      * Represents the variant of a Zombie Nautilus.
      */
-    interface Variant extends Keyed {
+    interface Variant extends Keyed, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ {
 
         // Start generate - ZombieNautilusVariant
         Variant TEMPERATE = getVariant("temperate");

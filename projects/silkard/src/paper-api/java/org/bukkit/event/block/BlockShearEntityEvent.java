@@ -91,4 +91,10 @@ public class BlockShearEntityEvent extends BlockEvent implements Cancellable {
     public static HandlerList getHandlerList() {
         return HANDLER_LIST;
     }
+    // Silkard start - Spigot API compat
+    public BlockShearEntityEvent(@NotNull Block dispenser, @NotNull Entity sheared, @NotNull ItemStack tool) {
+        this(dispenser, sheared, tool, new java.util.ArrayList<>());
+    }
+    // Silkard end
+
 }

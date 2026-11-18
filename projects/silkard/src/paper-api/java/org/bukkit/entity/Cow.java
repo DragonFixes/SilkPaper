@@ -44,7 +44,7 @@ public interface Cow extends AbstractCow {
     /**
      * Represents the variant of a cow.
      */
-    interface Variant extends Keyed {
+    interface Variant extends Keyed, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ {
 
         // Start generate - CowVariant
         Variant COLD = getVariant("cold");

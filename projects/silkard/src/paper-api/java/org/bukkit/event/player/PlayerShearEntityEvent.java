@@ -110,4 +110,10 @@ public class PlayerShearEntityEvent extends PlayerEvent implements Cancellable {
     public static HandlerList getHandlerList() {
         return HANDLER_LIST;
     }
+    // Silkard start - Spigot API compat
+    public PlayerShearEntityEvent(@NotNull Player who, @NotNull Entity what, @NotNull ItemStack item, @NotNull EquipmentSlot hand) {
+        this(who, what, item, hand, new java.util.ArrayList<>());
+    }
+    // Silkard end
+
 }

@@ -19,7 +19,7 @@ import org.jspecify.annotations.NullMarked;
  * Represents a material that may be used in an {@link ArmorTrim}.
  */
 @NullMarked
-public interface TrimMaterial extends Keyed, Translatable {
+public interface TrimMaterial extends Keyed, Translatable, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ {
 
     /**
      * Creates an inlined trim material.

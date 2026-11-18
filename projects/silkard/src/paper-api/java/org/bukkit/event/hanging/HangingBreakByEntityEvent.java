@@ -44,4 +44,14 @@ public class HangingBreakByEntityEvent extends HangingBreakEvent {
     public DamageSource getDamageSource() {
         return this.damageSource;
     }
+    // Silkard start - Spigot API compat
+    public HangingBreakByEntityEvent(final Hanging hanging, final Entity remover) {
+        this(hanging, remover, HangingBreakEvent.RemoveCause.ENTITY);
+    }
+
+    public HangingBreakByEntityEvent(final Hanging hanging, final Entity remover, final HangingBreakEvent.RemoveCause cause) {
+        this(hanging, remover, org.bukkit.damage.DamageSource.builder(org.bukkit.damage.DamageType.GENERIC).build(), cause);
+    }
+    // Silkard end
+
 }

@@ -21,7 +21,7 @@ public class BlockFromToEvent extends BlockEvent implements Cancellable {
     protected Block to;
     protected BlockFace face;
 
-    protected boolean cancelled;
+    protected boolean cancel; // Silkard - Spigot API compat: Bukkit field name
 
     @ApiStatus.Internal
     public BlockFromToEvent(@NotNull final Block block, @NotNull final BlockFace face) {
@@ -60,12 +60,12 @@ public class BlockFromToEvent extends BlockEvent implements Cancellable {
 
     @Override
     public boolean isCancelled() {
-        return this.cancelled;
+        return this.cancel;
     }
 
     @Override
     public void setCancelled(boolean cancel) {
-        this.cancelled = cancel;
+        this.cancel = cancel;
     }
 
     @NotNull

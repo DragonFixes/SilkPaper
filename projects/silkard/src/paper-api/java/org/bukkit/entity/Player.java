@@ -1,5 +1,7 @@
 package org.bukkit.entity;
 
+import org.jetbrains.annotations.ApiStatus; // Silkard - Spigot API compat
+import org.jetbrains.annotations.NotNull; // Silkard - Spigot API compat
 import com.destroystokyo.paper.ClientOption;
 import com.google.common.base.Preconditions;
 import io.papermc.paper.connection.PlayerGameConnection;
@@ -4251,4 +4253,22 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
         sendDeathScreen(message);
     }
     // Purpur end
+    // Silkard start - Spigot API compat
+    /**
+     * Clear the player's open dialog.
+     */
+    @ApiStatus.Experimental
+    public void clearDialog();
+
+    /**
+     * Show a dialog to the player.
+     *
+     * @param dialog the dialog to show
+     * @throws IllegalArgumentException if the dialog does not exist on the
+     * server
+     */
+    @ApiStatus.Experimental
+    public void showDialog(@NotNull NamespacedKey dialog);
+    // Silkard end
+
 }

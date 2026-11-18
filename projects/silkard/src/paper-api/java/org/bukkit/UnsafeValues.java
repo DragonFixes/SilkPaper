@@ -1,5 +1,16 @@
 package org.bukkit;
 
+import org.bukkit.inventory.CreativeCategory; // Silkard - Spigot API compat
+import org.bukkit.entity.Villager; // Silkard - Spigot API compat
+import org.bukkit.damage.DamageType; // Silkard - Spigot API compat
+import org.bukkit.damage.DamageSource; // Silkard - Spigot API compat
+import org.bukkit.damage.DamageEffect; // Silkard - Spigot API compat
+import org.bukkit.block.Biome; // Silkard - Spigot API compat
+import org.bukkit.entity.EntityType; // Silkard - Spigot API compat
+import org.bukkit.attribute.Attribute; // Silkard - Spigot API compat
+import org.bukkit.inventory.EquipmentSlot; // Silkard - Spigot API compat
+import com.google.common.collect.Multimap; // Silkard - Spigot API compat
+import org.bukkit.attribute.AttributeModifier; // Silkard - Spigot API compat
 import io.papermc.paper.entity.EntitySerializationFlag;
 import io.papermc.paper.registry.RegistryKey;
 import java.util.List;
@@ -276,5 +287,55 @@ public interface UnsafeValues {
      * @return the deserialized {@code ItemStack}
      */
     @NotNull ItemStack deserializeItemHover(HoverEvent.@NotNull ShowItem itemHover);
+
+    // Silkard start - Spigot API compat
+    @ApiStatus.Internal
+    <B extends Keyed> B get(Registry<B> registry, NamespacedKey key);
+
+    @Deprecated(since = "1.21", forRemoval = true)
+    CreativeCategory getCreativeCategory(Material material);
+
+    @Deprecated(since = "1.21", forRemoval = true)
+    String getItemTranslationKey(Material material);
+
+    @Deprecated(since = "1.21", forRemoval = true)
+    String getBlockTranslationKey(Material material);
+
+    @ApiStatus.Internal
+    Villager.ReputationType createReputationType(String key);
+
+    @Nullable
+    FeatureFlag getFeatureFlag(@NotNull NamespacedKey key);
+
+    /**
+     * Create a new {@link DamageSource.Builder}.
+     *
+     * @param damageType the {@link DamageType} to use
+     * @return a {@link DamageSource.Builder}
+     */
+    @ApiStatus.Internal
+    @NotNull
+    DamageSource.Builder createDamageSourceBuilder(@NotNull DamageType damageType);
+
+    @ApiStatus.Internal
+    @Nullable
+    DamageEffect getDamageEffect(@NotNull String key);
+
+    @ApiStatus.Internal
+    Biome getCustomBiome();
+
+    @ApiStatus.Internal
+    Villager.ReputationEvent createReputationEvent(String key);
+
+    String getTranslationKey(EntityType entityType);
+
+    String getTranslationKey(ItemStack itemStack);
+
+    @Deprecated(since = "1.21.3", forRemoval = true)
+    String getTranslationKey(Attribute attribute);
+
+    @Deprecated(since = "1.21", forRemoval = true)
+    Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(Material material, EquipmentSlot slot);
+    // Silkard end
 
 }

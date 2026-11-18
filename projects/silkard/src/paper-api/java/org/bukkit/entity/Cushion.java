@@ -7,6 +7,6 @@ import org.jspecify.annotations.NullMarked;
  * Represents a Cushion entity
  */
 @NullMarked
-public interface Cushion extends Colorable, Entity {
+public interface Cushion extends Colorable, Entity, org.bukkit.entity.Hanging /* Silkard - Spigot API compat */ {
 
 }

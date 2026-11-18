@@ -1,5 +1,8 @@
 package org.bukkit.entity;
 
+import org.bukkit.entity.model.PlayerModelPart; // Silkard - Spigot API compat
+import org.bukkit.profile.PlayerProfile; // Silkard - Spigot API compat
+import org.jetbrains.annotations.NotNull; // Silkard - Spigot API compat
 import com.destroystokyo.paper.SkinParts;
 import io.papermc.paper.InternalAPIBridge;
 import io.papermc.paper.datacomponent.item.ResolvableProfile;
@@ -113,4 +116,72 @@ public interface Mannequin extends LivingEntity {
 
     @Override
     EntityEquipment getEquipment();
+    // Silkard start - Spigot API compat
+    /**
+     * Gets whether a part of the mannequin model is shown.
+     *
+     * @param part model part
+     * @return if it is shown
+     */
+    boolean isModelPartShown(@NotNull PlayerModelPart part);
+
+    /**
+     * Sets the description which shows as part of the mannequin's name.
+     *
+     * @param description the description to show or null for default
+     */
+    void setDescription(@Nullable String description);
+
+    /**
+     * Gets the profile of the player used to texture the mannequin.
+     *
+     * @return the profile of the owning player
+     */
+    @Nullable
+    PlayerProfile getPlayerProfile();
+
+    /**
+     * Sets the profile of the player used to texture the mannequin.
+     * <p>
+     * The profile must already contain a skin texture for it to be displayed.
+     *
+     * @param profile the profile of the player texture.
+     * @throws IllegalArgumentException if the profile does not contain the
+     * necessary information
+     */
+    void setPlayerProfile(@Nullable PlayerProfile profile);
+
+    /**
+     * Sets whether the mannequin description is hidden.
+     *
+     * @param hide whether to hide description
+     */
+    void setHideDescription(boolean hide);
+
+    /**
+     * Gets the description which shows as part of the mannequin's name.
+     *
+     * @return description the description text
+     * @deprecated typo, use {@link #getDescription()}
+     */
+    @Nullable
+    @Deprecated(since = "1.21.11")
+    String getDescripion();
+
+    /**
+     * Sets whether a part of the mannequin model is shown.
+     *
+     * @param part model part
+     * @param shown whether it is shown
+     */
+    void setModelPartShown(@NotNull PlayerModelPart part, boolean shown);
+
+    /**
+     * Gets whether the mannequin description is hidden.
+     *
+     * @return hide description status
+     */
+    boolean isHideDescription();
+    // Silkard end
+
 }

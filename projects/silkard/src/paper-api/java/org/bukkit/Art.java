@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
  * There may be additional arts present in the server, for example from a {@link io.papermc.paper.datapack.Datapack}
  * which can be accessed via {@link RegistryAccess#registryAccess()} and {@link RegistryKey#PAINTING_VARIANT}.
  */
-public interface Art extends OldEnum<Art>, Keyed {
+public interface Art extends OldEnum<Art>, Keyed, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ {
 
     // Start generate - Art
     Art ALBAN = getArt("alban");

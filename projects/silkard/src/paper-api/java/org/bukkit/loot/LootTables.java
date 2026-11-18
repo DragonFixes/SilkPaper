@@ -280,4 +280,12 @@ public enum LootTables implements Keyed {
     public LootTable getLootTable() {
         return Bukkit.getLootTable(getKey());
     }
+    // Silkard start - Spigot API compat
+    /**
+     * @deprecated renamed to {@link #CHARGED_CREEPER}
+     */
+    @Deprecated
+    public static final LootTables CHARGED_CREEPER_ROOT = CHARGED_CREEPER;
+    // Silkard end
+
 }

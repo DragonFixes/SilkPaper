@@ -1,5 +1,6 @@
 package org.bukkit.entity;
 
+import org.jetbrains.annotations.NotNull; // Silkard - Spigot API compat
 import org.bukkit.Location;
 import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
@@ -39,5 +40,14 @@ public interface Creaking extends Monster {
      * @return true if active
      */
     boolean isActive();
+
+    // Silkard start - Spigot API compat
+    /**
+     * Sets the home location for this Creaking.
+     *
+     * @param location the location of the home.
+     */
+    public void setHome(@NotNull Location location);
+    // Silkard end
 
 }

@@ -1,5 +1,6 @@
 package org.bukkit.profile;
 
+import org.jetbrains.annotations.ApiStatus; // Silkard - Spigot API compat
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import org.bukkit.Server;
@@ -100,4 +101,24 @@ public interface PlayerProfile extends Cloneable, ConfigurationSerializable {
 
     @NotNull
     PlayerProfile clone();
+    // Silkard start - Spigot API compat
+    /**
+     * Copies the given patch.
+     *
+     * @param patch the patch to copy, or <code>null</code> to clear the
+     * patch
+     */
+    @ApiStatus.Experimental
+    void setSkinPatch(@Nullable PlayerSkinPatch patch);
+
+    /**
+     * Gets the {@link PlayerSkinPatch} of this profile.
+     *
+     * @return the skin patch, not <code>null</code>
+     */
+    @NotNull
+    @ApiStatus.Experimental
+    PlayerSkinPatch getSkinPatch();
+    // Silkard end
+
 }

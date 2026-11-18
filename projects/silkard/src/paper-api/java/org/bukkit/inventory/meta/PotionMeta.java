@@ -231,4 +231,31 @@ public interface PotionMeta extends ItemMeta {
 
     @Override
     PotionMeta clone();
+    // Silkard start - Spigot API compat
+    /**
+     * Gets the potion duration scale that is set.
+     * <p>
+     * Plugins should check that hasDurationScale() returns <code>true</code>
+     * before calling this method.
+     *
+     * @return the scale factor applied to all potion effect durations
+     */
+    @Nullable
+    float getDurationScale();
+
+    /**
+     * Checks for existence of a potion duration scale.
+     *
+     * @return true if this has a potion duration scale.
+     */
+    boolean hasDurationScale();
+
+    /**
+     * Gets the potion duration scale.
+     *
+     * @param scale the scale factor applied to all potion effect durations
+     */
+    void setDurationScale(@Nullable Float scale);
+    // Silkard end
+
 }

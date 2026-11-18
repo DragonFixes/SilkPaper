@@ -181,4 +181,25 @@ public interface Vault extends TileState {
      * @param displayedItem The item to display
      */
     void setDisplayedItem(ItemStack displayedItem);
+    // Silkard start - Spigot API compat
+    /**
+     * Gets the {@link LootTable} this vault will display items from. <br>
+     * If this value is null the regular loot table will be used to display
+     * items.
+     *
+     * @return the loot table to display items from
+     */
+    @Nullable
+    LootTable getDisplayLootTable();
+
+    /**
+     * Sets the {@link LootTable} this vault will display items from. <br>
+     * If this value is set to null the regular loot table will be used to
+     * display items.
+     *
+     * @param table the loot table to display items from
+     */
+    void setDisplayLootTable(@Nullable LootTable table);
+    // Silkard end
+
 }

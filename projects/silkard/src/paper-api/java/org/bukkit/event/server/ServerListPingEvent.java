@@ -261,4 +261,14 @@ public class ServerListPingEvent extends ServerEvent implements Iterable<Player>
     public static HandlerList getHandlerList() {
         return HANDLER_LIST;
     }
+    // Silkard start - Spigot API compat
+    public ServerListPingEvent(@NotNull final String hostname, @NotNull final java.net.InetAddress address, @NotNull final String motd, final int numPlayers, final int maxPlayers) {
+        this(hostname, new java.net.InetSocketAddress(address, 0), motd, numPlayers, maxPlayers);
+    }
+
+    protected ServerListPingEvent(@NotNull final String hostname, @NotNull final java.net.InetAddress address, @NotNull final String motd, final int maxPlayers) {
+        this(hostname, new java.net.InetSocketAddress(address, 0), motd, maxPlayers);
+    }
+    // Silkard end
+
 }

@@ -23,4 +23,10 @@ public class EntityBreakDoorEvent extends EntityChangeBlockEvent {
     public LivingEntity getEntity() {
         return (LivingEntity) this.entity;
     }
+    // Silkard start - Spigot API compat
+    public EntityBreakDoorEvent(@NotNull final LivingEntity entity, @NotNull final Block targetBlock) {
+        this(entity, targetBlock, org.bukkit.Material.AIR.createBlockData());
+    }
+    // Silkard end
+
 }

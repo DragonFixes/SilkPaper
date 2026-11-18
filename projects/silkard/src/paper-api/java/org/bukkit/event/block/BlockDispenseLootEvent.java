@@ -102,4 +102,10 @@ public class BlockDispenseLootEvent extends BlockEvent implements Cancellable {
     public static HandlerList getHandlerList() {
         return HANDLER_LIST;
     }
+    // Silkard start - Spigot API compat
+    public BlockDispenseLootEvent(@Nullable Player player, @NotNull Block theBlock, @NotNull List<ItemStack> dispensedLoot) {
+        this(player, theBlock, dispensedLoot, org.bukkit.Bukkit.getLootTable(org.bukkit.NamespacedKey.minecraft("empty")));
+    }
+    // Silkard end
+
 }

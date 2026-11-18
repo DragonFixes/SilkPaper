@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Represents a fluid type.
  */
-public interface Fluid extends OldEnum<Fluid>, Keyed {
+public interface Fluid extends OldEnum<Fluid>, Keyed, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ {
 
     // Start generate - Fluid
     Fluid EMPTY = getFluid("empty");

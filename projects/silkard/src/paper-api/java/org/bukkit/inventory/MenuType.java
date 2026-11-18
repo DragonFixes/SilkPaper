@@ -27,7 +27,7 @@ import org.jspecify.annotations.Nullable;
  * created and viewed by the player.
  */
 @NullMarked
-public interface MenuType extends Keyed, io.papermc.paper.world.flag.FeatureDependant { // Paper - make FeatureDependant
+public interface MenuType extends Keyed, io.papermc.paper.world.flag.FeatureDependant, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ { // Paper - make FeatureDependant
 
     /**
      * A MenuType which represents a chest with 1 row.

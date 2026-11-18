@@ -1370,4 +1370,38 @@ public interface Tag<T extends Keyed> extends Keyed {
     @NotNull
     Set<T> getValues();
 
+    // Silkard start - Spigot API compat
+    /**
+     * @deprecated misspelled, use {@link #CONVERTIBLE_TO_MUD}
+     */
+    @Deprecated
+    Tag<Material> CONVERTBLE_TO_MUD = CONVERTIBLE_TO_MUD;
+    /**
+     * @deprecated misspelled, use {@link #TRIGGERS_AMBIENT_DRIED_GHAST_BLOCK_SOUNDS}
+     */
+    @Deprecated
+    Tag<Material> RIGGERS_AMBIENT_DRIED_GHAST_BLOCK_SOUNDS = TRIGGERS_AMBIENT_DRIED_GHAST_BLOCK_SOUNDS;
+    /**
+     * Vanilla block tag representing blocks a consumable does not teleport the consumer to.
+     */
+    Tag<Material> CONSUMABLE_DOES_NOT_TELEPORT_TO = Bukkit.getTag(REGISTRY_BLOCKS, NamespacedKey.minecraft("consumable_does_not_teleport_to"), Material.class);
+    /**
+     * @see #ITEMS_IGNORED_BY_PIGLIN_BABIES
+     */
+    Tag<Material> IGNORED_BY_PIGLIN_BABIES = ITEMS_IGNORED_BY_PIGLIN_BABIES;
+    /**
+     * @deprecated use {@link #ITEMS_ENCHANTABLE_SWEEPING}
+     */
+    @Deprecated
+    Tag<Material> ITEMS_ENCHANTABLE_SWORD = ITEMS_ENCHANTABLE_SWEEPING;
+    /**
+     * @see #ITEMS_FREEZE_IMMUNE_WEARABLES
+     */
+    Tag<Material> FREEZE_IMMUNE_WEARABLES = ITEMS_FREEZE_IMMUNE_WEARABLES;
+    /**
+     * @see #ITEMS_CLUSTER_MAX_HARVESTABLES
+     */
+    Tag<Material> CLUSTER_MAX_HARVESTABLES = ITEMS_CLUSTER_MAX_HARVESTABLES;
+    // Silkard end
+
 }

@@ -32,10 +32,10 @@ public class PlayerInteractEvent extends PlayerEvent implements Cancellable {
 
     private static final HandlerList HANDLER_LIST = new HandlerList();
 
-    private final Action action;
-    private final ItemStack item;
-    private final Block blockClicked;
-    private final BlockFace blockFace;
+    protected Action action; // Silkard - Spigot API compat: protected like Bukkit
+    protected ItemStack item; // Silkard - Spigot API compat: protected like Bukkit
+    protected Block blockClicked; // Silkard - Spigot API compat: protected like Bukkit
+    protected BlockFace blockFace; // Silkard - Spigot API compat: protected like Bukkit
     private final EquipmentSlot hand;
     private final Vector clickedPosition;
     private Result useItemInHand;

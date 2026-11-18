@@ -1,5 +1,6 @@
 package org.bukkit.entity;
 
+import org.jetbrains.annotations.NotNull; // Silkard - Spigot API compat
 import com.google.common.base.Preconditions;
 import io.papermc.paper.entity.Shearable;
 import io.papermc.paper.world.WeatheringCopperState;
@@ -166,4 +167,61 @@ public interface CopperGolem extends Golem, Shearable {
         DROPPING_NO_ITEM;
         // End generate - CopperGolemState
     }
+    // Silkard start - Spigot API compat
+    /**
+     * Represents a state of copper weathering/oxidation.
+     */
+    public enum CopperWeatherState {
+
+        /**
+         * No weathering/oxidation.
+         */
+        UNAFFECTED,
+        /**
+         * Some weathering/oxidation.
+         */
+        EXPOSED,
+        /**
+         * Significant weathering/oxidation.
+         */
+        WEATHERED,
+        /**
+         * Total weathering/oxidation.
+         */
+        OXIDIZED;
+    }
+    // Silkard end
+
+    // Silkard start - Spigot API compat
+    /**
+     * Gets the golem's current weather state.
+     *
+     * @return current weather state
+     */
+    @NotNull
+    CopperWeatherState getWeatherState();
+
+    /**
+     * Sets the golem's current wheather state
+     *
+     * @param state new state
+     */
+    void setWeatherState(@NotNull CopperWeatherState state);
+
+    /**
+     * Sets the tick at which the golem will progress to the next weather state.
+     *
+     * @param tick new weathering tick
+     */
+    void setNextWeatheringTick(long tick);
+
+    /**
+     * Gets the next tick at which the golem will progress to the next weather
+     * state.
+     *
+     * @return next weathering tick
+     */
+    long getNextWeatheringTick();
+    // Silkard end
+
 }

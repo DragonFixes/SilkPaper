@@ -145,7 +145,7 @@ import org.jetbrains.annotations.Nullable;
  * An enum of all material IDs accepted by the official server and client
  */
 @SuppressWarnings({"DeprecatedIsStillUsed", "deprecation"}) // Paper
-public enum Material implements Keyed, Translatable, net.kyori.adventure.translation.Translatable { // Paper
+public enum Material implements Keyed, Translatable, net.kyori.adventure.translation.Translatable, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ { // Paper
     //<editor-fold desc="Materials" defaultstate="collapsed">
     // Start generate - Items
     ABANDONED_CAMP_MAP(-1),
@@ -3964,4 +3964,16 @@ public enum Material implements Keyed, Translatable, net.kyori.adventure.transla
         return material;
     }
     // Silkard end
+    // Silkard start - Spigot API compat
+    /**
+     * Checks if this type is enabled by feature in a world.
+     *
+     * @param world the world to check
+     * @return true if this type can be used in the world
+     */
+    public boolean isEnabledByFeature(@NotNull World world) {
+        return Bukkit.getDataPackManager().isEnabledByFeature(this, world);
+    }
+    // Silkard end
+
 }

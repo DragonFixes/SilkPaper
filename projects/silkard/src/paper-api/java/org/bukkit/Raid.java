@@ -157,4 +157,13 @@ public interface Raid extends PersistentDataHolder {
          */
         STOPPED;
     }
+    // Silkard start - Spigot API compat
+    /**
+     * Stops this raid.
+     *
+     * @param removeSpawnedRaiders whether to remove spawned raiders
+     */
+    void stopRaid(boolean removeSpawnedRaiders);
+    // Silkard end
+
 }

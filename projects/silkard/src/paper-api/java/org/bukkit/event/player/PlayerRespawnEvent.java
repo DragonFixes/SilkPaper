@@ -93,4 +93,10 @@ public class PlayerRespawnEvent extends AbstractRespawnEvent {
          */
         END_PORTAL
     }
+    // Silkard start - Spigot API compat
+    public PlayerRespawnEvent(@NotNull final Player respawnPlayer, @NotNull final Location respawnLocation, final boolean isBedSpawn, final boolean isAnchorSpawn, @NotNull final RespawnReason respawnReason) {
+        this(respawnPlayer, respawnLocation, isBedSpawn, isAnchorSpawn, false, respawnReason);
+    }
+    // Silkard end
+
 }

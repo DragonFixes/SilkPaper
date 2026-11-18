@@ -68,7 +68,7 @@ public interface Cat extends Tameable, Sittable, io.papermc.paper.entity.CollarC
     /**
      * Represents the various different cat types there are.
      */
-    interface Type extends OldEnum<Type>, Keyed {
+    interface Type extends OldEnum<Type>, Keyed, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ {
 
         // Start generate - CatType
         Type ALL_BLACK = getType("all_black");

@@ -201,4 +201,20 @@ public interface ToolComponent extends ConfigurationSerializable {
          */
         void setCorrectForDrops(@Nullable Boolean correct);
     }
+    // Silkard start - Spigot API compat
+    /**
+     * Get whether this tool can destroy blocks in creative.
+     *
+     * @return whether can destroy
+     */
+    boolean canDestroyBlocksInCreative();
+
+    /**
+     * Set whether this tool can destroy blocks in creative.
+     *
+     * @param destroy whether can destroy
+     */
+    void setCanDestroyBlocksInCreative(boolean destroy);
+    // Silkard end
+
 }

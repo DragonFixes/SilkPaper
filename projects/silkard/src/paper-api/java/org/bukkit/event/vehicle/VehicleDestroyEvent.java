@@ -69,4 +69,10 @@ public class VehicleDestroyEvent extends VehicleEvent implements Cancellable {
     public static HandlerList getHandlerList() {
         return HANDLER_LIST;
     }
+    // Silkard start - Spigot API compat
+    public VehicleDestroyEvent(@NotNull final Vehicle vehicle, @Nullable final Entity attacker) {
+        this(vehicle, org.bukkit.damage.DamageSource.builder(org.bukkit.damage.DamageType.GENERIC).build(), attacker);
+    }
+    // Silkard end
+
 }

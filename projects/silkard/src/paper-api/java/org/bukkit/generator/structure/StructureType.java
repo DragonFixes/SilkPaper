@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
  * structure types added by data packs), which can be received via
  * {@link Registry#STRUCTURE_TYPE}.
  */
-public abstract class StructureType implements Keyed {
+public abstract class StructureType implements Keyed, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ {
 
     // Start generate - StructureType
     public static final StructureType BURIED_TREASURE = getStructureType("buried_treasure");

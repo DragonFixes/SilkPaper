@@ -1,5 +1,7 @@
 package org.bukkit.entity;
 
+import org.bukkit.entity.model.PlayerModelPart; // Silkard - Spigot API compat
+import org.jetbrains.annotations.NotNull; // Silkard - Spigot API compat
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.Fireworks;
 import io.papermc.paper.datacomponent.item.UseCooldown;
@@ -1051,5 +1053,15 @@ public interface HumanEntity extends LivingEntity, AnimalTamer, InventoryHolder 
     default Firework fireworkBoost() {
         return this.fireworkBoost(ItemStack.empty());
     }
+
+    // Silkard start - Spigot API compat
+    /**
+     * Gets whether a part of the player model is shown.
+     *
+     * @param part model part
+     * @return if it is shown
+     */
+    public boolean isModelPartShown(@NotNull PlayerModelPart part);
+    // Silkard end
 
 }

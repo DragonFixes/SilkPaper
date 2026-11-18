@@ -485,5 +485,17 @@ public class PaperServerListPingEvent extends ServerListPingEvent implements Can
         public @NotNull Map<String, Object> serialize() {
             throw new UnsupportedOperationException();
         }
+    // Silkard start - Spigot API compat
+        @Override
+        public org.bukkit.profile.PlayerSkinPatch getSkinPatch() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void setSkinPatch(@Nullable final org.bukkit.profile.PlayerSkinPatch skinPatch) {
+            throw new UnsupportedOperationException();
+        }
+    // Silkard end
+
     }
 }

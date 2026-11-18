@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
  * This enum reflects and matches each potion state that can be obtained from
  * the Creative mode inventory
  */
-public enum PotionType implements Keyed, io.papermc.paper.world.flag.FeatureDependant { // Paper - feature flag API
+public enum PotionType implements Keyed, io.papermc.paper.world.flag.FeatureDependant, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ { // Paper - feature flag API
     // Start generate - PotionType
     AWKWARD("awkward"),
     FIRE_RESISTANCE("fire_resistance"),

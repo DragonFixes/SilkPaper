@@ -22,11 +22,11 @@ public class BlockPlaceEvent extends BlockEvent implements Cancellable {
     protected Block placedAgainst;
     protected ItemStack itemInHand;
     protected Player player;
-    protected BlockState replacedState;
+    protected BlockState replacedBlockState; // Silkard - Spigot API compat: Bukkit field name
     protected boolean canBuild;
     protected EquipmentSlot hand;
 
-    protected boolean cancelled;
+    protected boolean cancel; // Silkard - Spigot API compat: Bukkit field name
 
     @ApiStatus.Internal
     @Deprecated(since = "1.9", forRemoval = true)
@@ -40,7 +40,7 @@ public class BlockPlaceEvent extends BlockEvent implements Cancellable {
         this.placedAgainst = placedAgainst;
         this.itemInHand = itemInHand;
         this.player = thePlayer;
-        this.replacedState = replacedState;
+        this.replacedBlockState = replacedState;
         this.canBuild = canBuild;
         this.hand = hand;
     }
@@ -95,7 +95,7 @@ public class BlockPlaceEvent extends BlockEvent implements Cancellable {
      */
     @NotNull
     public BlockState getBlockReplacedState() {
-        return this.replacedState;
+        return this.replacedBlockState;
     }
 
     /**
@@ -132,12 +132,12 @@ public class BlockPlaceEvent extends BlockEvent implements Cancellable {
 
     @Override
     public boolean isCancelled() {
-        return this.cancelled;
+        return this.cancel;
     }
 
     @Override
     public void setCancelled(boolean cancel) {
-        this.cancelled = cancel;
+        this.cancel = cancel;
     }
 
     @NotNull

@@ -106,6 +106,16 @@ public class EntityUnleashEvent extends EntityEvent implements Cancellable {
          * When the leashed entity is removed from the game
          */
         LEASHED_GONE,
+        // Silkard start - Spigot API compat
+        /**
+         * When the entity's leash is sheared off.
+         */
+        SHEAR,
+        /**
+         * When the entity's leash is broken by a firework.
+         */
+        FIREWORK,
+        // Silkard end
         UNKNOWN;
     }
 }

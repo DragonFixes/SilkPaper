@@ -51,7 +51,7 @@ public interface Frog extends Animals {
     /**
      * Represents the variant of a frog - ie its color.
      */
-    interface Variant extends OldEnum<Variant>, Keyed {
+    interface Variant extends OldEnum<Variant>, Keyed, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ {
 
         // Start generate - FrogVariant
         Variant COLD = getVariant("cold");

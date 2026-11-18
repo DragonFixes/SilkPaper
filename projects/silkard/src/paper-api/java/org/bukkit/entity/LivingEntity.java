@@ -36,7 +36,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Represents a living entity, such as a monster or player
  */
-public interface LivingEntity extends Attributable, Damageable, ProjectileSource, io.papermc.paper.entity.Frictional { // Paper
+public interface LivingEntity extends Attributable, Damageable, ProjectileSource, io.papermc.paper.entity.Frictional, org.bukkit.entity.Leashable /* Silkard - Spigot API compat */ { // Paper
 
     /**
      * Gets the height of the living entity's eyes above its Location.
@@ -1590,4 +1590,13 @@ public interface LivingEntity extends Attributable, Damageable, ProjectileSource
      */
     void setShouldBurnInDay(boolean shouldBurnInDay);
     // Purpur end - API for any mob to burn daylight
+    // Silkard start - Spigot API compat
+    /**
+     * Sets the waypoint style of this entity.
+     *
+     * @param key new style key or null for default
+     */
+    public void setWaypointStyle(@Nullable NamespacedKey key);
+    // Silkard end
+
 }

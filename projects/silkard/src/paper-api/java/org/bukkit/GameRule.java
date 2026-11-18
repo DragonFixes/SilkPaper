@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
  * @see GameRules
  */
 @ApiStatus.NonExtendable
-public abstract class GameRule<T> implements net.kyori.adventure.translation.Translatable, FeatureDependant, Keyed {
+public abstract class GameRule<T> implements net.kyori.adventure.translation.Translatable, FeatureDependant, Keyed, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ {
 
     // Boolean rules
     /**
@@ -530,5 +530,116 @@ public abstract class GameRule<T> implements net.kyori.adventure.translation.Tra
 
     @Override
     public abstract @NotNull String translationKey();
+
+    // Silkard start - Spigot API compat
+    /**
+     * @see GameRules#SHOW_ADVANCEMENT_MESSAGES
+     */
+    public static final GameRule<Boolean> SHOW_ADVANCEMENT_MESSAGES = GameRules.SHOW_ADVANCEMENT_MESSAGES;
+    /**
+     * @see GameRules#PLAYER_MOVEMENT_CHECK
+     */
+    public static final GameRule<Boolean> PLAYER_MOVEMENT_CHECK = GameRules.PLAYER_MOVEMENT_CHECK;
+    /**
+     * @see GameRules#ELYTRA_MOVEMENT_CHECK
+     */
+    public static final GameRule<Boolean> ELYTRA_MOVEMENT_CHECK = GameRules.ELYTRA_MOVEMENT_CHECK;
+    /**
+     * @see GameRules#ADVANCE_TIME
+     */
+    public static final GameRule<Boolean> ADVANCE_TIME = GameRules.ADVANCE_TIME;
+    /**
+     * @see GameRules#ENTITY_DROPS
+     */
+    public static final GameRule<Boolean> ENTITY_DROPS = GameRules.ENTITY_DROPS;
+    /**
+     * @see GameRules#LIMITED_CRAFTING
+     */
+    public static final GameRule<Boolean> LIMITED_CRAFTING = GameRules.LIMITED_CRAFTING;
+    /**
+     * @see GameRules#MOB_DROPS
+     */
+    public static final GameRule<Boolean> MOB_DROPS = GameRules.MOB_DROPS;
+    /**
+     * @see GameRules#SPAWN_MOBS
+     */
+    public static final GameRule<Boolean> SPAWN_MOBS = GameRules.SPAWN_MOBS;
+    /**
+     * @see GameRules#BLOCK_DROPS
+     */
+    public static final GameRule<Boolean> BLOCK_DROPS = GameRules.BLOCK_DROPS;
+    /**
+     * @see GameRules#ADVANCE_WEATHER
+     */
+    public static final GameRule<Boolean> ADVANCE_WEATHER = GameRules.ADVANCE_WEATHER;
+    /**
+     * @see GameRules#NATURAL_HEALTH_REGENERATION
+     */
+    public static final GameRule<Boolean> NATURAL_HEALTH_REGENERATION = GameRules.NATURAL_HEALTH_REGENERATION;
+    /**
+     * @see GameRules#RAIDS
+     */
+    public static final GameRule<Boolean> RAIDS = GameRules.RAIDS;
+    /**
+     * @see GameRules#SPAWN_PHANTOMS
+     */
+    public static final GameRule<Boolean> SPAWN_PHANTOMS = GameRules.SPAWN_PHANTOMS;
+    /**
+     * @see GameRules#IMMEDIATE_RESPAWN
+     */
+    public static final GameRule<Boolean> IMMEDIATE_RESPAWN = GameRules.IMMEDIATE_RESPAWN;
+    /**
+     * @see GameRules#SPAWN_PATROLS
+     */
+    public static final GameRule<Boolean> SPAWN_PATROLS = GameRules.SPAWN_PATROLS;
+    /**
+     * @see GameRules#SPAWN_WANDERING_TRADERS
+     */
+    public static final GameRule<Boolean> SPAWN_WANDERING_TRADERS = GameRules.SPAWN_WANDERING_TRADERS;
+    /**
+     * @see GameRules#SPAWN_WARDENS
+     */
+    public static final GameRule<Boolean> SPAWN_WARDENS = GameRules.SPAWN_WARDENS;
+    /**
+     * @see GameRules#SPREAD_VINES
+     */
+    public static final GameRule<Boolean> SPREAD_VINES = GameRules.SPREAD_VINES;
+    /**
+     * @see GameRules#COMMAND_BLOCKS_WORK
+     */
+    public static final GameRule<Boolean> COMMAND_BLOCKS_WORK = GameRules.COMMAND_BLOCKS_WORK;
+    /**
+     * @see GameRules#SPAWNER_BLOCKS_WORK
+     */
+    public static final GameRule<Boolean> SPAWNER_BLOCKS_WORK = GameRules.SPAWNER_BLOCKS_WORK;
+    /**
+     * @see GameRules#RESPAWN_RADIUS
+     */
+    public static final GameRule<Integer> RESPAWN_RADIUS = GameRules.RESPAWN_RADIUS;
+    /**
+     * @see GameRules#MAX_COMMAND_SEQUENCE_LENGTH
+     */
+    public static final GameRule<Integer> MAX_COMMAND_SEQUENCE_LENGTH = GameRules.MAX_COMMAND_SEQUENCE_LENGTH;
+    /**
+     * @see GameRules#MAX_COMMAND_FORKS
+     */
+    public static final GameRule<Integer> MAX_COMMAND_FORKS = GameRules.MAX_COMMAND_FORKS;
+    /**
+     * @see GameRules#MAX_BLOCK_MODIFICATIONS
+     */
+    public static final GameRule<Integer> MAX_BLOCK_MODIFICATIONS = GameRules.MAX_BLOCK_MODIFICATIONS;
+    /**
+     * @see GameRules#MAX_SNOW_ACCUMULATION_HEIGHT
+     */
+    public static final GameRule<Integer> MAX_SNOW_ACCUMULATION_HEIGHT = GameRules.MAX_SNOW_ACCUMULATION_HEIGHT;
+    /**
+     * @see GameRules#MAX_MINECART_SPEED
+     */
+    public static final GameRule<Integer> MAX_MINECART_SPEED = GameRules.MAX_MINECART_SPEED;
+    /**
+     * @see GameRules#FIRE_SPREAD_RADIUS_AROUND_PLAYER
+     */
+    public static final GameRule<Integer> FIRE_SPREAD_RADIUS_AROUND_PLAYER = GameRules.FIRE_SPREAD_RADIUS_AROUND_PLAYER;
+    // Silkard end
 
 }

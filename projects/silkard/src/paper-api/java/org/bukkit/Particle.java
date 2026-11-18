@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import static io.papermc.paper.util.BoundChecker.requirePositive;
 import static io.papermc.paper.util.BoundChecker.requireRange;
 
-public enum Particle implements Keyed {
+public enum Particle implements Keyed, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ {
     POOF("poof"),
     EXPLOSION("explosion"),
     EXPLOSION_EMITTER("explosion_emitter"),
@@ -444,6 +444,16 @@ public enum Particle implements Keyed {
         public float getBurstImpulse() {
             return this.burstImpulse;
         }
+    // Silkard start - Spigot API compat
+        /**
+         * @return the burst impulse
+         * @see #getBurstImpulse()
+         */
+        public float getBurstImpulseBase() {
+            return this.burstImpulse;
+        }
+    // Silkard end
+
     }
 
     /**

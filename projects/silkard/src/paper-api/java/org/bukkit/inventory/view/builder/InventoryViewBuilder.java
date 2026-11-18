@@ -1,5 +1,6 @@
 package org.bukkit.inventory.view.builder;
 
+import org.jetbrains.annotations.NotNull; // Silkard - Spigot API compat
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.InventoryView;
@@ -34,4 +35,15 @@ public interface InventoryViewBuilder<V extends InventoryView> {
      * @return the created InventoryView
      */
     V build(final HumanEntity player);
+    // Silkard start - Spigot API compat
+    /**
+     * Sets the title of the builder
+     *
+     * @param title the title
+     * @return this builder
+     */
+    @NotNull
+    InventoryViewBuilder<V> title(@NotNull final String title);
+    // Silkard end
+
 }

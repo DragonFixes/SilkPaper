@@ -19,7 +19,7 @@ import org.jspecify.annotations.NullMarked;
  * Represents a pattern that may be used in an {@link ArmorTrim}.
  */
 @NullMarked
-public interface TrimPattern extends Keyed, Translatable {
+public interface TrimPattern extends Keyed, Translatable, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ {
 
     /**
      * Creates an inlined trim pattern.
