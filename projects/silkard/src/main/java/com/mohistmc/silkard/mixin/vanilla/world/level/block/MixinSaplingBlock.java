@@ -60,7 +60,7 @@ public abstract class MixinSaplingBlock {
 
                     if (event == null || !event.isCancelled()) {
                         for (org.bukkit.block.BlockState capturedBlockState : blocks) {
-                            CapturedBlockState.setBlockState(capturedBlockState);
+                            com.mohistmc.silkard.bukkit.CraftCompat.placeCaptured(capturedBlockState);
                         }
                     }
                 }

@@ -64,7 +64,7 @@ public class MixinTrialSpawner {
     @Redirect(method = "ejectReward", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/storage/loot/LootTable;getRandomItems(Lnet/minecraft/world/level/storage/loot/LootParams;)Lit/unimi/dsi/fastutil/objects/ObjectArrayList;"))
     private ObjectArrayList<ItemStack> silkard$loot(LootTable table, LootParams params) {
         ObjectArrayList<ItemStack> loot = table.getRandomItems(params);
-        BlockDispenseLootEvent event = CraftEventFactory.callBlockDispenseLootEvent(this.silkard$ejectLevel, this.silkard$ejectPos, null, loot);
+        BlockDispenseLootEvent event = CraftEventFactory.callBlockDispenseLootEvent(this.silkard$ejectLevel, this.silkard$ejectPos, null, loot, table);
         if (event.isCancelled()) {
             return new ObjectArrayList<>();
         }

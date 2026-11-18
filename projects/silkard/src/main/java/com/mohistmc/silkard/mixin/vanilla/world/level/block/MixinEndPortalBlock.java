@@ -89,7 +89,7 @@ public class MixinEndPortalBlock {
             return null;
         }
         Location to = event.getTo();
-        TeleportTransition transition = new TeleportTransition(((CraftWorld) to.getWorld()).getHandle(), CraftLocation.toVec3D(to), entity.getDeltaMovement(), to.getYaw(), to.getPitch(), relatives, post);
+        TeleportTransition transition = new TeleportTransition(((CraftWorld) to.getWorld()).getHandle(), CraftLocation.toVec3(to), entity.getDeltaMovement(), to.getYaw(), to.getPitch(), relatives, post);
         ((ContextTeleportTransition) (Object) transition).silkard$cause(PlayerTeleportEvent.TeleportCause.END_PORTAL);
         return transition;
     }

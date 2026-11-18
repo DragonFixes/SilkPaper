@@ -43,7 +43,7 @@ public class MixinConcretePowderBlock {
     @Redirect(method = "getStateForPlacement", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/Block;defaultBlockState()Lnet/minecraft/world/level/block/state/BlockState;"))
     private BlockState silkard$formOnPlacement(Block block, BlockPlaceContext context) {
         CraftBlockState blockState = CraftBlockStates.getBlockState(context.getLevel(), context.getClickedPos());
-        blockState.setData(block.defaultBlockState());
+        blockState.setBlock(block.defaultBlockState());
         BlockFormEvent event = new BlockFormEvent(blockState.getBlock(), blockState);
         context.getLevel().getCraftServer().getPluginManager().callEvent(event);
         if (!event.isCancelled()) {
@@ -61,7 +61,7 @@ public class MixinConcretePowderBlock {
             return true;
         }
         CraftBlockState blockState = CraftBlockStates.getBlockState(actualLevel, pos);
-        blockState.setData(this.concrete.defaultBlockState());
+        blockState.setBlock(this.concrete.defaultBlockState());
         BlockFormEvent event = new BlockFormEvent(blockState.getBlock(), blockState);
         actualLevel.getCraftServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) {

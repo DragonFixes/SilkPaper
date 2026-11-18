@@ -47,7 +47,7 @@ public abstract class MixinCrafterBlock {
                 RecipeHolder<CraftingRecipe> pickedRecipe = recipe.get();
                 ItemStack results = pickedRecipe.value().assemble(input);
 
-                CrafterCraftEvent event = CraftEventFactory.callCrafterCraftEvent(pos, level, blockEntity, results,
+                CrafterCraftEvent event = com.mohistmc.silkard.bukkit.CraftCompat.callCrafterCraftEvent(pos, level, results,
                         pickedRecipe.value().getRemainingItems(input), pickedRecipe);
                 if (event.isCancelled()) {
                     return;
@@ -141,7 +141,7 @@ public abstract class MixinCrafterBlock {
     // CraftBukkit end
 
     private InventoryMoveItemEvent silkard$moveItemEvent(ServerLevel level, CrafterBlockEntity blockEntity, Container into, ItemStack item) {
-        CraftItemStack craftItemStack = CraftItemStack.asCraftMirror(item);
+        CraftItemStack craftItemStack = com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(item);
 
         Inventory destinationInventory;
         // Have to special case large chests as they work oddly

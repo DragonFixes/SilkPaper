@@ -33,7 +33,7 @@ public abstract class MixinDyeRecipe implements ContextRecipe {
     // CraftBukkit start
     @Override
     public org.bukkit.inventory.Recipe toBukkitRecipe(NamespacedKey id) {
-        return new CraftDyeRecipe(id, CraftItemStack.asCraftMirror(this.result), CraftRecipe.toBukkit(this.target), CraftRecipe.toBukkit(this.dye));
+        return new CraftDyeRecipe(id, com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(this.result), CraftRecipe.toChoice(this.target), CraftRecipe.toChoice(this.dye));
     }
     // CraftBukkit end
 }

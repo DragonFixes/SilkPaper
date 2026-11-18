@@ -31,7 +31,7 @@ public abstract class MixinFireworkRocketEntity {
 
     @Redirect(method = {"tick", "onHitEntity", "onHitBlock"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/FireworkRocketEntity;explode(Lnet/minecraft/server/level/ServerLevel;)V"))
     private void silkard$explode(FireworkRocketEntity self, ServerLevel level) {
-        if (!CraftEventFactory.callFireworkExplodeEvent(self).isCancelled()) {
+        if (CraftEventFactory.callFireworkExplodeEvent(self)) {
             ((MixinFireworkRocketEntity) (Object) self).explode(level);
         }
     }

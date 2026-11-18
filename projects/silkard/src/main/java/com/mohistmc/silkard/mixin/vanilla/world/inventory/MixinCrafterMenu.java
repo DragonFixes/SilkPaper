@@ -70,7 +70,7 @@ public abstract class MixinCrafterMenu extends AbstractContainerMenu {
     @Redirect(method = "refreshRecipeResult", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/ResultContainer;setItem(ILnet/minecraft/world/item/ItemStack;)V"))
     private void silkard$refreshRecipeResult$setItem(ResultContainer resultContainer, int slot, net.minecraft.world.item.ItemStack itemstack) {
         // CraftBukkit - callPreCraftEvent
-        itemstack = org.bukkit.craftbukkit.event.CraftEventFactory.callPreCraftEvent(this.container, this.resultContainer, itemstack, this.getBukkitView(), java.util.Optional.empty());
+        itemstack = org.bukkit.craftbukkit.event.CraftEventFactory.callPreCraftEvent(this.container, this.resultContainer, itemstack, this.getBukkitView(), false);
         resultContainer.setItem(slot, itemstack);
     }
 }

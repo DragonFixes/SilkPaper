@@ -64,9 +64,9 @@ public abstract class MixinThrownEgg extends ThrowableItemProjectile {
             }
 
             for (int j = 0; j < i; ++j) {
-                Entity chicken = this.level().getWorld().makeEntity(
+                Entity chicken = this.level().getWorld().createEntity(
                         new Location(this.level().getWorld(), this.getX(), this.getY(), this.getZ(), this.getYRot(), 0.0F),
-                        hatchingType.getEntityClass());
+                        hatchingType.getEntityClass(), true);
                 if (chicken != null) {
                     if (chicken.getBukkitEntity() instanceof Ageable) {
                         ((Ageable) chicken.getBukkitEntity()).setBaby();

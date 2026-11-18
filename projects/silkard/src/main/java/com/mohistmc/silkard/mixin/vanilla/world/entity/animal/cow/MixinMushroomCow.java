@@ -27,7 +27,7 @@ public class MixinMushroomCow {
     @Inject(method = "mobInteract", at = @At("HEAD"), cancellable = true)
     private void silkard$shearEvent(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         ItemStack itemstack = player.getItemInHand(hand);
-        if (!CraftEventFactory.handlePlayerShearEntityEvent(player, (MushroomCow) (Object) this, itemstack, hand)) {
+        if (!com.mohistmc.silkard.bukkit.CraftCompat.handlePlayerShear(player, (MushroomCow) (Object) this, itemstack, hand)) {
             cir.setReturnValue(InteractionResult.PASS);
         }
     }

@@ -695,7 +695,7 @@ public abstract class MixinPlayerList implements ContextPlayerList {
                 ((ContextServerPlayer) serverPlayer).reset(); // SPIGOT-4785
             }
         } else {
-            teleporttransition = new TeleportTransition(((CraftWorld) location.getWorld()).getHandle(), CraftLocation.toVec3D(location), Vec3.ZERO, location.getYaw(), location.getPitch(), Set.of(), TeleportTransition.DO_NOTHING);
+            teleporttransition = new TeleportTransition(((CraftWorld) location.getWorld()).getHandle(), CraftLocation.toVec3(location), Vec3.ZERO, location.getYaw(), location.getPitch(), Set.of(), TeleportTransition.DO_NOTHING);
         }
 
         ServerLevel serverlevel = teleporttransition.newLevel();

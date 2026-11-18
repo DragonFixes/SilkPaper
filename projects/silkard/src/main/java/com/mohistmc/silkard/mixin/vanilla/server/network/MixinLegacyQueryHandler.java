@@ -30,7 +30,7 @@ public class MixinLegacyQueryHandler {
     // CraftBukkit start
     @Inject(method = "channelRead", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/LegacyQueryHandler;createVersion0Response(Lnet/minecraft/server/ServerInfo;)Ljava/lang/String;", shift = At.Shift.BEFORE))
     private void silkard$version0Ping(io.netty.channel.ChannelHandlerContext ctx, Object msg, CallbackInfo ci, @Local java.net.SocketAddress address) {
-        this.silkard$legacyPingEvent = CraftEventFactory.callServerListPingEvent(address, this.server.getMotd(), this.server.getPlayerCount(), this.server.getMaxPlayers());
+        this.silkard$legacyPingEvent = com.mohistmc.silkard.bukkit.CraftCompat.callServerListPingEvent(address, this.server.getMotd(), this.server.getPlayerCount(), this.server.getMaxPlayers());
     }
 
     @Redirect(method = "channelRead", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/LegacyQueryHandler;createVersion0Response(Lnet/minecraft/server/ServerInfo;)Ljava/lang/String;"))
@@ -41,7 +41,7 @@ public class MixinLegacyQueryHandler {
 
     @Inject(method = "channelRead", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/LegacyQueryHandler;createVersion1Response(Lnet/minecraft/server/ServerInfo;)Ljava/lang/String;", shift = At.Shift.BEFORE))
     private void silkard$version1Ping(io.netty.channel.ChannelHandlerContext ctx, Object msg, CallbackInfo ci, @Local java.net.SocketAddress address) {
-        this.silkard$legacyPingEvent = CraftEventFactory.callServerListPingEvent(address, this.server.getMotd(), this.server.getPlayerCount(), this.server.getMaxPlayers());
+        this.silkard$legacyPingEvent = com.mohistmc.silkard.bukkit.CraftCompat.callServerListPingEvent(address, this.server.getMotd(), this.server.getPlayerCount(), this.server.getMaxPlayers());
     }
 
     @Redirect(method = "channelRead", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/LegacyQueryHandler;createVersion1Response(Lnet/minecraft/server/ServerInfo;)Ljava/lang/String;"))

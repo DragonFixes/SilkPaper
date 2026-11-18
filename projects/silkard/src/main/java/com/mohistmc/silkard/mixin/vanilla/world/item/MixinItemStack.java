@@ -113,7 +113,7 @@ public abstract class MixinItemStack implements ContextItemStack {
     private int silkard$playerItemDamage(ItemStack stack, int amount, ServerLevel level, @Nullable ServerPlayer player) {
         int j = this.silkard$processDurabilityChange(amount, level, player);
         if (player != null) {
-            PlayerItemDamageEvent event = new PlayerItemDamageEvent(player.getBukkitEntity(), CraftItemStack.asCraftMirror(stack), j);
+            PlayerItemDamageEvent event = new PlayerItemDamageEvent(player.getBukkitEntity(), com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(stack), j);
             event.getPlayer().getServer().getPluginManager().callEvent(event);
             if (j != event.getDamage() || event.isCancelled()) {
                 event.getPlayer().updateInventory();
@@ -190,7 +190,7 @@ public abstract class MixinItemStack implements ContextItemStack {
                     this.setCount(newCount);
                 }
                 for (CraftBlockState blockstate : blocks) {
-                    CapturedBlockState.setBlockState(blockstate);
+                    com.mohistmc.silkard.bukkit.CraftCompat.placeCaptured(blockstate);
                 }
                 player.awardStat(Stats.ITEM_USED.get(item));
             }
@@ -205,9 +205,9 @@ public abstract class MixinItemStack implements ContextItemStack {
                 List<org.bukkit.block.BlockState> blocks = new ArrayList<>(levelHandle.silkard$capturedBlockStates().values());
                 levelHandle.silkard$capturedBlockStates().clear();
                 if (blocks.size() > 1) {
-                    placeEvent = CraftEventFactory.callBlockMultiPlaceEvent(world, player, interactionhand, blocks, blockpos.getX(), blockpos.getY(), blockpos.getZ());
+                    placeEvent = CraftEventFactory.callBlockMultiPlaceEvent(world, player, interactionhand, blocks, blockpos);
                 } else if (blocks.size() == 1) {
-                    placeEvent = CraftEventFactory.callBlockPlaceEvent(world, player, interactionhand, blocks.get(0), blockpos.getX(), blockpos.getY(), blockpos.getZ());
+                    placeEvent = CraftEventFactory.callBlockPlaceEvent(world, player, interactionhand, blocks.get(0), blockpos);
                 }
 
                 if (placeEvent != null && (placeEvent.isCancelled() || !placeEvent.canBuild())) {
@@ -234,7 +234,7 @@ public abstract class MixinItemStack implements ContextItemStack {
                     }
 
                     for (org.bukkit.block.BlockState blockstate : blocks) {
-                        int updateFlag = ((CraftBlockState) blockstate).getFlag();
+                        int updateFlag = ((CraftBlockState) blockstate).getFlags();
                         BlockState oldBlock = ((CraftBlockState) blockstate).getHandle();
                         BlockPos newblockposition = ((CraftBlockState) blockstate).getPosition();
                         BlockState block = world.getBlockState(newblockposition);

@@ -67,7 +67,7 @@ public class MixinSpongeBlock {
             }
         });
 
-        List<CraftBlockState> blocks = blockList.getList();
+        List<CraftBlockState> blocks = blockList.getSnapshotBlocks();
         if (!blocks.isEmpty()) {
             final org.bukkit.block.Block bblock = level.getWorld().getBlockAt(startPos.getX(), startPos.getY(), startPos.getZ());
 
@@ -94,7 +94,7 @@ public class MixinSpongeBlock {
                         Block.dropResources(blockstate, level, blockpos1, blockentity);
                     }
                 }
-                level.setBlock(blockpos1, block.getHandle(), block.getFlag());
+                level.setBlock(blockpos1, block.getHandle(), block.getFlags());
             }
 
             return true;

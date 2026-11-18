@@ -29,7 +29,7 @@ public class MixinSheep {
     // CraftBukkit start - shear event
     @Inject(method = "mobInteract", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/animal/sheep/Sheep;shear(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/sounds/SoundSource;Lnet/minecraft/world/item/ItemStack;)V"), cancellable = true)
     private void silkard$playerShear(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir, @Local(ordinal = 0) ItemStack itemstack) {
-        if (!CraftEventFactory.handlePlayerShearEntityEvent(player, (Sheep) (Object) this, itemstack, hand)) {
+        if (!com.mohistmc.silkard.bukkit.CraftCompat.handlePlayerShear(player, (Sheep) (Object) this, itemstack, hand)) {
             cir.setReturnValue(InteractionResult.PASS);
         }
     }

@@ -39,8 +39,8 @@ public abstract class MixinSmithingTransformRecipe implements ContextRecipe {
     // CraftBukkit start
     @Override
     public org.bukkit.inventory.Recipe toBukkitRecipe(NamespacedKey id) {
-        org.bukkit.inventory.ItemStack result = CraftItemStack.asCraftMirror(this.result);
-        CraftSmithingTransformRecipe recipe = new CraftSmithingTransformRecipe(id, result, CraftRecipe.toBukkit(this.template), CraftRecipe.toBukkit(this.base), CraftRecipe.toBukkit(this.addition));
+        org.bukkit.inventory.ItemStack result = com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(this.result);
+        CraftSmithingTransformRecipe recipe = new CraftSmithingTransformRecipe(id, result, CraftRecipe.toChoice(this.template), CraftRecipe.toChoice(this.base), CraftRecipe.toChoice(this.addition));
         return recipe;
     }
     // CraftBukkit end

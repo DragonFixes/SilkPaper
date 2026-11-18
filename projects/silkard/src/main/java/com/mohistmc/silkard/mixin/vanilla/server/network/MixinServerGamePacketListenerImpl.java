@@ -215,7 +215,7 @@ public class MixinServerGamePacketListenerImpl implements ContextServerGamePacke
         if (event.isCancelled() || !to.equals(event.getTo())) {
             relatives = Collections.emptySet();
             to = event.isCancelled() ? event.getFrom() : event.getTo();
-            destination = new net.minecraft.world.entity.PositionMoveRotation(org.bukkit.craftbukkit.util.CraftLocation.toVec3D(to), net.minecraft.world.phys.Vec3.ZERO, to.getYaw(), to.getPitch());
+            destination = new net.minecraft.world.entity.PositionMoveRotation(org.bukkit.craftbukkit.util.CraftLocation.toVec3(to), net.minecraft.world.phys.Vec3.ZERO, to.getYaw(), to.getPitch());
         }
         this.internalTeleport(destination, relatives);
         return !event.isCancelled();

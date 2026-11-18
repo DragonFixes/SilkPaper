@@ -145,7 +145,7 @@ public abstract class MixinSignBlockEntity {
     // CraftBukkit - pass the player to custom click actions
     @Redirect(method = "executeClickCommandsIfPresent", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;handleCustomClickAction(Lnet/minecraft/resources/Identifier;Ljava/util/Optional;)V"))
     private void silkard$customClick(MinecraftServer server, Identifier id, Optional<Tag> payload, @Local(argsOnly = true) Player player) {
-        CraftEventFactory.callPlayerCustomClickEvent(id, payload, (ServerPlayer) player);
+        com.mohistmc.silkard.bukkit.CraftCompat.callPlayerCustomClickEvent(id, payload, (ServerPlayer) player);
         server.handleCustomClickAction(id, payload);
     }
 

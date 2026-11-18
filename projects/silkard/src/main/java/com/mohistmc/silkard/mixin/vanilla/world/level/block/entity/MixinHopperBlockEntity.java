@@ -94,7 +94,7 @@ public abstract class MixinHopperBlockEntity extends RandomizableContainerBlockE
         }
 
         Inventory source = ((ContextContainer) self).getOwner() != null ? ((ContextContainer) self).getOwner().getInventory() : new CraftInventory(self);
-        InventoryMoveItemEvent event = new InventoryMoveItemEvent(source, CraftItemStack.asCraftMirror(stack), destination, true);
+        InventoryMoveItemEvent event = new InventoryMoveItemEvent(source, com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(stack), destination, true);
         ((ContextLevel) ((HopperBlockEntity) self).getLevel()).getCraftServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             return stack;
@@ -115,7 +115,7 @@ public abstract class MixinHopperBlockEntity extends RandomizableContainerBlockE
         }
 
         Inventory destination = ((ContextContainer) hopper).getOwner() != null ? ((ContextContainer) hopper).getOwner().getInventory() : new CraftInventory(hopper);
-        InventoryMoveItemEvent event = new InventoryMoveItemEvent(source, CraftItemStack.asCraftMirror(stack), destination, false);
+        InventoryMoveItemEvent event = new InventoryMoveItemEvent(source, com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(stack), destination, false);
         Bukkit.getServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             return stack;

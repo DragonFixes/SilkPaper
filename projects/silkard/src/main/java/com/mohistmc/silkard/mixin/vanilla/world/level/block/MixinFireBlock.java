@@ -67,7 +67,7 @@ public abstract class MixinFireBlock implements ContextFireBlock {
                 return Blocks.AIR.defaultBlockState();
             }
             CraftBlockState blockState = CraftBlockStates.getBlockState(actualLevel, pos);
-            blockState.setData(Blocks.AIR.defaultBlockState());
+            blockState.setBlock(Blocks.AIR.defaultBlockState());
 
             BlockFadeEvent event = new BlockFadeEvent(blockState.getBlock(), blockState);
             actualLevel.getCraftServer().getPluginManager().callEvent(event);

@@ -257,7 +257,7 @@ public abstract class MixinBrewingStandBlockEntity implements ContextBrewingStan
         BrewingFuel brewingFuel = fuelStack.get(DataComponents.BREWING_FUEL);
 
         if (stand.silkard$fuel() <= 0 && brewingFuel != null) {
-            BrewingStandFuelEvent event = new BrewingStandFuelEvent(CraftBlock.at(level, pos), CraftItemStack.asCraftMirror(fuelStack), stand.silkard$getUses(level, brewingFuel));
+            BrewingStandFuelEvent event = new BrewingStandFuelEvent(CraftBlock.at(level, pos), com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(fuelStack), stand.silkard$getUses(level, brewingFuel));
             level.getCraftServer().getPluginManager().callEvent(event);
             if (event.isCancelled()) {
                 return;
@@ -302,7 +302,7 @@ public abstract class MixinBrewingStandBlockEntity implements ContextBrewingStan
         } else if (brewable && stand.silkard$fuel() > 0) {
             float speed = stand.silkard$speedMultiplier() > 0.0F ? stand.silkard$speedMultiplier() : 1.0F;
             stand.silkard$fuel(stand.silkard$fuel() - 1);
-            BrewingStartEvent event = new BrewingStartEvent(CraftBlock.at(level, pos), CraftItemStack.asCraftMirror(ingredientStack), (int) Math.ceil(400.0F / speed));
+            BrewingStartEvent event = new BrewingStartEvent(CraftBlock.at(level, pos), com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(ingredientStack), (int) Math.ceil(400.0F / speed));
             level.getCraftServer().getPluginManager().callEvent(event);
             stand.silkard$brewTime(event.getTotalBrewTime());
             stand.silkard$totalBrewTime(stand.silkard$brewTime());
@@ -345,7 +345,7 @@ public abstract class MixinBrewingStandBlockEntity implements ContextBrewingStan
             ItemStack bottleStack = items.get(i);
             BrewingInput input = new BrewingInput(bottleStack, ingredientStack);
             Optional<RecipeHolder<BrewingRecipe>> optional = stand.silkard$quickCheck(input, level);
-            results.add(i, CraftItemStack.asCraftMirror(optional.isPresent() ? optional.get().value().assemble(input) : bottleStack));
+            results.add(i, com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(optional.isPresent() ? optional.get().value().assemble(input) : bottleStack));
         }
 
         BrewEvent event = new BrewEvent(CraftBlock.at(level, pos), (BrewerInventory) owner.getInventory(), results, stand.silkard$fuel());

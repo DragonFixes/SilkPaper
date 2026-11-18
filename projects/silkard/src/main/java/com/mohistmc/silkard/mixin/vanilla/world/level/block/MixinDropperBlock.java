@@ -51,7 +51,7 @@ public abstract class MixinDropperBlock {
     private static ItemStack silkard$addItem(Container dropper, Container container, ItemStack stack, Direction direction) {
         DispenserBlockEntity dropperEntity = (DispenserBlockEntity) dropper;
         ServerLevel level = (ServerLevel) dropperEntity.getLevel();
-        CraftItemStack oitemstack = CraftItemStack.asCraftMirror(stack);
+        CraftItemStack oitemstack = com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(stack);
 
         org.bukkit.inventory.Inventory destinationInventory;
         // Have to special case large chests as they work oddly

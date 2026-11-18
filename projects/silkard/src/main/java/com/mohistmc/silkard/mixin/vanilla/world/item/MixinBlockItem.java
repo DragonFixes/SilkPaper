@@ -53,7 +53,7 @@ public class MixinBlockItem {
     @Inject(method = "place", at = @At(value = "INVOKE", shift = At.Shift.AFTER, target = "Lnet/minecraft/world/level/block/Block;setPlacedBy(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;)V"), cancellable = true)
     private void silkard$blockPlace(BlockPlaceContext placeContext, CallbackInfoReturnable<InteractionResult> cir, @Local BlockPos pos, @Local Level level, @Local Player player, @Local(ordinal = 1) BlockPlaceContext updatedPlaceContext) {
         if (this.silkard$replacedBlockState != null && level instanceof ServerLevel serverLevel) {
-            BlockPlaceEvent placeEvent = CraftEventFactory.callBlockPlaceEvent(serverLevel, player, updatedPlaceContext.getHand(), this.silkard$replacedBlockState, pos.getX(), pos.getY(), pos.getZ());
+            BlockPlaceEvent placeEvent = CraftEventFactory.callBlockPlaceEvent(serverLevel, player, updatedPlaceContext.getHand(), this.silkard$replacedBlockState, pos);
 
             if (placeEvent != null && (placeEvent.isCancelled() || !placeEvent.canBuild())) {
                 this.silkard$replacedBlockState.update(true, false);
@@ -71,7 +71,7 @@ public class MixinBlockItem {
     private void silkard$canBuild(BlockPlaceContext context, BlockState stateForPlacement, CallbackInfoReturnable<Boolean> cir) {
         Player player = context.getPlayer();
         org.bukkit.entity.Player bukkitPlayer = player instanceof ServerPlayer ? (org.bukkit.entity.Player) player.getBukkitEntity() : null;
-        BlockCanBuildEvent event = new BlockCanBuildEvent(CraftBlock.at(context.getLevel(), context.getClickedPos()), bukkitPlayer, CraftBlockData.fromData(stateForPlacement), cir.getReturnValue());
+        BlockCanBuildEvent event = new BlockCanBuildEvent(CraftBlock.at(context.getLevel(), context.getClickedPos()), bukkitPlayer, CraftBlockData.createData(stateForPlacement), cir.getReturnValue());
         context.getLevel().getCraftServer().getPluginManager().callEvent(event);
         cir.setReturnValue(event.isBuildable());
     }

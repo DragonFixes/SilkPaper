@@ -57,7 +57,6 @@ public final class PaperBootstrap {
     );
     private static final String LEGACY_CONFIG_DIR = "config";
 
-    private static volatile @Nullable MinecraftServer server;
     private static @Nullable PaperConfigurations paperConfigurations;
     private static @Nullable GaleConfigurations galeConfigurations;
     private static File purpurConfigFile = new File(PaperConfigurations.CONFIG_DIR, "purpur.yml");
@@ -65,13 +64,9 @@ public final class PaperBootstrap {
     private PaperBootstrap() {
     }
 
-    /**
-     * The running server. Available from {@code DedicatedServer.initServer} on; before that it
-     * falls back to the server behind {@code Bukkit.getServer()}, which may be {@code null}.
-     */
+    /** The running server; see {@link BukkitUtils#getServer()}. */
     public static @Nullable MinecraftServer server() {
-        final MinecraftServer current = server;
-        return current != null ? current : BukkitUtils.getServer();
+        return BukkitUtils.getServer();
     }
 
     public static PaperConfigurations paperConfigurations() {
@@ -116,7 +111,7 @@ public final class PaperBootstrap {
      * which is where Spigot, Paper, Gale and Purpur initialize them upstream.
      */
     public static void initServer(DedicatedServer dedicatedServer) throws Exception {
-        server = dedicatedServer;
+        BukkitUtils.setServer(dedicatedServer);
         final @Nullable OptionSet options = ((ContextMinecraftServer) dedicatedServer).silkard_options();
 
         // Leaf's post-bootstrap pass (registry-dependent options); vanilla bootstrap has run by now.

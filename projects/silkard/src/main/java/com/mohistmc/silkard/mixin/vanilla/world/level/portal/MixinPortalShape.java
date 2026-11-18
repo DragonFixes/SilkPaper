@@ -67,7 +67,7 @@ public abstract class MixinPortalShape implements ContextPortalShape {
                 .forEach(pos -> blocks.setBlock(pos, blockstate, 18));
 
         PortalCreateEvent event = new PortalCreateEvent(
-                (List<org.bukkit.block.BlockState>) (List<?>) blocks.getList(),
+                (List<org.bukkit.block.BlockState>) (List<?>) blocks.getSnapshotBlocks(),
                 bworld,
                 entity == null ? null : entity.getBukkitEntity(),
                 PortalCreateEvent.CreateReason.FIRE);

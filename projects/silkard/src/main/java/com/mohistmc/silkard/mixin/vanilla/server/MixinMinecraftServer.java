@@ -186,7 +186,7 @@ public abstract class MixinMinecraftServer extends net.minecraft.util.thread.Ree
     @Override
     public void handleCustomClickAction(net.minecraft.resources.Identifier id, Optional<net.minecraft.nbt.Tag> payload, ServerPlayer player) {
         ((net.minecraft.server.MinecraftServer) (Object) this).handleCustomClickAction(id, payload);
-        org.bukkit.craftbukkit.event.CraftEventFactory.callPlayerCustomClickEvent(id, payload, player);
+        com.mohistmc.silkard.bukkit.CraftCompat.callPlayerCustomClickEvent(id, payload, player);
     }
 
     // CraftBukkit start
@@ -730,7 +730,16 @@ public abstract class MixinMinecraftServer extends net.minecraft.util.thread.Ree
             List<net.minecraft.world.level.CustomSpawner> list = com.google.common.collect.ImmutableList.of(new net.minecraft.world.level.levelgen.PhantomSpawner(), new net.minecraft.world.level.levelgen.PatrolSpawner(), new net.minecraft.world.entity.npc.CatSpawner(), new net.minecraft.world.entity.ai.village.VillageSiege(), new net.minecraft.world.entity.npc.wanderingtrader.WanderingTraderSpawner(dimensiondatastorage));
             LevelStem levelstem = dimensions.getValue(dimensionKey);
 
-            org.bukkit.generator.WorldInfo worldInfo = new org.bukkit.craftbukkit.generator.CraftWorldInfo(serverleveldata, worldoptions, worldSession, org.bukkit.World.Environment.getEnvironment(dimension), levelstem.type().value());
+            org.bukkit.generator.WorldInfo worldInfo = new org.bukkit.craftbukkit.generator.CraftWorldInfo(
+                    serverleveldata.getLevelName(),
+                    org.bukkit.craftbukkit.util.CraftNamespacedKey.fromMinecraft(dimensionKey.identifier()),
+                    worldoptions.seed(),
+                    worlddata.enabledFeatures(),
+                    org.bukkit.World.Environment.getEnvironment(dimension),
+                    levelstem.type().value(),
+                    levelstem.generator(),
+                    this.registryAccess(),
+                    org.bukkit.craftbukkit.util.WorldUUID.getUUID(worldSession.levelDirectory.path().toFile()));
             if (biomeProvider == null && gen != null) {
                 biomeProvider = gen.getDefaultBiomeProvider(worldInfo);
             }
@@ -1051,6 +1060,7 @@ public abstract class MixinMinecraftServer extends net.minecraft.util.thread.Ree
     // (CB MinecraftServer.patch ctor hunk 的等价；silkard 经 MixinMain 槽位或 silkard$configure 供值)
     @Inject(method = "<init>", at = @At("TAIL"))
     private void silkard$bukkitServerInit(Thread serverThread, net.minecraft.world.level.storage.LevelStorageSource.LevelStorageAccess levelStorageSource, net.minecraft.server.packs.repository.PackRepository packRepository, net.minecraft.server.WorldStem worldStem, java.util.Optional<net.minecraft.world.level.gamerules.GameRules> gameRules, java.net.Proxy proxy, com.mojang.datafixers.DataFixer fixerUpper, net.minecraft.server.Services services, net.minecraft.server.level.progress.LevelLoadListener levelLoadListener, boolean propagatesCrashes, net.minecraft.server.notifications.NotificationManager notificationManager, CallbackInfo ci) {
+        BukkitUtils.setServer((MinecraftServer) (Object) this); // Paper - MinecraftServer.getServer()
         // CraftBukkit start
         this.options = MainHook.options(); // CraftBukkit - from Main capture
         this.worldLoader = MainHook.worldLoader(); // CraftBukkit - from Main capture

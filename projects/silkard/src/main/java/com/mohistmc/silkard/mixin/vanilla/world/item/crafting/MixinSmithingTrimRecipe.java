@@ -38,7 +38,7 @@ public abstract class MixinSmithingTrimRecipe implements ContextRecipe {
     // CraftBukkit start
     @Override
     public org.bukkit.inventory.Recipe toBukkitRecipe(NamespacedKey id) {
-        return new CraftSmithingTrimRecipe(id, CraftRecipe.toBukkit(this.template), CraftRecipe.toBukkit(this.base), CraftRecipe.toBukkit(this.addition), CraftTrimPattern.minecraftHolderToBukkit(this.pattern));
+        return new CraftSmithingTrimRecipe(id, CraftRecipe.toChoice(this.template), CraftRecipe.toChoice(this.base), CraftRecipe.toChoice(this.addition), CraftTrimPattern.minecraftHolderToBukkit(this.pattern));
     }
     // CraftBukkit end
 }

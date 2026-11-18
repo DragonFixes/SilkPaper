@@ -33,7 +33,7 @@ public abstract class MixinImbueRecipe implements ContextRecipe {
     // CraftBukkit start
     @Override
     public org.bukkit.inventory.Recipe toBukkitRecipe(NamespacedKey id) {
-        return new CraftImbueRecipe(id, CraftItemStack.asCraftMirror(this.result), CraftRecipe.toBukkit(this.source), CraftRecipe.toBukkit(this.material));
+        return new CraftImbueRecipe(id, com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(this.result), CraftRecipe.toChoice(this.source), CraftRecipe.toChoice(this.material));
     }
     // CraftBukkit end
 }

@@ -25,8 +25,9 @@ public class MixinVaultBlockEntity$Server {
 
     // CraftBukkit start - BlockDispenseLootEvent
     @ModifyExpressionValue(method = "tryInsertKey", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/entity/vault/VaultBlockEntity$Server;resolveItemsToEject(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/level/block/entity/vault/VaultConfig;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemInstance;)Ljava/util/List;"))
-    private static List<ItemStack> silkard$dispenseLoot(List<ItemStack> original, @Local(argsOnly = true) ServerLevel level, @Local(argsOnly = true) BlockPos pos, @Local(argsOnly = true) Player player) {
-        BlockDispenseLootEvent event = CraftEventFactory.callBlockDispenseLootEvent(level, pos, player, original);
+    private static List<ItemStack> silkard$dispenseLoot(List<ItemStack> original, @Local(argsOnly = true) ServerLevel level, @Local(argsOnly = true) BlockPos pos, @Local(argsOnly = true) Player player, @Local(argsOnly = true) net.minecraft.world.level.block.entity.vault.VaultConfig config) {
+        net.minecraft.world.level.storage.loot.LootTable sourceLootTable = level.getServer().reloadableRegistries().getLootTable(config.lootTable());
+        BlockDispenseLootEvent event = CraftEventFactory.callBlockDispenseLootEvent(level, pos, player, original, sourceLootTable);
         if (event.isCancelled()) {
             return List.of();
         }

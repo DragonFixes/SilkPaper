@@ -58,7 +58,7 @@ public abstract class MixinBlockStateBase {
             CraftWorld cworld = serverLevel.getWorld();
             if (cworld != null) {
                 BlockState state = (BlockState) (Object) this;
-                BlockPhysicsEvent event = new BlockPhysicsEvent(CraftBlock.at(level, pos), CraftBlockData.fromData(state));
+                BlockPhysicsEvent event = new BlockPhysicsEvent(CraftBlock.at(level, pos), CraftBlockData.createData(state));
                 serverLevel.getCraftServer().getPluginManager().callEvent(event);
 
                 if (event.isCancelled()) {

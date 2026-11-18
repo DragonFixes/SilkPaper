@@ -36,7 +36,7 @@ public interface MixinNeighborUpdater {
         if (level instanceof ServerLevel serverLevel) {
             CraftWorld cworld = serverLevel.getWorld();
             if (cworld != null) {
-                BlockPhysicsEvent event = new BlockPhysicsEvent(CraftBlock.at(level, pos), CraftBlockData.fromData(state));
+                BlockPhysicsEvent event = new BlockPhysicsEvent(CraftBlock.at(level, pos), CraftBlockData.createData(state));
                 serverLevel.getCraftServer().getPluginManager().callEvent(event);
 
                 if (event.isCancelled()) {

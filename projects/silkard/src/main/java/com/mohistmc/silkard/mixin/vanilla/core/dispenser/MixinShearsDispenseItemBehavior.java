@@ -72,7 +72,8 @@ public abstract class MixinShearsDispenseItemBehavior extends OptionalDispenseIt
             if (entity.isAlive() && entity instanceof Shearable shearable) {
                 if (shearable.readyForShearing()) {
                     // CraftBukkit start
-                    if (CraftEventFactory.callBlockShearEntityEvent(entity, event.getBlock(), CraftItemStack.asCraftMirror(tool)).isCancelled()) {
+                    // TODO(silkard-paper): pass the rolled shear loot so BlockShearEntityEvent#getDrops/setDrops reach the dropped items.
+                    if (CraftEventFactory.callBlockShearEntityEvent(entity, event.getBlock(), com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(tool), new java.util.ArrayList<>()).isCancelled()) {
                         continue;
                     }
                     // CraftBukkit end

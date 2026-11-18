@@ -64,8 +64,24 @@ public class BukkitUtils {
 
     public static long pluginTimeout = 0L;
 
+    private static volatile MinecraftServer server;
+
+    /**
+     * The running server, standing in for Paper's static {@code MinecraftServer.getServer()}.
+     * Set from the {@code MinecraftServer} constructor, so it is available before the CraftServer
+     * exists; falls back to the server behind {@code Bukkit.getServer()}. May be {@code null}
+     * before the server has been constructed.
+     */
     public static MinecraftServer getServer() {
-        return (Bukkit.getServer() instanceof CraftServer) ? ((CraftServer) Bukkit.getServer()).getServer() : null;
+        final MinecraftServer current = server;
+        if (current != null) {
+            return current;
+        }
+        return (Bukkit.getServer() instanceof CraftServer craftServer) ? craftServer.getServer() : null;
+    }
+
+    public static void setServer(MinecraftServer minecraftServer) {
+        server = minecraftServer;
     }
 
     public static RegistryAccess getDefaultRegistryAccess() {
@@ -230,7 +246,7 @@ public class BukkitUtils {
 
     public static boolean changeCauldronLevel(Level level, BlockPos pos, BlockState newBlock, Entity entity, CauldronLevelChangeEvent.ChangeReason reason) {
         CraftBlockState newState = CraftBlockStates.getBlockState(level, pos);
-        newState.setData(newBlock);
+        newState.setBlock(newBlock);
 
         CauldronLevelChangeEvent event = new CauldronLevelChangeEvent(
                 ((ContextLevel) level).getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ()),

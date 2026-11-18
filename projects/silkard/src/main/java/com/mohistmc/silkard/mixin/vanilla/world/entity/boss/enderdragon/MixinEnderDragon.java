@@ -121,7 +121,7 @@ public abstract class MixinEnderDragon implements ContextLivingEntity {
                 }
                 CraftBlock craftBlock = (CraftBlock) block;
                 BlockPos blockpos = craftBlock.getPosition();
-                BlockState blockstate = craftBlock.getNMS();
+                BlockState blockstate = craftBlock.getBlockState();
                 Block nmsBlock = blockstate.getBlock();
                 if (nmsBlock.dropFromExplosion(this.silkard$explosionSource)) {
                     BlockEntity blockentity = blockstate.hasBlockEntity() ? level.getBlockEntity(blockpos) : null;
