@@ -16,6 +16,6 @@ public class MixinRootedDirtBlock {
 
     @Redirect(method = "performBonemeal", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z"))
     private boolean silkard$performBonemeal(ServerLevel instance, BlockPos pos, BlockState state, ServerLevel level, RandomSource random, BlockPos blockPos, BlockState blockState) {
-        return CraftEventFactory.handleBlockSpreadEvent(level, blockPos, pos, Blocks.HANGING_ROOTS.defaultBlockState());
+        return CraftEventFactory.handleBlockSpreadEvent(level, blockPos, pos, Blocks.HANGING_ROOTS.defaultBlockState(), net.minecraft.world.level.block.Block.UPDATE_ALL);
     }
 }

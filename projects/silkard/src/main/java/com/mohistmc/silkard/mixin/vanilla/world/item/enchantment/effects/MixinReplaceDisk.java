@@ -20,6 +20,6 @@ public class MixinReplaceDisk {
 
     @Redirect(method = "apply", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z"))
     private boolean silkard$blockForm(ServerLevel level, BlockPos pos, BlockState state, @Local(argsOnly = true) Entity entity) {
-        return CraftEventFactory.handleBlockFormEvent(level, pos, state, entity); // CraftBukkit - Call EntityBlockFormEvent for Frost Walker
+        return CraftEventFactory.handleBlockFormEvent(level, pos, state, net.minecraft.world.level.block.Block.UPDATE_ALL, entity); // CraftBukkit - Call EntityBlockFormEvent for Frost Walker
     }
 }

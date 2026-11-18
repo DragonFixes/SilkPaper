@@ -391,7 +391,7 @@ public abstract class MixinServerPlayerGameMode implements ContextServerPlayerGa
             ci.cancel();
             return;
         }
-        BlockDamageEvent blockEvent = CraftEventFactory.callBlockDamageEvent(this.player, pos, this.player.getInventory().getSelectedItem(), this.silkard$destroyProgress >= 1.0F);
+        BlockDamageEvent blockEvent = CraftEventFactory.callBlockDamageEvent(this.player, pos, direction, this.player.getInventory().getSelectedItem(), this.silkard$destroyProgress >= 1.0F);
         if (blockEvent.isCancelled()) {
             this.player.connection.send(new ClientboundBlockUpdatePacket(this.level, pos));
             ci.cancel();

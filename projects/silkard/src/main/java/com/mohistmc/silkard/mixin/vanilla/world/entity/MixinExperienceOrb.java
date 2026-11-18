@@ -90,8 +90,9 @@ public abstract class MixinExperienceOrb {
             int toRepairFromXpAmount = EnchantmentHelper.modifyDurabilityToRepairFromXp(player.level(), itemStack, amount);
             int repair = Math.min(toRepairFromXpAmount, itemStack.getDamageValue());
 
+            final int consumedExperience = repair > 0 ? repair * amount / toRepairFromXpAmount : 0; // Paper - mending event
             PlayerItemMendEvent event = CraftEventFactory.callPlayerItemMendEvent(player,
-                    (ExperienceOrb) (Object) this, itemStack, selected.get().inSlot(), repair);
+                    (ExperienceOrb) (Object) this, itemStack, selected.get().inSlot(), repair, consumedExperience);
             repair = event.getRepairAmount();
             if (event.isCancelled()) {
                 return amount;
@@ -143,7 +144,7 @@ public abstract class MixinExperienceOrb {
 
     @Redirect(method = "playerTouch", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;giveExperiencePoints(I)V"))
     private void silkard$expChange(Player player, int amount) {
-        player.giveExperiencePoints(CraftEventFactory.callPlayerExpChangeEvent((ServerPlayer) player, amount).getAmount());
+        player.giveExperiencePoints(CraftEventFactory.callPlayerExpChangeEvent(player, (ExperienceOrb) (Object) this, amount).getAmount());
     }
     // CraftBukkit end
 

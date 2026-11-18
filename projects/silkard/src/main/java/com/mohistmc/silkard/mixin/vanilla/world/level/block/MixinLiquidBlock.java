@@ -25,7 +25,7 @@ public class MixinLiquidBlock {
     // CraftBukkit start - BlockFormEvent when lava meets water (obsidian/cobblestone) or blue ice (basalt)
     @Redirect(method = "shouldSpreadLiquid", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z", ordinal = 0))
     private boolean silkard$meetWaterFormEvent(Level level, BlockPos pos, BlockState state) {
-        if (CraftEventFactory.handleBlockFormEvent(level, pos, state)) {
+        if (CraftEventFactory.handleBlockFormEvent(level, pos, state, net.minecraft.world.level.block.Block.UPDATE_ALL)) {
             this.fizz(level, pos);
             return true;
         }
@@ -34,7 +34,7 @@ public class MixinLiquidBlock {
 
     @Redirect(method = "shouldSpreadLiquid", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z", ordinal = 1))
     private boolean silkard$soulSoilFormEvent(Level level, BlockPos pos, BlockState state) {
-        if (CraftEventFactory.handleBlockFormEvent(level, pos, state)) {
+        if (CraftEventFactory.handleBlockFormEvent(level, pos, state, net.minecraft.world.level.block.Block.UPDATE_ALL)) {
             this.fizz(level, pos);
             return true;
         }

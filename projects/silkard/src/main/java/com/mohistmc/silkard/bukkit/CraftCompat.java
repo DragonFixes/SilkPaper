@@ -103,6 +103,31 @@ public final class CraftCompat {
         return event;
     }
 
+    /**
+     * CrafterCraftEvent with Spigot's remaining-items list, so plugins can change what the
+     * crafter ejects besides the result.
+     */
+    public static org.bukkit.event.block.CrafterCraftEvent callCrafterCraftEvent(BlockPos pos, Level level, ItemStack result, java.util.List<ItemStack> remainingItems, net.minecraft.world.item.crafting.RecipeHolder<net.minecraft.world.item.crafting.CraftingRecipe> holder) {
+        java.util.List<org.bukkit.inventory.ItemStack> remaining = new java.util.ArrayList<>(remainingItems.size());
+        for (ItemStack stack : remainingItems) {
+            remaining.add(CraftItemStack.asBukkitCopy(stack));
+        }
+        org.bukkit.event.block.CrafterCraftEvent event = new org.bukkit.event.block.CrafterCraftEvent(
+            CraftBlock.at(level, pos), (org.bukkit.inventory.CraftingRecipe) holder.toBukkitRecipe(), CraftItemStack.asBukkitMirror(result), remaining);
+        Bukkit.getPluginManager().callEvent(event);
+        return event;
+    }
+
+    /**
+     * Fires PlayerShearEntityEvent before a player shears {@code sheared}; returns whether the
+     * shearing may go ahead. Vanilla rolls the shear loot inside the shear method itself, so the
+     * event carries no drops.
+     */
+    public static boolean handlePlayerShear(Player player, Entity sheared, ItemStack shears, InteractionHand hand) {
+        // TODO(silkard-paper): roll the shear loot up front so PlayerShearEntityEvent#getDrops/setDrops reach the dropped items.
+        return !org.bukkit.craftbukkit.event.CraftEventFactory.handlePlayerShearEntityEvent(player, sheared, shears, hand, new java.util.ArrayList<>()).isCancelled();
+    }
+
     public static BlockBrushEvent callBlockBrushEvent(Level level, BlockPos pos, BlockState newData, int flags, Player entity) {
         org.bukkit.entity.Player player = (org.bukkit.entity.Player) entity.getBukkitEntity();
         CraftBlock block = CraftBlock.at(level, pos);

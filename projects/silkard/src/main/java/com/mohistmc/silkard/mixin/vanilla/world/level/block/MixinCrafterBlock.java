@@ -47,7 +47,7 @@ public abstract class MixinCrafterBlock {
                 RecipeHolder<CraftingRecipe> pickedRecipe = recipe.get();
                 ItemStack results = pickedRecipe.value().assemble(input);
 
-                CrafterCraftEvent event = CraftEventFactory.callCrafterCraftEvent(pos, level, blockEntity, results,
+                CrafterCraftEvent event = com.mohistmc.silkard.bukkit.CraftCompat.callCrafterCraftEvent(pos, level, results,
                         pickedRecipe.value().getRemainingItems(input), pickedRecipe);
                 if (event.isCancelled()) {
                     return;

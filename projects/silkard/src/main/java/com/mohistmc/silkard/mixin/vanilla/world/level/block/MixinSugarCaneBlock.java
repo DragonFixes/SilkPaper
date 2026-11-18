@@ -15,6 +15,6 @@ public class MixinSugarCaneBlock {
 
     @Redirect(method = "randomTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z"))
     private boolean silkard$randomTick(ServerLevel instance, BlockPos pos, BlockState state, BlockState state1, ServerLevel level, BlockPos blockPos) {
-        return CraftEventFactory.handleBlockGrowEvent(level, pos, state);
+        return CraftEventFactory.handleBlockGrowEvent(level, pos, state, net.minecraft.world.level.block.Block.UPDATE_ALL);
     }
 }

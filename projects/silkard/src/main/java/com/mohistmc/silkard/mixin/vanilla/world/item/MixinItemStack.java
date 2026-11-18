@@ -205,9 +205,9 @@ public abstract class MixinItemStack implements ContextItemStack {
                 List<org.bukkit.block.BlockState> blocks = new ArrayList<>(levelHandle.silkard$capturedBlockStates().values());
                 levelHandle.silkard$capturedBlockStates().clear();
                 if (blocks.size() > 1) {
-                    placeEvent = CraftEventFactory.callBlockMultiPlaceEvent(world, player, interactionhand, blocks, blockpos.getX(), blockpos.getY(), blockpos.getZ());
+                    placeEvent = CraftEventFactory.callBlockMultiPlaceEvent(world, player, interactionhand, blocks, blockpos);
                 } else if (blocks.size() == 1) {
-                    placeEvent = CraftEventFactory.callBlockPlaceEvent(world, player, interactionhand, blocks.get(0), blockpos.getX(), blockpos.getY(), blockpos.getZ());
+                    placeEvent = CraftEventFactory.callBlockPlaceEvent(world, player, interactionhand, blocks.get(0), blockpos);
                 }
 
                 if (placeEvent != null && (placeEvent.isCancelled() || !placeEvent.canBuild())) {

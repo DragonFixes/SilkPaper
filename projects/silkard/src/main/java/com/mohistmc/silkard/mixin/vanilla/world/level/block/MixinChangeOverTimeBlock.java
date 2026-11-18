@@ -13,6 +13,6 @@ public interface MixinChangeOverTimeBlock {
 
     @Redirect(method = "lambda$changeOverTime$0", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z"))
     private static boolean silkard$handleBlockFormEvent(ServerLevel level, BlockPos pos, BlockState state) {
-        return org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockFormEvent(level, pos, state);
+        return org.bukkit.craftbukkit.event.CraftEventFactory.handleBlockFormEvent(level, pos, state, net.minecraft.world.level.block.Block.UPDATE_ALL);
     }
 }

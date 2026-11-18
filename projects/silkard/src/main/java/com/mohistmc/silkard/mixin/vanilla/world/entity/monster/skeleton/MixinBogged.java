@@ -18,7 +18,7 @@ public class MixinBogged {
     @Inject(method = "mobInteract", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/skeleton/Bogged;shear(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/sounds/SoundSource;Lnet/minecraft/world/item/ItemStack;)V"), cancellable = true)
     private void silkard$mobInteract(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         ItemStack itemstack = player.getItemInHand(hand);
-        if (!CraftEventFactory.handlePlayerShearEntityEvent(player, (Bogged) (Object) this, itemstack, hand)) {
+        if (!com.mohistmc.silkard.bukkit.CraftCompat.handlePlayerShear(player, (Bogged) (Object) this, itemstack, hand)) {
             ((Bogged) (Object) this).getEntityData().markDirty(Bogged.DATA_SHEARED);
             cir.setReturnValue(InteractionResult.PASS);
         }

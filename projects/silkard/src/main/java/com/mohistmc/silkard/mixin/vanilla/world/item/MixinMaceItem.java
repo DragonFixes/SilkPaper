@@ -26,11 +26,10 @@ public class MixinMaceItem {
                                      @Local(argsOnly = true, ordinal = 0) Entity attacker,
                                      @Local(ordinal = 0) double knockbackPower) {
         Vec3 push = new Vec3(x, y, z);
-        Vec3 raw = attacker.getDeltaMovement().add(push);
-        EntityKnockbackEvent event = CraftEventFactory.callEntityKnockbackEvent((CraftLivingEntity) nearby.getBukkitEntity(), attacker, EntityKnockbackEvent.KnockbackCause.ENTITY_ATTACK, knockbackPower, raw, x, y, z);
+        io.papermc.paper.event.entity.EntityKnockbackEvent event = CraftEventFactory.callEntityKnockbackEvent((CraftLivingEntity) nearby.getBukkitEntity(), attacker, attacker, io.papermc.paper.event.entity.EntityKnockbackEvent.Cause.ENTITY_ATTACK, knockbackPower, push);
 
         if (!event.isCancelled()) {
-            nearby.push(CraftVector.toVec3(event.getFinalKnockback()));
+            nearby.push(CraftVector.toVec3(event.getKnockback()));
         }
     }
 }

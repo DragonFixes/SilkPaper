@@ -45,6 +45,9 @@ public class MixinServerExplosion {
     @Shadow public Entity getDirectSourceEntity() {
         throw new AssertionError();
     }
+    @Shadow public net.minecraft.world.entity.LivingEntity getIndirectSourceEntity() {
+        throw new AssertionError();
+    }
     @Unique private float silkard$yield;
     @Unique private boolean silkard$wasCanceled;
     @Unique private List<Entity> silkard$entityList;
@@ -130,15 +133,13 @@ public class MixinServerExplosion {
             return;
         }
         if (entity instanceof LivingEntity living) {
-            Vec3 result = entity.getDeltaMovement().add(vec32);
-            EntityKnockbackEvent event = CraftEventFactory.callEntityKnockbackEvent(
+            io.papermc.paper.event.entity.EntityKnockbackEvent event = CraftEventFactory.callEntityKnockbackEvent(
                 (CraftLivingEntity) living.getBukkitEntity(),
                 this.getDirectSourceEntity(),
-                EntityKnockbackEvent.KnockbackCause.EXPLOSION,
-                this.silkard$knockbackForce, vec32,
-                result.x, result.y, result.z);
-            vec32 = event.isCancelled() ? Vec3.ZERO
-                : new Vec3(event.getFinalKnockback().getX(), event.getFinalKnockback().getY(), event.getFinalKnockback().getZ()).subtract(entity.getDeltaMovement());
+                this.getIndirectSourceEntity(),
+                io.papermc.paper.event.entity.EntityKnockbackEvent.Cause.EXPLOSION,
+                this.silkard$knockbackForce, vec32);
+            vec32 = event.isCancelled() ? Vec3.ZERO : org.bukkit.craftbukkit.util.CraftVector.toVec3(event.getKnockback());
         }
         entity.pushFromExplosion(vec32);
     }

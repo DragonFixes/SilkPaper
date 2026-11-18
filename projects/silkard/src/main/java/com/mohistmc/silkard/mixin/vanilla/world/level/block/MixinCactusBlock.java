@@ -22,7 +22,7 @@ public class MixinCactusBlock {
     // CraftBukkit start - BlockGrowEvent
     @Redirect(method = "randomTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z"))
     private boolean silkard$cactusGrowth(ServerLevel level, BlockPos pos, BlockState state) {
-        return CraftEventFactory.handleBlockGrowEvent(level, pos, state);
+        return CraftEventFactory.handleBlockGrowEvent(level, pos, state, net.minecraft.world.level.block.Block.UPDATE_ALL);
     }
     // CraftBukkit end
 

@@ -30,7 +30,7 @@ public class MixinSnowGolem {
     // CraftBukkit start - fire EntityBlockFormEvent when the snow block forms
     @Redirect(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z"))
     private boolean silkard$setBlock(Level level, BlockPos pos, BlockState state) {
-        if (!CraftEventFactory.handleBlockFormEvent(level, pos, state, (SnowGolem) (Object) this)) {
+        if (!CraftEventFactory.handleBlockFormEvent(level, pos, state, net.minecraft.world.level.block.Block.UPDATE_ALL, (SnowGolem) (Object) this)) {
             return false;
         }
         return level.setBlockAndUpdate(pos, state);
@@ -48,7 +48,7 @@ public class MixinSnowGolem {
     @Inject(method = "mobInteract", at = @At("HEAD"), cancellable = true)
     private void silkard$shearEvent(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         ItemStack itemstack = player.getItemInHand(hand);
-        if (!CraftEventFactory.handlePlayerShearEntityEvent(player, (SnowGolem) (Object) this, itemstack, hand)) {
+        if (!com.mohistmc.silkard.bukkit.CraftCompat.handlePlayerShear(player, (SnowGolem) (Object) this, itemstack, hand)) {
             cir.setReturnValue(InteractionResult.PASS);
         }
     }
