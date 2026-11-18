@@ -28,210 +28,121 @@ public class CraftFishHook extends CraftProjectile implements FishHook {
 
     @Override
     public int getMinWaitTime() {
-<<<<<<< silkard
-        return getHandle().silkard$minWaitTime();
-=======
-        return this.getHandle().minWaitTime;
->>>>>>> paper
+        return this.getHandle().silkard$minWaitTime();
     }
 
     @Override
     public void setMinWaitTime(int minWaitTime) {
         Preconditions.checkArgument(minWaitTime >= 0 && minWaitTime <= this.getMaxWaitTime(), "The minimum wait time should be between %s and %s (the maximum wait time)", 0, this.getMaxWaitTime());
-<<<<<<< silkard
-        FishingHook hook = getHandle();
-        hook.silkard$minWaitTime(minWaitTime);
-=======
         FishingHook hook = this.getHandle();
-        hook.minWaitTime = minWaitTime;
->>>>>>> paper
+        hook.silkard$minWaitTime(minWaitTime);
     }
 
     @Override
     public int getMaxWaitTime() {
-<<<<<<< silkard
-        return getHandle().silkard$maxWaitTime();
-=======
-        return this.getHandle().maxWaitTime;
->>>>>>> paper
+        return this.getHandle().silkard$maxWaitTime();
     }
 
     @Override
     public void setMaxWaitTime(int maxWaitTime) {
         Preconditions.checkArgument(maxWaitTime >= 0 && maxWaitTime >= this.getMinWaitTime(), "The maximum wait time should be between %s and %s (the minimum wait time)", 0, this.getMinWaitTime());
-<<<<<<< silkard
-        FishingHook hook = getHandle();
-        hook.silkard$maxWaitTime(maxWaitTime);
-=======
         FishingHook hook = this.getHandle();
-        hook.maxWaitTime = maxWaitTime;
->>>>>>> paper
+        hook.silkard$maxWaitTime(maxWaitTime);
     }
 
     @Override
     public void setWaitTime(int min, int max) {
         Preconditions.checkArgument(min >= 0 && max >= 0 && min <= max, "The minimum/maximum wait time should be higher than or equal to 0 and the minimum wait time");
-<<<<<<< silkard
-        getHandle().silkard$minWaitTime(min);
-        getHandle().silkard$maxWaitTime(max);
-=======
-        this.getHandle().minWaitTime = min;
-        this.getHandle().maxWaitTime = max;
->>>>>>> paper
+        this.getHandle().silkard$minWaitTime(min);
+        this.getHandle().silkard$maxWaitTime(max);
     }
 
     @Override
     public int getMinLureTime() {
-<<<<<<< silkard
-        return getHandle().silkard$minLureTime();
-=======
-        return this.getHandle().minLureTime;
->>>>>>> paper
+        return this.getHandle().silkard$minLureTime();
     }
 
     @Override
     public void setMinLureTime(int minLureTime) {
         Preconditions.checkArgument(minLureTime >= 0 && minLureTime <= this.getMaxLureTime(), "The minimum lure time (%s) should be between 0 and %s (the maximum wait time)", minLureTime, this.getMaxLureTime());
-<<<<<<< silkard
-        getHandle().silkard$minLureTime(minLureTime);
-=======
-        this.getHandle().minLureTime = minLureTime;
->>>>>>> paper
+        this.getHandle().silkard$minLureTime(minLureTime);
     }
 
     @Override
     public int getMaxLureTime() {
-<<<<<<< silkard
-        return getHandle().silkard$maxLureTime();
-=======
-        return this.getHandle().maxLureTime;
->>>>>>> paper
+        return this.getHandle().silkard$maxLureTime();
     }
 
     @Override
     public void setMaxLureTime(int maxLureTime) {
         Preconditions.checkArgument(maxLureTime >= 0 && maxLureTime >= this.getMinLureTime(), "The maximum lure time (%s) should be higher than or equal to 0 and %s (the minimum wait time)", maxLureTime, this.getMinLureTime());
-<<<<<<< silkard
-        getHandle().silkard$maxLureTime(maxLureTime);
-=======
-        this.getHandle().maxLureTime = maxLureTime;
->>>>>>> paper
+        this.getHandle().silkard$maxLureTime(maxLureTime);
     }
 
     @Override
     public void setLureTime(int min, int max) {
         Preconditions.checkArgument(min >= 0 && max >= 0 && min <= max, "The minimum/maximum lure time should be higher than or equal to 0 and the minimum wait time.");
-<<<<<<< silkard
-        getHandle().silkard$minLureTime(min);
-        getHandle().silkard$maxLureTime(max);
-=======
-        this.getHandle().minLureTime = min;
-        this.getHandle().maxLureTime = max;
->>>>>>> paper
+        this.getHandle().silkard$minLureTime(min);
+        this.getHandle().silkard$maxLureTime(max);
     }
 
     @Override
     public float getMinLureAngle() {
-<<<<<<< silkard
-        return getHandle().silkard$minLureAngle();
-=======
-        return this.getHandle().minLureAngle;
->>>>>>> paper
+        return this.getHandle().silkard$minLureAngle();
     }
 
     @Override
     public void setMinLureAngle(float minLureAngle) {
         Preconditions.checkArgument(minLureAngle <= this.getMaxLureAngle(), "The minimum lure angle (%s) should be less than %s (the maximum lure angle)", minLureAngle, this.getMaxLureAngle());
-<<<<<<< silkard
-        getHandle().silkard$minLureAngle(minLureAngle);
-=======
-        this.getHandle().minLureAngle = minLureAngle;
->>>>>>> paper
+        this.getHandle().silkard$minLureAngle(minLureAngle);
     }
 
     @Override
     public float getMaxLureAngle() {
-<<<<<<< silkard
-        return getHandle().silkard$maxLureAngle();
-=======
-        return this.getHandle().maxLureAngle;
->>>>>>> paper
+        return this.getHandle().silkard$maxLureAngle();
     }
 
     @Override
     public void setMaxLureAngle(float maxLureAngle) {
         Preconditions.checkArgument(maxLureAngle >= this.getMinLureAngle(), "The minimum lure angle (%s) should be less than %s (the maximum lure angle)", maxLureAngle, this.getMinLureAngle());
-<<<<<<< silkard
-        getHandle().silkard$maxLureAngle(maxLureAngle);
-=======
-        this.getHandle().maxLureAngle = maxLureAngle;
->>>>>>> paper
+        this.getHandle().silkard$maxLureAngle(maxLureAngle);
     }
 
     @Override
     public void setLureAngle(float min, float max) {
         Preconditions.checkArgument(min <= max, "The minimum lure (%s) angle should be less than the maximum lure angle (%s)", min, max);
-<<<<<<< silkard
-        getHandle().silkard$minLureAngle(min);
-        getHandle().silkard$maxLureAngle(max);
-=======
-        this.getHandle().minLureAngle = min;
-        this.getHandle().maxLureAngle = max;
->>>>>>> paper
+        this.getHandle().silkard$minLureAngle(min);
+        this.getHandle().silkard$maxLureAngle(max);
     }
 
     @Override
     public boolean isSkyInfluenced() {
-<<<<<<< silkard
-        return getHandle().silkard$skyInfluenced();
-=======
-        return this.getHandle().skyInfluenced;
->>>>>>> paper
+        return this.getHandle().silkard$skyInfluenced();
     }
 
     @Override
     public void setSkyInfluenced(boolean skyInfluenced) {
-<<<<<<< silkard
-        getHandle().silkard$skyInfluenced(skyInfluenced);
-=======
-        this.getHandle().skyInfluenced = skyInfluenced;
->>>>>>> paper
+        this.getHandle().silkard$skyInfluenced(skyInfluenced);
     }
 
     @Override
     public boolean isRainInfluenced() {
-<<<<<<< silkard
-        return getHandle().silkard$rainInfluenced();
-=======
-        return this.getHandle().rainInfluenced;
->>>>>>> paper
+        return this.getHandle().silkard$rainInfluenced();
     }
 
     @Override
     public void setRainInfluenced(boolean rainInfluenced) {
-<<<<<<< silkard
-        getHandle().silkard$rainInfluenced(rainInfluenced);
-=======
-        this.getHandle().rainInfluenced = rainInfluenced;
->>>>>>> paper
+        this.getHandle().silkard$rainInfluenced(rainInfluenced);
     }
 
     @Override
     public boolean getApplyLure() {
-<<<<<<< silkard
-        return getHandle().silkard$applyLure();
-=======
-        return this.getHandle().applyLure;
->>>>>>> paper
+        return this.getHandle().silkard$applyLure();
     }
 
     @Override
     public void setApplyLure(boolean applyLure) {
-<<<<<<< silkard
-        getHandle().silkard$applyLure(applyLure);
-=======
-        this.getHandle().applyLure = applyLure;
->>>>>>> paper
+        this.getHandle().silkard$applyLure(applyLure);
     }
 
     @Override
@@ -308,7 +219,7 @@ public class CraftFishHook extends CraftProjectile implements FishHook {
         // Reset the fish angle hook only when this call "enters" the fish into the lure stage.
         final boolean alreadyInLuringPhase = hook.timeUntilHooked > 0 && hook.timeUntilLured <= 0;
         if (!alreadyInLuringPhase) {
-            hook.fishAngle = net.minecraft.util.Mth.nextFloat(hook.getRandom(), hook.minLureAngle, hook.maxLureAngle);
+            hook.fishAngle = net.minecraft.util.Mth.nextFloat(hook.getRandom(), hook.silkard$minLureAngle(), hook.silkard$maxLureAngle());
             hook.timeUntilLured = 0;
         }
 

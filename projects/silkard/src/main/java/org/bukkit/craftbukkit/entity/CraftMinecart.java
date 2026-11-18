@@ -1,11 +1,6 @@
 package org.bukkit.craftbukkit.entity;
 
-<<<<<<< silkard
-import com.mohistmc.silkard.injected.world.entity.vehicle.minecart.ContextAbstractMinecart;
-import java.util.Optional;
-=======
 import com.google.common.base.Preconditions;
->>>>>>> paper
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import net.minecraft.world.level.block.state.BlockState;
@@ -47,32 +42,19 @@ public abstract class CraftMinecart extends CraftVehicle implements Minecart {
 
     @Override
     public void setMaxSpeed(double speed) {
-<<<<<<< silkard
-        if (speed >= 0D) {
-            getHandle().silkard_maxSpeed(speed);
-=======
         if (speed >= 0) {
-            this.getHandle().maxSpeed = speed;
->>>>>>> paper
+            this.getHandle().silkard_maxSpeed(speed);
         }
     }
 
     @Override
     public boolean isSlowWhenEmpty() {
-<<<<<<< silkard
-        return getHandle().silkard_slowWhenEmpty();
-=======
-        return this.getHandle().slowWhenEmpty;
->>>>>>> paper
+        return this.getHandle().silkard_slowWhenEmpty();
     }
 
     @Override
     public void setSlowWhenEmpty(boolean slow) {
-<<<<<<< silkard
-        getHandle().silkard_slowWhenEmpty(slow);
-=======
-        this.getHandle().slowWhenEmpty = slow;
->>>>>>> paper
+        this.getHandle().silkard_slowWhenEmpty(slow);
     }
 
     @Override
@@ -135,15 +117,6 @@ public abstract class CraftMinecart extends CraftVehicle implements Minecart {
 
     @org.jetbrains.annotations.NotNull
     @Override
-<<<<<<< silkard
-    public double getPoweredRailAccelerationMultiplier() {
-        return getHandle().silkard_powRailAccelMult();
-    }
-
-    @Override
-    public void setPoweredRailAccelerationMultiplier(double multiplier) {
-        getHandle().silkard_powRailAccelMult(multiplier);
-=======
     public net.kyori.adventure.util.TriState getFrictionState() {
         return this.getHandle().frictionState;
     }
@@ -152,6 +125,5 @@ public abstract class CraftMinecart extends CraftVehicle implements Minecart {
     public void setFrictionState(@org.jetbrains.annotations.NotNull net.kyori.adventure.util.TriState state) {
         Preconditions.checkArgument(state != null, "state may not be null");
         this.getHandle().frictionState = state;
->>>>>>> paper
     }
 }

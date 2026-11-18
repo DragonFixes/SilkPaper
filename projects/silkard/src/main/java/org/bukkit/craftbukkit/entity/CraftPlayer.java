@@ -350,53 +350,21 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     // Paper end - Add API to get player's proxy address
     @Override
     public boolean isTransferred() {
-<<<<<<< silkard
-        return getHandle().silkard$transferCookieConnection().isTransferred();
-    }
-
-    @Override
-    public CompletableFuture<byte[]> retrieveCookie(NamespacedKey key) {
-        Preconditions.checkArgument(key != null, "Cookie key cannot be null");
-
-        CompletableFuture<byte[]> future = new CompletableFuture<>();
-        Identifier nms = CraftNamespacedKey.toMinecraft(key);
-        requestedCookies.add(new CookieFuture(nms, future));
-
-        getHandle().silkard$transferCookieConnection().sendPacket(new ClientboundCookieRequestPacket(nms));
-
-        return future;
-=======
         return this.getHandle().connection.playerGameConnection.isTransferred();
     }
 
     @Override
     public CompletableFuture<byte @Nullable []> retrieveCookie(final NamespacedKey key) {
         return this.getHandle().connection.playerGameConnection.retrieveCookie(key);
->>>>>>> paper
     }
 
     @Override
     public void storeCookie(NamespacedKey key, byte[] value) {
-<<<<<<< silkard
-        Preconditions.checkArgument(key != null, "Cookie key cannot be null");
-        Preconditions.checkArgument(value != null, "Cookie value cannot be null");
-        Preconditions.checkArgument(value.length <= 5120, "Cookie value too large, must be smaller than 5120 bytes");
-        Preconditions.checkState(getHandle().silkard$transferCookieConnection().getProtocol() == ConnectionProtocol.CONFIGURATION || getHandle().silkard$transferCookieConnection().getProtocol() == ConnectionProtocol.PLAY, "Can only store cookie in CONFIGURATION or PLAY protocol.");
-
-        getHandle().silkard$transferCookieConnection().sendPacket(new ClientboundStoreCookiePacket(CraftNamespacedKey.toMinecraft(key), value));
-=======
         this.getHandle().connection.playerGameConnection.storeCookie(key, value);
->>>>>>> paper
     }
 
     @Override
     public void transfer(String host, int port) {
-<<<<<<< silkard
-        Preconditions.checkArgument(host != null, "Host cannot be null");
-        Preconditions.checkState(getHandle().silkard$transferCookieConnection().getProtocol() == ConnectionProtocol.CONFIGURATION || getHandle().silkard$transferCookieConnection().getProtocol() == ConnectionProtocol.PLAY, "Can only transfer in CONFIGURATION or PLAY protocol.");
-
-        getHandle().silkard$transferCookieConnection().sendPacket(new ClientboundTransferPacket(host, port));
-=======
         this.getHandle().connection.playerGameConnection.transfer(host, port);
     }
 
@@ -411,7 +379,6 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     public InetSocketAddress getVirtualHost() {
         if (this.getHandle().connection == null) return null;
         return this.getHandle().connection.connection.virtualHost;
->>>>>>> paper
     }
     // Paper end
 
@@ -583,28 +550,20 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
 
     @Override
     public String getDisplayName() {
-<<<<<<< silkard
-        return getHandle().silkard$displayName();
-=======
         if (true) return io.papermc.paper.adventure.DisplayNames.getLegacy(this); // Paper
-        return this.getHandle().displayName;
->>>>>>> paper
+        return this.getHandle().silkard$displayName();
     }
 
     @Override
     public void setDisplayName(final String name) {
-<<<<<<< silkard
-        getHandle().silkard$displayName(name == null ? getName() : name);
-=======
         this.getHandle().adventure$displayName = name != null ? net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection().deserialize(name) : net.kyori.adventure.text.Component.text(this.getName()); // Paper
-        this.getHandle().displayName = name == null ? this.getName() : name;
->>>>>>> paper
+        this.getHandle().silkard$displayName(name == null ? this.getName() : name);
     }
 
     // Paper start
     @Override
     public void playerListName(net.kyori.adventure.text.Component name) {
-        getHandle().listName = name == null ? null : io.papermc.paper.adventure.PaperAdventure.asVanilla(name);
+        getHandle().silkard$listName(name == null ? null : io.papermc.paper.adventure.PaperAdventure.asVanilla(name));
         if (getHandle().connection == null) return; // Updates are possible before the player has fully joined
         for (ServerPlayer player : server.getHandle().getPlayers()) {
             if (player.getBukkitEntity().canSee(this)) {
@@ -614,7 +573,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     }
     @Override
     public net.kyori.adventure.text.Component playerListName() {
-        return getHandle().listName == null ? net.kyori.adventure.text.Component.text(getName()) : io.papermc.paper.adventure.PaperAdventure.asAdventure(getHandle().listName);
+        return getHandle().silkard$listName() == null ? net.kyori.adventure.text.Component.text(getName()) : io.papermc.paper.adventure.PaperAdventure.asAdventure(getHandle().silkard$listName());
     }
     @Override
     public net.kyori.adventure.text.Component playerListHeader() {
@@ -627,11 +586,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     // Paper end
     @Override
     public String getPlayerListName() {
-<<<<<<< silkard
-        return getHandle().silkard$listName() == null ? getName() : CraftChatMessage.fromComponent(getHandle().silkard$listName());
-=======
-        return this.getHandle().listName == null ? this.getName() : CraftChatMessage.fromComponent(this.getHandle().listName);
->>>>>>> paper
+        return this.getHandle().silkard$listName() == null ? this.getName() : CraftChatMessage.fromComponent(this.getHandle().silkard$listName());
     }
 
     @Override
@@ -644,14 +599,9 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
         if (name == null) {
             name = this.getName();
         }
-<<<<<<< silkard
-        getHandle().silkard$listName(name.equals(getName()) ? null : CraftChatMessage.fromStringOrNull(name));
-        for (ServerPlayer player : (List<ServerPlayer>) server.getHandle().players) {
-=======
-        this.getHandle().listName = name.equals(this.getName()) ? null : useMM ? io.papermc.paper.adventure.PaperAdventure.asVanilla(net.kyori.adventure.text.minimessage.MiniMessage.miniMessage().deserialize(name)) : CraftChatMessage.fromStringOrNull(name); // Purpur - AFK API
+        this.getHandle().silkard$listName(name.equals(this.getName()) ? null : useMM ? io.papermc.paper.adventure.PaperAdventure.asVanilla(net.kyori.adventure.text.minimessage.MiniMessage.miniMessage().deserialize(name)) : CraftChatMessage.fromStringOrNull(name)); // Purpur - AFK API
         if (this.getHandle().connection == null) return; // Paper - Updates are possible before the player has fully joined
         for (ServerPlayer player : this.server.getHandle().getPlayers()) {
->>>>>>> paper
             if (player.getBukkitEntity().canSee(this)) {
                 player.connection.send(new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME, this.getHandle()));
             }
@@ -660,21 +610,14 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
 
     @Override
     public int getPlayerListOrder() {
-<<<<<<< silkard
-        return getHandle().silkard$listOrder();
-=======
-        return this.getHandle().listOrder;
->>>>>>> paper
+        return this.getHandle().silkard$listOrder();
     }
 
     @Override
     public void setPlayerListOrder(int order) {
         Preconditions.checkArgument(order >= 0, "order cannot be negative");
 
-<<<<<<< silkard
-        getHandle().silkard$listOrder(order);
-=======
-        this.getHandle().listOrder = order;
+        this.getHandle().silkard$listOrder(order);
         // Paper start - Send update packet
         if (getHandle().connection == null) return; // Updates are possible before the player has fully joined
         for (ServerPlayer player : server.getHandle().getPlayers()) {
@@ -683,7 +626,6 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
             }
         }
         // Paper end - Send update packet
->>>>>>> paper
     }
 
     private net.kyori.adventure.text.Component playerListHeader; // Paper - Adventure
@@ -780,16 +722,11 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     }
 
     @Override
-<<<<<<< silkard
-    public void kickPlayer(String message) {
-        getHandle().silkard$transferCookieConnection().kickPlayer(CraftChatMessage.fromStringOrEmpty(message, true));
-=======
     public void removeAdditionalChatCompletions(@NonNull Collection<String> completions) {
         this.getHandle().connection.send(new net.minecraft.network.protocol.game.ClientboundCustomChatCompletionsPacket(
             net.minecraft.network.protocol.game.ClientboundCustomChatCompletionsPacket.Action.REMOVE,
             new ArrayList<>(completions)
         ));
->>>>>>> paper
     }
 
     @Override
@@ -811,11 +748,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
 
     @Override
     public Location getCompassTarget() {
-<<<<<<< silkard
-        return getHandle().silkard$compassTarget();
-=======
-        return this.getHandle().compassTarget;
->>>>>>> paper
+        return this.getHandle().silkard$compassTarget();
     }
 
     @Override
@@ -1055,14 +988,10 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
         // Construct the packets using the data allocated above and send then to the players
         for (Map.Entry<SectionPos, ChunkSectionChanges> entry : changes.entrySet()) {
             ChunkSectionChanges chunkChanges = entry.getValue();
-<<<<<<< silkard
+            // Silkard - vanilla has no states-array constructor; the states travel as the packet's Bukkit extra
             ClientboundSectionBlocksUpdatePacket packet = new ClientboundSectionBlocksUpdatePacket(entry.getKey(), chunkChanges.positions(), null);
             packet.putbukkitExtra(chunkChanges.blockData().toArray(net.minecraft.world.level.block.state.BlockState[]::new));
-            getHandle().connection.send(packet);
-=======
-            ClientboundSectionBlocksUpdatePacket packet = new ClientboundSectionBlocksUpdatePacket(entry.getKey(), chunkChanges.positions(), chunkChanges.blockData().toArray(net.minecraft.world.level.block.state.BlockState[]::new));
             this.getHandle().connection.send(packet);
->>>>>>> paper
         }
     }
 
@@ -1494,19 +1423,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
             return false;
         }
 
-<<<<<<< silkard
-        // Check if the fromWorld and toWorld are the same.
-        if (fromWorld == toWorld) {
-            entity.connection.teleport(to);
-        } else {
-            entity.portalProcess = null; // SPIGOT-7785: there is no need to carry this over as it contains the old world/location and we might run into trouble if there is a portal in the same spot in both worlds
-            // The respawn reason should never be used if the passed location is non null.
-            ((com.mohistmc.silkard.injected.server.players.ContextPlayerList) server.getHandle()).silkard$respawnWithLocation(entity, true, Entity.RemovalReason.CHANGED_DIMENSION, null, to);
-        }
-        return true;
-=======
         return super.teleport0(location, cause, flags);
->>>>>>> paper
     }
 
     @Override
@@ -1549,27 +1466,13 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
 
     @Override
     public void setSleepingIgnored(boolean isSleeping) {
-<<<<<<< silkard
-        getHandle().silkard$fauxSleeping(isSleeping);
-        ((CraftWorld) getWorld()).getHandle().updateSleepingPlayerList();
-=======
-        this.getHandle().fauxSleeping = isSleeping;
+        this.getHandle().silkard$fauxSleeping(isSleeping);
         ((CraftWorld) this.getWorld()).getHandle().updateSleepingPlayerList();
->>>>>>> paper
     }
 
     @Override
     public boolean isSleepingIgnored() {
-<<<<<<< silkard
-        return getHandle().silkard$fauxSleeping();
-    }
-
-    @Override
-    public Location getBedSpawnLocation() {
-        return getRespawnLocation();
-=======
-        return this.getHandle().fauxSleeping;
->>>>>>> paper
+        return this.getHandle().silkard$fauxSleeping();
     }
 
     @Override
@@ -1733,34 +1636,22 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     }
 
     @Override
-<<<<<<< silkard
-    public void setPlayerTime(long time, boolean relative) {
-		ServerPlayer player = getHandle();
-        getHandle().silkard$timeOffset(time);
-        getHandle().silkard$relativeTime(relative);
-		if (player.connection != null) {
-            player.connection.send(player.level().clockManager().createFullSyncPacket()); // TODO
-=======
     public void setPlayerTime(long time, boolean tickTime) {
-        this.getHandle().timeOffset = time;
-        this.getHandle().relativeTime = tickTime;
+        this.getHandle().silkard$timeOffset(time);
+        this.getHandle().silkard$relativeTime(tickTime);
 
         final ServerLevel level = this.getHandle().level();
         if (this.getHandle().connection == null || level.dimensionType().defaultClock().isEmpty()) {
             return;
->>>>>>> paper
         }
 
-        this.getHandle().connection.send(level.clockManager().createFullSyncPacket(this.getHandle()));
+        // TODO Silkard - vanilla createFullSyncPacket has no per-player overload, so the player time offset is not applied
+        this.getHandle().connection.send(level.clockManager().createFullSyncPacket());
     }
 
     @Override
     public long getPlayerTimeOffset() {
-<<<<<<< silkard
-        return getHandle().silkard$timeOffset();
-=======
-        return this.getHandle().timeOffset;
->>>>>>> paper
+        return this.getHandle().silkard$timeOffset();
     }
 
     @Override
@@ -1770,11 +1661,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
 
     @Override
     public boolean isPlayerTimeRelative() {
-<<<<<<< silkard
-        return getHandle().silkard$relativeTime();
-=======
-        return this.getHandle().relativeTime;
->>>>>>> paper
+        return this.getHandle().silkard$relativeTime();
     }
 
     @Override
@@ -2110,13 +1997,8 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
         // Remove the hidden entity from this player user list, if they're on it
         if (other instanceof ServerPlayer) {
             ServerPlayer otherPlayer = (ServerPlayer) other;
-<<<<<<< silkard
-            if (otherPlayer.silkard$sentListPacket()) {
-                getHandle().connection.send(new ClientboundPlayerInfoRemovePacket(List.of(otherPlayer.getUUID())));
-=======
-            if (this.getHandle().sentListPacket && otherPlayer.sentListPacket) {
+            if (this.getHandle().silkard$sentListPacket() && otherPlayer.silkard$sentListPacket()) {
                 this.getHandle().connection.send(new ClientboundPlayerInfoRemovePacket(List.of(otherPlayer.getUUID())));
->>>>>>> paper
             }
         }
     }
@@ -2208,7 +2090,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     public void setPlayerProfile(com.destroystokyo.paper.profile.PlayerProfile profile) {
         ServerPlayer self = this.getHandle();
         GameProfile gameProfile = com.destroystokyo.paper.profile.CraftPlayerProfile.asAuthlibCopy(profile);
-        if (!self.sentListPacket) {
+        if (!self.silkard$sentListPacket()) {
             self.gameProfile = gameProfile;
             return;
         }
@@ -2383,26 +2265,6 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     }
     // Paper end - getLastPlayed replacement API
 
-<<<<<<< silkard
-            ServerPlayer handle = getHandle();
-            handle.silkard$newExp(data.getIntOr("newExp", handle.silkard$newExp()));
-            handle.silkard$newTotalExp(data.getIntOr("newTotalExp", handle.silkard$newTotalExp()));
-            handle.silkard$newLevel(data.getIntOr("newLevel", handle.silkard$newLevel()));
-            handle.silkard$expToDrop(data.getIntOr("expToDrop", handle.silkard$expToDrop()));
-            handle.silkard$keepLevel(data.getBooleanOr("keepLevel", handle.silkard$keepLevel()));
-        });
-    }
-
-    public void setExtraData(ValueOutput valueoutput) {
-        ValueOutput data = valueoutput.child("bukkit");
-        ServerPlayer handle = getHandle();
-        data.putInt("newExp", handle.silkard$newExp());
-        data.putInt("newTotalExp", handle.silkard$newTotalExp());
-        data.putInt("newLevel", handle.silkard$newLevel());
-        data.putInt("expToDrop", handle.silkard$expToDrop());
-        data.putBoolean("keepLevel", handle.silkard$keepLevel());
-        data.putLong("firstPlayed", getFirstPlayed());
-=======
     public void readExtraData(ValueInput input) {
         this.hasPlayedBefore = true;
         input.child("bukkit").ifPresent(data -> {
@@ -2410,11 +2272,11 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
             this.lastPlayed = data.getLongOr("lastPlayed", 0);
 
             final ServerPlayer handle = getHandle();
-            handle.newExp = data.getIntOr("newExp", 0);
-            handle.newTotalExp = data.getIntOr("newTotalExp", 0);
-            handle.newLevel = data.getIntOr("newLevel", 0);
-            handle.expToDrop = data.getIntOr("expToDrop", 0);
-            handle.keepLevel = data.getBooleanOr("keepLevel", false);
+            handle.silkard$newExp(data.getIntOr("newExp", 0));
+            handle.silkard$newTotalExp(data.getIntOr("newTotalExp", 0));
+            handle.silkard$newLevel(data.getIntOr("newLevel", 0));
+            handle.silkard$expToDrop(data.getIntOr("expToDrop", 0));
+            handle.silkard$keepLevel(data.getBooleanOr("keepLevel", false));
         });
     }
 
@@ -2423,13 +2285,12 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
 
         ValueOutput data = output.child("bukkit");
         ServerPlayer handle = this.getHandle();
-        data.putInt("newExp", handle.newExp);
-        data.putInt("newTotalExp", handle.newTotalExp);
-        data.putInt("newLevel", handle.newLevel);
-        data.putInt("expToDrop", handle.expToDrop);
-        data.putBoolean("keepLevel", handle.keepLevel);
+        data.putInt("newExp", handle.silkard$newExp());
+        data.putInt("newTotalExp", handle.silkard$newTotalExp());
+        data.putInt("newLevel", handle.silkard$newLevel());
+        data.putInt("expToDrop", handle.silkard$expToDrop());
+        data.putBoolean("keepLevel", handle.silkard$keepLevel());
         data.putLong("firstPlayed", this.getFirstPlayed());
->>>>>>> paper
         data.putLong("lastPlayed", System.currentTimeMillis());
         data.putString("lastKnownName", handle.getGameProfile().name());
 
@@ -2477,39 +2338,9 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     }
 
     private void sendCustomPayload(Identifier id, byte[] message) {
-<<<<<<< silkard
-        //ClientboundCustomPayloadPacket packet = new ClientboundCustomPayloadPacket(new DiscardedPayload(id, Unpooled.wrappedBuffer(message)));
-        //getHandle().connection.send(packet);
-        // TODO
-    }
-
-    @Override
-    public void setTexturePack(String url) {
-        setResourcePack(url);
-    }
-
-    @Override
-    public void setResourcePack(String url) {
-        setResourcePack(url, null);
-    }
-
-    @Override
-    public void setResourcePack(String url, byte[] hash) {
-        setResourcePack(url, hash, false);
-    }
-
-    @Override
-    public void setResourcePack(String url, byte[] hash, String prompt) {
-        setResourcePack(url, hash, prompt, false);
-    }
-
-    @Override
-    public void setResourcePack(String url, byte[] hash, boolean force) {
-        setResourcePack(url, hash, null, force);
-=======
-        ClientboundCustomPayloadPacket packet = new ClientboundCustomPayloadPacket(new DiscardedPayload(id, message));
-        this.getHandle().connection.send(packet);
->>>>>>> paper
+        // TODO Silkard - vanilla DiscardedPayload carries no data, so raw plugin messages are not sent
+        //ClientboundCustomPayloadPacket packet = new ClientboundCustomPayloadPacket(new DiscardedPayload(id, message));
+        //this.getHandle().connection.send(packet);
     }
 
     @Override
@@ -2905,11 +2736,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
         }
         this.getHandle().getEntityData().set(net.minecraft.world.entity.LivingEntity.DATA_HEALTH_ID, (float) this.getScaledHealth());
 
-<<<<<<< silkard
-        getHandle().silkard$maxHealthCache(getMaxHealth());
-=======
-        this.getHandle().maxHealthCache = this.getMaxHealth();
->>>>>>> paper
+        this.getHandle().silkard$maxHealthCache(this.getMaxHealth());
     }
 
     @Override
@@ -3098,7 +2925,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     @Override
     public void displayName(final net.kyori.adventure.text.Component displayName) {
         this.getHandle().adventure$displayName = displayName != null ? displayName : net.kyori.adventure.text.Component.text(this.getName());
-        this.getHandle().displayName = null;
+        this.getHandle().silkard$displayName(null);
     }
 
     @Override

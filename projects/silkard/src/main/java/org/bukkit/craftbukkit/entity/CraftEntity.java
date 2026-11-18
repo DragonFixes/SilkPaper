@@ -171,6 +171,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
             return (CraftEntity) entityTypeData.convertFunction().apply(server, entity);
         }
 
+        // Silkard - entities added by Fabric mods have no CraftBukkit mapping; wrap them generically
         return com.mohistmc.silkard.fabric.EntityClassLookup.getEntity(server, entity);
     }
 
@@ -330,7 +331,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
     public boolean teleport(Location location, TeleportCause cause, TeleportFlag... flags) {
         Preconditions.checkArgument(location != null, "location cannot be null");
         Preconditions.checkArgument(location.getWorld() != null, "Target world cannot be null");
-        Preconditions.checkState(!this.entity.generation, "Cannot teleport entity to an other world during world generation");
+        Preconditions.checkState(!this.entity.silkard_generation(), "Cannot teleport entity to an other world during world generation");
         location.checkFinite();
 
         return this.teleport0(location, cause, flags);
@@ -338,27 +339,15 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
 
     protected boolean teleport0(Location location, TeleportCause cause, TeleportFlag... flags) {
         Entity entity = this.getHandle();
-        if (!entity.isAlive() || !entity.valid) {
+        if (!entity.isAlive() || !entity.silkard_valid()) {
             return false;
         }
 
-<<<<<<< silkard
-        // If this entity is riding another entity, we must dismount before teleporting.
-        entity.stopRiding();
-
-        // Let the server handle cross world teleports
-        if (location.getWorld() != null && !location.getWorld().equals(getWorld())) {
-            // Prevent teleportation to an other world during world generation
-            Preconditions.checkState(!entity.silkard_generation(), "Cannot teleport entity to an other world during world generation");
-            entity.teleport(new TeleportTransition(((CraftWorld) location.getWorld()).getHandle(), CraftLocation.toVec3D(location), Vec3.ZERO, location.getPitch(), location.getYaw(), Set.of(), TeleportTransition.DO_NOTHING/*, TeleportCause.PLUGIN*/));
-            return true;
-=======
         final Set<net.minecraft.world.entity.Relative> relativeFlags = EnumSet.noneOf(net.minecraft.world.entity.Relative.class);
         for (final TeleportFlag flag : flags) {
             if (flag instanceof TeleportFlag.Relative relativeFlag) {
                 relativeFlags.add(deltaRelativeToNMS(relativeFlag));
             }
->>>>>>> paper
         }
 
         return this.entity.teleport(new TeleportTransition(
@@ -426,12 +415,8 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
 
     @Override
     public List<org.bukkit.entity.Entity> getNearbyEntities(double x, double y, double z) {
-<<<<<<< silkard
-        Preconditions.checkState(!entity.silkard_generation(), "Cannot get nearby entities during world generation");
-=======
-        Preconditions.checkState(!this.entity.generation, "Cannot get nearby entities during world generation");
+        Preconditions.checkState(!this.entity.silkard_generation(), "Cannot get nearby entities during world generation");
         org.spigotmc.AsyncCatcher.catchOp("getNearbyEntities"); // Spigot
->>>>>>> paper
 
         List<Entity> entities = this.getHandle().level().getEntities(this.entity, this.entity.getBoundingBox().inflate(x, y, z), Predicates.alwaysTrue());
         List<org.bukkit.entity.Entity> result = new java.util.ArrayList<>(entities.size());
@@ -518,12 +503,8 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
 
     @Override
     public void remove() {
-<<<<<<< silkard
-        entity.silkard_pluginRemoved(true);
-        entity.discard(getHandle().silkard_generation() ? null : EntityRemoveEvent.Cause.PLUGIN);
-=======
-        this.entity.pluginRemoved = true;
-        this.entity.discard(this.getHandle().generation ? null : EntityRemoveEvent.Cause.PLUGIN);
+        this.entity.silkard_pluginRemoved(true);
+        this.entity.discard(this.getHandle().silkard_generation() ? null : EntityRemoveEvent.Cause.PLUGIN);
     }
 
     @Override
@@ -535,7 +516,6 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
     public @Nullable RemovalReason getRemovalReason() {
         final Entity.RemovalReason removalReason = this.entity.getRemovalReason();
         return removalReason == null ? null : RemovalReason.valueOf(removalReason.name());
->>>>>>> paper
     }
 
     @Override
@@ -545,11 +525,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
 
     @Override
     public boolean isValid() {
-<<<<<<< silkard
-        return entity.isAlive() && entity.silkard_valid() && entity.isChunkLoaded() && isInWorld();
-=======
-        return this.entity.isAlive() && this.entity.valid;
->>>>>>> paper
+        return this.entity.isAlive() && this.entity.silkard_valid();
     }
 
     @Override
@@ -559,28 +535,12 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
 
     @Override
     public boolean isPersistent() {
-<<<<<<< silkard
-        return entity.silkard_persist();
-=======
-        return this.entity.persist;
->>>>>>> paper
+        return this.entity.silkard_persist();
     }
 
     @Override
     public void setPersistent(boolean persistent) {
-<<<<<<< silkard
-        entity.silkard_persist(persistent);
-    }
-
-    public Vector getMomentum() {
-        return getVelocity();
-    }
-
-    public void setMomentum(Vector value) {
-        setVelocity(value);
-=======
-        this.entity.persist = persistent;
->>>>>>> paper
+        this.entity.silkard_persist(persistent);
     }
 
     @Override
@@ -690,16 +650,10 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
     }
 
     @Override
-<<<<<<< silkard
-    public void playEffect(EntityEffect type) {
-        Preconditions.checkArgument(type != null, "Type cannot be null");
-        Preconditions.checkState(!entity.silkard_generation(), "Cannot play effect during world generation");
-=======
     public void playEffect(EntityEffect effect) {
         Preconditions.checkArgument(effect != null, "Entity effect cannot be null");
-        Preconditions.checkState(!this.entity.generation, "Cannot play effect during world generation");
+        Preconditions.checkState(!this.entity.silkard_generation(), "Cannot play effect during world generation");
         Preconditions.checkArgument(effect.isApplicableTo(this), "Entity effect cannot apply to this entity");
->>>>>>> paper
 
         this.getHandle().level().broadcastEntityEvent(this.getHandle(), effect.getData());
     }
@@ -822,11 +776,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
 
     @Override
     public void setVisibleByDefault(boolean visible) {
-<<<<<<< silkard
-        if (getHandle().silkard_visibleByDefault() != visible) {
-=======
-        if (this.getHandle().visibleByDefault != visible) {
->>>>>>> paper
+        if (this.getHandle().silkard_visibleByDefault() != visible) {
             if (visible) {
                 // Making visible by default, reset and show to all players
                 for (Player player : this.server.getOnlinePlayers()) {
@@ -839,30 +789,18 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
                 }
             }
 
-<<<<<<< silkard
-            getHandle().silkard_visibleByDefault(visible);
-=======
-            this.getHandle().visibleByDefault = visible;
->>>>>>> paper
+            this.getHandle().silkard_visibleByDefault(visible);
         }
     }
 
     @Override
     public boolean isVisibleByDefault() {
-<<<<<<< silkard
-        return getHandle().silkard_visibleByDefault();
-=======
-        return this.getHandle().visibleByDefault;
->>>>>>> paper
+        return this.getHandle().silkard_visibleByDefault();
     }
 
     @Override
     public Set<Player> getTrackedBy() {
-<<<<<<< silkard
-        Preconditions.checkState(!entity.silkard_generation(), "Cannot get tracking players during world generation");
-=======
-        Preconditions.checkState(!this.entity.generation, "Cannot get tracking players during world generation");
->>>>>>> paper
+        Preconditions.checkState(!this.entity.silkard_generation(), "Cannot get tracking players during world generation");
         ImmutableSet.Builder<Player> players = ImmutableSet.builder();
 
         ServerLevel world = ((CraftWorld) this.getWorld()).getHandle();
@@ -879,7 +817,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
 
     @Override
     public boolean isTrackedBy(final Player player) {
-        Preconditions.checkState(!this.entity.generation, "Cannot check tracking players during world generation");
+        Preconditions.checkState(!this.entity.silkard_generation(), "Cannot check tracking players during world generation");
         Preconditions.checkArgument(player != null, "Player cannot be null");
 
         ServerLevel world = ((CraftWorld) this.getWorld()).getHandle();
@@ -1131,11 +1069,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
 
     @Override
     public boolean isInWorld() {
-<<<<<<< silkard
-        return getHandle().silkard_inWorld();
-=======
-        return this.getHandle().inWorld;
->>>>>>> paper
+        return this.getHandle().silkard_inWorld();
     }
 
     @Override
@@ -1272,7 +1206,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
     public CompletableFuture<Boolean> teleportAsync(final Location location, final TeleportCause cause, final TeleportFlag... teleportFlags) {
         Preconditions.checkArgument(location != null, "location cannot be null");
         Preconditions.checkArgument(location.getWorld() != null, "Target world cannot be null");
-        Preconditions.checkState(!this.entity.generation, "Cannot teleport entity to an other world during world generation");
+        Preconditions.checkState(!this.entity.silkard_generation(), "Cannot teleport entity to an other world during world generation");
         location.checkFinite();
         Location locationClone = location.clone(); // clone so we don't need to worry about mutations after this call.
 
@@ -1388,7 +1322,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
         this.entity.setLevel(((CraftWorld) location.getWorld()).getHandle());
         this.entity.setPos(location.getX(), location.getY(), location.getZ());
         this.entity.setRot(location.getYaw(), location.getPitch());
-        final boolean spawned = !this.entity.valid && this.entity.level().addFreshEntity(this.entity, reason);
+        final boolean spawned = !this.entity.silkard_valid() && this.entity.level().addFreshEntity(this.entity, reason);
         if (!spawned) return false; // Do not attempt to spawn rest if root was not spawned in
         // Like net.minecraft.world.level.ServerLevelAccessor.addFreshEntityWithPassengers(net.minecraft.world.entity.Entity, org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason)
         this.entity.getIndirectPassengers().forEach(e -> e.level().addFreshEntity(e, reason));
@@ -1432,7 +1366,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
 
     @Override
     public void setInvisible(boolean invisible) {
-        this.getHandle().persistentInvisibility = invisible;
+        this.getHandle().silkard_persistentInvisibility(invisible);
         this.getHandle().setSharedFlag(Entity.FLAG_INVISIBLE, invisible);
     }
 

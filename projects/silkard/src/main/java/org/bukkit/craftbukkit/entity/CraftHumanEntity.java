@@ -204,12 +204,9 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
             return false;
         }
 
-<<<<<<< silkard
-        if (getHandle().startSleepInBed(bed, blockstate, bed.getBedRule(getHandle().level(), blockpos), blockpos).left().isPresent()) { //TODO
-=======
         final BedRule bedRule = bedBlock.getBedRule(level, pos);
-        if (this.getHandle().startSleepInBed(bedBlock, state, bedRule, pos, force).left().isPresent()) {
->>>>>>> paper
+        // TODO Silkard - the injected startSleepInBed has no force flag, so force is not honoured yet
+        if (this.getHandle().startSleepInBed(bedBlock, state, bedRule, pos).left().isPresent()) {
             return false;
         }
 
@@ -378,23 +375,14 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         if (this.getHandle().containerMenu == formerContainer) {
             return null;
         }
-<<<<<<< silkard
-        getHandle().containerMenu.silkard$checkReachable(false);
-        return getHandle().containerMenu.getBukkitView();
-=======
-        this.getHandle().containerMenu.checkReachable = false;
+        this.getHandle().containerMenu.silkard$checkReachable(false);
         return this.getHandle().containerMenu.getBukkitView();
->>>>>>> paper
     }
 
     private static void openCustomInventory(Inventory inventory, ServerPlayer player, MenuType<?> windowType) {
         if (player.connection == null) return;
         Preconditions.checkArgument(windowType != null, "Unknown windowType");
-<<<<<<< silkard
-        AbstractContainerMenu abstractcontainermenu = new CraftContainer(inventory, player, player.nextContainerCounterInt());
-=======
-        AbstractContainerMenu container = new CraftContainer(inventory, player, player.nextContainerCounter());
->>>>>>> paper
+        AbstractContainerMenu container = new CraftContainer(inventory, player, player.nextContainerCounterInt());
 
         // Paper start - Add titleOverride to InventoryOpenEvent
         final com.mojang.datafixers.util.Pair<net.kyori.adventure.text.Component, AbstractContainerMenu> result = CraftEventFactory.callInventoryOpenEventWithTitle(player, container);
@@ -426,11 +414,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         }
         this.getHandle().openMenu(Blocks.CRAFTING_TABLE.defaultBlockState().getMenuProvider(this.getHandle().level(), CraftLocation.toBlockPos(location)));
         if (force) {
-<<<<<<< silkard
-            getHandle().containerMenu.silkard$checkReachable(false);
-=======
-            this.getHandle().containerMenu.checkReachable = false;
->>>>>>> paper
+            this.getHandle().containerMenu.silkard$checkReachable(false);
         }
         return this.getHandle().containerMenu.getBukkitView();
     }
@@ -465,11 +449,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         // Paper end
 
         if (force) {
-<<<<<<< silkard
-            getHandle().containerMenu.silkard$checkReachable(false);
-=======
-            this.getHandle().containerMenu.checkReachable = false;
->>>>>>> paper
+            this.getHandle().containerMenu.silkard$checkReachable(false);
         }
         return this.getHandle().containerMenu.getBukkitView();
     }
@@ -489,11 +469,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
             container = ((CraftInventoryView) inventory).getHandle();
             Preconditions.checkArgument(!(container instanceof InventoryMenu), "Can not open player's InventoryView");
         } else {
-<<<<<<< silkard
-            abstractcontainermenu = new CraftContainer(inventory, this.getHandle(), player.nextContainerCounterInt());
-=======
-            container = new CraftContainer(inventory, this.getHandle(), player.nextContainerCounter());
->>>>>>> paper
+            container = new CraftContainer(inventory, this.getHandle(), player.nextContainerCounterInt());
         }
 
         // Trigger an INVENTORY_OPEN event
@@ -628,7 +604,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
             throw new IllegalArgumentException("Unsupported inventory type: " + material);
         }
         this.getHandle().openMenu(block.getMenuProvider(null, this.getHandle().level(), new BlockPos(location.getBlockX(), location.getBlockY(), location.getBlockZ())));
-        this.getHandle().containerMenu.checkReachable = !force;
+        this.getHandle().containerMenu.silkard$checkReachable(!force);
         return this.getHandle().containerMenu.getBukkitView();
     }
 
@@ -888,56 +864,32 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
 
     @Override
     public int getSaturatedRegenRate() {
-<<<<<<< silkard
-        return getHandle().getFoodData().silkard$saturatedRegenRate();
-=======
-        return this.getHandle().getFoodData().saturatedRegenRate;
->>>>>>> paper
+        return this.getHandle().getFoodData().silkard$saturatedRegenRate();
     }
 
     @Override
     public void setSaturatedRegenRate(int i) {
-<<<<<<< silkard
-        getHandle().getFoodData().silkard$saturatedRegenRate(i);
-=======
-        this.getHandle().getFoodData().saturatedRegenRate = i;
->>>>>>> paper
+        this.getHandle().getFoodData().silkard$saturatedRegenRate(i);
     }
 
     @Override
     public int getUnsaturatedRegenRate() {
-<<<<<<< silkard
-        return getHandle().getFoodData().silkard$unsaturatedRegenRate();
-=======
-        return this.getHandle().getFoodData().unsaturatedRegenRate;
->>>>>>> paper
+        return this.getHandle().getFoodData().silkard$unsaturatedRegenRate();
     }
 
     @Override
     public void setUnsaturatedRegenRate(int i) {
-<<<<<<< silkard
-        getHandle().getFoodData().silkard$unsaturatedRegenRate(i);
-=======
-        this.getHandle().getFoodData().unsaturatedRegenRate = i;
->>>>>>> paper
+        this.getHandle().getFoodData().silkard$unsaturatedRegenRate(i);
     }
 
     @Override
     public int getStarvationRate() {
-<<<<<<< silkard
-        return getHandle().getFoodData().silkard$starvationRate();
-=======
-        return this.getHandle().getFoodData().starvationRate;
->>>>>>> paper
+        return this.getHandle().getFoodData().silkard$starvationRate();
     }
 
     @Override
     public void setStarvationRate(int i) {
-<<<<<<< silkard
-        getHandle().getFoodData().silkard$starvationRate(i);
-=======
-        this.getHandle().getFoodData().starvationRate = i;
->>>>>>> paper
+        this.getHandle().getFoodData().silkard$starvationRate(i);
     }
 
     @Override

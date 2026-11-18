@@ -22,22 +22,18 @@ public class CraftEntityType {
         // Leaf start - Cache CraftEntityType#minecraftToBukkit convert
         EntityType asBukkit = MINECRAFT_TO_BUKKIT_KEY_CACHE.get(minecraft);
 
-<<<<<<< silkard
+        // Silkard start - modded entity types resolve through the Fabric registry
         EntityType modded = com.mohistmc.silkard.fabric.FabricEntityRegistry.bukkit(minecraft);
         if (modded != null) {
             return modded;
         }
+        // Silkard end
 
-        net.minecraft.core.Registry<net.minecraft.world.entity.EntityType<?>> registry = CraftRegistry.getMinecraftRegistry(Registries.ENTITY_TYPE);
-        EntityType bukkit = Registry.ENTITY_TYPE.get(CraftNamespacedKey.fromMinecraft(registry.getResourceKey(minecraft).orElseThrow().identifier()));
-
-=======
         if (org.dreeam.leaf.config.modules.opt.EnableCachedMTBEntityTypeConvert.enabled && asBukkit != null) {
             return asBukkit;
         }
         // Leaf end - Cache CraftEntityType#minecraftToBukkit convert
         EntityType bukkit = Registry.ENTITY_TYPE.get(CraftNamespacedKey.fromMinecraft(net.minecraft.world.entity.EntityType.getKey(minecraft)));
->>>>>>> paper
         Preconditions.checkArgument(bukkit != null);
         MINECRAFT_TO_BUKKIT_KEY_CACHE.put(minecraft, bukkit); // Leaf - Cache CraftEntityType#minecraftToBukkit convert
         return bukkit;
@@ -46,14 +42,11 @@ public class CraftEntityType {
     private static final java.util.Map<EntityType, net.minecraft.resources.ResourceKey<net.minecraft.world.entity.EntityType<?>>> KEY_CACHE = java.util.Collections.synchronizedMap(new java.util.EnumMap<>(EntityType.class)); // Paper
     public static net.minecraft.world.entity.EntityType<?> bukkitToMinecraft(EntityType bukkit) {
         Preconditions.checkArgument(bukkit != null);
-<<<<<<< silkard
 
         if (bukkit.getMinecraftEntityType() != null) {
             return bukkit.getMinecraftEntityType();
         }
 
-=======
->>>>>>> paper
         return CraftRegistry.getMinecraftRegistry(Registries.ENTITY_TYPE)
                 .getOptional(KEY_CACHE.computeIfAbsent(bukkit, type -> CraftNamespacedKey.toResourceKey(Registries.ENTITY_TYPE, type.getKey()))).orElseThrow();
     }

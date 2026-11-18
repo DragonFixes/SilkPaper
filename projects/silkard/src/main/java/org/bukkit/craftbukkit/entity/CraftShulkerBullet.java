@@ -11,20 +11,6 @@ public class CraftShulkerBullet extends AbstractProjectile implements ShulkerBul
     }
 
     @Override
-<<<<<<< silkard
-    public ProjectileSource getShooter() {
-        return getHandle().silkard_projectileSource();
-    }
-
-    @Override
-    public void setShooter(ProjectileSource shooter) {
-        if (shooter instanceof Entity) {
-            getHandle().setOwner(((CraftEntity) shooter).getHandle());
-        } else {
-            getHandle().setOwner(null);
-        }
-        getHandle().silkard_projectileSource(shooter);
-=======
     public net.minecraft.world.entity.projectile.ShulkerBullet getHandle() {
         return (net.minecraft.world.entity.projectile.ShulkerBullet) this.entity;
     }
@@ -32,26 +18,20 @@ public class CraftShulkerBullet extends AbstractProjectile implements ShulkerBul
     @Override
     public org.bukkit.entity.Entity getTarget() {
         return this.getHandle().getTarget() != null ? this.getHandle().getTarget().getBukkitEntity() : null;
->>>>>>> paper
     }
 
     @Override
     public void setTarget(org.bukkit.entity.Entity target) {
-        Preconditions.checkState(!this.getHandle().generation, "Cannot set target during world generation");
+        Preconditions.checkState(!this.getHandle().silkard_generation(), "Cannot set target during world generation");
 
         this.getHandle().setTarget(target == null ? null : ((CraftEntity) target).getHandle());
     }
 
     @Override
-<<<<<<< silkard
-    public void setTarget(org.bukkit.entity.Entity target) {
-        Preconditions.checkState(!getHandle().silkard_generation(), "Cannot set target during world generation");
-=======
     public org.bukkit.util.Vector getTargetDelta() {
         net.minecraft.world.entity.projectile.ShulkerBullet bullet = this.getHandle();
         return new org.bukkit.util.Vector(bullet.targetDeltaX, bullet.targetDeltaY, bullet.targetDeltaZ);
     }
->>>>>>> paper
 
     @Override
     public void setTargetDelta(org.bukkit.util.Vector vector) {

@@ -38,11 +38,7 @@ public class CraftPiglin extends CraftPiglinAbstract implements Piglin, com.dest
         Preconditions.checkArgument(material != null, "material cannot be null");
 
         Item item = CraftItemType.bukkitToMinecraft(material);
-<<<<<<< silkard
-        return getHandle().silkard$allowedBarterItems().add(item);
-=======
-        return this.getHandle().allowedBarterItems.add(item);
->>>>>>> paper
+        return this.getHandle().silkard$allowedBarterItems().add(item);
     }
 
     @Override
@@ -50,11 +46,7 @@ public class CraftPiglin extends CraftPiglinAbstract implements Piglin, com.dest
         Preconditions.checkArgument(material != null, "material cannot be null");
 
         Item item = CraftItemType.bukkitToMinecraft(material);
-<<<<<<< silkard
-        return getHandle().silkard$allowedBarterItems().remove(item);
-=======
-        return this.getHandle().allowedBarterItems.remove(item);
->>>>>>> paper
+        return this.getHandle().silkard$allowedBarterItems().remove(item);
     }
 
     @Override
@@ -62,11 +54,7 @@ public class CraftPiglin extends CraftPiglinAbstract implements Piglin, com.dest
         Preconditions.checkArgument(material != null, "material cannot be null");
 
         Item item = CraftItemType.bukkitToMinecraft(material);
-<<<<<<< silkard
-        return getHandle().silkard$interestItems().add(item);
-=======
-        return this.getHandle().interestItems.add(item);
->>>>>>> paper
+        return this.getHandle().silkard$interestItems().add(item);
     }
 
     @Override
@@ -74,29 +62,17 @@ public class CraftPiglin extends CraftPiglinAbstract implements Piglin, com.dest
         Preconditions.checkArgument(material != null, "material cannot be null");
 
         Item item = CraftItemType.bukkitToMinecraft(material);
-<<<<<<< silkard
-        return getHandle().silkard$interestItems().remove(item);
-=======
-        return this.getHandle().interestItems.remove(item);
->>>>>>> paper
+        return this.getHandle().silkard$interestItems().remove(item);
     }
 
     @Override
     public Set<Material> getInterestList() {
-<<<<<<< silkard
-        return Collections.unmodifiableSet(getHandle().silkard$interestItems().stream().map(CraftItemType::minecraftToBukkit).collect(Collectors.toSet()));
-=======
-        return Collections.unmodifiableSet(this.getHandle().interestItems.stream().map(CraftItemType::minecraftToBukkit).collect(Collectors.toSet()));
->>>>>>> paper
+        return Collections.unmodifiableSet(this.getHandle().silkard$interestItems().stream().map(CraftItemType::minecraftToBukkit).collect(Collectors.toSet()));
     }
 
     @Override
     public Set<Material> getBarterList() {
-<<<<<<< silkard
-        return Collections.unmodifiableSet(getHandle().silkard$allowedBarterItems().stream().map(CraftItemType::minecraftToBukkit).collect(Collectors.toSet()));
-=======
-        return Collections.unmodifiableSet(this.getHandle().allowedBarterItems.stream().map(CraftItemType::minecraftToBukkit).collect(Collectors.toSet()));
->>>>>>> paper
+        return Collections.unmodifiableSet(this.getHandle().silkard$allowedBarterItems().stream().map(CraftItemType::minecraftToBukkit).collect(Collectors.toSet()));
     }
 
     @Override

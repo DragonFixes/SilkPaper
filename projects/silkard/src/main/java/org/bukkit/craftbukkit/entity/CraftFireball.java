@@ -21,53 +21,22 @@ public class CraftFireball extends AbstractProjectile implements Fireball {
 
     @Override
     public float getYield() {
-<<<<<<< silkard
         return getHandle().silkard$bukkitYield();
-=======
-        return this.getHandle().bukkitYield;
->>>>>>> paper
     }
 
     @Override
     public boolean isIncendiary() {
-<<<<<<< silkard
         return getHandle().silkard$isIncendiary();
-=======
-        return this.getHandle().isIncendiary;
->>>>>>> paper
     }
 
     @Override
     public void setIsIncendiary(boolean isIncendiary) {
-<<<<<<< silkard
         getHandle().silkard$isIncendiary(isIncendiary);
-=======
-        this.getHandle().isIncendiary = isIncendiary;
->>>>>>> paper
     }
 
     @Override
     public void setYield(float yield) {
-<<<<<<< silkard
-        getHandle().silkard$bukkitYield(yield);
-    }
-
-    @Override
-    public ProjectileSource getShooter() {
-        return getHandle().silkard_projectileSource();
-    }
-
-    @Override
-    public void setShooter(ProjectileSource shooter) {
-        if (shooter instanceof CraftLivingEntity) {
-            getHandle().setOwner(((CraftLivingEntity) shooter).getHandle());
-        } else {
-            getHandle().setOwner(null);
-        }
-        getHandle().silkard_projectileSource(shooter);
-=======
-        this.getHandle().bukkitYield = yield;
->>>>>>> paper
+        this.getHandle().silkard$bukkitYield(yield);
     }
 
     @Override

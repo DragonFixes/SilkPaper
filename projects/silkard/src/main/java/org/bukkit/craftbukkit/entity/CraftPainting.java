@@ -35,11 +35,7 @@ public class CraftPainting extends CraftHanging implements Painting {
         Holder<PaintingVariant> oldArt = painting.getVariant();
         painting.setVariant(CraftArt.bukkitToMinecraftHolder(art));
         painting.setDirection(painting.getDirection());
-<<<<<<< silkard
         if (!force && !getHandle().silkard_generation() && !painting.survives()) {
-=======
-        if (!force && !this.getHandle().generation && !painting.survives()) {
->>>>>>> paper
             // Revert painting since it doesn't fit
             painting.setVariant(oldArt);
             painting.setDirection(painting.getDirection());

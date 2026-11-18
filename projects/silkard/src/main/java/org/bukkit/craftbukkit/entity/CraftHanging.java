@@ -43,11 +43,7 @@ public class CraftHanging extends CraftBlockAttachedEntity implements Hanging {
             default:
                 throw new IllegalArgumentException(String.format("%s is not a valid facing direction", face));
         }
-<<<<<<< silkard
         if (!force && !getHandle().silkard_generation() && !hanging.survives()) {
-=======
-        if (!force && !this.getHandle().generation && !hanging.survives()) {
->>>>>>> paper
             // Revert since it doesn't fit
             hanging.setDirection(dir);
             return false;

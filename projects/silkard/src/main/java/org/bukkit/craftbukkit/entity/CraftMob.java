@@ -57,11 +57,7 @@ public abstract class CraftMob extends CraftLivingEntity implements Mob, io.pape
 
     @Override
     public void setTarget(LivingEntity target) {
-<<<<<<< silkard
         Preconditions.checkState(!getHandle().silkard_generation(), "Cannot set target during world generation");
-=======
-        Preconditions.checkState(!this.getHandle().generation, "Cannot set target during world generation");
->>>>>>> paper
 
         net.minecraft.world.entity.Mob entity = this.getHandle();
         if (target == null) {
@@ -78,20 +74,12 @@ public abstract class CraftMob extends CraftLivingEntity implements Mob, io.pape
 
     @Override
     public void setAware(boolean aware) {
-<<<<<<< silkard
         getHandle().silkard_aware(aware);
-=======
-        this.getHandle().aware = aware;
->>>>>>> paper
     }
 
     @Override
     public boolean isAware() {
-<<<<<<< silkard
         return getHandle().silkard_aware();
-=======
-        return this.getHandle().aware;
->>>>>>> paper
     }
 
     @Override

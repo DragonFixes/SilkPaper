@@ -27,13 +27,8 @@ public class CraftCreeper extends CraftMonster implements Creeper {
         CreeperPowerEvent.PowerCause cause = powered ? CreeperPowerEvent.PowerCause.SET_ON : CreeperPowerEvent.PowerCause.SET_OFF;
 
         // only call event when we are not in world generation
-<<<<<<< silkard
-        if (getHandle().silkard_generation() || !callPowerEvent(cause)) {
-            getHandle().setPowered(powered);
-=======
-        if (this.getHandle().generation || !this.callPowerEvent(cause)) {
+        if (this.getHandle().silkard_generation() || !this.callPowerEvent(cause)) {
             this.getHandle().setPowered(powered);
->>>>>>> paper
         }
     }
 
@@ -88,13 +83,8 @@ public class CraftCreeper extends CraftMonster implements Creeper {
     @Override
     public void ignite(Entity entity) {
         Preconditions.checkNotNull(entity, "entity cannot be null");
-<<<<<<< silkard
         getHandle().silkard$entityIgniter(((CraftEntity) entity).getHandle());
         getHandle().ignite();
-=======
-        this.getHandle().entityIgniter = ((CraftEntity) entity).getHandle();
-        this.getHandle().ignite();
->>>>>>> paper
     }
 
     @Override
@@ -104,11 +94,7 @@ public class CraftCreeper extends CraftMonster implements Creeper {
 
     @Override
     public Entity getIgniter() {
-<<<<<<< silkard
         return (getHandle().silkard$entityIgniter() != null) ? getHandle().silkard$entityIgniter().getBukkitEntity() : null;
-=======
-        return (this.getHandle().entityIgniter != null) ? this.getHandle().entityIgniter.getBukkitEntity() : null;
->>>>>>> paper
     }
 
     // Paper start
