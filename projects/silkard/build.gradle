@@ -148,6 +148,8 @@ tasks.withType(JavaCompile).configureEach {
 	//it.options.warnings = false
 	options.compilerArgs += "-Xlint:-removal"
 	options.compilerArgs += ["-Xmaxerrs", "100000"]
+	// Leaf's SIMD API classes use the Vector API; the server also needs this module at runtime.
+	options.compilerArgs += ["--add-modules", "jdk.incubator.vector"]
 }
 
 // Paper + Purpur + Leaf API, vendored by scripts/sync-leaf-api.ps1.
