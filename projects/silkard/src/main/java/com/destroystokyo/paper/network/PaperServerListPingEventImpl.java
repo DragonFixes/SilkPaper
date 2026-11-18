@@ -13,7 +13,7 @@ class PaperServerListPingEventImpl extends PaperServerListPingEvent {
     private final MinecraftServer server;
 
     PaperServerListPingEventImpl(MinecraftServer server, StatusClient client, int protocolVersion, @Nullable CachedServerIcon icon) {
-        super(client, server.motd(), server.getPlayerCount(), server.getMaxPlayers(),
+        super(client, net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection().deserialize(java.util.Objects.requireNonNullElse(server.getMotd(), "")), server.getPlayerCount(), server.getMaxPlayers(),
                 server.getServerModName() + ' ' + server.getServerVersion(), protocolVersion, icon);
         this.server = server;
     }

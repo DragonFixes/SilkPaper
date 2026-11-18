@@ -2978,10 +2978,10 @@ public class PurpurWorldConfig {
         final String defaultSkeletonBowAccuracy = skeletonBowAccuracy;
         skeletonBowAccuracy = getString("mobs.skeleton.bow-accuracy", skeletonBowAccuracy);
         skeletonBowAccuracyEnabled = !"14 - difficulty * 4".equals(skeletonBowAccuracy); // Leaf - Improve Purpur JS expression evaluation
-        for (int i = 1; i < 4; i++) {
+        for (int i = 1; skeletonBowAccuracyEnabled && i < 4; i++) { // the default expression needs no script engine
             final float divergence;
             try {
-                divergence = ((Number) Entity.scriptEngine.eval("let difficulty = " + i + "; " + skeletonBowAccuracy)).floatValue();
+                divergence = ((Number) com.mohistmc.silkard.paper.paper.PurpurScripts.evalWithDifficulty(skeletonBowAccuracy, i)).floatValue();
             } catch (javax.script.ScriptException e) {
                 e.printStackTrace();
                 break;

@@ -373,7 +373,7 @@ public class WorldConfiguration extends ConfigurationPart {
                 } else if (entity instanceof HangingEntity || entity instanceof ItemEntity || entity instanceof ExperienceOrb) {
                     return misc.or(def);
                 }
-                switch (entity.activationType) {
+                switch (io.papermc.paper.entity.activation.ActivationType.activationTypeFor(entity)) {
                     case ANIMAL, WATER, VILLAGER -> {
                         return animal.or(def);
                     }

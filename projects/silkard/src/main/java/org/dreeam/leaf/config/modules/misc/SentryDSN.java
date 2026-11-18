@@ -36,8 +36,6 @@ public class SentryDSN extends ConfigModule {
             """
                 是否仅记录带有 Throwable 的日志."""));
 
-        if (sentryDsn != null && !sentryDsn.isBlank()) {
-            gg.pufferfish.pufferfish.sentry.SentryManager.init(Level.getLevel(logLevel));
-        }
+        // TODO Silkard - Sentry error reporting is not bundled; the DSN is read but no reports are sent
     }
 }

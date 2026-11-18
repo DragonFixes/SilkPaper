@@ -28,13 +28,13 @@ public class PaperNetworkClient implements NetworkClient {
 
     @Override
     public int getProtocolVersion() {
-        return this.connection.protocolVersion;
+        return this.connection.paper$protocolVersion();
     }
 
     @Nullable
     @Override
     public InetSocketAddress getVirtualHost() {
-        return this.connection.virtualHost;
+        return this.connection.paper$virtualHost();
     }
 
     public static InetSocketAddress prepareVirtualHost(String host, int port) {

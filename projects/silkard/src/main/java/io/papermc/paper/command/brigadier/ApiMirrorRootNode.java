@@ -225,12 +225,11 @@ public abstract class ApiMirrorRootNode extends RootCommandNode<CommandSourceSta
     }
 
     // These are needed for bukkit... we should NOT allow this
-    @Override
+    // Brigadier's CommandNode has no removeCommand/clearAll without Paper's library patch; PaperCommandNodes routes to these.
     public void removeCommand(String name) {
         com.mohistmc.silkard.paper.paper.PaperCommandNodes.removeCommand(this.getDispatcher().getRoot(), name);
     }
 
-    @Override
     public void clearAll() {
         com.mohistmc.silkard.paper.paper.PaperCommandNodes.clearAll(this.getDispatcher().getRoot());
     }

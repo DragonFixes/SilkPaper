@@ -141,7 +141,7 @@ public class PaperServerInternalAPIBridge implements InternalAPIBridge {
 
     @Override
     public Predicate<CommandSourceStack> restricted(final Predicate<CommandSourceStack> predicate, final boolean restricted) {
-        record RestrictedPredicate(Predicate<CommandSourceStack> predicate, @Override boolean restricted) implements Predicate<CommandSourceStack>, Commands.RestrictedMarker {
+        record RestrictedPredicate(Predicate<CommandSourceStack> predicate, @Override boolean restricted) implements Predicate<CommandSourceStack>, com.mohistmc.silkard.paper.paper.RestrictedMarker {
             @Override
             public boolean test(final CommandSourceStack commandSourceStack) {
                 return this.predicate.test(commandSourceStack);
@@ -203,7 +203,7 @@ public class PaperServerInternalAPIBridge implements InternalAPIBridge {
 
     @Override
     public VersionFetcher getVersionFetcher() {
-        return new org.dreeam.leaf.version.LeafVersionFetcher(); // Leaf - Rebrand
+        return new VersionFetcher.DummyVersionFetcher(); // TODO Silkard - Leaf's version fetcher checks Leaf builds, which do not describe Silkard
     }
 
     @Override
@@ -246,8 +246,8 @@ public class PaperServerInternalAPIBridge implements InternalAPIBridge {
         final net.minecraft.commands.CommandSourceStack source = context != null ? VanillaCommandWrapper.getListener(context) : null;
         Boolean previous = null;
         if (source != null && bypassPermissions) {
-            previous = source.bypassSelectorPermissions;
-            source.bypassSelectorPermissions = true;
+            previous = source.paper$bypassSelectorPermissions();
+            source.paper$bypassSelectorPermissions(true);
         }
         try {
             final ResolutionContext.Builder builder = ResolutionContext.builder();
@@ -263,7 +263,7 @@ public class PaperServerInternalAPIBridge implements InternalAPIBridge {
             throw new IOException(e);
         } finally {
             if (previous != null) {
-                source.bypassSelectorPermissions = previous;
+                source.paper$bypassSelectorPermissions(previous);
             }
         }
     }
@@ -288,7 +288,7 @@ public class PaperServerInternalAPIBridge implements InternalAPIBridge {
         final int[] levelClue = new int[offerAmount];
 
         final RandomSource randomSource = new RandomSourceWrapper(new Random());
-        EnchantmentMenu.fillEnchantmentOffers(randomSource, seed, bookshelfCount, CraftItemStack.unwrap(targetStack), CraftRegistry.getMinecraftRegistry(), costs, enchantClue, levelClue);
+        com.mohistmc.silkard.paper.paper.Enchanting.fillEnchantmentOffers(randomSource, seed, bookshelfCount, CraftItemStack.unwrap(targetStack), CraftRegistry.getMinecraftRegistry(), costs, enchantClue, levelClue);
 
         final IdMap<Holder<Enchantment>> holderIdMap = CraftRegistry.getMinecraftRegistry()
             .lookupOrThrow(Registries.ENCHANTMENT)

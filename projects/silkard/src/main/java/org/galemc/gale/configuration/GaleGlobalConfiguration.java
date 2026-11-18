@@ -37,7 +37,7 @@ public class GaleGlobalConfiguration extends ConfigurationPart {
 
             @PostProcess
             public void postProcess() {
-                net.minecraft.server.level.ServerPlayer.increaseTimeStatisticsInterval = Math.max(1, increaseTimeStatistics); // Gale - Hydrinity - increase time statistics in intervals - store as static field for fast access
+                // TODO Silkard - interval time statistics are not ported; the setting is read but players update statistics every tick
             }
 
         }
