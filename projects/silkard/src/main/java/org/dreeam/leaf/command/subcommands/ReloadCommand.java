@@ -32,7 +32,7 @@ public final class ReloadCommand extends PermissionedLeafSubcommand {
         Command.broadcastCommandMessage(sender, Component.text("Reloading Gale config...", NamedTextColor.GREEN));
 
         MinecraftServer server = ((CraftServer) sender.getServer()).getServer();
-        server.galeConfigurations.reloadConfigs(server);
+        server.galeConfigurations().reloadConfigs(server);
         server.silkard$server().reloadCount++;
 
         Command.broadcastCommandMessage(sender, Component.text("Gale config reload complete.", NamedTextColor.GREEN));

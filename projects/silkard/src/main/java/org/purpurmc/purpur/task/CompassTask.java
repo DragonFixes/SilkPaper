@@ -27,7 +27,7 @@ public class CompassTask extends BossBarTask {
         tick = 0;
 
         com.mohistmc.silkard.paper.PaperBootstrap.server().getAllLevels().forEach((level) -> {
-            if (level.purpurConfig.compassItemShowsBossBar) {
+            if (level.purpurConfig().compassItemShowsBossBar) {
                 level.players().forEach(player -> {
                     if (!player.compassBar()) {
                         if (player.getMainHandItem().getItem() != Items.COMPASS && player.getOffhandItem().getItem() != Items.COMPASS) {
