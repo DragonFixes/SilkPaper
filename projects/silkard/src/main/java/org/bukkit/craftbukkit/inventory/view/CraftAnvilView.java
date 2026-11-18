@@ -47,7 +47,7 @@ public class CraftAnvilView extends CraftInventoryView<AnvilMenu, AnvilInventory
 
     @Override
     public void setMaximumRepairCost(final int cost) {
-        this.container.silkard(cost);
+        this.container.silkard$maximumRepairCost(cost);
     }
 
     @Override

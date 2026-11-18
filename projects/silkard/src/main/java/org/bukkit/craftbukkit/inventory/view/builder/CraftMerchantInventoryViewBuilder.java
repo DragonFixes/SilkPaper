@@ -57,7 +57,7 @@ public class CraftMerchantInventoryViewBuilder<V extends InventoryView> extends 
 
         container = new MerchantMenu(serverPlayer.nextContainerCounterInt(), serverPlayer.getInventory(), this.merchant);
 
-        container.silkard(super.checkReachable);
+        container.silkard$checkReachable(super.checkReachable);
         setDefaultTitle(this.merchant);
         container.setTitle(super.title != null ? PaperAdventure.asVanilla(this.title) : super.defaultTitle);
         return (V) container.getBukkitView();
