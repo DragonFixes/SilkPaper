@@ -157,6 +157,11 @@ processResources {
 	filesMatching("fabric.mod.json") {
 		expand "version": inputs.properties.version
 	}
+	// Bukkit's Versioning reads the API version from this file; Paper's API build generates it.
+	inputs.property "mcVersion", project.minecraft_version
+	filesMatching("apiVersioning.json") {
+		expand "mcVersion": inputs.properties.mcVersion
+	}
 }
 
 tasks.withType(JavaCompile).configureEach {

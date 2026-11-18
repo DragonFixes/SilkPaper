@@ -1,0 +1,4 @@
+{
+  "version": "${mcVersion}-R0.1-SNAPSHOT",
+  "currentApiVersion": "${mcVersion}"
+}
