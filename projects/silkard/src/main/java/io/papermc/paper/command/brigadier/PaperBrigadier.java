@@ -35,7 +35,7 @@ public final class PaperBrigadier {
         }
 
         final APICommandMeta meta;
-        if ((meta = node.apiCommandMeta) == null) {
+        if ((meta = com.mohistmc.silkard.paper.paper.PaperCommandNodes.apiCommandMeta(node)) == null) {
             return new VanillaCommandWrapper(node);
         }
         CommandNode<CommandSourceStack> argumentCommandNode = node;
@@ -66,7 +66,7 @@ public final class PaperBrigadier {
 
         for (Object node : erasedDispatcher.getRoot().getChildren()) {
             if (node instanceof CommandNode<?> commandNode && commandNode.getCommand() instanceof BukkitCommandNode.BukkitBrigCommand) {
-                after.getDispatcher().getRoot().removeCommand(((CommandNode<?>) node).getName()); // Remove already existing commands
+                com.mohistmc.silkard.paper.paper.PaperCommandNodes.removeCommand(after.getDispatcher().getRoot(), ((CommandNode<?>) node).getName()); // Remove already existing commands
                 after.getDispatcher().getRoot().addChild((CommandNode<net.minecraft.commands.CommandSourceStack>) node);
             }
         }

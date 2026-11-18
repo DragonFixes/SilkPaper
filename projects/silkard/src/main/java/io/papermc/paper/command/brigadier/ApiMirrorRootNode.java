@@ -85,8 +85,8 @@ public abstract class ApiMirrorRootNode extends RootCommandNode<CommandSourceSta
         /*
         This node already has had an unwrapped node created, so we can assume that it's safe to reuse that cached copy.
          */
-        if (maybeWrappedNode.unwrappedCached != null) {
-            return maybeWrappedNode.unwrappedCached;
+        if (com.mohistmc.silkard.paper.paper.PaperCommandNodes.unwrappedCached(maybeWrappedNode) != null) {
+            return com.mohistmc.silkard.paper.paper.PaperCommandNodes.unwrappedCached(maybeWrappedNode);
         }
 
         // convert the pure brig node into one compatible with the nms dispatcher
@@ -147,8 +147,8 @@ public abstract class ApiMirrorRootNode extends RootCommandNode<CommandSourceSta
         }
 
         // Store unwrapped node before unwrapping children to avoid infinite recursion in cyclic redirects.
-        converted.wrappedCached = pureNode;
-        pureNode.unwrappedCached = converted;
+        com.mohistmc.silkard.paper.paper.PaperCommandNodes.wrappedCached(converted, pureNode);
+        com.mohistmc.silkard.paper.paper.PaperCommandNodes.unwrappedCached(pureNode, converted);
 
         /*
         Add the children to the node, unwrapping each child in the process.
@@ -181,8 +181,8 @@ public abstract class ApiMirrorRootNode extends RootCommandNode<CommandSourceSta
         This was most likely created by API and has a wrapped variant,
         so we can return this safely.
          */
-        if (unwrapped.wrappedCached != null) {
-            return unwrapped.wrappedCached;
+        if (com.mohistmc.silkard.paper.paper.PaperCommandNodes.wrappedCached(unwrapped) != null) {
+            return com.mohistmc.silkard.paper.paper.PaperCommandNodes.wrappedCached(unwrapped);
         }
 
         /*
@@ -191,7 +191,7 @@ public abstract class ApiMirrorRootNode extends RootCommandNode<CommandSourceSta
         restrictive access.
          */
         CommandNode<CommandSourceStack> shadow = new ShadowBrigNode(unwrapped);
-        unwrapped.wrappedCached = shadow;
+        com.mohistmc.silkard.paper.paper.PaperCommandNodes.wrappedCached(unwrapped, shadow);
         return shadow;
     }
 
@@ -227,12 +227,12 @@ public abstract class ApiMirrorRootNode extends RootCommandNode<CommandSourceSta
     // These are needed for bukkit... we should NOT allow this
     @Override
     public void removeCommand(String name) {
-        this.getDispatcher().getRoot().removeCommand(name);
+        com.mohistmc.silkard.paper.paper.PaperCommandNodes.removeCommand(this.getDispatcher().getRoot(), name);
     }
 
     @Override
     public void clearAll() {
-        this.getDispatcher().getRoot().clearAll();
+        com.mohistmc.silkard.paper.paper.PaperCommandNodes.clearAll(this.getDispatcher().getRoot());
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
