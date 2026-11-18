@@ -98,6 +98,10 @@ dependencies {
 		exclude group: 'org.yaml', module: 'snakeyaml'
 	})
 	include(implementation(platform("ca.spottedleaf.leafpile:bom:1.3.2")))
+	// json-simple backs Paper's bStats Metrics.
+	include(implementation("com.googlecode.json-simple:json-simple:1.1.1") {
+		exclude group: 'junit'
+	})
 	include(implementation("ca.spottedleaf.leafpile:common"))
 	include(implementation("ca.spottedleaf.leafpile:concurrentutil"))
 	include(implementation("ca.spottedleaf.leafpile:converter"))
