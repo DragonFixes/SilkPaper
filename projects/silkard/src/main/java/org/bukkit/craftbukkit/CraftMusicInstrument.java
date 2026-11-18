@@ -15,6 +15,12 @@ import org.jetbrains.annotations.NotNull;
 
 public class CraftMusicInstrument extends MusicInstrument implements io.papermc.paper.util.Holderable<Instrument> {
 
+    // Paper's Holderable and the Spigot-compat RegistryAware both default getKeyOrNull; Paper's wins.
+    @Override
+    public org.bukkit.NamespacedKey getKeyOrNull() {
+        return this.getHolder().unwrapKey().map(org.bukkit.craftbukkit.util.CraftNamespacedKey::fromResourceKey).orElse(null);
+    }
+
     public static MusicInstrument minecraftHolderToBukkit(Holder<Instrument> minecraft) {
         return CraftRegistry.minecraftHolderToBukkit(minecraft, Registries.INSTRUMENT); // Paper - switch to Holder
     }
