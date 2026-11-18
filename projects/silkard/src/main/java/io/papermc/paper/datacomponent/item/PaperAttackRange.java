@@ -45,12 +45,16 @@ public record PaperAttackRange(
 
     static final class BuilderImpl implements AttackRange.Builder {
 
-        private float minReach = net.minecraft.world.item.component.AttackRange.CODEC_DEFAULT.minReach();
-        private float maxReach = net.minecraft.world.item.component.AttackRange.CODEC_DEFAULT.maxReach();
-        private float minCreativeReach = net.minecraft.world.item.component.AttackRange.CODEC_DEFAULT.minCreativeReach();
-        private float maxCreativeReach = net.minecraft.world.item.component.AttackRange.CODEC_DEFAULT.maxCreativeReach();
-        private float hitboxMargin = net.minecraft.world.item.component.AttackRange.CODEC_DEFAULT.hitboxMargin();
-        private float mobFactor = net.minecraft.world.item.component.AttackRange.CODEC_DEFAULT.mobFactor();
+        // Paper adds this constant to the vanilla component; decoding an empty map yields the codec's field defaults.
+        private static final net.minecraft.world.item.component.AttackRange CODEC_DEFAULT = net.minecraft.world.item.component.AttackRange.CODEC
+            .parse(com.mojang.serialization.JavaOps.INSTANCE, java.util.Map.of()).getOrThrow();
+
+        private float minReach = CODEC_DEFAULT.minReach();
+        private float maxReach = CODEC_DEFAULT.maxReach();
+        private float minCreativeReach = CODEC_DEFAULT.minCreativeReach();
+        private float maxCreativeReach = CODEC_DEFAULT.maxCreativeReach();
+        private float hitboxMargin = CODEC_DEFAULT.hitboxMargin();
+        private float mobFactor = CODEC_DEFAULT.mobFactor();
 
         @Override
         public AttackRange.Builder minReach(final float minReach) {

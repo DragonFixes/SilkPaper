@@ -5,6 +5,7 @@
   "mixins": [
     "MixinPaperCommandSourceStack",
     "MixinPaperConnection",
+    "MixinPaperGoal",
     "MixinPaperMinecraftServer",
     "MixinPaperServerCommonPacketListenerImpl",
     "MixinPaperServerConfigurationPacketListenerImpl",

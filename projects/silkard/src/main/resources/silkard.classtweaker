@@ -1114,3 +1114,4 @@ transitive-inject-interface	net/minecraft/server/network/ServerGamePacketListene
 transitive-inject-interface	net/minecraft/server/network/ServerConfigurationPacketListenerImpl	com/mohistmc/silkard/injected/paper/paper/PaperConfigurationListenerAccess
 accessible class net/minecraft/world/level/block/entity/SculkSensorBlockEntity$VibrationUser
 accessible class net/minecraft/world/level/BaseCommandBlock$CloseableCommandBlockSource
+transitive-inject-interface	net/minecraft/world/entity/ai/goal/Goal	com/mohistmc/silkard/injected/paper/paper/PaperGoalAccess

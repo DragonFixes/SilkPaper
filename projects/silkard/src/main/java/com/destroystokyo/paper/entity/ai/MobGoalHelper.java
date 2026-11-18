@@ -217,7 +217,7 @@ public class MobGoalHelper {
     public static EnumSet<GoalType> vanillaToPaper(Goal goal) {
         EnumSet<GoalType> goals = EnumSet.noneOf(GoalType.class);
         for (GoalType type : GoalType.values()) {
-            if (goal.hasFlag(paperToVanilla(type))) {
+            if (hasFlag(goal, paperToVanilla(type))) {
                 goals.add(type);
             }
         }
@@ -229,7 +229,6 @@ public class MobGoalHelper {
             case MOVE -> GoalType.MOVE;
             case LOOK -> GoalType.LOOK;
             case JUMP -> GoalType.JUMP;
-            case UNKNOWN_BEHAVIOR -> GoalType.UNKNOWN_BEHAVIOR;
             case TARGET -> GoalType.TARGET;
         };
     }
@@ -237,19 +236,29 @@ public class MobGoalHelper {
     public static EnumSet<Goal.Flag> paperToVanilla(EnumSet<GoalType> types) {
         EnumSet<Goal.Flag> goals = EnumSet.noneOf(Goal.Flag.class);
         for (GoalType type : types) {
-            goals.add(paperToVanilla(type));
+            Goal.Flag flag = paperToVanilla(type);
+            if (flag != null) {
+                goals.add(flag);
+            }
         }
         return goals;
     }
 
-    public static Goal.Flag paperToVanilla(GoalType type) {
+    // Paper adds an UNKNOWN_BEHAVIOR constant to vanilla's Goal.Flag. Vanilla enums cannot safely gain
+    // constants, so an unknown-behavior goal is a goal without flags and maps to null here.
+    public static Goal.@org.jspecify.annotations.Nullable Flag paperToVanilla(GoalType type) {
         return switch (type) {
             case MOVE -> Goal.Flag.MOVE;
             case LOOK -> Goal.Flag.LOOK;
             case JUMP -> Goal.Flag.JUMP;
-            case UNKNOWN_BEHAVIOR -> Goal.Flag.UNKNOWN_BEHAVIOR;
+            case UNKNOWN_BEHAVIOR -> null;
             case TARGET -> Goal.Flag.TARGET;
         };
+    }
+
+    /** Whether {@code goal} has {@code flag}; a {@code null} flag (unknown behavior) matches goals without flags. */
+    public static boolean hasFlag(Goal goal, Goal.@org.jspecify.annotations.Nullable Flag flag) {
+        return flag == null ? goal.getFlags().isEmpty() : goal.getFlags().contains(flag);
     }
 
     public static <T extends Mob> GoalKey<T> getKey(Class<? extends Goal> goalClass) {

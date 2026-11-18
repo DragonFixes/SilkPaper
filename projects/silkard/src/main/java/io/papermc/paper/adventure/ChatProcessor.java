@@ -50,7 +50,7 @@ import static net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializ
 
 @DefaultQualifier(NonNull.class)
 public final class ChatProcessor {
-    static final ResourceKey<ChatType> PAPER_RAW = ResourceKey.create(Registries.CHAT_TYPE, Identifier.fromNamespaceAndPath(Identifier.PAPER_NAMESPACE, "raw"));
+    static final ResourceKey<ChatType> PAPER_RAW = ResourceKey.create(Registries.CHAT_TYPE, Identifier.fromNamespaceAndPath("paper", "raw"));
     static final String DEFAULT_LEGACY_FORMAT = "<%1$s> %2$s"; // copied from PlayerChatEvent/AsyncPlayerChatEvent
     final MinecraftServer server;
     final ServerPlayer player;
@@ -145,7 +145,7 @@ public final class ChatProcessor {
     }
 
     private void processModern(final ChatRenderer renderer, final Set<Audience> viewers, final Component message, final Player player, final boolean cancelled) {
-        final PlayerChatMessage.AdventureView signedMessage = this.message.adventureView();
+        final com.mohistmc.silkard.paper.paper.PlayerChatMessageView signedMessage = com.mohistmc.silkard.paper.paper.PlayerChatMessageView.of(this.message);
         final AsyncChatEvent ae = new AsyncChatEvent(this.async, player, viewers, renderer, message, this.paper$originalMessage, signedMessage);
         ae.setCancelled(cancelled); // propagate cancelled state
         this.post(ae);
@@ -222,7 +222,12 @@ public final class ChatProcessor {
     final class ServerOutgoingChat implements OutgoingChat {
         @Override
         public void sendFormatChangedViewerAware(CraftPlayer player, Component displayName, Component message, ChatRenderer renderer, Set<Audience> viewers, ChatType.Bound chatType) {
-            ChatProcessor.this.server.getPlayerList().broadcastChatMessage(ChatProcessor.this.message, ChatProcessor.this.player, chatType, viewer -> PaperAdventure.asVanilla(renderer.render(player, displayName, message, viewer)));
+            // Paper's PlayerList overload renders the unsigned content per viewer; vanilla has no such overload.
+            ChatProcessor.this.server.logChatMessage(ChatProcessor.this.message.decoratedContent(), chatType, null);
+            for (final ServerPlayer viewer : ChatProcessor.this.server.getPlayerList().getPlayers()) {
+                final net.minecraft.network.chat.Component rendered = PaperAdventure.asVanilla(renderer.render(player, displayName, message, viewer.getBukkitEntity()));
+                viewer.sendChatMessage(OutgoingChatMessage.create(ChatProcessor.this.message.withUnsignedContent(rendered)), ChatProcessor.this.player.shouldFilterMessageTo(viewer), chatType);
+            }
         }
 
         @Override
@@ -259,7 +264,7 @@ public final class ChatProcessor {
                 } else {
                     final net.minecraft.network.chat.@Nullable Component unsigned = Optionull.map(msgFunction, f -> f.apply(viewer));
                     final PlayerChatMessage msg = unsigned == null ? ChatProcessor.this.message : ChatProcessor.this.message.withUnsignedContent(unsigned);
-                    viewer.sendMessage(msg.adventureView(), this.adventure(chatType));
+                    viewer.sendMessage(com.mohistmc.silkard.paper.paper.PlayerChatMessageView.of(msg), this.adventure(chatType));
                 }
             }
         }
@@ -307,7 +312,9 @@ public final class ChatProcessor {
             if (viewer instanceof ConsoleCommandSender) {
                 this.sendToServer(chatType, msgFunction);
             } else if (viewer instanceof CraftPlayer craftPlayer) {
-                craftPlayer.getHandle().sendChatMessage(ChatProcessor.this.outgoing, ChatProcessor.this.player.shouldFilterMessageTo(craftPlayer.getHandle()), chatType, Optionull.map(msgFunction, f -> f.apply(viewer)));
+                final net.minecraft.network.chat.@Nullable Component unsigned = Optionull.map(msgFunction, f -> f.apply(viewer));
+                final OutgoingChatMessage outgoingMessage = unsigned == null ? ChatProcessor.this.outgoing : OutgoingChatMessage.create(ChatProcessor.this.message.withUnsignedContent(unsigned));
+                craftPlayer.getHandle().sendChatMessage(outgoingMessage, ChatProcessor.this.player.shouldFilterMessageTo(craftPlayer.getHandle()), chatType);
             } else if (viewer instanceof ForwardingAudience.Single single) {
                 this.sendNative(single.audience(), chatType, msgFunction);
             } else {
