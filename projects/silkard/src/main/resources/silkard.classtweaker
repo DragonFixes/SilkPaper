@@ -1074,3 +1074,6 @@ accessible field net/minecraft/world/entity/EntityType dimensions Lnet/minecraft
 mutable field net/minecraft/world/entity/EntityType dimensions Lnet/minecraft/world/entity/EntityDimensions;
 accessible field net/minecraft/world/level/block/state/BlockBehaviour explosionResistance F
 mutable field net/minecraft/world/level/block/state/BlockBehaviour explosionResistance F
+accessible method net/minecraft/world/entity/projectile/Projectile canHitEntity (Lnet/minecraft/world/entity/Entity;)Z
+transitive-inject-interface	net/minecraft/world/entity/Entity	com/mohistmc/silkard/injected/paper/core/PaperEntity
+transitive-inject-interface	net/minecraft/world/entity/LivingEntity	com/mohistmc/silkard/injected/paper/core/PaperLivingEntity

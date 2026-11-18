@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "package": "com.mohistmc.silkard.mixin.paper.core",
+  "compatibilityLevel": "JAVA_25",
+  "plugin": "com.mohistmc.silkard.SilkardMixinPlugin",
+  "mixins": [
+    "MixinPaperEntity",
+    "MixinPaperLivingEntity",
+    "MixinPaperMob",
+    "MixinPaperServerLevelEntityCallbacks"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
+}

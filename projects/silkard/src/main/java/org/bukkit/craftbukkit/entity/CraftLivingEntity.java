@@ -274,12 +274,12 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     }
 
     public net.minecraft.world.phys.EntityHitResult rayTraceEntity(int maxDistance, boolean ignoreBlocks) {
-        net.minecraft.world.phys.EntityHitResult rayTrace = getHandle().getTargetEntity(maxDistance);
+        net.minecraft.world.phys.EntityHitResult rayTrace = com.mohistmc.silkard.paper.core.PaperEntities.getTargetEntity(getHandle(), maxDistance);
         if (rayTrace == null) {
             return null;
         }
         if (!ignoreBlocks) {
-            net.minecraft.world.phys.HitResult rayTraceBlocks = getHandle().getRayTrace(maxDistance, net.minecraft.world.level.ClipContext.Fluid.NONE);
+            net.minecraft.world.phys.HitResult rayTraceBlocks = com.mohistmc.silkard.paper.core.PaperEntities.getRayTrace(getHandle(), maxDistance, net.minecraft.world.level.ClipContext.Fluid.NONE);
             if (rayTraceBlocks != null) {
                 net.minecraft.world.phys.Vec3 eye = getHandle().getEyePosition(1.0F);
                 if (eye.distanceToSqr(rayTraceBlocks.getLocation()) <= eye.distanceToSqr(rayTrace.getLocation())) {
@@ -498,7 +498,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         net.minecraft.server.level.ServerPlayer nmsKiller = killer == null ? null : ((CraftPlayer) killer).getHandle();
         this.getHandle().setLastHurtByMob(nmsKiller);
         if (nmsKiller != null) {
-            this.getHandle().setLastHurtByPlayer(nmsKiller, this.getHandle().level().purpurConfig.mobLastHurtByPlayerTime); // value taken from LivingEntity#resolvePlayerResponsibleForDamage // Purpur - Config for mob last hurt by player time
+            this.getHandle().setLastHurtByPlayer(nmsKiller, this.getHandle().level().purpurConfig().mobLastHurtByPlayerTime); // value taken from LivingEntity#resolvePlayerResponsibleForDamage // Purpur - Config for mob last hurt by player time
         } else {
             this.getHandle().lastHurtByPlayer = null;
             this.getHandle().lastHurtByPlayerMemoryTime = 0;
@@ -688,7 +688,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
             return false; // Return early if the distance is greater than 128 blocks
         }
 
-        return this.getHandle().level().clipDirect(start, end, net.minecraft.world.phys.shapes.CollisionContext.of(this.getHandle())) == net.minecraft.world.phys.HitResult.Type.MISS;
+        return com.mohistmc.silkard.paper.core.PaperEntities.clipDirect(this.getHandle().level(), start, end, this.getHandle()) == net.minecraft.world.phys.HitResult.Type.MISS;
     }
 
     @Override
@@ -1098,19 +1098,19 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     }
 
     private void damageItemStack0(final net.minecraft.world.item.ItemStack nmsStack, final int amount, final net.minecraft.world.entity.EquipmentSlot slot) {
-        nmsStack.hurtAndBreak(amount, this.getHandle(), slot, true);
+        nmsStack.hurtAndBreak(amount, this.getHandle(), slot);
     }
 
     @org.jetbrains.annotations.NotNull
     @Override
     public net.kyori.adventure.util.TriState getFrictionState() {
-        return this.getHandle().frictionState;
+        return this.getHandle().paper$frictionState();
     }
 
     @Override
     public void setFrictionState(@org.jetbrains.annotations.NotNull net.kyori.adventure.util.TriState state) {
         Preconditions.checkArgument(state != null, "state may not be null");
-        this.getHandle().frictionState = state;
+        this.getHandle().paper$setFrictionState(state);
     }
 
     @Override
@@ -1130,7 +1130,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
 
     @Override
     public CombatTracker getCombatTracker() {
-        return this.getHandle().getCombatTracker().paperCombatTracker;
+        return new io.papermc.paper.world.damagesource.PaperCombatTrackerWrapper(this.getHandle().getCombatTracker());
     }
 
     @Override
@@ -1163,6 +1163,13 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         updateWaypoint();
     }
 
+    // Silkard start - Spigot API compat
+    @Override
+    public void setWaypointStyle(final org.bukkit.NamespacedKey key) {
+        this.setWaypointStyle((Key) key);
+    }
+    // Silkard end - Spigot API compat
+
     private void updateWaypoint() {
         ServerWaypointManager manager = ((ServerLevel) getHandle().level()).getWaypointManager();
         manager.untrackWaypoint(getHandle());
@@ -1172,12 +1179,16 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
     // Purpur start - API for any mob to burn daylight
     @Override
     public boolean shouldBurnInDay() {
-        return this.getHandle().shouldBurnInDay();
+        final Boolean override = this.getHandle().paper$shouldBurnInDayOverride();
+        if (override != null) {
+            return override;
+        }
+        return this.getHandle() instanceof Mob && this.getHandle().getType().is(net.minecraft.tags.EntityTypeTags.BURN_IN_DAYLIGHT);
     }
 
     @Override
     public void setShouldBurnInDay(final boolean shouldBurnInDay) {
-        this.getHandle().setShouldBurnInDay(shouldBurnInDay);
+        this.getHandle().paper$setShouldBurnInDayOverride(shouldBurnInDay);
     }
     // Purpur end - API for any mob to burn daylight
 }

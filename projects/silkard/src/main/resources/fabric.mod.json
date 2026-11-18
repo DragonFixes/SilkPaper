@@ -21,7 +21,8 @@
 	},
 	"accessWidener" : "silkard.classtweaker",
 	"mixins": [
-		"silkard.mixins.json"
+		"silkard.mixins.json",
+		"silkard.paper.core.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.19.5",
