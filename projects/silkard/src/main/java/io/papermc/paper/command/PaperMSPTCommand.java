@@ -40,7 +40,7 @@ public class PaperMSPTCommand {
 
     private int execute(CommandContext<CommandSourceStack> context) {
         CommandSender sender = context.getSource().getSender();
-        MinecraftServer server = MinecraftServer.getServer();
+        MinecraftServer server = com.mohistmc.silkard.paper.PaperBootstrap.server();
 
         List<Component> times = new ArrayList<>();
         times.addAll(eval(server.tickTimes5s));
@@ -80,7 +80,7 @@ public class PaperMSPTCommand {
     }
 
     private static List<Component> eval(TickData tickData) {
-        TickData.TickReportData reportData = tickData.generateTickReport(null, System.nanoTime(), MinecraftServer.getServer().tickRateManager().nanosecondsPerTick());
+        TickData.TickReportData reportData = tickData.generateTickReport(null, System.nanoTime(), com.mohistmc.silkard.paper.PaperBootstrap.server().tickRateManager().nanosecondsPerTick());
         double avgD = reportData == null ? 0.0 : reportData.timePerTickData().segmentAll().average() * 1.0E-6D;
         double minD = reportData == null ? 0.0 : reportData.timePerTickData().segmentAll().least() * 1.0E-6D;
         double maxD = reportData == null ? 0.0 : reportData.timePerTickData().segmentAll().greatest() * 1.0E-6D;

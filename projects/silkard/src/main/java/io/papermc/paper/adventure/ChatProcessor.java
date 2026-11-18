@@ -316,7 +316,7 @@ public final class ChatProcessor {
         }
 
         private void sendToServer(final ChatType.Bound chatType, final @Nullable Function<Audience, net.minecraft.network.chat.Component> msgFunction) {
-            final PlayerChatMessage toConsoleMessage = msgFunction == null ? ChatProcessor.this.message : ChatProcessor.this.message.withUnsignedContent(msgFunction.apply(ChatProcessor.this.server.console));
+            final PlayerChatMessage toConsoleMessage = msgFunction == null ? ChatProcessor.this.message : ChatProcessor.this.message.withUnsignedContent(msgFunction.apply(ChatProcessor.this.server.silkard_console()));
             ChatProcessor.this.server.logChatMessage(toConsoleMessage.decoratedContent(), chatType, !org.dreeam.leaf.config.modules.network.ChatMessageSignature.enabled || !org.galemc.gale.configuration.GaleGlobalConfiguration.get().logToConsole.chat.notSecureMarker || ChatProcessor.this.server.getPlayerList().verifyChatTrusted(toConsoleMessage) ? null : "Not Secure"); // Gale - do not log Not Secure marker // Leaf - Mirai - Configurable chat message signatures
         }
     }
@@ -326,7 +326,7 @@ public final class ChatProcessor {
             return new LazyChatAudienceSet(this.server);
         }
         final HashSet<Audience> viewers = new HashSet<>(recipients);
-        viewers.add(this.server.console);
+        viewers.add(this.server.silkard_console());
         return viewers;
     }
 
@@ -361,7 +361,7 @@ public final class ChatProcessor {
 
     private void queueIfAsyncOrRunImmediately(final Waitable<Void> waitable) {
         if (this.async) {
-            this.server.processQueue.add(waitable);
+            this.server.silkard_processQueue().add(waitable);
         } else {
             waitable.run();
         }
@@ -375,7 +375,7 @@ public final class ChatProcessor {
     }
 
     private void post(final Event event) {
-        this.server.server.getPluginManager().callEvent(event);
+        this.server.silkard$server().getPluginManager().callEvent(event);
     }
 
     static boolean canYouHearMe(final HandlerList handlers) {

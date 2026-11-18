@@ -56,7 +56,7 @@ public final class PaperLegacyStatusClient implements StatusClient {
 
         PaperServerListPingEvent event = new PaperServerListPingEventImpl(server,
                 new PaperLegacyStatusClient(address, protocolVersion, virtualHost), Byte.MAX_VALUE, null);
-        server.server.getPluginManager().callEvent(event);
+        server.silkard$server().getPluginManager().callEvent(event);
 
         if (event.isCancelled()) {
             return null;

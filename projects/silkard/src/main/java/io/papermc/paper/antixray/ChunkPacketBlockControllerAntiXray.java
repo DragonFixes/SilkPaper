@@ -127,7 +127,7 @@ public final class ChunkPacketBlockControllerAntiXray extends ChunkPacketBlockCo
             }
         }
 
-        EmptyLevelChunk emptyChunk = new EmptyLevelChunk(level, new ChunkPos(0, 0), MinecraftServer.getServer().registryAccess().lookupOrThrow(Registries.BIOME).getOrThrow(Biomes.PLAINS));
+        EmptyLevelChunk emptyChunk = new EmptyLevelChunk(level, new ChunkPos(0, 0), com.mohistmc.silkard.paper.PaperBootstrap.server().registryAccess().lookupOrThrow(Registries.BIOME).getOrThrow(Biomes.PLAINS));
         BlockPos zeroPos = new BlockPos(0, 0, 0);
 
         for (int i = 0; i < solidGlobal.length; i++) {
@@ -188,7 +188,7 @@ public final class ChunkPacketBlockControllerAntiXray extends ChunkPacketBlockCo
 
         if (!Bukkit.isPrimaryThread()) {
             // Plugins?
-            MinecraftServer.getServer().scheduleOnMain(() -> modifyBlocks(chunkPacket, chunkPacketInfo));
+            com.mohistmc.silkard.paper.PaperBootstrap.server().scheduleOnMain(() -> modifyBlocks(chunkPacket, chunkPacketInfo));
             return;
         }
 

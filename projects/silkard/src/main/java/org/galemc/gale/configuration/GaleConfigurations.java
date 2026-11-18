@@ -194,7 +194,7 @@ public class GaleConfigurations extends Configurations<GaleGlobalConfiguration, 
                     .register(new TypeToken<Table<?, ?, ?>>() {}, new TableSerializer())
                     .register(StringRepresentableSerializer::isValidFor, new StringRepresentableSerializer())
                     .register(EngineMode.SERIALIZER)
-                    .register(FallbackValueSerializer.create(contextMap.require(PaperConfigurations.SPIGOT_WORLD_CONFIG_CONTEXT_KEY).get(), MinecraftServer::getServer))
+                    .register(FallbackValueSerializer.create(contextMap.require(PaperConfigurations.SPIGOT_WORLD_CONFIG_CONTEXT_KEY).get(), com.mohistmc.silkard.paper.PaperBootstrap::server))
                     .register(new RegistryValueSerializer<>(new TypeToken<EntityType<?>>() {}, access, Registries.ENTITY_TYPE, true))
                     .register(new RegistryValueSerializer<>(Item.class, access, Registries.ITEM, true))
                     .register(new RegistryHolderSerializer<>(Item.class, access, Registries.ITEM, true))

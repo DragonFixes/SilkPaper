@@ -251,7 +251,7 @@ public class CraftPlayerProfile implements PlayerProfile, SharedPlayerProfile {
     }
 
     public boolean completeFromCache(boolean lookupUUID, boolean onlineMode) {
-        MinecraftServer server = MinecraftServer.getServer();
+        MinecraftServer server = com.mohistmc.silkard.paper.PaperBootstrap.server();
         String name = profile.name();
         if (this.getId() == null) {
             GameProfile profile;
@@ -310,7 +310,7 @@ public class CraftPlayerProfile implements PlayerProfile, SharedPlayerProfile {
             return true;
         }
 
-        MinecraftServer server = MinecraftServer.getServer();
+        MinecraftServer server = com.mohistmc.silkard.paper.PaperBootstrap.server();
         boolean isCompleteFromCache = this.completeFromCache(true, onlineMode);
         if (onlineMode && (!isCompleteFromCache || (textures && !hasTextures()))) {
             ProfileResult result = server.services().sessionService().fetchProfile(this.profile.id(), true);

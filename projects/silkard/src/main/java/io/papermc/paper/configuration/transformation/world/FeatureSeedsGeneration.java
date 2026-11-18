@@ -31,7 +31,7 @@ public final class FeatureSeedsGeneration implements TransformAction {
     public static final String GENERATE_KEY = "generate-random-seeds-for-all";
     public static final String FEATURES_KEY = "features";
 
-    private static final Logger LOGGER = LogUtils.getClassLogger();
+    private static final Logger LOGGER = LogUtils.getLogger();
 
     private final Identifier worldKey;
 
@@ -45,7 +45,7 @@ public final class FeatureSeedsGeneration implements TransformAction {
         final Reference2LongMap<Holder<Feature>> features = Objects.requireNonNullElseGet(featureNode.get(new TypeToken<Reference2LongMap<Holder<Feature>>>() {}), Reference2LongOpenHashMap::new);
         final Random random = new SecureRandom();
         AtomicInteger counter = new AtomicInteger(0);
-        MinecraftServer.getServer().registryAccess().lookupOrThrow(Registries.FEATURE).listElements().forEach(holder -> {
+        com.mohistmc.silkard.paper.PaperBootstrap.server().registryAccess().lookupOrThrow(Registries.FEATURE).listElements().forEach(holder -> {
             if (features.containsKey(holder)) {
                 return;
             }

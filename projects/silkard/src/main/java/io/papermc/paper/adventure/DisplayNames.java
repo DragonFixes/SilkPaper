@@ -15,10 +15,10 @@ public final class DisplayNames {
 
     @SuppressWarnings("deprecation") // Valid suppress due to supporting legacy display name formatting
     public static String getLegacy(final ServerPlayer player) {
-        final String legacy = player.displayName;
+        final String legacy = player.silkard$displayName();
         if (legacy != null) {
             // thank you for being worse than wet socks, Bukkit
-            return LegacyComponentSerializer.legacySection().serialize(player.adventure$displayName) + ChatColor.getLastColors(player.displayName);
+            return LegacyComponentSerializer.legacySection().serialize(player.adventure$displayName) + ChatColor.getLastColors(player.silkard$displayName());
         }
         return LegacyComponentSerializer.legacySection().serialize(player.adventure$displayName);
     }

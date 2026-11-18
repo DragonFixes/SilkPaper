@@ -305,7 +305,7 @@ public class GlobalConfiguration extends ConfigurationPart {
             @PostProcess
             private void postProcess() {
                 //noinspection ConstantConditions
-                if (net.minecraft.server.MinecraftServer.getServer() == null) return; // In testing env, this will be null here
+                if (com.mohistmc.silkard.paper.PaperBootstrap.server() == null) return; // In testing env, this will be null here
                 int _chatExecutorMaxSize = (this.chatExecutorMaxSize <= 0) ? Integer.MAX_VALUE : this.chatExecutorMaxSize; // This is somewhat dumb, but, this is the default, do we cap this?;
                 int _chatExecutorCoreSize = Math.max(this.chatExecutorCoreSize, 0);
 
@@ -314,7 +314,7 @@ public class GlobalConfiguration extends ConfigurationPart {
                 }
 
                 if (!org.dreeam.leaf.config.modules.opt.VirtualThreadSupport.asyncChatExecutor) { // Leaf - Virtual thread support for chat executor
-                java.util.concurrent.ThreadPoolExecutor executor = (java.util.concurrent.ThreadPoolExecutor) net.minecraft.server.MinecraftServer.getServer().chatExecutor;
+                java.util.concurrent.ThreadPoolExecutor executor = (java.util.concurrent.ThreadPoolExecutor) com.mohistmc.silkard.paper.PaperBootstrap.server().silkard$chatExecutor();
                 executor.setCorePoolSize(_chatExecutorCoreSize);
                 executor.setMaximumPoolSize(_chatExecutorMaxSize);
                 } // Leaf - Virtual thread support for chat executor

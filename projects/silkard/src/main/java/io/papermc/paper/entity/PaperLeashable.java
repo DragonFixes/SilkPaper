@@ -31,7 +31,7 @@ public interface PaperLeashable extends io.papermc.paper.entity.Leashable {
 
     @Override
     default boolean setLeashHolder(Entity holder) {
-        if (this.getHandle() instanceof net.minecraft.world.entity.Entity entity && entity.generation) {
+        if (this.getHandle() instanceof net.minecraft.world.entity.Entity entity && entity.silkard_generation()) {
             return false;
         }
 

@@ -27,13 +27,13 @@ public class V29_LogIPs implements TransformAction {
 
     @Override
     public Object @Nullable [] visitPath(final NodePath path, final ConfigurationNode value) throws ConfigurateException {
-        final DedicatedServer server = ((DedicatedServer) MinecraftServer.getServer());
+        final DedicatedServer server = ((DedicatedServer) com.mohistmc.silkard.paper.PaperBootstrap.server());
 
         final boolean val = value.getBoolean(server.settings.getProperties().logIPs);
         server.settings.update((config) -> {
             final Properties newProps = new Properties(config.properties);
             newProps.setProperty("log-ips", String.valueOf(val));
-            return config.reload(server.registryAccess(), newProps, server.options);
+            return config.reload(server.registryAccess(), newProps, server.silkard_options());
         });
 
         value.raw(null);

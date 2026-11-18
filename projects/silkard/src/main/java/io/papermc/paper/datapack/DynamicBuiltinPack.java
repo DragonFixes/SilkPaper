@@ -101,7 +101,7 @@ public record DynamicBuiltinPack(String name, Component description) {
 
     public interface LevelPathAccess {
 
-        LevelPathAccess SERVER = resource -> MinecraftServer.getServer().getWorldPath(resource);
+        LevelPathAccess SERVER = resource -> com.mohistmc.silkard.paper.PaperBootstrap.server().getWorldPath(resource);
 
         static LevelPathAccess fromStorageSource(final LevelStorageSource.LevelStorageAccess storage) {
             return storage::getLevelPath;

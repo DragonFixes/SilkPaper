@@ -828,6 +828,13 @@ accessible method net/minecraft/util/Util onThreadException (Ljava/lang/Thread;L
 accessible field net/minecraft/util/filefix/FileFixerUpper FILE_FIXER_INTRODUCTION_VERSION I
 accessible field net/minecraft/world/damagesource/CombatTracker entries Ljava/util/List;
 accessible method net/minecraft/world/damagesource/CombatTracker getMostSignificantFall ()Lnet/minecraft/world/damagesource/CombatEntry;
+
+# Paper/Purpur/Leaf server code (io.papermc, com.destroystokyo, org.purpurmc, org.galemc, org.dreeam)
+accessible class net/minecraft/world/item/component/ResolvableProfile$Partial
+accessible field net/minecraft/server/network/ServerCommonPacketListenerImpl connection Lnet/minecraft/network/Connection;
+accessible field net/minecraft/server/network/ServerLoginPacketListenerImpl requestedUsername Ljava/lang/String;
+accessible field net/minecraft/server/network/ServerLoginPacketListenerImpl transferred Z
+accessible field net/minecraft/util/Util LOGGER Lorg/slf4j/Logger;
 accessible field net/minecraft/world/damagesource/CombatTracker inCombat Z
 accessible field net/minecraft/world/damagesource/CombatTracker lastDamageTime I
 accessible field net/minecraft/world/damagesource/CombatTracker mob Lnet/minecraft/world/entity/LivingEntity;
@@ -979,7 +986,6 @@ accessible field net/minecraft/world/item/CrossbowItem FIREWORK_POWER F
 accessible field net/minecraft/world/item/ItemStackLinkedSet TYPE_AND_TAG Lit/unimi/dsi/fastutil/Hash$Strategy;
 accessible field net/minecraft/world/item/component/ItemContainerContents MAX_SIZE I
 accessible field net/minecraft/world/item/component/ItemContainerContents items Ljava/util/List;
-accessible class net/minecraft/world/item/component/ResolvableProfile$Partial
 accessible method net/minecraft/world/item/component/ResolvableProfile$Partial <init> (Ljava/util/Optional;Ljava/util/Optional;Lcom/mojang/authlib/properties/PropertyMap;)V
 accessible field net/minecraft/world/item/component/ResolvableProfile$Partial MAP_CODEC Lcom/mojang/serialization/MapCodec;
 accessible field net/minecraft/world/item/crafting/RecipeMap byKey Ljava/util/Map;
@@ -1055,7 +1061,6 @@ accessible field net/minecraft/server/level/ServerChunkCache mainThread Ljava/la
 accessible field net/minecraft/server/network/ServerLoginPacketListenerImpl LOGGER Lorg/slf4j/Logger;
 accessible field net/minecraft/server/players/PlayerList SEND_PLAYER_INFO_INTERVAL I
 accessible field net/minecraft/util/Mth SIN [F
-accessible field net/minecraft/util/Util LOGGER Lorg/slf4j/Logger;
 accessible field net/minecraft/world/entity/Entity blockPosition Lnet/minecraft/core/BlockPos;
 accessible method net/minecraft/world/entity/Entity markHurt ()V
 accessible field net/minecraft/world/entity/Entity position Lnet/minecraft/world/phys/Vec3;
@@ -1096,3 +1101,10 @@ transitive-inject-interface	net/minecraft/world/level/block/entity/SculkSensorBl
 accessible field net/minecraft/world/level/block/entity/vault/VaultServerData rewardedPlayers Ljava/util/Set;
 accessible method net/minecraft/world/level/block/entity/vault/VaultServerData markChanged ()V
 # Silkard paper-server end
+accessible field net/minecraft/world/level/storage/loot/entries/TagEntry tag Lnet/minecraft/core/HolderSet;
+transitive-inject-interface	net/minecraft/commands/CommandSourceStack	com/mohistmc/silkard/injected/paper/paper/PaperCommandSourceStackAccess
+transitive-inject-interface	net/minecraft/server/level/ServerPlayer	com/mohistmc/silkard/injected/paper/paper/PaperServerPlayerAccess
+transitive-inject-interface	net/minecraft/network/Connection	com/mohistmc/silkard/injected/paper/paper/PaperConnectionAccess
+transitive-inject-interface	net/minecraft/server/network/ServerLoginPacketListenerImpl	com/mohistmc/silkard/injected/paper/paper/PaperLoginListenerAccess
+transitive-inject-interface	net/minecraft/server/MinecraftServer	com/mohistmc/silkard/injected/paper/paper/PaperMinecraftServerAccess
+transitive-inject-interface	net/minecraft/server/level/ServerLevel	com/mohistmc/silkard/injected/paper/paper/PaperServerLevelAccess

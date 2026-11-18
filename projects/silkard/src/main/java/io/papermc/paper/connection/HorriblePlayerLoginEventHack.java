@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 @Deprecated
 public class HorriblePlayerLoginEventHack {
 
-    private static final Logger LOGGER = LogUtils.getClassLogger();
+    private static final Logger LOGGER = LogUtils.getLogger();
     private static boolean nagged = false;
 
     public static boolean warnReenterConfiguration(final Connection connection) {
@@ -87,7 +87,7 @@ public class HorriblePlayerLoginEventHack {
         connection.handledLegacyLoginEvent = true;
 
         CraftPlayer horribleBukkitPlayer = player.getBukkitEntity();
-        PlayerLoginEvent event = new PlayerLoginEvent(horribleBukkitPlayer, connection.hostname, ((java.net.InetSocketAddress) connection.getRemoteAddress()).getAddress(), connection.channel.remoteAddress());
+        PlayerLoginEvent event = new PlayerLoginEvent(horribleBukkitPlayer, connection.silkard$hostname(), ((java.net.InetSocketAddress) connection.getRemoteAddress()).getAddress(), connection.channel.remoteAddress());
         event.disallow(result.result(), PaperAdventure.asAdventure(result.message()));
         event.callEvent();
 

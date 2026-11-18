@@ -48,7 +48,8 @@ public interface PaperCommandSourceStack extends CommandSourceStack, BukkitBriga
     @Override
     default CommandSourceStack withExecutor(Entity executor) {
         Preconditions.checkNotNull(executor, "Executor cannot be null.");
-        return this.getHandle().withEntity(((CraftEntity) executor).getHandle());
+        // The vanilla source implements this interface through a mixin at runtime.
+        return (CommandSourceStack) (Object) this.getHandle().withEntity(((CraftEntity) executor).getHandle());
     }
 
     @Override

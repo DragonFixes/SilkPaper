@@ -64,7 +64,7 @@ import org.jspecify.annotations.Nullable;
 public final class MCUtil {
     public static final java.util.concurrent.Executor MAIN_EXECUTOR = (run) -> {
         if (!isMainThread()) {
-            MinecraftServer.getServer().execute(run);
+            com.mohistmc.silkard.paper.PaperBootstrap.server().execute(run);
         } else {
             run.run();
         }
@@ -114,7 +114,7 @@ public final class MCUtil {
     }
 
     public static boolean isMainThread() {
-        return MinecraftServer.getServer().isSameThread();
+        return com.mohistmc.silkard.paper.PaperBootstrap.server().isSameThread();
     }
 
     public static void ensureMain(Runnable run) {
@@ -129,7 +129,7 @@ public final class MCUtil {
             if (reason != null) {
                 MinecraftServer.LOGGER.warn("Asynchronous " + reason + "!", new IllegalStateException());
             }
-            MinecraftServer.getServer().processQueue.add(run);
+            com.mohistmc.silkard.paper.PaperBootstrap.server().silkard_processQueue().add(run);
             return;
         }
         run.run();
@@ -153,7 +153,7 @@ public final class MCUtil {
                     return run.get();
                 }
             };
-            MinecraftServer.getServer().processQueue.add(wait);
+            com.mohistmc.silkard.paper.PaperBootstrap.server().silkard_processQueue().add(wait);
             try {
                 return wait.get();
             } catch (InterruptedException | ExecutionException e) {

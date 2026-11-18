@@ -21,7 +21,7 @@ public final class StandardPaperServerListPingEventImpl extends PaperServerListP
     private List<NameAndId> originalSample;
 
     private StandardPaperServerListPingEventImpl(MinecraftServer server, Connection connection, ServerStatus ping) {
-        super(server, new PaperStatusClient(connection), ping.version().map(ServerStatus.Version::protocol).orElse(-1), server.server.getServerIcon());
+        super(server, new PaperStatusClient(connection), ping.version().map(ServerStatus.Version::protocol).orElse(-1), server.silkard$server().getServerIcon());
         this.originalSample = ping.players().map(ServerStatus.Players::sample).orElse(null); // GH-1473 - pre-tick race condition NPE
     }
 
@@ -65,7 +65,7 @@ public final class StandardPaperServerListPingEventImpl extends PaperServerListP
 
     public static void processRequest(MinecraftServer server, Connection connection) {
         StandardPaperServerListPingEventImpl event = new StandardPaperServerListPingEventImpl(server, connection, server.getStatus());
-        server.server.getPluginManager().callEvent(event);
+        server.silkard$server().getPluginManager().callEvent(event);
 
         // Close connection immediately if event is cancelled
         if (event.isCancelled()) {

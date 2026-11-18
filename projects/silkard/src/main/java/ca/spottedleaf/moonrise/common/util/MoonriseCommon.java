@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 
 public final class MoonriseCommon {
 
-    private static final Logger LOGGER = LogUtils.getClassLogger();
+    private static final Logger LOGGER = LogUtils.getLogger();
     // Gale start - metrics - chunk system IO threads
     public static int chunkSystemIOThreads;
     public static int chunkSystemWorkerThreads;

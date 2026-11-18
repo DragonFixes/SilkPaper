@@ -1,0 +1,20 @@
+{
+  "required": true,
+  "package": "com.mohistmc.silkard.mixin.paper.paper",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "MixinPaperCommandSourceStack",
+    "MixinPaperConnection",
+    "MixinPaperMinecraftServer",
+    "MixinPaperServerHandshakePacketListenerImpl",
+    "MixinPaperServerLevel",
+    "MixinPaperServerLoginPacketListenerImpl",
+    "MixinPaperServerPlayer"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
+}
