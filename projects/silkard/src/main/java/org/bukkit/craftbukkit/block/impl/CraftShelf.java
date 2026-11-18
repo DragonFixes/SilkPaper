@@ -76,4 +76,9 @@ public class CraftShelf extends CraftBlockData implements Shelf {
     public void setWaterlogged(final boolean waterlogged) {
         this.set(WATERLOGGED, waterlogged);
     }
+
+    @Override
+    public void setSideChain(final org.bukkit.block.data.type.Shelf.SideChain sideChain) {
+        this.setSideChain(org.bukkit.block.data.SideChaining.ChainPart.valueOf(sideChain.name()));
+    }
 }

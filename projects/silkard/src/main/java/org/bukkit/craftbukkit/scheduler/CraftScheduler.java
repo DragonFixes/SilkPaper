@@ -525,7 +525,7 @@ public class CraftScheduler implements BukkitScheduler {
         if (task.isSync() && task.getTaskId() != -1 && delay == 0L && task.getPeriod() == CraftTask.NO_REPEATING
                 && Thread.currentThread() instanceof ca.spottedleaf.moonrise.common.util.TickThread.ServerLevelTickThread levelThread) {
             final net.minecraft.server.level.ServerLevel level = levelThread.currentTickingServerLevel;
-            if (level != null && !level.moonrise$getChunkTaskScheduler().chunkHolderManager.areTicketUpdatesBlocked()) {
+            if (level != null) { // vanilla's chunk system has no ticket-update critical section
                 task.run();
                 return task;
             }

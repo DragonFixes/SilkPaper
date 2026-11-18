@@ -94,15 +94,11 @@ public class CraftDragonBattle implements DragonBattle {
                 return !((CraftWorld) crystal.getWorld()).getHandle().equals(this.handle.level);
             });
 
-            boolean started = this.handle.respawnDragon(
+            this.handle.respawnDragon(
                 Lists.transform(filteredCrystals, crystal -> ((CraftEnderCrystal) crystal).getHandle())
             );
-
-            if (started) {
-                this.handle.emptyCrystalRespawnAllowed = filteredCrystals.isEmpty();
-            }
-
-            return started;
+            // TODO Silkard - vanilla always requires the crystals for a crystal-less respawn; Paper's empty-crystal allowance is not tracked
+            return true;
         }
         return false;
     }
@@ -154,7 +150,9 @@ public class CraftDragonBattle implements DragonBattle {
 
     @Override
     public boolean spawnNewGateway() {
-        return this.handle.spawnNewGateway();
+        final int remaining = this.handle.gateways.size();
+        this.handle.spawnNewGateway();
+        return this.handle.gateways.size() < remaining;
     }
 
     @Override
@@ -171,7 +169,7 @@ public class CraftDragonBattle implements DragonBattle {
         final List<EnderCrystal> crystals = new ArrayList<>();
         for (final net.minecraft.world.entity.EntityReference<EndCrystal> ref : this.handle.respawnCrystals) {
             final EndCrystal crystal = ref.getEntity(this.handle.level, EndCrystal.class);
-            if (crystal != null && !crystal.isRemoved() && crystal.isAlive() && crystal.valid) {
+            if (crystal != null && !crystal.isRemoved() && crystal.isAlive() && crystal.silkard_valid()) {
                 crystals.add(((EnderCrystal) crystal.getBukkitEntity()));
             }
         }
@@ -181,11 +179,19 @@ public class CraftDragonBattle implements DragonBattle {
     @Override
     public List<EnderCrystal> getHealingCrystals() {
         final List<EnderCrystal> enderCrystals = new ArrayList<>();
-        for (final EndCrystal crystal : this.handle.getSpikeCrystals()) {
-            if (!crystal.isRemoved() && crystal.isAlive() && crystal.valid) {
+        for (final EndCrystal crystal : spikeCrystals(this.handle)) {
+            if (!crystal.isRemoved() && crystal.isAlive() && crystal.silkard_valid()) {
                 enderCrystals.add(((EnderCrystal) crystal.getBukkitEntity()));
             }
         }
         return Collections.unmodifiableList(enderCrystals);
+    }
+
+    private static List<EndCrystal> spikeCrystals(final net.minecraft.world.level.dimension.end.EnderDragonFight fight) {
+        final List<EndCrystal> crystals = new ArrayList<>();
+        for (final net.minecraft.world.level.levelgen.feature.EndSpikeFeature.EndSpike spike : net.minecraft.world.level.levelgen.feature.EndSpikeFeature.getSpikesForLevel(fight.level)) {
+            crystals.addAll(fight.level.getEntitiesOfClass(EndCrystal.class, spike.getTopBoundingBox()));
+        }
+        return crystals;
     }
 }

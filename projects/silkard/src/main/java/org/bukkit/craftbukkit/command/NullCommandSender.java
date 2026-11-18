@@ -45,6 +45,11 @@ public final class NullCommandSender implements CommandSender {
     }
 
     @Override
+    public net.kyori.adventure.text.Component name() {
+        return net.kyori.adventure.text.Component.empty();
+    }
+
+    @Override
     public boolean isPermissionSet(String name) {
         return false;
     }
@@ -106,5 +111,10 @@ public final class NullCommandSender implements CommandSender {
     @Override
     public void setOp(boolean value) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public CommandSender.Spigot spigot() {
+        return new CommandSender.Spigot();
     }
 }

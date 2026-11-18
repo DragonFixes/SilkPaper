@@ -100,6 +100,87 @@ import org.slf4j.Logger;
 @SuppressWarnings("deprecation")
 public final class CraftMagicNumbers implements UnsafeValues {
 
+    // Spigot UnsafeValues methods that Paper's UnsafeValues does not declare.
+
+    @Override
+    public <B extends Keyed> B get(org.bukkit.Registry<B> registry, NamespacedKey key) {
+        return registry.get(key);
+    }
+
+    @Override
+    @Deprecated
+    public org.bukkit.inventory.CreativeCategory getCreativeCategory(Material material) {
+        return material.getCreativeCategory();
+    }
+
+    @Override
+    @Deprecated
+    public String getItemTranslationKey(Material material) {
+        return material.getItemTranslationKey();
+    }
+
+    @Override
+    @Deprecated
+    public String getBlockTranslationKey(Material material) {
+        return material.getBlockTranslationKey();
+    }
+
+    @Override
+    public org.bukkit.entity.Villager.ReputationType createReputationType(String key) {
+        return java.util.Optional.ofNullable(org.bukkit.craftbukkit.entity.CraftVillager.CraftReputationType.BY_ID.get(key))
+            .orElseThrow(() -> new IllegalArgumentException("Invalid ReputationType key: " + key));
+    }
+
+    @Override
+    public org.bukkit.entity.Villager.ReputationEvent createReputationEvent(String key) {
+        return java.util.Optional.ofNullable(net.minecraft.world.entity.ai.village.ReputationEventType.BY_ID.get(key))
+            .map(org.bukkit.craftbukkit.entity.CraftVillager.CraftReputationEvent::new)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid ReputationEvent key: " + key));
+    }
+
+    @Override
+    public org.bukkit.FeatureFlag getFeatureFlag(NamespacedKey key) {
+        com.google.common.base.Preconditions.checkArgument(key != null, "NamespacedKey cannot be null");
+        return org.bukkit.craftbukkit.CraftFeatureFlag.getFromNMS(key);
+    }
+
+    @Override
+    public org.bukkit.damage.DamageSource.Builder createDamageSourceBuilder(org.bukkit.damage.DamageType damageType) {
+        return new org.bukkit.craftbukkit.damage.CraftDamageSourceBuilder(damageType);
+    }
+
+    @Override
+    public org.bukkit.damage.DamageEffect getDamageEffect(String key) {
+        com.google.common.base.Preconditions.checkArgument(key != null, "key cannot be null");
+        return org.bukkit.craftbukkit.damage.CraftDamageEffect.getById(key);
+    }
+
+    @Override
+    @Deprecated
+    public org.bukkit.block.Biome getCustomBiome() {
+        return org.bukkit.block.Biome.CUSTOM;
+    }
+
+    @Override
+    public String getTranslationKey(org.bukkit.entity.EntityType entityType) {
+        return org.bukkit.craftbukkit.entity.CraftEntityType.bukkitToMinecraft(entityType).getDescriptionId();
+    }
+
+    @Override
+    public String getTranslationKey(ItemStack itemStack) {
+        return CraftItemStack.asNMSCopy(itemStack).getItem().getDescriptionId();
+    }
+
+    @Override
+    public String getTranslationKey(org.bukkit.attribute.Attribute attribute) {
+        return attribute.getTranslationKey();
+    }
+    @Override
+    @Deprecated
+    public com.google.common.collect.Multimap<org.bukkit.attribute.Attribute, org.bukkit.attribute.AttributeModifier> getDefaultAttributeModifiers(Material material, org.bukkit.inventory.EquipmentSlot slot) {
+        return material.getDefaultAttributeModifiers(slot);
+    }
+
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public static final CraftMagicNumbers INSTANCE = new CraftMagicNumbers();
@@ -257,7 +338,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
         net.minecraft.world.item.ItemStack stack = CraftItemStack.unwrap(item); // mutation is expected as old behavior
         try {
             StringReader reader = new StringReader(item.getType().key().asString() + components);
-            stack.applyComponents(new ItemParser(Commands.createValidationContext(BukkitUtils.getDefaultRegistryAccess())).parse(reader).components());
+            stack.applyComponents(new ItemParser(net.minecraft.commands.Commands.createValidationContext(BukkitUtils.getDefaultRegistryAccess())).parse(reader).components());
             if (reader.canRead()) {
                 throw new IllegalArgumentException("Trailing input found when parsing components: " + reader.getRemaining());
             }
@@ -359,7 +440,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
             deserializedAdvancements.add(entry.advancement().toBukkit());
         }
 
-        com.mohistmc.silkard.bukkit.BukkitUtils.getServer().getPlayerList().reloadAdvancementData();
+        com.mohistmc.silkard.bukkit.BukkitUtils.getServer().getPlayerList().reloadResources();
         return deserializedAdvancements;
     }
 
@@ -512,13 +593,8 @@ public final class CraftMagicNumbers implements UnsafeValues {
         net.minecraft.core.RegistryAccess registryAccess = CraftRegistry.getMinecraftRegistry();
         com.mojang.serialization.DynamicOps<com.google.gson.JsonElement> ops = registryAccess.createSerializationContext(com.mojang.serialization.JsonOps.INSTANCE);
         com.google.gson.JsonObject item;
-        // Serialize as SNBT to preserve exact NBT types; vanilla codecs already can handle such deserialization.
-        net.minecraft.world.item.component.CustomData.SERIALIZE_CUSTOM_AS_SNBT.set(true);
-        try {
-            item = net.minecraft.world.item.ItemStack.CODEC.encodeStart(ops, CraftItemStack.unwrap(itemStack)).getOrThrow().getAsJsonObject();
-        } finally {
-            net.minecraft.world.item.component.CustomData.SERIALIZE_CUSTOM_AS_SNBT.set(false);
-        }
+        // TODO Silkard - CustomData has no SNBT switch, so custom data goes through the vanilla codec and may not keep exact NBT number types
+        item = net.minecraft.world.item.ItemStack.CODEC.encodeStart(ops, CraftItemStack.unwrap(itemStack)).getOrThrow().getAsJsonObject();
         item.addProperty(SharedConstants.DATA_VERSION_TAG, this.getDataVersion());
         return item;
     }
@@ -579,13 +655,13 @@ public final class CraftMagicNumbers implements UnsafeValues {
         )) {
             final TagValueOutput output = TagValueOutput.createWithContext(problemReporter, nmsEntity.registryAccess());
             if (serializePassengers) {
-                if (!nmsEntity.saveAsPassenger(output, true, includeNonSaveable, forceSerialization)) {
+                if (!nmsEntity.saveAsPassenger(output, true)) { // TODO Silkard - includeNonSaveable and forceSerialization are not supported
                     throw new IllegalArgumentException("Couldn't serialize entity");
                 }
             } else {
                 List<net.minecraft.world.entity.Entity> pass = new ArrayList<>(nmsEntity.getPassengers());
                 nmsEntity.passengers = com.google.common.collect.ImmutableList.of();
-                boolean serialized = nmsEntity.saveAsPassenger(output, true, includeNonSaveable, forceSerialization);
+                boolean serialized = nmsEntity.saveAsPassenger(output, true);
                 nmsEntity.passengers = com.google.common.collect.ImmutableList.copyOf(pass);
                 if (!serialized) {
                     throw new IllegalArgumentException("Couldn't serialize entity");

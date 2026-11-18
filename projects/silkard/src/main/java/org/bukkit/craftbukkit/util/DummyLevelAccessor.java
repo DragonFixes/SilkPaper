@@ -214,21 +214,6 @@ public class DummyLevelAccessor implements WorldGenLevel {
     }
 
     @Override
-    public ChunkAccess getChunkIfLoadedImmediately(int x, int z) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public BlockState getBlockStateIfLoaded(BlockPos pos) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public FluidState getFluidIfLoaded(BlockPos pos) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public WorldBorder getWorldBorder() {
         throw new UnsupportedOperationException("Not supported yet.");
     }

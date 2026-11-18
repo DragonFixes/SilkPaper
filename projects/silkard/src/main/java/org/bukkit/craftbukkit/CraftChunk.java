@@ -3,7 +3,7 @@ package org.bukkit.craftbukkit;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicates;
 import com.mojang.serialization.Codec;
-import io.papermc.paper.FeatureHooks;
+import com.mohistmc.silkard.paper.server.FeatureHooks;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -195,9 +195,8 @@ public class CraftChunk implements Chunk {
         if (this.level.paperConfig().entities.spawning.allChunksAreSlimeChunks) {
             return true;
         }
-        return org.dreeam.leaf.config.modules.misc.SecureSeed.enabled
-            ? level.getChunk(this.getX(), this.getZ()).isSlimeChunk()
-            : WorldgenRandom.seedSlimeChunk(this.getX(), this.getZ(), this.getWorld().getSeed(), level.spigotConfig().slimeSeed).nextInt(10) == 0; // Paper;
+        // TODO Silkard - Leaf's secure seed is not ported, so slime chunks always follow the world seed
+        return WorldgenRandom.seedSlimeChunk(this.getX(), this.getZ(), this.getWorld().getSeed(), level.spigotConfig().slimeSeed).nextInt(10) == 0; // Paper;
         // Leaf end - Matter - Secure Seed
     }
 

@@ -52,8 +52,8 @@ public class TicksPerSecondCommand extends Command {
         sender.sendMessage(builder.asComponent());
         // Gale start - YAPFA - last tick time - in TPS command
         if (org.galemc.gale.configuration.GaleGlobalConfiguration.get().misc.lastTickTimeInTpsCommand.enabled) {
-            long lastTickProperTime = net.minecraft.server.MinecraftServer.lastTickProperTime;
-            long lastTickOversleepTime = net.minecraft.server.MinecraftServer.lastTickOversleepTime;
+            long lastTickProperTime = com.mohistmc.silkard.paper.server.PaperServerHooks.lastTickProperTime(com.mohistmc.silkard.bukkit.BukkitUtils.getServer());
+            long lastTickOversleepTime = com.mohistmc.silkard.paper.server.PaperServerHooks.lastTickOversleepTime(com.mohistmc.silkard.bukkit.BukkitUtils.getServer());
             var lastTickTimeMessage = text("Last tick: ")
                 .append(formatTickTimeDuration(lastTickProperTime, 44, 50, 51));
 

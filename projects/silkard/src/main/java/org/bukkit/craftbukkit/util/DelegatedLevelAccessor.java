@@ -265,13 +265,6 @@ public abstract class DelegatedLevelAccessor implements WorldGenLevel {
         return this.delegate.getBiome(pos);
     }
 
-    // Leaf start - cache getBiome
-    @Override
-    public Holder<Biome> getBiomeCached(net.minecraft.world.level.chunk.@org.jspecify.annotations.Nullable LevelChunk chunk, BlockPos pos) {
-        return this.delegate.getBiomeCached(chunk, pos);
-    }
-    // Leaf end - cache getBiome
-
     @Override
     public Stream<BlockState> getBlockStatesIfLoaded(AABB box) {
         return this.delegate.getBlockStatesIfLoaded(box);
@@ -674,13 +667,6 @@ public abstract class DelegatedLevelAccessor implements WorldGenLevel {
         return this.delegate.destroyBlock(pos, dropResources, breaker, updateLimit);
     }
 
-    // Leaf start - propagate block destruction cancellation
-    @Override
-    public net.minecraft.world.level.LevelWriter.DestroyBlockResult destroyBlockWithResult(BlockPos pos, boolean dropResources, @Nullable Entity breaker, int updateLimit) {
-        return this.delegate.destroyBlockWithResult(pos, dropResources, breaker, updateLimit);
-    }
-    // Leaf end - propagate block destruction cancellation
-
     @Override
     public boolean addFreshEntity(Entity entity) {
         return this.delegate.addFreshEntity(entity);
@@ -751,21 +737,4 @@ public abstract class DelegatedLevelAccessor implements WorldGenLevel {
         return this.delegate.isFluidAtPosition(pos, predicate);
     }
 
-    @Nullable
-    @Override
-    public BlockState getBlockStateIfLoaded(final BlockPos pos) {
-        return this.delegate.getBlockStateIfLoaded(pos);
-    }
-
-    @Nullable
-    @Override
-    public FluidState getFluidIfLoaded(final BlockPos pos) {
-        return this.delegate.getFluidIfLoaded(pos);
-    }
-
-    @Nullable
-    @Override
-    public ChunkAccess getChunkIfLoadedImmediately(final int x, final int z) {
-        return this.delegate.getChunkIfLoadedImmediately(x, z);
-    }
 }

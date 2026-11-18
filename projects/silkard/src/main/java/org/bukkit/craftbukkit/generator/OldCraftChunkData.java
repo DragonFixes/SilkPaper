@@ -1,6 +1,6 @@
 package org.bukkit.craftbukkit.generator;
 
-import io.papermc.paper.FeatureHooks;
+import com.mohistmc.silkard.paper.server.FeatureHooks;
 import java.util.HashSet;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
