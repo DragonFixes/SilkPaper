@@ -1108,3 +1108,48 @@ transitive-inject-interface	net/minecraft/network/Connection	com/mohistmc/silkar
 transitive-inject-interface	net/minecraft/server/network/ServerLoginPacketListenerImpl	com/mohistmc/silkard/injected/paper/paper/PaperLoginListenerAccess
 transitive-inject-interface	net/minecraft/server/MinecraftServer	com/mohistmc/silkard/injected/paper/paper/PaperMinecraftServerAccess
 transitive-inject-interface	net/minecraft/server/level/ServerLevel	com/mohistmc/silkard/injected/paper/paper/PaperServerLevelAccess
+# Silkard paper-core start - entities and misc CraftBukkit (entity, inventory, map, scoreboard, registries)
+transitive-inject-interface	net/minecraft/server/level/ServerPlayer	com/mohistmc/silkard/injected/paper/core/PaperServerPlayer
+transitive-inject-interface	net/minecraft/world/entity/player/Player	com/mohistmc/silkard/injected/paper/core/PaperPlayer
+transitive-inject-interface	net/minecraft/network/Connection	com/mohistmc/silkard/injected/paper/core/PaperNetworkConnection
+transitive-inject-interface	net/minecraft/server/network/ServerGamePacketListenerImpl	com/mohistmc/silkard/injected/paper/core/PaperServerGamePacketListener
+accessible method net/minecraft/server/players/PlayerList sendPlayerPermissionLevel (Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/server/permissions/LevelBasedPermissionSet;)V
+accessible field net/minecraft/network/protocol/game/ClientboundPlayerInfoUpdatePacket entries Ljava/util/List;
+mutable field net/minecraft/network/protocol/game/ClientboundPlayerInfoUpdatePacket entries Ljava/util/List;
+transitive-inject-interface	net/minecraft/world/entity/item/ItemEntity	com/mohistmc/silkard/injected/paper/core/PaperItemEntity
+transitive-inject-interface	net/minecraft/world/entity/decoration/ArmorStand	com/mohistmc/silkard/injected/paper/core/PaperArmorStand
+transitive-inject-interface	net/minecraft/world/entity/Mob	com/mohistmc/silkard/injected/paper/core/PaperMobExtras$Mob
+transitive-inject-interface	net/minecraft/world/entity/animal/bee/Bee	com/mohistmc/silkard/injected/paper/core/PaperMobExtras$Bee
+transitive-inject-interface	net/minecraft/world/entity/animal/golem/IronGolem	com/mohistmc/silkard/injected/paper/core/PaperMobExtras$Summonable
+transitive-inject-interface	net/minecraft/world/entity/animal/golem/SnowGolem	com/mohistmc/silkard/injected/paper/core/PaperMobExtras$Summonable
+transitive-inject-interface	net/minecraft/world/entity/animal/golem/CopperGolem	com/mohistmc/silkard/injected/paper/core/PaperMobExtras$Summonable
+transitive-inject-interface	net/minecraft/world/entity/boss/wither/WitherBoss	com/mohistmc/silkard/injected/paper/core/PaperMobExtras$Summonable
+transitive-inject-interface	net/minecraft/world/entity/boss/wither/WitherBoss	com/mohistmc/silkard/injected/paper/core/PaperMobExtras$WitherBoss
+transitive-inject-interface	net/minecraft/world/entity/projectile/FireworkRocketEntity	com/mohistmc/silkard/injected/paper/core/PaperMobExtras$SpawnedBy
+transitive-inject-interface	net/minecraft/world/entity/monster/Phantom	com/mohistmc/silkard/injected/paper/core/PaperMobExtras$SpawnedBy
+transitive-inject-interface	net/minecraft/world/entity/animal/equine/Llama	com/mohistmc/silkard/injected/paper/core/PaperMobExtras$Llama
+transitive-inject-interface	net/minecraft/world/entity/npc/wanderingtrader/WanderingTrader	com/mohistmc/silkard/injected/paper/core/PaperMobExtras$WanderingTrader
+transitive-inject-interface	net/minecraft/world/entity/ExperienceOrb	com/mohistmc/silkard/injected/paper/core/PaperMobExtras$ExperienceOrbData
+transitive-inject-interface	net/minecraft/world/entity/item/FallingBlockEntity	com/mohistmc/silkard/injected/paper/core/PaperMobExtras$FallingBlock
+transitive-inject-interface	net/minecraft/world/entity/monster/Endermite	com/mohistmc/silkard/injected/paper/core/PaperMobExtras$Endermite
+transitive-inject-interface	net/minecraft/world/entity/animal/wolf/Wolf	com/mohistmc/silkard/injected/paper/core/PaperMobExtras$Wolf
+transitive-inject-interface	net/minecraft/world/entity/boss/enderdragon/EnderDragon	com/mohistmc/silkard/injected/paper/core/PaperMobExtras$EnderDragon
+transitive-inject-interface	net/minecraft/world/entity/monster/cubemob/AbstractCubeMob	com/mohistmc/silkard/injected/paper/core/PaperMobExtras$CubeMob
+transitive-inject-interface	net/minecraft/world/entity/vehicle/minecart/AbstractMinecart	com/mohistmc/silkard/injected/paper/core/PaperMobExtras$Minecart
+accessible method net/minecraft/world/entity/animal/equine/AbstractHorse getFlag (I)Z
+accessible method net/minecraft/world/entity/animal/equine/AbstractHorse setFlag (IZ)V
+accessible field net/minecraft/world/entity/animal/equine/AbstractHorse FLAG_OPEN_MOUTH I
+accessible field net/minecraft/world/entity/npc/villager/AbstractVillager offers Lnet/minecraft/world/item/trading/MerchantOffers;
+accessible method net/minecraft/world/entity/npc/villager/AbstractVillager updateTrades (Lnet/minecraft/server/level/ServerLevel;)V
+accessible method net/minecraft/world/entity/npc/villager/Villager updateTrades (Lnet/minecraft/server/level/ServerLevel;)V
+accessible method net/minecraft/world/entity/npc/wanderingtrader/WanderingTrader updateTrades (Lnet/minecraft/server/level/ServerLevel;)V
+accessible field net/minecraft/world/entity/monster/Creeper DATA_IS_IGNITED Lnet/minecraft/network/syncher/EntityDataAccessor;
+accessible field net/minecraft/world/entity/monster/Enderman DATA_CREEPY Lnet/minecraft/network/syncher/EntityDataAccessor;
+accessible field net/minecraft/world/entity/monster/Enderman DATA_STARED_AT Lnet/minecraft/network/syncher/EntityDataAccessor;
+accessible field net/minecraft/world/entity/monster/Ghast explosionPower I
+accessible field net/minecraft/world/entity/projectile/arrow/ThrownTrident ID_FOIL Lnet/minecraft/network/syncher/EntityDataAccessor;
+accessible field net/minecraft/world/entity/projectile/arrow/ThrownTrident ID_LOYALTY Lnet/minecraft/network/syncher/EntityDataAccessor;
+accessible method net/minecraft/world/entity/projectile/throwableitemprojectile/AbstractThrownPotion onHit (Lnet/minecraft/world/phys/HitResult;)V
+accessible field net/minecraft/world/entity/monster/Witch SPEED_MODIFIER_DRINKING Lnet/minecraft/world/entity/ai/attributes/AttributeModifier;
+accessible field net/minecraft/world/entity/monster/Witch SPEED_MODIFIER_DRINKING_ID Lnet/minecraft/resources/Identifier;
+# Silkard paper-core end

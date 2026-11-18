@@ -70,12 +70,12 @@ public class CraftItem extends CraftEntity implements Item {
 
     @Override
     public boolean canMobPickup() {
-        return this.getHandle().canMobPickup;
+        return this.getHandle().paper$canMobPickup();
     }
 
     @Override
     public void setCanMobPickup(boolean canMobPickup) {
-        this.getHandle().canMobPickup = canMobPickup;
+        this.getHandle().paper$setCanMobPickup(canMobPickup);
     }
 
      @Override
@@ -100,13 +100,13 @@ public class CraftItem extends CraftEntity implements Item {
 
      @Override
      public net.kyori.adventure.util.TriState getFrictionState() {
-        return this.getHandle().frictionState;
+        return this.getHandle().paper$frictionState();
      }
 
      @Override
      public void setFrictionState(net.kyori.adventure.util.TriState state) {
          Preconditions.checkArgument(state != null, "state may not be null");
-         this.getHandle().frictionState = state;
+         this.getHandle().paper$setFrictionState(state);
      }
 
     @Override
@@ -147,28 +147,28 @@ public class CraftItem extends CraftEntity implements Item {
     // Purpur start - Item entity immunities
     @Override
     public void setImmuneToCactus(boolean immuneToCactus) {
-        this.getHandle().immuneToCactus = immuneToCactus;
+        this.getHandle().paper$setImmuneToCactus(immuneToCactus);
     }
 
     @Override
     public boolean isImmuneToCactus() {
-        return this.getHandle().immuneToCactus;
+        return this.getHandle().paper$immuneToCactus();
     }
 
     @Override
     public void setImmuneToExplosion(boolean immuneToExplosion) {
-        this.getHandle().immuneToExplosion = immuneToExplosion;
+        this.getHandle().paper$setImmuneToExplosion(immuneToExplosion);
     }
 
     @Override
     public boolean isImmuneToExplosion() {
-        return this.getHandle().immuneToExplosion;
+        return this.getHandle().paper$immuneToExplosion();
     }
 
     // Purpur start - Fire Immunity API
     @Override
     public void setImmuneToFire(@org.jetbrains.annotations.Nullable Boolean immuneToFire) {
-        this.getHandle().immuneToFire = (immuneToFire != null && immuneToFire);
+        this.getHandle().paper$setImmuneToFire(immuneToFire != null && immuneToFire);
     }
     // Purpur end - Fire Immunity API
 
@@ -179,17 +179,17 @@ public class CraftItem extends CraftEntity implements Item {
 
     @Override
     public boolean isImmuneToFire() {
-        return this.getHandle().immuneToFire;
+        return this.getHandle().paper$immuneToFire();
     }
 
     @Override
     public void setImmuneToLightning(boolean immuneToLightning) {
-        this.getHandle().immuneToLightning = immuneToLightning;
+        this.getHandle().paper$setImmuneToLightning(immuneToLightning);
     }
 
     @Override
     public boolean isImmuneToLightning() {
-        return this.getHandle().immuneToLightning;
+        return this.getHandle().paper$immuneToLightning();
     }
     // Purpur end - Item entity immunities
 }

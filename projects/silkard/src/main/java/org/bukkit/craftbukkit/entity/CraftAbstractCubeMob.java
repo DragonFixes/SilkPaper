@@ -3,7 +3,7 @@ package org.bukkit.craftbukkit.entity;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.AbstractCubeMob;
 
-public abstract class CraftAbstractCubeMob extends CraftMob implements AbstractCubeMob {
+public abstract class CraftAbstractCubeMob extends CraftAgeable implements AbstractCubeMob {
     public CraftAbstractCubeMob(final CraftServer server, final net.minecraft.world.entity.monster.cubemob.AbstractCubeMob entity) {
         super(server, entity);
     }
@@ -25,11 +25,11 @@ public abstract class CraftAbstractCubeMob extends CraftMob implements AbstractC
 
     @Override
     public boolean canWander() {
-        return this.getHandle().canWander();
+        return this.getHandle().paper$canWander();
     }
 
     @Override
     public void setWander(boolean canWander) {
-        this.getHandle().setWander(canWander);
+        this.getHandle().paper$setCanWander(canWander);
     }
 }

@@ -118,13 +118,13 @@ public abstract class CraftMinecart extends CraftVehicle implements Minecart {
     @org.jetbrains.annotations.NotNull
     @Override
     public net.kyori.adventure.util.TriState getFrictionState() {
-        return this.getHandle().frictionState;
+        return this.getHandle().paper$frictionState();
     }
 
     @Override
     public void setFrictionState(@org.jetbrains.annotations.NotNull net.kyori.adventure.util.TriState state) {
         Preconditions.checkArgument(state != null, "state may not be null");
-        this.getHandle().frictionState = state;
+        this.getHandle().paper$setFrictionState(state);
     }
 
     // Silkard start - Spigot API

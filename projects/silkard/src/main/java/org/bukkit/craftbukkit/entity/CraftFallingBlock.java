@@ -123,11 +123,11 @@ public class CraftFallingBlock extends CraftEntity implements FallingBlock {
 
     @Override
     public boolean doesAutoExpire() {
-        return this.getHandle().autoExpire;
+        return this.getHandle().paper$autoExpire();
     }
 
     @Override
     public void shouldAutoExpire(boolean autoExpires) {
-        this.getHandle().autoExpire = autoExpires;
+        this.getHandle().paper$setAutoExpire(autoExpires);
     }
 }

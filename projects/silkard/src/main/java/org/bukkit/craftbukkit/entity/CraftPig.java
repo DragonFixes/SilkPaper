@@ -46,7 +46,7 @@ public class CraftPig extends CraftAnimals implements Pig {
     public void setBoostTicks(int ticks) {
         Preconditions.checkArgument(ticks >= 0, "ticks must be >= 0");
 
-        this.getHandle().steering.boost(ticks);
+        this.getHandle().steering.setBoostTicks(ticks);
     }
 
     @Override

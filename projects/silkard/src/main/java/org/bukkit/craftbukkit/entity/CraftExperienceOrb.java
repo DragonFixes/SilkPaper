@@ -37,16 +37,16 @@ public class CraftExperienceOrb extends CraftEntity implements ExperienceOrb {
 
     @Override
     public UUID getTriggerEntityId() {
-        return this.getHandle().triggerEntityId;
+        return this.getHandle().paper$triggerEntityId();
     }
 
     @Override
     public UUID getSourceEntityId() {
-        return this.getHandle().sourceEntityId;
+        return this.getHandle().paper$sourceEntityId();
     }
 
     @Override
     public SpawnReason getSpawnReason() {
-        return this.getHandle().spawnReason;
+        return this.getHandle().paper$spawnReason();
     }
 }

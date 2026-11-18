@@ -45,7 +45,7 @@ public class CraftWither extends CraftMonster implements Wither, com.destroystok
             return null;
         }
         net.minecraft.world.entity.LivingEntity target = (net.minecraft.world.entity.LivingEntity) this.getHandle().level().getEntity(entityId);
-        return (target != null) ? target.getBukkitEntity() : null;
+        return (target != null) ? (LivingEntity) target.getBukkitEntity() : null;
     }
 
     @Override
@@ -82,7 +82,7 @@ public class CraftWither extends CraftMonster implements Wither, com.destroystok
 
     @Override
     public void setCanTravelThroughPortals(boolean value) {
-        getHandle().setCanTravelThroughPortals(value);
+        getHandle().paper$setCanTravelThroughPortals(value);
     }
 
     @Override
@@ -95,12 +95,12 @@ public class CraftWither extends CraftMonster implements Wither, com.destroystok
     @Override
     @org.jetbrains.annotations.Nullable
     public java.util.UUID getSummoner() {
-        return getHandle().getSummoner();
+        return getHandle().paper$summoner();
     }
 
     @Override
     public void setSummoner(@org.jetbrains.annotations.Nullable java.util.UUID summoner) {
-        getHandle().setSummoner(summoner);
+        getHandle().paper$setSummoner(summoner);
     }
     // Purpur end - Summoner API
 }

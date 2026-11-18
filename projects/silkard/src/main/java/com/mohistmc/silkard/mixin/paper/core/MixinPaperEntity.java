@@ -51,6 +51,14 @@ public abstract class MixinPaperEntity implements PaperEntity {
         }
     }
 
+    /** An armor stand whose movement is switched off through Paper's API is not moved. */
+    @Inject(method = "move", at = @At("HEAD"), cancellable = true)
+    private void paper$armorStandMove(net.minecraft.world.entity.MoverType type, Vec3 delta, CallbackInfo ci) {
+        if ((Object) this instanceof net.minecraft.world.entity.decoration.ArmorStand stand && !stand.paper$canMove()) {
+            ci.cancel();
+        }
+    }
+
     @Inject(method = "fireImmune", at = @At("HEAD"), cancellable = true)
     private void paper$fireImmunityOverride(CallbackInfoReturnable<Boolean> cir) {
         if (this.paper$immuneToFire != null) {

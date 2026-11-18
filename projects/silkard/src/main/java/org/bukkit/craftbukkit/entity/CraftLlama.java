@@ -91,12 +91,12 @@ public class CraftLlama extends CraftChestedHorse implements Llama, com.destroys
     // Purpur start - Llama API
     @Override
     public boolean shouldJoinCaravan() {
-        return getHandle().shouldJoinCaravan;
+        return getHandle().paper$shouldJoinCaravan();
     }
 
     @Override
     public void setShouldJoinCaravan(boolean shouldJoinCaravan) {
-        getHandle().shouldJoinCaravan = shouldJoinCaravan;
+        getHandle().paper$setShouldJoinCaravan(shouldJoinCaravan);
     }
     // Purpur end - Llama API
 }

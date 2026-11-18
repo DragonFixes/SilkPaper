@@ -32,6 +32,6 @@ public abstract class CraftAbstractVillager extends CraftAgeable implements Craf
 
     @Override
     public void resetOffers() {
-        getHandle().resetOffers();
+        com.mohistmc.silkard.paper.core.PaperVillagers.resetOffers(getHandle());
     }
 }
