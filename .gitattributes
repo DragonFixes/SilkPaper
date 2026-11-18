@@ -1,0 +1,2 @@
+# Patch files are applied with git apply; keep their bytes exactly as generated.
+patches/** -text
