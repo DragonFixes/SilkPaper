@@ -58,6 +58,11 @@ public class CraftCat extends CraftTameableAnimal implements Cat {
     }
 
     public static class CraftType extends OldEnumHolderable<Type, CatVariant> implements Type {
+
+        @Override
+        public org.bukkit.NamespacedKey getKeyOrNull() {
+            return io.papermc.paper.util.Holderable.super.getKeyOrNull();
+        }
         private static int count = 0;
 
         public static Type minecraftHolderToBukkit(Holder<CatVariant> minecraft) {

@@ -12,6 +12,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class CraftTrimMaterial extends HolderableBase<net.minecraft.world.item.equipment.trim.TrimMaterial> implements TrimMaterial {
 
+    @Override
+    public org.bukkit.NamespacedKey getKeyOrNull() {
+        return io.papermc.paper.util.Holderable.super.getKeyOrNull();
+    }
+
     public static TrimMaterial minecraftHolderToBukkit(Holder<net.minecraft.world.item.equipment.trim.TrimMaterial> minecraft) {
         return CraftRegistry.minecraftHolderToBukkit(minecraft, Registries.TRIM_MATERIAL);
     }

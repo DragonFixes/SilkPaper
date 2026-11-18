@@ -54,6 +54,11 @@ import org.jspecify.annotations.Nullable;
 @NullMarked
 public class CraftItemType<M extends ItemMeta> extends HolderableBase<Item> implements ItemType.Typed<M>, io.papermc.paper.world.flag.PaperFeatureDependent<Item> {
 
+    @Override
+    public org.bukkit.NamespacedKey getKeyOrNull() {
+        return io.papermc.paper.util.Holderable.super.getKeyOrNull();
+    }
+
     private final Supplier<CraftItemMetas.ItemMetaData<M>> itemMetaData;
 
     public static Material minecraftToBukkit(Item minecraft) {

@@ -13,6 +13,11 @@ import org.jspecify.annotations.NullMarked;
 @NullMarked
 public class CraftDamageType extends HolderableBase<net.minecraft.world.damagesource.DamageType> implements DamageType {
 
+    @Override
+    public org.bukkit.NamespacedKey getKeyOrNull() {
+        return io.papermc.paper.util.Holderable.super.getKeyOrNull();
+    }
+
     public CraftDamageType(final Holder<net.minecraft.world.damagesource.DamageType> holder) {
         super(holder);
     }

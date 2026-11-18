@@ -12,6 +12,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class CraftTrimPattern extends HolderableBase<net.minecraft.world.item.equipment.trim.TrimPattern> implements TrimPattern {
 
+    @Override
+    public org.bukkit.NamespacedKey getKeyOrNull() {
+        return io.papermc.paper.util.Holderable.super.getKeyOrNull();
+    }
+
     public static TrimPattern minecraftHolderToBukkit(Holder<net.minecraft.world.item.equipment.trim.TrimPattern> minecraft) {
         return CraftRegistry.minecraftHolderToBukkit(minecraft, Registries.TRIM_PATTERN);
     }

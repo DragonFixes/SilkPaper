@@ -49,6 +49,11 @@ public class CraftChicken extends CraftAnimals implements Chicken {
 
     public static class CraftVariant extends HolderableBase<ChickenVariant> implements Variant {
 
+        @Override
+        public org.bukkit.NamespacedKey getKeyOrNull() {
+            return io.papermc.paper.util.Holderable.super.getKeyOrNull();
+        }
+
         public static Variant minecraftHolderToBukkit(Holder<ChickenVariant> minecraft) {
             return CraftRegistry.minecraftHolderToBukkit(minecraft, Registries.CHICKEN_VARIANT);
         }

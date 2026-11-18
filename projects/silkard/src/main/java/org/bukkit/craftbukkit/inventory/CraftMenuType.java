@@ -23,6 +23,11 @@ public class CraftMenuType<V extends @NonNull InventoryView, B extends Inventory
     private final Supplier<CraftMenus.MenuTypeData<V, B>> typeData;
 
     public CraftMenuType(final Holder<net.minecraft.world.inventory.MenuType<?>> holder) {
+
+    @Override
+    public org.bukkit.NamespacedKey getKeyOrNull() {
+        return io.papermc.paper.util.Holderable.super.getKeyOrNull();
+    }
         super(holder);
         this.typeData = Suppliers.memoize(() -> CraftMenus.getMenuTypeData(this));
     }

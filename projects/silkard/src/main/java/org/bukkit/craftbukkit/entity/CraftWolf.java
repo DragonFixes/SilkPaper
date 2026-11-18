@@ -104,6 +104,11 @@ public class CraftWolf extends CraftTameableAnimal implements Wolf {
 
     public static class CraftVariant extends HolderableBase<WolfVariant> implements Variant {
 
+        @Override
+        public org.bukkit.NamespacedKey getKeyOrNull() {
+            return io.papermc.paper.util.Holderable.super.getKeyOrNull();
+        }
+
         public static Variant minecraftHolderToBukkit(Holder<WolfVariant> minecraft) {
             return CraftRegistry.minecraftHolderToBukkit(minecraft, Registries.WOLF_VARIANT);
         }

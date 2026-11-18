@@ -166,6 +166,11 @@ public class CraftVillager extends CraftAbstractVillager implements Villager {
     }
 
     public static class CraftType extends OldEnumHolderable<Type, VillagerType> implements Type {
+
+        @Override
+        public org.bukkit.NamespacedKey getKeyOrNull() {
+            return io.papermc.paper.util.Holderable.super.getKeyOrNull();
+        }
         private static int count = 0;
 
         public static Type minecraftHolderToBukkit(Holder<VillagerType> minecraft) {
@@ -182,6 +187,11 @@ public class CraftVillager extends CraftAbstractVillager implements Villager {
     }
 
     public static class CraftProfession extends OldEnumHolderable<Profession, VillagerProfession> implements Profession {
+
+        @Override
+        public org.bukkit.NamespacedKey getKeyOrNull() {
+            return io.papermc.paper.util.Holderable.super.getKeyOrNull();
+        }
         private static int count = 0;
 
         public static Profession minecraftHolderToBukkit(Holder<VillagerProfession> minecraft) {
@@ -250,4 +260,74 @@ public class CraftVillager extends CraftAbstractVillager implements Villager {
         return getHandle().isLobotomized();
     }
     // Purpur end - Lobotomize stuck villagers
+
+    // Silkard start - Spigot API
+    @Override
+    public int getReputation(UUID uuid, ReputationType reputationType) {
+        Preconditions.checkArgument(uuid != null, "UUID cannot be null");
+        Preconditions.checkArgument(reputationType != null, "Reputation type cannot be null");
+        return getHandle().getGossips().getReputation(uuid,
+                Predicate.isEqual(CraftReputationType.bukkitToMinecraft(reputationType)),
+                false);
+    }
+
+    @Override
+    public int getWeightedReputation(UUID uuid, ReputationType reputationType) {
+        Preconditions.checkArgument(uuid != null, "UUID cannot be null");
+        Preconditions.checkArgument(reputationType != null, "Reputation type cannot be null");
+        return getHandle().getGossips().getReputation(uuid,
+                Predicate.isEqual(CraftReputationType.bukkitToMinecraft(reputationType)),
+                true);
+    }
+
+
+    @Override
+    public void addReputation(UUID uuid, ReputationType reputationType, int amount) {
+        addReputation(uuid, reputationType, amount, ReputationEvent.UNSPECIFIED);
+    }
+
+    @Override
+    public void addReputation(UUID uuid, ReputationType reputationType, int amount, ReputationEvent changeReason) {
+        Preconditions.checkArgument(uuid != null, "UUID cannot be null");
+        Preconditions.checkArgument(reputationType != null, "Reputation type cannot be null");
+        Preconditions.checkArgument(changeReason != null, "Change reason cannot be null");
+        getHandle().getGossips().add(uuid, CraftReputationType.bukkitToMinecraft(reputationType), amount, changeReason);
+    }
+
+    @Override
+    public void removeReputation(UUID uuid, ReputationType reputationType, int amount) {
+        removeReputation(uuid, reputationType, amount, ReputationEvent.UNSPECIFIED);
+    }
+
+    @Override
+    public void removeReputation(UUID uuid, ReputationType reputationType, int amount, ReputationEvent changeReason) {
+        Preconditions.checkArgument(uuid != null, "UUID cannot be null");
+        Preconditions.checkArgument(reputationType != null, "Reputation type cannot be null");
+        Preconditions.checkArgument(changeReason != null, "Change reason cannot be null");
+        getHandle().getGossips().remove(uuid, CraftReputationType.bukkitToMinecraft(reputationType), amount, changeReason);
+    }
+
+    @Override
+    public void setReputation(UUID uuid, ReputationType reputationType, int amount) {
+        setReputation(uuid, reputationType, amount, ReputationEvent.UNSPECIFIED);
+    }
+
+    @Override
+    public void setReputation(UUID uuid, ReputationType reputationType, int amount, ReputationEvent changeReason) {
+        Preconditions.checkArgument(uuid != null, "UUID cannot be null");
+        Preconditions.checkArgument(reputationType != null, "Reputation type cannot be null");
+        Preconditions.checkArgument(changeReason != null, "Change reason cannot be null");
+        getHandle().getGossips().set(uuid, CraftReputationType.bukkitToMinecraft(reputationType), amount, changeReason);
+    }
+
+    @Override
+    public void setGossipDecayTime(long ticks) {
+        getHandle().silkard$gossipDecayInterval(ticks);
+    }
+
+    @Override
+    public long getGossipDecayTime() {
+        return getHandle().silkard$gossipDecayInterval();
+    }
+    // Silkard end
 }

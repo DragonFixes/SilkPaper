@@ -20,6 +20,11 @@ import org.bukkit.inventory.ItemStack;
 
 public class CraftEnchantment extends Enchantment implements Holderable<net.minecraft.world.item.enchantment.Enchantment> {
 
+    @Override
+    public org.bukkit.NamespacedKey getKeyOrNull() {
+        return io.papermc.paper.util.Holderable.super.getKeyOrNull();
+    }
+
     public static Enchantment minecraftHolderToBukkit(Holder<net.minecraft.world.item.enchantment.Enchantment> minecraft) {
         return CraftRegistry.minecraftHolderToBukkit(minecraft, Registries.ENCHANTMENT);
     }

@@ -2649,4 +2649,238 @@ public class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDat
 
         return true;
     }
-}
+
+    // Silkard start - Spigot ItemMeta component API
+    // Components the Spigot API exposes but Paper models only through its data component API live in
+    // unhandledTags, so they share Paper's serialization, equality and apply-to-item handling.
+    @SuppressWarnings("unchecked")
+    <T> @org.jspecify.annotations.Nullable T silkard$component(final net.minecraft.core.component.DataComponentType<T> type) {
+        final Object value = this.unhandledTags.map.get(type);
+        return value instanceof java.util.Optional<?> optional ? (T) optional.orElse(null) : null;
+    }
+
+    <T> void silkard$component(final net.minecraft.core.component.DataComponentType<T> type, final @org.jspecify.annotations.Nullable T value) {
+        if (value == null) {
+            this.unhandledTags.map.remove(type);
+        } else {
+            this.unhandledTags.set(type, value);
+            this.removedTags.remove(type);
+        }
+    }
+
+    @Override
+    public java.util.Collection<org.bukkit.damage.DamageType> getDamageResistances() {
+        return this.hasDamageResistant() ? this.damageResistantTypes.stream().map(org.bukkit.craftbukkit.damage.CraftDamageType::minecraftHolderToBukkit).toList() : null;
+    }
+
+    @Override
+    public void setDamageResistant(final java.util.Collection<org.bukkit.damage.DamageType> damages) {
+        this.damageResistantTypes = (damages == null) ? null : net.minecraft.core.HolderSet.direct(damages.stream().map(org.bukkit.craftbukkit.damage.CraftDamageType::bukkitToMinecraftHolder).toList());
+    }
+
+    @Override
+    public boolean hasDamageType() {
+        return this.silkard$component(net.minecraft.core.component.DataComponents.DAMAGE_TYPE) != null;
+    }
+
+    @Override
+    public org.bukkit.damage.DamageType getDamageType() {
+        Preconditions.checkState(this.hasDamageType(), "We don't have damage_type! Check hasDamageType first!");
+        return org.bukkit.craftbukkit.damage.CraftDamageType.minecraftHolderToBukkit(this.silkard$component(net.minecraft.core.component.DataComponents.DAMAGE_TYPE));
+    }
+
+    @Override
+    public NamespacedKey getDamageTypeKey() {
+        Preconditions.checkState(this.hasDamageType(), "We don't have damage_type! Check hasDamageType first!");
+        return this.silkard$component(net.minecraft.core.component.DataComponents.DAMAGE_TYPE).unwrapKey().map(net.minecraft.resources.ResourceKey::identifier).map(CraftNamespacedKey::fromMinecraft).orElse(null);
+    }
+
+    @Override
+    public void setDamageType(final org.bukkit.damage.DamageType type) {
+        this.silkard$component(net.minecraft.core.component.DataComponents.DAMAGE_TYPE, (type == null) ? null : org.bukkit.craftbukkit.damage.CraftDamageType.bukkitToMinecraftHolder(type));
+    }
+
+    @Override
+    public void setDamageTypeKey(final NamespacedKey type) {
+        this.silkard$component(net.minecraft.core.component.DataComponents.DAMAGE_TYPE, (type == null) ? null
+            : CraftRegistry.getMinecraftRegistry(net.minecraft.core.registries.Registries.DAMAGE_TYPE).getOrThrow(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.DAMAGE_TYPE, CraftNamespacedKey.toMinecraft(type))));
+    }
+
+    @Override
+    public boolean hasAdditionalTradeCost() {
+        return this.silkard$component(net.minecraft.core.component.DataComponents.ADDITIONAL_TRADE_COST) != null;
+    }
+
+    @Override
+    public int getAdditionalTradeCost() {
+        Preconditions.checkState(this.hasAdditionalTradeCost(), "We don't have additional_trade_cost! Check hasAdditionalTradeCost first!");
+        return this.silkard$component(net.minecraft.core.component.DataComponents.ADDITIONAL_TRADE_COST);
+    }
+
+    @Override
+    public void setAdditionalTradeCost(final Integer cost) {
+        this.silkard$component(net.minecraft.core.component.DataComponents.ADDITIONAL_TRADE_COST, cost);
+    }
+
+    @Override
+    public boolean hasMinimumAttackCharge() {
+        return this.silkard$component(net.minecraft.core.component.DataComponents.MINIMUM_ATTACK_CHARGE) != null;
+    }
+
+    @Override
+    public float getMinimumAttackCharge() {
+        Preconditions.checkState(this.hasMinimumAttackCharge(), "We don't have minimum_attack_charge! Check hasMinimumAttackCharge first!");
+        return this.silkard$component(net.minecraft.core.component.DataComponents.MINIMUM_ATTACK_CHARGE);
+    }
+
+    @Override
+    public void setMinimumAttackCharge(final Float minimumAttackCharge) {
+        this.silkard$component(net.minecraft.core.component.DataComponents.MINIMUM_ATTACK_CHARGE, minimumAttackCharge);
+    }
+
+    @Override
+    public boolean hasBreakSound() {
+        return this.silkard$component(net.minecraft.core.component.DataComponents.BREAK_SOUND) != null;
+    }
+
+    @Override
+    public org.bukkit.Sound getBreakSound() {
+        final net.minecraft.core.Holder<net.minecraft.sounds.SoundEvent> sound = this.silkard$component(net.minecraft.core.component.DataComponents.BREAK_SOUND);
+        return (sound == null) ? null : org.bukkit.craftbukkit.CraftSound.minecraftHolderToBukkit(sound);
+    }
+
+    @Override
+    public void setBreakSound(final org.bukkit.Sound sound) {
+        this.silkard$component(net.minecraft.core.component.DataComponents.BREAK_SOUND, (sound == null) ? null : org.bukkit.craftbukkit.CraftSound.bukkitToMinecraftHolder(sound));
+    }
+
+    @Override
+    public boolean hasUseEffects() {
+        return this.silkard$component(net.minecraft.core.component.DataComponents.USE_EFFECTS) != null;
+    }
+
+    @Override
+    public org.bukkit.inventory.meta.components.UseEffectsComponent getUseEffects() {
+        final net.minecraft.world.item.component.UseEffects value = this.silkard$component(net.minecraft.core.component.DataComponents.USE_EFFECTS);
+        return new org.bukkit.craftbukkit.inventory.components.CraftUseEffectsComponent(value != null ? value : net.minecraft.world.item.component.UseEffects.DEFAULT);
+    }
+
+    @Override
+    public void setUseEffects(final org.bukkit.inventory.meta.components.UseEffectsComponent effects) {
+        this.silkard$component(net.minecraft.core.component.DataComponents.USE_EFFECTS, (effects == null) ? null : ((org.bukkit.craftbukkit.inventory.components.CraftUseEffectsComponent) effects).getHandle());
+    }
+
+    @Override
+    public boolean hasSwingAnimation() {
+        return this.silkard$component(net.minecraft.core.component.DataComponents.SWING_ANIMATION) != null;
+    }
+
+    @Override
+    public org.bukkit.inventory.meta.components.SwingAnimationComponent getSwingAnimation() {
+        final net.minecraft.world.item.component.SwingAnimation value = this.silkard$component(net.minecraft.core.component.DataComponents.SWING_ANIMATION);
+        return new org.bukkit.craftbukkit.inventory.components.CraftSwingAnimationComponent(value != null ? value : net.minecraft.world.item.component.SwingAnimation.DEFAULT);
+    }
+
+    @Override
+    public void setSwingAnimation(final org.bukkit.inventory.meta.components.SwingAnimationComponent component) {
+        this.silkard$component(net.minecraft.core.component.DataComponents.SWING_ANIMATION, (component == null) ? null : ((org.bukkit.craftbukkit.inventory.components.CraftSwingAnimationComponent) component).getHandle());
+    }
+
+    @Override
+    public boolean hasAttackRange() {
+        return this.silkard$component(net.minecraft.core.component.DataComponents.ATTACK_RANGE) != null;
+    }
+
+    @Override
+    public org.bukkit.inventory.meta.components.AttackRangeComponent getAttackRange() {
+        final net.minecraft.world.item.component.AttackRange value = this.silkard$component(net.minecraft.core.component.DataComponents.ATTACK_RANGE);
+        return new org.bukkit.craftbukkit.inventory.components.CraftAttackRangeComponent(value != null ? value : new net.minecraft.world.item.component.AttackRange(0.0F, 3.0F, 0.0F, 3.0F, 0.0F, 1.0F));
+    }
+
+    @Override
+    public void setAttackRange(final org.bukkit.inventory.meta.components.AttackRangeComponent component) {
+        this.silkard$component(net.minecraft.core.component.DataComponents.ATTACK_RANGE, (component == null) ? null : ((org.bukkit.craftbukkit.inventory.components.CraftAttackRangeComponent) component).getHandle());
+    }
+
+    @Override
+    public boolean hasPiercingWeapon() {
+        return this.silkard$component(net.minecraft.core.component.DataComponents.PIERCING_WEAPON) != null;
+    }
+
+    @Override
+    public org.bukkit.inventory.meta.components.PiercingWeaponComponent getPiercingWeapon() {
+        final net.minecraft.world.item.component.PiercingWeapon value = this.silkard$component(net.minecraft.core.component.DataComponents.PIERCING_WEAPON);
+        return new org.bukkit.craftbukkit.inventory.components.CraftPiercingWeaponComponent(value != null ? value : new net.minecraft.world.item.component.PiercingWeapon(true, false, java.util.Optional.empty(), java.util.Optional.empty()));
+    }
+
+    @Override
+    public void setPiercingWeapon(final org.bukkit.inventory.meta.components.PiercingWeaponComponent component) {
+        this.silkard$component(net.minecraft.core.component.DataComponents.PIERCING_WEAPON, (component == null) ? null : ((org.bukkit.craftbukkit.inventory.components.CraftPiercingWeaponComponent) component).getHandle());
+    }
+
+    @Override
+    public boolean hasKineticWeapon() {
+        return this.silkard$component(net.minecraft.core.component.DataComponents.KINETIC_WEAPON) != null;
+    }
+
+    @Override
+    public org.bukkit.inventory.meta.components.KineticWeaponComponent getKineticWeapon() {
+        final net.minecraft.world.item.component.KineticWeapon value = this.silkard$component(net.minecraft.core.component.DataComponents.KINETIC_WEAPON);
+        return new org.bukkit.craftbukkit.inventory.components.CraftKineticWeaponComponent(value != null ? value : new net.minecraft.world.item.component.KineticWeapon(10, 0, java.util.Optional.empty(), java.util.Optional.empty(), java.util.Optional.empty(), 0.0F, 1.0F, java.util.Optional.empty(), java.util.Optional.empty()));
+    }
+
+    @Override
+    public void setKineticWeapon(final org.bukkit.inventory.meta.components.KineticWeaponComponent component) {
+        this.silkard$component(net.minecraft.core.component.DataComponents.KINETIC_WEAPON, (component == null) ? null : ((org.bukkit.craftbukkit.inventory.components.CraftKineticWeaponComponent) component).getHandle());
+    }
+
+    @Override
+    public boolean hasConsumable() {
+        return this.silkard$component(net.minecraft.core.component.DataComponents.CONSUMABLE) != null;
+    }
+
+    @Override
+    public org.bukkit.inventory.meta.components.consumable.ConsumableComponent getConsumable() {
+        final net.minecraft.world.item.component.Consumable value = this.silkard$component(net.minecraft.core.component.DataComponents.CONSUMABLE);
+        return new org.bukkit.craftbukkit.inventory.components.consumable.CraftConsumableComponent(value != null ? value
+            : new net.minecraft.world.item.component.Consumable(net.minecraft.world.item.component.Consumable.DEFAULT_CONSUME_SECONDS, net.minecraft.world.item.ItemUseAnimation.EAT, net.minecraft.sounds.SoundEvents.GENERIC_EAT, true, List.of()));
+    }
+
+    @Override
+    public void setConsumable(final org.bukkit.inventory.meta.components.consumable.ConsumableComponent consumable) {
+        this.silkard$component(net.minecraft.core.component.DataComponents.CONSUMABLE, (consumable == null) ? null : ((org.bukkit.craftbukkit.inventory.components.consumable.CraftConsumableComponent) consumable).getHandle());
+    }
+
+    @Override
+    public boolean hasBlocksAttacks() {
+        return this.silkard$component(net.minecraft.core.component.DataComponents.BLOCKS_ATTACKS) != null;
+    }
+
+    @Override
+    public org.bukkit.inventory.meta.components.BlocksAttacksComponent getBlocksAttacks() {
+        final net.minecraft.world.item.component.BlocksAttacks value = this.silkard$component(net.minecraft.core.component.DataComponents.BLOCKS_ATTACKS);
+        return new org.bukkit.craftbukkit.inventory.components.CraftBlocksAttacksComponent(value != null ? value
+            : new net.minecraft.world.item.component.BlocksAttacks(0.0F, 1.0F, java.util.Collections.emptyList(), new net.minecraft.world.item.component.BlocksAttacks.ItemDamageFunction(0, 0, 0), java.util.Optional.empty(), java.util.Optional.empty(), java.util.Optional.empty()));
+    }
+
+    @Override
+    public void setBlocksAttacks(final org.bukkit.inventory.meta.components.BlocksAttacksComponent blocksAttacks) {
+        this.silkard$component(net.minecraft.core.component.DataComponents.BLOCKS_ATTACKS, (blocksAttacks == null) ? null : ((org.bukkit.craftbukkit.inventory.components.CraftBlocksAttacksComponent) blocksAttacks).getHandle());
+    }
+
+    @Override
+    public boolean hasWeapon() {
+        return this.silkard$component(net.minecraft.core.component.DataComponents.WEAPON) != null;
+    }
+
+    @Override
+    public org.bukkit.inventory.meta.components.WeaponComponent getWeapon() {
+        final net.minecraft.world.item.component.Weapon value = this.silkard$component(net.minecraft.core.component.DataComponents.WEAPON);
+        return new org.bukkit.craftbukkit.inventory.components.CraftWeaponComponent(value != null ? value : new net.minecraft.world.item.component.Weapon(0));
+    }
+
+    @Override
+    public void setWeapon(final org.bukkit.inventory.meta.components.WeaponComponent weapon) {
+        this.silkard$component(net.minecraft.core.component.DataComponents.WEAPON, (weapon == null) ? null : ((org.bukkit.craftbukkit.inventory.components.CraftWeaponComponent) weapon).getHandle());
+    }
+    // Silkard end}

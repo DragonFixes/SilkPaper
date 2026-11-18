@@ -350,4 +350,24 @@ public final class CraftItemFactory implements ItemFactory {
         return CraftItemStack.asBukkitMirror(enchanted);
     }
     // Paper end - enchantWithLevels API
+
+    // Silkard start - Spigot API
+    @Override
+    public ItemStack createExplorerMap(World world, Location structureLocation, MapCursor.Type mapIcon) {
+        Preconditions.checkArgument(world != null, "World cannot be null");
+        Preconditions.checkArgument(structureLocation != null, "structureLocation cannot be null");
+        Preconditions.checkArgument(mapIcon != null, "mapIcon cannot be null");
+
+        ServerLevel worldServer = ((CraftWorld) world).getHandle();
+        BlockPos structurePosition = CraftLocation.toBlockPosition(structureLocation);
+
+        // Create map with trackPlayer = true, unlimitedTracking = true
+        net.minecraft.world.item.ItemStack stack = MapItem.create(worldServer, structurePosition.getX(), structurePosition.getZ(), MapView.Scale.NORMAL.getValue(), true, true);
+        MapItem.renderBiomePreviewMap(worldServer, stack);
+        // "+" map ID taken from EntityVillager
+        MapItemSavedData.addTargetDecoration(stack, structurePosition, "+", CraftMapCursor.CraftType.bukkitToMinecraftHolder(mapIcon));
+
+        return CraftItemStack.asBukkitCopy(stack);
+    }
+    // Silkard end
 }

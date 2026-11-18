@@ -101,4 +101,68 @@ public class CraftMannequin extends CraftLivingEntity implements Mannequin {
         Preconditions.checkArgument(hand != null, "hand cannot be null");
         this.getHandle().setMainArm(hand == MainHand.LEFT ? HumanoidArm.LEFT : HumanoidArm.RIGHT);
     }
+
+    // Silkard start - Spigot API
+    @Override
+    public boolean isModelPartShown(PlayerModelPart part) {
+        Preconditions.checkArgument(part != null, "part cannot be null");
+        net.minecraft.world.entity.player.PlayerModelPart nms = net.minecraft.world.entity.player.PlayerModelPart.valueOf(part.name());
+
+        return getHandle().isModelPartShown(nms);
+    }
+
+    @Override
+    public void setModelPartShown(PlayerModelPart part, boolean shown) {
+        Preconditions.checkArgument(part != null, "part cannot be null");
+        net.minecraft.world.entity.player.PlayerModelPart nms = net.minecraft.world.entity.player.PlayerModelPart.valueOf(part.name());
+
+        byte flags = getHandle().getEntityData().get(Avatar.DATA_PLAYER_MODE_CUSTOMISATION);
+        if (shown) {
+            flags |= nms.getMask();
+        } else {
+            flags &= ~nms.getMask();
+        }
+
+        getHandle().getEntityData().set(Avatar.DATA_PLAYER_MODE_CUSTOMISATION, flags);
+    }
+
+    @Override
+    public PlayerProfile getPlayerProfile() {
+        return (getHandle().getProfile().equals(net.minecraft.world.entity.decoration.Mannequin.DEFAULT_PROFILE)) ? null : new CraftPlayerProfile(getHandle().getProfile());
+    }
+
+    @Override
+    public void setPlayerProfile(PlayerProfile profile) {
+        if (profile instanceof CraftPlayerProfile craftPlayerProfile) {
+            getHandle().setProfile(craftPlayerProfile.buildResolvableProfile());
+        } else {
+            getHandle().setProfile(net.minecraft.world.entity.decoration.Mannequin.DEFAULT_PROFILE);
+        }
+    }
+
+    @Override
+    public String getDescripion() {
+        return getDescription();
+    }
+
+    @Override
+    public void setDescription(String description) {
+        if (description != null) {
+            getHandle().setDescription(CraftChatMessage.fromStringOrNull(description));
+        } else {
+            getHandle().setDescription(net.minecraft.world.entity.decoration.Mannequin.DEFAULT_DESCRIPTION);
+
+        }
+    }
+
+    @Override
+    public boolean isHideDescription() {
+        return getHandle().hideDescription;
+    }
+
+    @Override
+    public void setHideDescription(boolean hide) {
+        getHandle().setHideDescription(hide);
+    }
+    // Silkard end
 }

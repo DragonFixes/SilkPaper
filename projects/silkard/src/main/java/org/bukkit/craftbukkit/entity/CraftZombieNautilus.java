@@ -35,6 +35,11 @@ public class CraftZombieNautilus extends CraftAbstractNautilus implements org.bu
 
     public static class CraftVariant extends HolderableBase<ZombieNautilusVariant> implements org.bukkit.entity.ZombieNautilus.Variant {
 
+        @Override
+        public org.bukkit.NamespacedKey getKeyOrNull() {
+            return io.papermc.paper.util.Holderable.super.getKeyOrNull();
+        }
+
         public static org.bukkit.entity.ZombieNautilus.Variant minecraftHolderToBukkit(Holder<ZombieNautilusVariant> minecraft) {
             return CraftRegistry.minecraftHolderToBukkit(minecraft, Registries.ZOMBIE_NAUTILUS_VARIANT);
         }

@@ -126,4 +126,16 @@ public abstract class CraftMinecart extends CraftVehicle implements Minecart {
         Preconditions.checkArgument(state != null, "state may not be null");
         this.getHandle().frictionState = state;
     }
+
+    // Silkard start - Spigot API
+    @Override
+    public double getPoweredRailAccelerationMultiplier() {
+        return getHandle().silkard_powRailAccelMult();
+    }
+
+    @Override
+    public void setPoweredRailAccelerationMultiplier(double multiplier) {
+        getHandle().silkard_powRailAccelMult(multiplier);
+    }
+    // Silkard end
 }
