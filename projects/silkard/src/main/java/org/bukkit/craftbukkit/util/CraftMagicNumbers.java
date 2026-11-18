@@ -100,6 +100,81 @@ import org.slf4j.Logger;
 @SuppressWarnings("deprecation")
 public final class CraftMagicNumbers implements UnsafeValues {
 
+    // Spigot UnsafeValues methods that Paper's UnsafeValues does not declare.
+
+    @Override
+    public <B extends Keyed> B get(org.bukkit.Registry<B> registry, NamespacedKey key) {
+        return registry.get(key);
+    }
+
+    @Override
+    @Deprecated
+    public org.bukkit.inventory.CreativeCategory getCreativeCategory(Material material) {
+        return material.getCreativeCategory();
+    }
+
+    @Override
+    @Deprecated
+    public String getItemTranslationKey(Material material) {
+        return material.getItemTranslationKey();
+    }
+
+    @Override
+    @Deprecated
+    public String getBlockTranslationKey(Material material) {
+        return material.getBlockTranslationKey();
+    }
+
+    @Override
+    public org.bukkit.entity.Villager.ReputationType createReputationType(String key) {
+        return java.util.Optional.ofNullable(org.bukkit.craftbukkit.entity.CraftVillager.CraftReputationType.BY_ID.get(key))
+            .orElseThrow(() -> new IllegalArgumentException("Invalid ReputationType key: " + key));
+    }
+
+    @Override
+    public org.bukkit.entity.Villager.ReputationEvent createReputationEvent(String key) {
+        return java.util.Optional.ofNullable(net.minecraft.world.entity.ai.village.ReputationEventType.BY_ID.get(key))
+            .map(org.bukkit.craftbukkit.entity.CraftVillager.CraftReputationEvent::new)
+            .orElseThrow(() -> new IllegalArgumentException("Invalid ReputationEvent key: " + key));
+    }
+
+    @Override
+    public org.bukkit.FeatureFlag getFeatureFlag(NamespacedKey key) {
+        com.google.common.base.Preconditions.checkArgument(key != null, "NamespacedKey cannot be null");
+        return org.bukkit.craftbukkit.CraftFeatureFlag.getFromNMS(key);
+    }
+
+    @Override
+    public org.bukkit.damage.DamageSource.Builder createDamageSourceBuilder(org.bukkit.damage.DamageType damageType) {
+        return new org.bukkit.craftbukkit.damage.CraftDamageSourceBuilder(damageType);
+    }
+
+    @Override
+    public org.bukkit.damage.DamageEffect getDamageEffect(String key) {
+        com.google.common.base.Preconditions.checkArgument(key != null, "key cannot be null");
+        return org.bukkit.craftbukkit.damage.CraftDamageEffect.getById(key);
+    }
+
+    @Override
+    @Deprecated
+    public org.bukkit.block.Biome getCustomBiome() {
+        return org.bukkit.block.Biome.CUSTOM;
+    }
+
+    @Override
+    public String getTranslationKey(org.bukkit.entity.EntityType entityType) {
+        return org.bukkit.craftbukkit.entity.CraftEntityType.bukkitToMinecraft(entityType).getDescriptionId();
+    }
+
+    @Override
+    public String getTranslationKey(ItemStack itemStack) {
+        return CraftItemStack.asNMSCopy(itemStack).getItem().getDescriptionId();
+    }
+
+    @Override
+    public String getTranslationKey(org.bukkit.attribute.Attribute attribute) {
+        return attribute.getTranslationKey();
+    }
     @Override
     @Deprecated
     public com.google.common.collect.Multimap<org.bukkit.attribute.Attribute, org.bukkit.attribute.AttributeModifier> getDefaultAttributeModifiers(Material material, org.bukkit.inventory.EquipmentSlot slot) {

@@ -3142,4 +3142,15 @@ public final class CraftServer implements Server {
         return org.dreeam.leaf.config.modules.async.SparklyPaperParallelWorldTicking.enabled;
     }
     // Fish end - Parallel World Ticking API
+
+    // Spigot's data pack API, created on first use because the pack repository exists only once the server has started.
+    private org.bukkit.craftbukkit.packs.CraftDataPackManager spigotDataPackManager;
+
+    @Override
+    public org.bukkit.packs.DataPackManager getDataPackManager() {
+        if (this.spigotDataPackManager == null) {
+            this.spigotDataPackManager = new org.bukkit.craftbukkit.packs.CraftDataPackManager(this.getServer().getPackRepository());
+        }
+        return this.spigotDataPackManager;
+    }
 }

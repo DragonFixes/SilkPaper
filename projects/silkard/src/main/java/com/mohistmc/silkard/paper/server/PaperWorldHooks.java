@@ -76,7 +76,7 @@ public final class PaperWorldHooks {
         final AABB search = AABB.encapsulatingFullBlocks(center, center.atY(level.getMaxY() + 1)).inflate(3.0);
         final List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, search, input -> input.isAlive() && level.canSeeSky(input.blockPosition()));
         if (!entities.isEmpty()) {
-            return entities.get(level.random.nextInt(entities.size())).blockPosition();
+            return entities.get(level.getRandom().nextInt(entities.size())).blockPosition();
         }
         if (returnNullWhenNoTarget) {
             return null;

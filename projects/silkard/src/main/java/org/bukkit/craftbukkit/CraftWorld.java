@@ -1823,8 +1823,8 @@ public class CraftWorld extends CraftRegionAccessor implements World {
         if (data != null) {
             Preconditions.checkArgument(particle.getDataType().isInstance(data), "data (%s) should be %s", data.getClass(), particle.getDataType());
         }
-        this.getHandle().sendParticlesSourceBukkit( // Leaf - Remove stream in CraftWorld#spawnParticle
-            receivers, // Leaf - Remove stream in CraftWorld#spawnParticle
+        com.mohistmc.silkard.paper.server.PaperWorldHooks.sendParticles(this.getHandle(),
+            receivers,
             sender != null ? ((CraftPlayer) sender).getHandle() : null,
             CraftParticle.createParticleParam(particle, data),
             force,

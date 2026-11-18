@@ -1116,3 +1116,5 @@ accessible method	net/minecraft/server/level/ServerLevel	sendParticles	(Lnet/min
 accessible method	net/minecraft/server/MinecraftServer	updateEffectiveRespawnData	()V
 accessible method	net/minecraft/world/level/block/DispenserBlock	getDispenseMethod	(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/core/dispenser/DispenseItemBehavior;
 transitive-inject-interface	net/minecraft/world/entity/raid/Raid	com/mohistmc/silkard/injected/paper/server/PaperRaid
+accessible method	net/minecraft/world/level/dimension/end/EnderDragonFight	spawnNewGateway	()V
+accessible class	net/minecraft/world/level/block/entity/SculkSensorBlockEntity$VibrationUser

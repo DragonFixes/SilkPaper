@@ -15,7 +15,7 @@ import org.jspecify.annotations.Nullable;
 public record DefaultDrop(Item item, org.bukkit.inventory.ItemStack stack, @Nullable Consumer<ItemStack> dropConsumer) {
 
     public DefaultDrop(final ItemStack stack, final @Nullable Consumer<ItemStack> dropConsumer) {
-        this(stack.getItem(), CraftItemStack.asCraftMirror(stack), dropConsumer);
+        this(stack.getItem(), CraftItemStack.asBukkitMirror(stack), dropConsumer);
     }
 
     public void runConsumer(final Consumer<org.bukkit.inventory.ItemStack> fallback) {
