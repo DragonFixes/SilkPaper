@@ -128,4 +128,27 @@ public interface ContextLevel {
     default BlockEntity getBlockEntity(BlockPos pos, boolean validate) {
         throw new ContextStateException("Not implemented");
     }
+
+    // Per-world configs (Spigot, Paper, Purpur, Gale). Server levels only.
+
+    default org.spigotmc.SpigotWorldConfig spigotConfig() {
+        throw new ContextStateException("Not implemented");
+    }
+
+    default io.papermc.paper.configuration.WorldConfiguration paperConfig() {
+        throw new ContextStateException("Not implemented");
+    }
+
+    default org.purpurmc.purpur.PurpurWorldConfig purpurConfig() {
+        throw new ContextStateException("Not implemented");
+    }
+
+    default org.galemc.gale.configuration.GaleWorldConfiguration galeConfig() {
+        throw new ContextStateException("Not implemented");
+    }
+
+    /** The CraftBukkit-era world name, used for per-world sections in spigot.yml and purpur.yml. */
+    default String silkard$bukkitName() {
+        throw new ContextStateException("Not implemented");
+    }
 }

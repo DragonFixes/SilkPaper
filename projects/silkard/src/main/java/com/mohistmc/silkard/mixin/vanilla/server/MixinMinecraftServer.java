@@ -158,8 +158,7 @@ public abstract class MixinMinecraftServer extends net.minecraft.util.thread.Ree
         CraftServer craftServer = this.server;
         if (craftServer != null && !silkard$pluginsLoaded) {
             silkard$pluginsLoaded = true;
-            org.spigotmc.SpigotConfig.init(new java.io.File("spigot.yml"));
-            org.spigotmc.SpigotConfig.registerCommands();
+            // spigot.yml is loaded in DedicatedServer.initServer (PaperBootstrap), before Paper's configs read it
             craftServer.loadPlugins();
             craftServer.enablePlugins(org.bukkit.plugin.PluginLoadOrder.STARTUP);
         }

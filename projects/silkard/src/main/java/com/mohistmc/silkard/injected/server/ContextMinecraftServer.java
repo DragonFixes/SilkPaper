@@ -21,6 +21,16 @@ import org.jline.terminal.Terminal;
 
 public interface ContextMinecraftServer {
 
+    /** Paper's global and world-default configs, set up during {@code DedicatedServer.initServer}. */
+    default io.papermc.paper.configuration.PaperConfigurations paperConfigurations() {
+        return com.mohistmc.silkard.paper.PaperBootstrap.paperConfigurations();
+    }
+
+    /** Gale's global and world-default configs, set up during {@code DedicatedServer.initServer}. */
+    default org.galemc.gale.configuration.GaleConfigurations galeConfigurations() {
+        return com.mohistmc.silkard.paper.PaperBootstrap.galeConfigurations();
+    }
+
     default void handleCustomClickAction(Identifier minecraftkey, Optional<Tag> optional, ServerPlayer player) {
         throw new ContextStateException("Not implemented");
     }

@@ -20,6 +20,16 @@ repositories {
 		name = 'papermc'
 		url = 'https://repo.papermc.io/repository/maven-public/'
 	}
+	maven {
+		// Leaf's snapshot repository: ConfigurationMaster-API and the spark builds Leaf targets
+		name = 'leafmc'
+		url = 'https://maven.leafmc.one/snapshots/'
+	}
+	maven {
+		name = 'jitpack'
+		url = 'https://jitpack.io'
+		content { includeGroupByRegex 'com\\.github\\..*' }
+	}
 	mavenCentral()
 }
 
@@ -67,6 +77,21 @@ dependencies {
 		exclude group: 'com.google.guava'
 	})
 	include(implementation("org.jspecify:jspecify:1.0.0"))
+	// Paper/Gale configuration (Configurate), Leaf configuration (ConfigurationMaster), Paper's
+	// leafpile utilities and spark. Jar-in-jar is not transitive, so each runtime jar is listed.
+	include(implementation("org.spongepowered:configurate-core:4.2.0"))
+	include(implementation("org.spongepowered:configurate-yaml:4.2.0"))
+	include(implementation("io.leangen.geantyref:geantyref:1.3.16"))
+	include(implementation("com.github.thatsmusic99:ConfigurationMaster-API:v2.0.0-rc.3") {
+		exclude group: 'org.yaml', module: 'snakeyaml'
+	})
+	include(implementation(platform("ca.spottedleaf.leafpile:bom:1.3.2")))
+	include(implementation("ca.spottedleaf.leafpile:common"))
+	include(implementation("ca.spottedleaf.leafpile:concurrentutil"))
+	include(implementation("ca.spottedleaf.leafpile:converter"))
+	include(implementation("ca.spottedleaf.leafpile:ioutil"))
+	include(implementation("me.lucko:spark-api:0.1-dev-284ead8-20260826.125727-1"))
+	include(implementation("me.lucko:spark-paper:1.10-dev-284ead8-20260826.125812-1"))
 	include(implementation("org.yaml:snakeyaml:2.6"))
 	include(implementation("org.jline:jline:3.30.4"))
 	include(implementation("org.apache.logging.log4j:log4j-iostreams:2.25.2"))

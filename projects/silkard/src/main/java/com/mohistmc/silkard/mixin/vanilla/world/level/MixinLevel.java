@@ -313,4 +313,51 @@ public abstract class MixinLevel implements ContextLevel {
         }
     }
     // CraftBukkit end
+    // Per-world configs, created on first use: the level's dimension, storage and game rules are
+    // all known by then, and CraftWorld reads paperConfig() while it is being constructed.
+    @Unique
+    private volatile com.mohistmc.silkard.paper.PaperBootstrap.WorldConfigs silkard$worldConfigs;
+
+    @Unique
+    private com.mohistmc.silkard.paper.PaperBootstrap.WorldConfigs silkard$worldConfigs() {
+        com.mohistmc.silkard.paper.PaperBootstrap.WorldConfigs configs = this.silkard$worldConfigs;
+        if (configs == null) {
+            synchronized (this) {
+                configs = this.silkard$worldConfigs;
+                if (configs == null) {
+                    if (!((Object) this instanceof net.minecraft.server.level.ServerLevel serverLevel)) {
+                        throw new IllegalStateException("World configs exist only for server levels");
+                    }
+                    configs = com.mohistmc.silkard.paper.PaperBootstrap.createWorldConfigs(serverLevel);
+                    this.silkard$worldConfigs = configs;
+                }
+            }
+        }
+        return configs;
+    }
+
+    @Override
+    public org.spigotmc.SpigotWorldConfig spigotConfig() {
+        return this.silkard$worldConfigs().spigot();
+    }
+
+    @Override
+    public io.papermc.paper.configuration.WorldConfiguration paperConfig() {
+        return this.silkard$worldConfigs().paper();
+    }
+
+    @Override
+    public org.purpurmc.purpur.PurpurWorldConfig purpurConfig() {
+        return this.silkard$worldConfigs().purpur();
+    }
+
+    @Override
+    public org.galemc.gale.configuration.GaleWorldConfiguration galeConfig() {
+        return this.silkard$worldConfigs().gale();
+    }
+
+    @Override
+    public String silkard$bukkitName() {
+        return com.mohistmc.silkard.paper.PaperBootstrap.legacyWorldName((Level) (Object) this);
+    }
 }
