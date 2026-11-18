@@ -95,7 +95,8 @@ public class PaperConfigurations extends Configurations<GlobalConfiguration, Wor
     static final String GLOBAL_CONFIG_FILE_NAME = "paper-global.yml";
     static final String WORLD_DEFAULTS_CONFIG_FILE_NAME = "paper-world-defaults.yml";
     static final String WORLD_CONFIG_FILE_NAME = "paper-world.yml";
-    public static final String CONFIG_DIR = "config";
+    // The server-root folder holding Paper, Gale, Leaf and Purpur configs. Fabric owns "config/" for mod configs.
+    public static final String CONFIG_DIR = "paper-config";
     private static final String BACKUP_DIR ="legacy-backup";
 
     private static final String GLOBAL_HEADER = String.format("""
@@ -350,7 +351,8 @@ public class PaperConfigurations extends Configurations<GlobalConfiguration, Wor
     }
 
     public static ContextMap createWorldContextMap(ServerLevel level) { // Gale - Gale configuration - private -> public
-        return createWorldContextMap(level.getServer().storageSource.getDimensionPath(level.dimension()), level.dimension().identifier(), level.spigotConfig, level.registryAccess(), level.getGameRules());
+        // Each Silkard ServerLevel carries the storage access for its own dimension.
+        return createWorldContextMap(level.silkard_storageSource().getDimensionPath(level.dimension()), level.dimension().identifier(), level.spigotConfig(), level.registryAccess(), level.getGameRules());
     }
 
     public static ContextMap createWorldContextMap(final Path dir, final Identifier worldKey, final SpigotWorldConfig spigotConfig, final RegistryAccess registryAccess, final GameRules gameRules) {

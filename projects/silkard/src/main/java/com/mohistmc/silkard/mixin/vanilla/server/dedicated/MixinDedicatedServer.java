@@ -235,6 +235,13 @@ public abstract class MixinDedicatedServer extends MinecraftServer implements Co
         }
 
         this.setPlayerList(new net.minecraft.server.dedicated.DedicatedPlayerList(this.self(), this.registries(), this.playerDataStorage));
+        // Spigot, Paper, Gale, Purpur and Leaf configs: after the player list exists, before plugins load
+        try {
+            com.mohistmc.silkard.paper.PaperBootstrap.initServer(this.self());
+        } catch (Exception e) {
+            silkard$LOGGER.error("Unable to load server configuration", e);
+            return false;
+        }
         // CraftBukkit start - loadPlugins/enablePlugins moved to MixinDedicatedServer.loadLevel HEAD
         this.tickTimeLogger = new net.minecraft.util.debugchart.RemoteSampleLogger(net.minecraft.util.debugchart.TpsDebugDimensions.values().length, this.debugSubscribers(), net.minecraft.util.debugchart.RemoteDebugSampleType.TICK_TIME);
         long levelNanoTime = net.minecraft.util.Util.getNanos();

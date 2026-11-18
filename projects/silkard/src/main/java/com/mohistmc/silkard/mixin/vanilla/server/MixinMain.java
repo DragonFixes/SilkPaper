@@ -43,6 +43,7 @@ public class MixinMain {
     @Inject(method = "main", at = @At("HEAD"))
     private static void silkard$bukkitOptions(String[] args, CallbackInfo ci) {
         MainHook.configure(org.bukkit.craftbukkit.Main.bukkitOptions(args)); // CraftBukkit
+        com.mohistmc.silkard.paper.PaperBootstrap.loadEarlyConfigs(); // Leaf - Leaf config loads before vanilla bootstrap
     }
 
     /**
