@@ -38,18 +38,11 @@ public abstract class CraftAbstractInventoryViewBuilder<V extends InventoryView>
         final CraftHumanEntity craftHuman = (CraftHumanEntity) player;
         Preconditions.checkArgument(craftHuman.getHandle() instanceof ServerPlayer, "The given player must be an ServerPlayer");
         final ServerPlayer serverPlayer = (ServerPlayer) craftHuman.getHandle();
-<<<<<<< silkard
-        final AbstractContainerMenu abstractcontainermenu = buildContainer(serverPlayer);
-        abstractcontainermenu.silkard$checkReachable(this.checkReachable);
-        abstractcontainermenu.setTitle(CraftChatMessage.fromString(title)[0]);
-        return (V) abstractcontainermenu.getBukkitView();
-=======
 
         final AbstractContainerMenu container = buildContainer(serverPlayer);
-        container.checkReachable = this.checkReachable;
+        container.silkard(this.checkReachable);
         container.setTitle(this.title != null ? PaperAdventure.asVanilla(this.title) : this.defaultTitle);
         return (V) container.getBukkitView();
->>>>>>> paper
     }
 
     protected abstract AbstractContainerMenu buildContainer(ServerPlayer player);

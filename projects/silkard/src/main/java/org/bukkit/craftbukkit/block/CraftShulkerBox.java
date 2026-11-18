@@ -44,44 +44,24 @@ public class CraftShulkerBox extends CraftLootable<ShulkerBoxBlockEntity> implem
 
     @Override
     public void open() {
-<<<<<<< silkard
-        requirePlaced();
-        if (!getTileEntity().silkard_opened() && getWorldHandle() instanceof net.minecraft.world.level.Level) {
-            net.minecraft.world.level.Level level = getTileEntity().getLevel();
-            level.blockEvent(getPosition(), getTileEntity().getBlockState().getBlock(), 1, 1);
-            level.playSound(null, getPosition(), SoundEvents.SHULKER_BOX_OPEN, SoundSource.BLOCKS, 0.5F, level.getRandom().nextFloat() * 0.1F + 0.9F);
-        }
-        getTileEntity().silkard_opened(true);
-=======
         this.requirePlaced();
-        if (!this.getBlockEntity().opened && this.getWorldHandle() instanceof net.minecraft.world.level.Level) {
+        if (!this.getBlockEntity().silkard_opened() && this.getWorldHandle() instanceof net.minecraft.world.level.Level) {
             net.minecraft.world.level.Level level = this.getBlockEntity().getLevel();
             level.blockEvent(this.getPosition(), this.getBlockEntity().getBlockState().getBlock(), 1, 1);
             level.playSound(null, this.getPosition(), SoundEvents.SHULKER_BOX_OPEN, SoundSource.BLOCKS, 0.5F, level.getRandom().nextFloat() * 0.1F + 0.9F);
         }
-        this.getBlockEntity().opened = true;
->>>>>>> paper
+        this.getBlockEntity().silkard_opened(true);
     }
 
     @Override
     public void close() {
-<<<<<<< silkard
-        requirePlaced();
-        if (getTileEntity().silkard_opened() && getWorldHandle() instanceof net.minecraft.world.level.Level) {
-            net.minecraft.world.level.Level level = getTileEntity().getLevel();
-            level.blockEvent(getPosition(), getTileEntity().getBlockState().getBlock(), 1, 0);
-            level.playSound(null, getPosition(), SoundEvents.SHULKER_BOX_OPEN, SoundSource.BLOCKS, 0.5F, level.getRandom().nextFloat() * 0.1F + 0.9F);
-        }
-        getTileEntity().silkard_opened(false);
-=======
         this.requirePlaced();
-        if (this.getBlockEntity().opened && this.getWorldHandle() instanceof net.minecraft.world.level.Level) {
+        if (this.getBlockEntity().silkard_opened() && this.getWorldHandle() instanceof net.minecraft.world.level.Level) {
             net.minecraft.world.level.Level level = this.getBlockEntity().getLevel();
             level.blockEvent(this.getPosition(), this.getBlockEntity().getBlockState().getBlock(), 1, 0);
             level.playSound(null, this.getPosition(), SoundEvents.SHULKER_BOX_CLOSE, SoundSource.BLOCKS, 0.5F, level.getRandom().nextFloat() * 0.1F + 0.9F); // Paper - More Lidded Block API (Wrong sound)
         }
-        this.getBlockEntity().opened = false;
->>>>>>> paper
+        this.getBlockEntity().silkard_opened(false);
     }
 
     @Override
@@ -97,7 +77,7 @@ public class CraftShulkerBox extends CraftLootable<ShulkerBoxBlockEntity> implem
     // Paper start - More Lidded Block API
     @Override
     public boolean isOpen() {
-        return getBlockEntity().opened;
+        return getBlockEntity().silkard_opened();
     }
     // Paper end - More Lidded Block API
 }

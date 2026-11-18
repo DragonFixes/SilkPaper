@@ -42,13 +42,8 @@ public class CraftBeacon extends CraftBlockEntityState<BeaconBlockEntity> implem
         if (blockEntity instanceof BeaconBlockEntity) {
             BeaconBlockEntity beacon = (BeaconBlockEntity) blockEntity;
 
-<<<<<<< silkard
             Collection<Player> nms = BukkitUtils.getHumansInRange(beacon.getLevel(), beacon.getBlockPos(), beacon.levels);
-            Collection<LivingEntity> bukkit = new ArrayList<LivingEntity>(nms.size());
-=======
-            Collection<Player> nms = BeaconBlockEntity.getHumansInRange(beacon.getLevel(), beacon.getBlockPos(), beacon.levels, beacon); // Paper - Custom beacon ranges
             Collection<LivingEntity> bukkit = new ArrayList<>(nms.size());
->>>>>>> paper
 
             for (Player human : nms) {
                 bukkit.add(human.getBukkitEntity());

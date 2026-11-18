@@ -55,17 +55,12 @@ public class CraftShapedRecipe extends ShapedRecipe implements CraftRecipe {
         Map<Character, Ingredient> ingredients = Maps.transformValues(choices, (bukkit) -> CraftRecipe.toIngredient(bukkit, false));
         ShapedRecipePattern pattern = ShapedRecipePattern.of(ingredients, shape);
 
-<<<<<<< silkard
-        ShapedRecipePattern pattern = ShapedRecipePattern.of(data, shape);
-        BukkitUtils.getServer().getRecipeManager().addRecipe(new RecipeHolder<>(CraftRecipe.toMinecraft(this.getKey()), new net.minecraft.world.item.crafting.ShapedRecipe(getCommon(), CraftRecipe.getBook(this), pattern, CraftItemStack.asNMSTemplate(this.getResult()))));
-=======
         return new RecipeHolder<>(CraftNamespacedKey.toResourceKey(Registries.RECIPE, this.getKey()), new net.minecraft.world.item.crafting.ShapedRecipe(
             new net.minecraft.world.item.crafting.Recipe.CommonInfo(true),
             new net.minecraft.world.item.crafting.CraftingRecipe.CraftingBookInfo(CraftRecipe.getCategory(this.getCategory()), this.getGroup()),
             pattern,
             CraftItemStack.asTemplate(this.getResult())
         ));
->>>>>>> paper
     }
 
     private static String[] replaceUndefinedIngredientsWithEmpty(String[] shape, Map<Character, org.bukkit.inventory.RecipeChoice> ingredients) {

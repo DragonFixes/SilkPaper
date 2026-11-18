@@ -4,13 +4,10 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-<<<<<<< silkard
 import com.mohistmc.silkard.bukkit.BukkitUtils;
 import java.util.Optional;
-=======
 import io.papermc.paper.registry.HolderableBase;
 import java.util.List;
->>>>>>> paper
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import net.minecraft.core.Holder;

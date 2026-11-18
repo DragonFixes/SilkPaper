@@ -47,16 +47,11 @@ public class CraftShapelessRecipe extends ShapelessRecipe implements CraftRecipe
             ingredients.add(CraftRecipe.toIngredient(choice, true));
         }
 
-<<<<<<< silkard
-        BukkitUtils.getServer().getRecipeManager().addRecipe(new RecipeHolder<>(CraftRecipe.toMinecraft(this.getKey()), new net.minecraft.world.item.crafting.ShapelessRecipe(getCommon(), CraftRecipe.getBook(this), CraftItemStack.asNMSTemplate(this.getResult()), data)));
-=======
         return new RecipeHolder<>(CraftNamespacedKey.toResourceKey(Registries.RECIPE, this.getKey()), new net.minecraft.world.item.crafting.ShapelessRecipe(
             new net.minecraft.world.item.crafting.Recipe.CommonInfo(true),
             new net.minecraft.world.item.crafting.CraftingRecipe.CraftingBookInfo(CraftRecipe.getCategory(this.getCategory()), this.getGroup()),
             CraftItemStack.asTemplate(this.getResult()),
-            ingredients,
-            true // Gale - Airplane - simpler ShapelessRecipe comparison for vanilla
+            ingredients
         ));
->>>>>>> paper
     }
 }

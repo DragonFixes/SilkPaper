@@ -45,15 +45,8 @@ public class CraftMerchantRecipe extends MerchantRecipe {
                 maxUses,
                 experience,
                 priceMultiplier,
-<<<<<<< silkard
                 demand
         ).bukkit(this);
-=======
-                demand,
-                ignoreDiscounts, // Paper - add ignoreDiscounts param
-                this
-        );
->>>>>>> paper
         this.setSpecialPrice(specialPrice);
         this.setExperienceReward(experienceReward);
     }

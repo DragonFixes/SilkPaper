@@ -35,13 +35,9 @@ public class CraftAccessLocationInventoryViewBuilder<V extends InventoryView> ex
             effectiveBlockState = block.defaultBlockState();
         }
 
-<<<<<<< silkard
-        return this.containerBuilder.build(player.nextContainerCounterInt(), player.getInventory(), access);
-=======
         final MenuProvider provider = block.getMenuProvider(effectiveBlockState, effectiveLevel, effectiveBlockPos);
         super.defaultTitle = provider.getDisplayName();
-        return provider.createMenu(player.nextContainerCounter(), player.getInventory(), player);
->>>>>>> paper
+        return provider.createMenu(player.nextContainerCounterInt(), player.getInventory(), player);
     }
 
     @Override

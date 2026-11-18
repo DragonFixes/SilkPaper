@@ -1,10 +1,7 @@
 package org.bukkit.craftbukkit.inventory;
 
-<<<<<<< silkard
 import com.mohistmc.silkard.bukkit.BukkitUtils;
-=======
 import net.minecraft.core.registries.Registries;
->>>>>>> paper
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.bukkit.NamespacedKey;
@@ -33,19 +30,13 @@ public class CraftSmithingTrimRecipe extends SmithingTrimRecipe implements Craft
     }
 
     @Override
-<<<<<<< silkard
-    public void addToCraftingManager() {
-        BukkitUtils.getServer().getRecipeManager().addRecipe(new RecipeHolder<>(CraftRecipe.toMinecraft(this.getKey()), new net.minecraft.world.item.crafting.SmithingTrimRecipe(getCommon(), toNMS(this.getTemplate(), false), toNMS(this.getBase(), false), toNMS(this.getAddition(), false), CraftTrimPattern.bukkitToMinecraftHolder(TrimPattern.BOLT))));
-=======
     public RecipeHolder<?> toMinecraftRecipe() {
         return new RecipeHolder<>(CraftNamespacedKey.toResourceKey(Registries.RECIPE, this.getKey()), new net.minecraft.world.item.crafting.SmithingTrimRecipe(
             new net.minecraft.world.item.crafting.Recipe.CommonInfo(true),
             CraftRecipe.toIngredient(this.getTemplate(), false),
             CraftRecipe.toIngredient(this.getBase(), false),
             CraftRecipe.toIngredient(this.getAddition(), false),
-            CraftTrimPattern.bukkitToMinecraftHolder(this.getTrimPattern()),
-            this.willCopyDataComponents()
+            CraftTrimPattern.bukkitToMinecraftHolder(this.getTrimPattern())
         ));
->>>>>>> paper
     }
 }

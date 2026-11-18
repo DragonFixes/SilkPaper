@@ -1,14 +1,11 @@
 package org.bukkit.craftbukkit.inventory;
 
 import com.google.common.base.Preconditions;
-<<<<<<< silkard
 import com.mohistmc.silkard.bukkit.BukkitUtils;
-=======
 import io.papermc.paper.registry.RegistryKey;
 import io.papermc.paper.registry.data.util.Conversions;
 import io.papermc.paper.registry.set.PaperRegistrySets;
 import io.papermc.paper.registry.set.RegistryKeySet;
->>>>>>> paper
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -62,10 +59,7 @@ public interface CraftRecipe extends Recipe {
         } else if (bukkit instanceof RecipeChoice.MaterialChoice) {
             stack = Ingredient.of(((RecipeChoice.MaterialChoice) bukkit).getChoices().stream().map(CraftItemType::bukkitToMinecraft));
         } else if (bukkit instanceof RecipeChoice.ExactChoice) {
-<<<<<<< silkard
-            stack = BukkitUtils.ofStacks(((RecipeChoice.ExactChoice) bukkit).getChoices().stream().map((mat) -> CraftItemStack.asNMSCopy(mat)).toList());
-=======
-            stack = Ingredient.ofStacks(((RecipeChoice.ExactChoice) bukkit).getChoices().stream().map(CraftItemStack::asNMSCopy).toList());
+            stack = BukkitUtils.ofStacks(((RecipeChoice.ExactChoice) bukkit).getChoices().stream().map(CraftItemStack::asNMSCopy).toList());
             // Paper start - support "empty" choices - legacy method that spigot might incorrectly call
             // Their impl of Ingredient.of() will error, ingredients need at least one entry.
             // Callers running into this exception may have passed an incorrect empty() recipe choice to a non-empty slot or
@@ -73,7 +67,6 @@ public interface CraftRecipe extends Recipe {
         } else if (bukkit == RecipeChoice.empty()) {
             throw new IllegalArgumentException("This ingredient cannot be empty");
             // Paper end - support "empty" choices
->>>>>>> paper
         } else {
             throw new IllegalArgumentException("Unknown recipe stack instance " + bukkit);
         }

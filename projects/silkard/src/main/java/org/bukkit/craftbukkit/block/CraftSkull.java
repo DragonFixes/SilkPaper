@@ -89,14 +89,7 @@ public class CraftSkull extends CraftBlockEntityState<SkullBlockEntity> implemen
             return false;
         }
 
-<<<<<<< silkard
-        NameAndId profile = BukkitUtils.getServer().services().nameToIdCache().get(name).orElse(null);
-=======
-        GameProfile profile = MinecraftServer.getServer().services().paper().filledProfileCache().getIfCached(name);
-        if (profile == null) {
-            profile = MinecraftServer.getServer().services().nameToIdCache().get(name).map(NameAndId::toUncompletedGameProfile).orElse(null);
-        }
->>>>>>> paper
+        GameProfile profile = MinecraftServer.getServer().services().nameToIdCache().get(name).map(NameAndId::toUncompletedGameProfile).orElse(null);
         if (profile == null) {
             return false;
         }

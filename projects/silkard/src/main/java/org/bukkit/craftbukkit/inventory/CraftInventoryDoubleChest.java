@@ -1,11 +1,8 @@
 package org.bukkit.craftbukkit.inventory;
 
 import com.google.common.base.Preconditions;
-<<<<<<< silkard
 import com.mohistmc.silkard.bukkit.DoubleChestCombiner;
-=======
 import net.minecraft.network.chat.Component;
->>>>>>> paper
 import net.minecraft.world.CompoundContainer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
@@ -23,19 +20,18 @@ public class CraftInventoryDoubleChest extends CraftInventory implements DoubleC
     private final CraftInventory left;
     private final CraftInventory right;
 
-<<<<<<< silkard
-    public CraftInventoryDoubleChest(DoubleChestCombiner.Dummy.DoubleInventory block) {
-        super(block.container);
-        this.tile = block;
-        this.left = new CraftInventory(block.container.container1);
-        this.right = new CraftInventory(block.container.container2);
-=======
     public CraftInventoryDoubleChest(Provider provider) {
         super(provider.container);
         this.provider = provider;
         this.left = new CraftInventory(provider.container.container1);
         this.right = new CraftInventory(provider.container.container2);
->>>>>>> paper
+    }
+
+    public CraftInventoryDoubleChest(DoubleChestCombiner.Dummy.DoubleInventory block) {
+        super(block.container);
+        this.provider = block;
+        this.left = new CraftInventory(block.container.container1);
+        this.right = new CraftInventory(block.container.container2);
     }
 
     public CraftInventoryDoubleChest(CompoundContainer largeChest) {

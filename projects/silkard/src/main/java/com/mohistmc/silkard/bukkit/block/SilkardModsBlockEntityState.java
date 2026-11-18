@@ -7,8 +7,8 @@ import org.bukkit.craftbukkit.block.CraftBlockEntityState;
 
 public class SilkardModsBlockEntityState extends CraftBlockEntityState<BlockEntity> {
 
-    public SilkardModsBlockEntityState(World world, BlockEntity blockEntity) {
-        super(world, blockEntity);
+    public SilkardModsBlockEntityState(World world, BlockEntity blockEntity, boolean useSnapshot) {
+        super(world, blockEntity, useSnapshot);
     }
 
     protected SilkardModsBlockEntityState(SilkardModsBlockEntityState state, Location location) {

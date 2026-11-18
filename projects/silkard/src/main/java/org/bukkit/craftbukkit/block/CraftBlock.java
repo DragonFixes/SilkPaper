@@ -697,44 +697,8 @@ public class CraftBlock implements Block {
     @Override
     public boolean applyBoneMeal(BlockFace face) {
         Direction direction = blockFaceToNotch(face);
-<<<<<<< silkard
-        BlockFertilizeEvent event = null;
-        ServerLevel world = getCraftWorld().getHandle();
-        UseOnContext context = new UseOnContext(world, null, InteractionHand.MAIN_HAND, Items.BONE_MEAL.getDefaultInstance(), new BlockHitResult(Vec3.ZERO, direction, getPosition(), false));
-
-        // SPIGOT-6895: Call StructureGrowEvent and BlockFertilizeEvent
-        world.silkard$captureTreeGeneration(true);
-        InteractionResult result = BukkitUtils.applyBonemeal(context);
-        world.silkard$captureTreeGeneration(false);
-
-        if (world.silkard$capturedBlockStates().size() > 0) {
-            TreeType treeType = BukkitUtils.treeType;
-            BukkitUtils.setTreeType(null);
-            List<BlockState> blocks = new ArrayList<>(world.silkard$capturedBlockStates().values());
-            world.silkard$capturedBlockStates().clear();
-            StructureGrowEvent structureEvent = null;
-
-            if (treeType != null) {
-                structureEvent = new StructureGrowEvent(getLocation(), treeType, true, null, blocks);
-                Bukkit.getPluginManager().callEvent(structureEvent);
-            }
-
-            event = new BlockFertilizeEvent(CraftBlock.at(world, getPosition()), null, blocks);
-            event.setCancelled(structureEvent != null && structureEvent.isCancelled());
-            Bukkit.getPluginManager().callEvent(event);
-
-            if (!event.isCancelled()) {
-                for (BlockState blockstate : blocks) {
-                    blockstate.update(true);
-                }
-            }
-        }
-
-        return result.consumesAction() && (event == null || !event.isCancelled());
-=======
         Preconditions.checkArgument(direction != null, face + " is not a valid cartesian face");
         return pwt$applyBoneMeal(direction); // Leaf - SparklyPaper - parallel world ticking - Write operation check
->>>>>>> paper
     }
 
     @Override

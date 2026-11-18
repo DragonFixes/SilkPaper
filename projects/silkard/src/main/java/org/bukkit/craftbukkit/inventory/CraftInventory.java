@@ -552,11 +552,7 @@ public class CraftInventory implements Inventory {
             return InventoryType.SHULKER_BOX;
         } else if (this.inventory instanceof BarrelBlockEntity) {
             return InventoryType.BARREL;
-<<<<<<< silkard
-        } else if (inventory instanceof BukkitLecternInventory) {
-=======
-        } else if (this.inventory instanceof LecternBlockEntity.LecternInventory) {
->>>>>>> paper
+        } else if (this.inventory instanceof BukkitLecternInventory) {
             return InventoryType.LECTERN;
         } else if (this.inventory instanceof ChiseledBookShelfBlockEntity) {
             return InventoryType.CHISELED_BOOKSHELF;

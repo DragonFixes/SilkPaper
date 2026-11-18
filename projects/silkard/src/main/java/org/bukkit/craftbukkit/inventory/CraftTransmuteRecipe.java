@@ -1,12 +1,9 @@
 package org.bukkit.craftbukkit.inventory;
 
-<<<<<<< silkard
 import com.mohistmc.silkard.bukkit.BukkitUtils;
 import net.minecraft.advancements.predicates.MinMaxBounds;
-=======
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.MinecraftServer;
->>>>>>> paper
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.TransmuteResult;
 import org.bukkit.Material;
@@ -32,21 +29,6 @@ public class CraftTransmuteRecipe extends TransmuteRecipe implements CraftRecipe
     }
 
     @Override
-<<<<<<< silkard
-    public void addToCraftingManager() {
-        BukkitUtils.getServer().getRecipeManager().addRecipe(
-                new RecipeHolder<>(CraftRecipe.toMinecraft(this.getKey()),
-                        new net.minecraft.world.item.crafting.TransmuteRecipe(getCommon(),
-                                CraftRecipe.getBook(this),
-                                toNMS(this.getInput(), true),
-                                toNMS(this.getMaterial(), true),
-                                MinMaxBounds.Ints.between(this.getMinimumMaterialCount(), this.getMaximumMaterialCount()),
-                                TransmuteResult.fromTemplate(CraftItemStack.asNMSTemplate(this.getResult())),
-                                this.isAddMaterialCountToResult()
-                        )
-                )
-        );
-=======
     public RecipeHolder<?> toMinecraftRecipe() {
         return new RecipeHolder<>(CraftNamespacedKey.toResourceKey(Registries.RECIPE, this.getKey()), new net.minecraft.world.item.crafting.TransmuteRecipe(
             new net.minecraft.world.item.crafting.Recipe.CommonInfo(true),
@@ -57,6 +39,5 @@ public class CraftTransmuteRecipe extends TransmuteRecipe implements CraftRecipe
             TransmuteResult.fromTemplate(CraftItemStack.asTemplate(this.getResult())),
             false
         ));
->>>>>>> paper
     }
 }

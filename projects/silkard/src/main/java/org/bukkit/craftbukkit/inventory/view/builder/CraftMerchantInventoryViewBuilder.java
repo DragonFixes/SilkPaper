@@ -52,24 +52,14 @@ public class CraftMerchantInventoryViewBuilder<V extends InventoryView> extends 
 
         final MerchantMenu container;
         if (this.merchant == null) {
-<<<<<<< silkard
-            container = new MerchantMenu(serverPlayer.nextContainerCounterInt(), serverPlayer.getInventory(), new CraftMerchantCustom(title).getMerchant());
-        } else {
-            container = new MerchantMenu(serverPlayer.nextContainerCounterInt(), serverPlayer.getInventory(), this.merchant);
-        }
-
-        container.silkard$checkReachable(super.checkReachable);
-        container.setTitle(CraftChatMessage.fromString(title)[0]);
-=======
             this.merchant = this.title == null ? new CraftMerchantCustom().getMerchant() : new CraftMerchantCustom(title).getMerchant();
         }
 
-        container = new MerchantMenu(serverPlayer.nextContainerCounter(), serverPlayer.getInventory(), this.merchant);
+        container = new MerchantMenu(serverPlayer.nextContainerCounterInt(), serverPlayer.getInventory(), this.merchant);
 
-        container.checkReachable = super.checkReachable;
+        container.silkard(super.checkReachable);
         setDefaultTitle(this.merchant);
         container.setTitle(super.title != null ? PaperAdventure.asVanilla(this.title) : super.defaultTitle);
->>>>>>> paper
         return (V) container.getBukkitView();
     }
 
