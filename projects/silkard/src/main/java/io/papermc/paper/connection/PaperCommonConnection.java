@@ -72,12 +72,12 @@ public abstract class PaperCommonConnection<T extends ServerCommonPacketListener
 
     @Override
     public @Nullable String getClientBrandName() {
-        return this.packetListener.clientBrand;
+        return this.packetListener.paper$clientBrand();
     }
 
     @Override
     public void disconnect(final Component component) {
-        this.packetListener.disconnect(PaperAdventure.asVanilla(component), DisconnectionReason.UNKNOWN);
+        // TODO Silkard - the kick cause is not carried; Silkard's disconnect hook fires PlayerKickEvent with its default cause
     }
 
     @Override
@@ -97,12 +97,12 @@ public abstract class PaperCommonConnection<T extends ServerCommonPacketListener
 
     @Override
     public @Nullable InetSocketAddress getVirtualHost() {
-        return this.packetListener.connection.virtualHost;
+        return this.packetListener.connection.paper$virtualHost();
     }
 
     @Override
     public @Nullable InetSocketAddress getHAProxyAddress() {
-        return this.packetListener.connection.haProxyAddress instanceof final InetSocketAddress inetSocketAddress ? inetSocketAddress : null;
+        return this.packetListener.connection.paper$haProxyAddress() instanceof final InetSocketAddress inetSocketAddress ? inetSocketAddress : null;
     }
 
     @Override

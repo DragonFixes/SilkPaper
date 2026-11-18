@@ -51,7 +51,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * @date 2026/6/8
  */
 @Mixin(ServerCommonPacketListenerImpl.class)
-public abstract class MixinServerCommonPacketListenerImpl implements ContextServerCommonPacketListenerImpl, CraftPlayer.TransferCookieConnection {
+public abstract class MixinServerCommonPacketListenerImpl implements ContextServerCommonPacketListenerImpl {
 
     // @formatter:off
     @Shadow @Final private static org.slf4j.Logger LOGGER;
@@ -104,9 +104,6 @@ public abstract class MixinServerCommonPacketListenerImpl implements ContextServ
     @Override
     public void silkard$setPlayer(ServerPlayer player) {
         this.player = player;
-        if (player != null) {
-            ((ContextServerPlayer) player).silkard$transferCookieConnection(this);
-        }
     }
 
     @Override
@@ -204,7 +201,8 @@ public abstract class MixinServerCommonPacketListenerImpl implements ContextServ
     @Inject(method = "handleCookieResponse", at = @At("HEAD"), cancellable = true)
     private void silkard$cookieResponse(ServerboundCookieResponsePacket packet, CallbackInfo ci) {
         PacketUtils.ensureRunningOnSameThread(packet, (ServerCommonPacketListenerImpl) (Object) this, this.server.packetProcessor());
-        if (player != null && player.getBukkitEntity().handleCookieResponse(packet)) {
+        final io.papermc.paper.connection.ReadablePlayerCookieConnectionImpl cookies = ((ServerCommonPacketListenerImpl) (Object) this).paper$cookieConnection();
+        if (cookies != null && cookies.handleCookieResponse(packet)) {
             ci.cancel();
         }
     }

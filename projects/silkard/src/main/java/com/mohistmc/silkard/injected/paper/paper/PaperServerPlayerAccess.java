@@ -36,6 +36,11 @@ public interface PaperServerPlayerAccess {
         throw new ContextStateException("Not implemented");
     }
 
+    /** CraftBukkit: the name saved with the player at its last logout, for rename detection on join. */
+    default @Nullable String paper$lastKnownName() {
+        throw new ContextStateException("Not implemented");
+    }
+
     /** Paper: the Adventure display name, or {@code null} when only the legacy name is set. */
     default @Nullable Component paper$adventureDisplayName() {
         throw new ContextStateException("Not implemented");

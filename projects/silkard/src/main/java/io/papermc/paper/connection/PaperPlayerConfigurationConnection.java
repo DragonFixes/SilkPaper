@@ -27,7 +27,6 @@ import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.network.protocol.common.ClientboundResourcePackPopPacket;
 import net.minecraft.network.protocol.common.ClientboundResourcePackPushPacket;
 import net.minecraft.network.protocol.common.ClientboundShowDialogPacket;
-import net.minecraft.network.protocol.common.custom.DiscardedPayload;
 import net.minecraft.network.protocol.configuration.ClientboundResetChatPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ClientInformation;
@@ -84,7 +83,7 @@ public class PaperPlayerConfigurationConnection extends PaperCommonConnection<Se
             final ResourcePackInfo pack = iter.next();
             packs.add(new ClientboundResourcePackPushPacket(pack.id(), pack.uri().toASCIIString(), pack.hash(), request.required(), iter.hasNext() ? Optional.empty() : Optional.ofNullable(prompt)));
             if (request.callback() != ResourcePackCallback.noOp()) {
-                this.packetListener.packCallbacks.put(pack.id(), request.callback()); // just override if there is a previously existing callback
+                this.packetListener.paper$packCallbacks().put(pack.id(), request.callback()); // just override if there is a previously existing callback
             }
         }
         packs.forEach(this.packetListener::send);
@@ -152,17 +151,17 @@ public class PaperPlayerConfigurationConnection extends PaperCommonConnection<Se
 
     @Override
     public Set<String> channels() {
-        return this.packetListener.pluginMessagerChannels;
+        return this.packetListener.paper$pluginMessagerChannels();
     }
 
     @Override
     public void sendPluginMessage(final Plugin source, final String channel, final byte[] message) {
-        StandardMessenger.validatePluginMessage(this.packetListener.cserver.getMessenger(), source, channel, message);
+        StandardMessenger.validatePluginMessage(org.bukkit.Bukkit.getMessenger(), source, channel, message);
 
         if (this.channels().contains(channel)) {
             @SuppressWarnings("deprecation") // "not an API method" does not apply to us
             Identifier id = Identifier.parse(StandardMessenger.validateAndCorrectChannel(channel));
-            ClientboundCustomPayloadPacket packet = new ClientboundCustomPayloadPacket(new DiscardedPayload(id, message));
+            ClientboundCustomPayloadPacket packet = com.mohistmc.silkard.paper.paper.PluginMessages.packet(id, message);
             this.packetListener.send(packet);
         }
     }

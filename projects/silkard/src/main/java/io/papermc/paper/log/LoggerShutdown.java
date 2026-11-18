@@ -12,12 +12,22 @@ public final class LoggerShutdown {
         LogManager.shutdown(); // Flushes the async appender
 
         // Call JLine's shutdown hooks now that all pending logs have been flushed
-        ShutdownHooks.runTasks();
+        runJLineShutdownHooks();
 
         try {
             // This may end up calling AbstractTerminal#close twice which doesn't have any guards for that, consider patching TCA if it becomes an issue
             net.minecrell.terminalconsole.TerminalConsoleAppender.close(); // Use TerminalConsoleAppender
         } catch (final Exception ignored) {
+        }
+    }
+
+    // JLine keeps runTasks private (Paper patches the library to open it), so it is called reflectively.
+    private static void runJLineShutdownHooks() {
+        try {
+            final java.lang.reflect.Method runTasks = ShutdownHooks.class.getDeclaredMethod("runTasks");
+            runTasks.setAccessible(true);
+            runTasks.invoke(null);
+        } catch (final ReflectiveOperationException | RuntimeException ignored) {
         }
     }
 }

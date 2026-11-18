@@ -30,7 +30,7 @@ public class PaperPlayerLoginConnection extends ReadablePlayerCookieConnectionIm
     public @Nullable PlayerProfile getUnsafeProfile() {
         // This can possibly error as requestedUsername can have wacky stuff. But its fine I doubt mojang will support this
         // much longer.
-        return new CraftPlayerProfile(this.packetListener.requestedUuid, this.packetListener.requestedUsername);
+        return new CraftPlayerProfile(this.packetListener.paper$requestedUuid(), this.packetListener.requestedUsername);
     }
 
     @Override
@@ -48,12 +48,12 @@ public class PaperPlayerLoginConnection extends ReadablePlayerCookieConnectionIm
 
     @Override
     public @org.jspecify.annotations.Nullable InetSocketAddress getVirtualHost() {
-        return this.packetListener.connection.virtualHost;
+        return this.packetListener.connection.paper$virtualHost();
     }
 
     @Override
     public @org.jspecify.annotations.Nullable InetSocketAddress getHAProxyAddress() {
-        return this.packetListener.connection.haProxyAddress instanceof final InetSocketAddress inetSocketAddress ? inetSocketAddress : null;
+        return this.packetListener.connection.paper$haProxyAddress() instanceof final InetSocketAddress inetSocketAddress ? inetSocketAddress : null;
     }
 
     @Override

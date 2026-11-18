@@ -76,7 +76,7 @@ public class MixinGossipContainer implements ContextGossipContainer {
         handle.setRawValue(type, mergedValue);
         int newValue = Math.max(0, Math.min(mergedValue, type.max));
         handle.setRawValue(type, oldValue);
-        VillagerReputationChangeEvent event = org.bukkit.craftbukkit.event.CraftEventFactory.callVillagerReputationChangeEvent(villager, target, changeReason, org.bukkit.craftbukkit.entity.CraftVillager.CraftReputationType.minecraftToBukkit(type), oldValue, newValue, type.max);
+        VillagerReputationChangeEvent event = com.mohistmc.silkard.paper.paper.VillagerReputationEvents.call(villager, target, changeReason, org.bukkit.craftbukkit.entity.CraftVillager.CraftReputationType.minecraftToBukkit(type), oldValue, newValue, type.max);
         if (!event.isCancelled()) {
             handle.setRawValue(type, event.getNewValue());
             entityGossips.makeSureValueIsntTooLowOrTooHigh(type);

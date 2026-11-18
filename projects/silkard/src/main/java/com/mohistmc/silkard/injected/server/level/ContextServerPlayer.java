@@ -238,14 +238,6 @@ public interface ContextServerPlayer extends ContextPlayer {
         throw new ContextStateException("Not implemented");
     }
 
-    default void silkard$transferCookieConnection(CraftPlayer.TransferCookieConnection transferCookieConnection) {
-        throw new ContextStateException("Not implemented");
-    }
-
-    default CraftPlayer.TransferCookieConnection silkard$transferCookieConnection() {
-        throw new ContextStateException("Not implemented");
-    }
-
     default ItemEntity dropItem(boolean dropAll) {
         throw new ContextStateException("Not implemented");
     }
