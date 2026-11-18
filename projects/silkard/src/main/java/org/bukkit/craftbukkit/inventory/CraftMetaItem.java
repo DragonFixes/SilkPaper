@@ -2883,4 +2883,5 @@ public class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDat
     public void setWeapon(final org.bukkit.inventory.meta.components.WeaponComponent weapon) {
         this.silkard$component(net.minecraft.core.component.DataComponents.WEAPON, (weapon == null) ? null : ((org.bukkit.craftbukkit.inventory.components.CraftWeaponComponent) weapon).getHandle());
     }
-    // Silkard end}
+    // Silkard end
+}

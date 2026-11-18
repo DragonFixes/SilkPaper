@@ -10,6 +10,8 @@ import org.bukkit.entity.Boat;
 public abstract class CraftBoat extends CraftVehicle implements Boat, io.papermc.paper.entity.PaperLeashable { // Paper - Leashable API
 
     public CraftBoat(CraftServer server, AbstractBoat entity) {
+        super(server, entity);
+    }
 
     @Override
     public boolean isLeashed() {
@@ -24,8 +26,6 @@ public abstract class CraftBoat extends CraftVehicle implements Boat, io.papermc
     @Override
     public boolean setLeashHolder(org.bukkit.entity.Entity holder) {
         return io.papermc.paper.entity.PaperLeashable.super.setLeashHolder(holder);
-    }
-        super(server, entity);
     }
 
     @Override

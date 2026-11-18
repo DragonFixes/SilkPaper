@@ -423,4 +423,5 @@ public class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
     public void setDurationScale(final Float scale) {
         this.silkard$component(net.minecraft.core.component.DataComponents.POTION_DURATION_SCALE, scale);
     }
-    // Silkard end}
+    // Silkard end
+}
