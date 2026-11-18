@@ -3,7 +3,17 @@ plugins {
 	id 'net.neoforged.gradleutils' version '4.0.1'
 }
 
-version = project.minecraft_version + "-" + gradleutils.gitInfo.abbreviatedId
+// gradleutils reads git through JGit, which cannot resolve HEAD inside a linked git worktree;
+// the git CLI handles both layouts.
+def gitAbbreviatedId = {
+    try {
+        return gradleutils.gitInfo.abbreviatedId
+    } catch (Exception ignored) {
+        return ['git', '-C', projectDir.absolutePath, 'rev-parse', '--short=10', 'HEAD'].execute().text.trim()
+    }
+}()
+
+version = project.minecraft_version + "-" + gitAbbreviatedId
 group = project.maven_group
 
 base {
