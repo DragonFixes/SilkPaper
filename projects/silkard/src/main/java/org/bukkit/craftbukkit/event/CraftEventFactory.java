@@ -2590,4 +2590,15 @@ public class CraftEventFactory {
         final EntityLandEvent event = new EntityLandEvent(entity.getBukkitEntity(), CraftBlock.at(level, pos), fallDistance);
         return event.callEvent() ? event.getFallDistance() : -1;
     }
-}
+
+    // Spigot CraftEventFactory entry points that Silkard's mixins call.
+
+    public static void callRaidSpawnWaveEvent(Level level, Raid raid, net.minecraft.world.entity.raid.Raider leader, List<net.minecraft.world.entity.raid.Raider> raiders) {
+        callRaidSpawnWaveEvent(level, raid, leader, new java.util.LinkedHashSet<>(raiders));
+    }
+
+    public static org.bukkit.event.entity.VillagerReputationChangeEvent callVillagerReputationChangeEvent(net.minecraft.world.entity.npc.villager.Villager villager, java.util.UUID targetUuid, org.bukkit.entity.Villager.ReputationEvent reason, org.bukkit.entity.Villager.ReputationType reputationType, int oldValue, int newValue, int maxValue) {
+        org.bukkit.event.entity.VillagerReputationChangeEvent event = new org.bukkit.event.entity.VillagerReputationChangeEvent((org.bukkit.entity.Villager) villager.getBukkitEntity(), targetUuid, reason, reputationType, oldValue, newValue, maxValue);
+        Bukkit.getPluginManager().callEvent(event);
+        return event;
+    }}
