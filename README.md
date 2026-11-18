@@ -33,6 +33,19 @@
 - [x] Spigot ([bed90fca](https://hub.spigotmc.org/stash/projects/SPIGOT/repos/spigot/commits/bed90fca))
 
 
+## 📁 Configuration Files
+
+| Location | Files |
+|----------|-------|
+| Server root | `server.properties`, `bukkit.yml`, `spigot.yml`, `commands.yml`, `help.yml` |
+| `paper-config/` | `paper-global.yml`, `paper-world-defaults.yml`, `purpur.yml`, `gale-global.yml`, `gale-world-defaults.yml`, `leaf-global.yml` |
+| Each world folder | `paper-world.yml`, `gale-world.yml` (per-world overrides) |
+| `silkard-config/` | `silkard.yml`, `database.yml`, `worlds.yml` |
+| `config/` | Fabric mod configs only |
+
+Paper, Purpur, Gale and Leaf normally keep their files in `config/`. Silkard moves them to
+`paper-config/` because Fabric mods use `config/`. On first start, existing Paper, Gale and
+Leaf files in `config/` (and a root `purpur.yml`) are moved to `paper-config/` automatically.
 ## ⚙️ Technical Stack
 
 | Component   | Source                                                              | Purpose         | Status |
