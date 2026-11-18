@@ -145,6 +145,13 @@ public abstract class MixinServerCommonPacketListenerImpl implements ContextServ
 
     @Inject(method = "handleCustomPayload", at = @At("HEAD"))
     private void silkard$customPayload(ServerboundCustomPayloadPacket packet, CallbackInfo ci) {
+        this.silkard$handlePluginPayload(packet);
+    }
+
+    // The game listener overrides handleCustomPayload without calling this class's version, so it calls
+    // this method from its own hook.
+    @Override
+    public void silkard$handlePluginPayload(ServerboundCustomPayloadPacket packet) {
         if (!(packet.payload() instanceof DiscardedPayload discarded) || player == null || cserver == null) {
             return;
         }

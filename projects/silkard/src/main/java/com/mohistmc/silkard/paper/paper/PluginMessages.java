@@ -1,14 +1,9 @@
 package com.mohistmc.silkard.paper.paper;
 
-import com.mohistmc.silkard.injected.network.ContextDiscardedPayload;
 import com.google.common.base.Preconditions;
-import io.netty.buffer.Unpooled;
 import io.papermc.paper.connection.PluginMessageBridgeImpl;
 import java.util.Set;
 import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
-import net.minecraft.network.protocol.common.custom.DiscardedPayload;
-import net.minecraft.resources.Identifier;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.event.player.PlayerRegisterChannelEvent;
@@ -17,22 +12,12 @@ import org.bukkit.plugin.messaging.StandardMessenger;
 import org.jspecify.annotations.Nullable;
 
 /**
- * Builds outgoing plugin message packets and tracks the client's registered channels. Vanilla's {@link DiscardedPayload} has no data component;
- * Silkard keeps the bytes on the payload and its codec writes them back out.
+ * Tracks the plugin channels a client registers through Silkard's custom payload handling. Outgoing
+ * plugin messages are built with {@code com.mohistmc.silkard.paper.core.PluginMessagePayload}.
  */
 public final class PluginMessages {
 
     private PluginMessages() {
-    }
-
-    public static DiscardedPayload payload(final Identifier channel, final byte[] message) {
-        final DiscardedPayload payload = new DiscardedPayload(channel);
-        ((ContextDiscardedPayload) (Object) payload).silkard$data(Unpooled.wrappedBuffer(message));
-        return payload;
-    }
-
-    public static ClientboundCustomPayloadPacket packet(final Identifier channel, final byte[] message) {
-        return new ClientboundCustomPayloadPacket(payload(channel, message));
     }
 
     /**

@@ -83,7 +83,7 @@ public class PaperPlayerConfigurationConnection extends PaperCommonConnection<Se
             final ResourcePackInfo pack = iter.next();
             packs.add(new ClientboundResourcePackPushPacket(pack.id(), pack.uri().toASCIIString(), pack.hash(), request.required(), iter.hasNext() ? Optional.empty() : Optional.ofNullable(prompt)));
             if (request.callback() != ResourcePackCallback.noOp()) {
-                this.packetListener.paper$packCallbacks().put(pack.id(), request.callback()); // just override if there is a previously existing callback
+                this.packetListener.connection.paper$packCallbacks().put(pack.id(), request.callback()); // just override if there is a previously existing callback
             }
         }
         packs.forEach(this.packetListener::send);
@@ -151,7 +151,7 @@ public class PaperPlayerConfigurationConnection extends PaperCommonConnection<Se
 
     @Override
     public Set<String> channels() {
-        return this.packetListener.paper$pluginMessagerChannels();
+        return this.packetListener.connection.paper$pluginMessagerChannels();
     }
 
     @Override
@@ -161,7 +161,7 @@ public class PaperPlayerConfigurationConnection extends PaperCommonConnection<Se
         if (this.channels().contains(channel)) {
             @SuppressWarnings("deprecation") // "not an API method" does not apply to us
             Identifier id = Identifier.parse(StandardMessenger.validateAndCorrectChannel(channel));
-            ClientboundCustomPayloadPacket packet = com.mohistmc.silkard.paper.paper.PluginMessages.packet(id, message);
+            ClientboundCustomPayloadPacket packet = com.mohistmc.silkard.paper.core.PluginMessagePayload.packet(id, message);
             this.packetListener.send(packet);
         }
     }

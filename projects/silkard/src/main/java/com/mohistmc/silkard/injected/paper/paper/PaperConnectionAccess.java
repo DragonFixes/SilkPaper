@@ -4,7 +4,6 @@ import com.mohistmc.silkard.util.ContextStateException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.Optional;
-import java.util.Set;
 import net.minecraft.server.level.ServerPlayer;
 import org.jspecify.annotations.Nullable;
 
@@ -64,20 +63,6 @@ public interface PaperConnectionAccess {
     }
 
     default void paper$legacySavedLoginEventResultOverride(final @Nullable Optional<net.minecraft.network.chat.Component> override) {
-        throw new ContextStateException("Not implemented");
-    }
-
-    /** Brand the client sent through the {@code minecraft:brand} channel, or {@code null} before it did. */
-    default @Nullable String paper$clientBrand() {
-        throw new ContextStateException("Not implemented");
-    }
-
-    default void paper$clientBrand(final @Nullable String brand) {
-        throw new ContextStateException("Not implemented");
-    }
-
-    /** Plugin channels the client registered; shared by every listener of this connection. */
-    default Set<String> paper$pluginMessagerChannels() {
         throw new ContextStateException("Not implemented");
     }
 }

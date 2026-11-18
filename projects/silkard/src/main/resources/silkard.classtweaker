@@ -1110,7 +1110,6 @@ transitive-inject-interface	net/minecraft/server/MinecraftServer	com/mohistmc/si
 transitive-inject-interface	net/minecraft/server/level/ServerLevel	com/mohistmc/silkard/injected/paper/paper/PaperServerLevelAccess
 # Silkard paper-paper wave 3 - Paper connection, command, mob goal and Silkard compat access
 transitive-inject-interface	net/minecraft/server/network/ServerCommonPacketListenerImpl	com/mohistmc/silkard/injected/paper/paper/PaperCommonListenerAccess
-transitive-inject-interface	net/minecraft/server/network/ServerGamePacketListenerImpl	com/mohistmc/silkard/injected/paper/paper/PaperGameListenerAccess
 transitive-inject-interface	net/minecraft/server/network/ServerConfigurationPacketListenerImpl	com/mohistmc/silkard/injected/paper/paper/PaperConfigurationListenerAccess
 accessible class net/minecraft/world/level/block/entity/SculkSensorBlockEntity$VibrationUser
 accessible class net/minecraft/world/level/BaseCommandBlock$CloseableCommandBlockSource

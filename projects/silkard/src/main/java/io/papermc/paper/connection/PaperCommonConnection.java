@@ -72,7 +72,7 @@ public abstract class PaperCommonConnection<T extends ServerCommonPacketListener
 
     @Override
     public @Nullable String getClientBrandName() {
-        return this.packetListener.paper$clientBrand();
+        return this.packetListener.connection.paper$clientBrand();
     }
 
     @Override

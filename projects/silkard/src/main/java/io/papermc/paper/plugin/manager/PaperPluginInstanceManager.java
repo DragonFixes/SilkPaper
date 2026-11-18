@@ -3,7 +3,7 @@ package io.papermc.paper.plugin.manager;
 import com.google.common.base.Preconditions;
 import com.google.common.graph.GraphBuilder;
 import com.google.common.graph.MutableGraph;
-import io.papermc.paper.FeatureHooks;
+import com.mohistmc.silkard.paper.server.FeatureHooks;
 import io.papermc.paper.plugin.configuration.PluginMeta;
 import io.papermc.paper.plugin.entrypoint.Entrypoint;
 import io.papermc.paper.plugin.entrypoint.dependency.MetaDependencyTree;

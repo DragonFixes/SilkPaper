@@ -1,6 +1,6 @@
 package io.papermc.paper.command;
 
-import io.papermc.paper.FeatureHooks;
+import com.mohistmc.silkard.paper.server.FeatureHooks;
 import io.papermc.paper.command.subcommands.DumpItemCommand;
 import io.papermc.paper.command.subcommands.DumpListenersCommand;
 import io.papermc.paper.command.subcommands.DumpPluginsCommand;
