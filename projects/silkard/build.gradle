@@ -3,7 +3,19 @@ plugins {
 	id 'net.neoforged.gradleutils' version '4.0.1'
 }
 
-version = project.minecraft_version + "-" + gradleutils.gitInfo.abbreviatedId
+// gradleutils reads git through JGit, which cannot resolve HEAD inside a linked git worktree;
+// fall back to the git CLI there.
+def silkardGitId = {
+    try {
+        return gradleutils.gitInfo.abbreviatedId
+    } catch (Exception ignored) {
+        def proc = ['git', 'rev-parse', '--short=10', 'HEAD'].execute(null, rootDir)
+        proc.waitFor()
+        def id = proc.text.trim()
+        return id ?: 'unknown'
+    }
+}.call()
+version = project.minecraft_version + "-" + silkardGitId
 group = project.maven_group
 
 base {
