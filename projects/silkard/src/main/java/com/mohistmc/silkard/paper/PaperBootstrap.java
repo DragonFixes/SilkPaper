@@ -87,6 +87,9 @@ public final class PaperBootstrap {
      * moving Paper/Gale/Leaf files out of Fabric's {@code config/} folder if they are still there.
      */
     public static void loadEarlyConfigs() {
+        // Leaf's config modules read ServerBuildInfo, which needs the game version; this runs at the
+        // head of vanilla Main.main, before vanilla detects it. Detection is a no-op once set.
+        net.minecraft.SharedConstants.tryDetectVersion();
         migrateLegacyConfigFolder();
         org.dreeam.leaf.config.LeafConfig.loadConfig();
     }
