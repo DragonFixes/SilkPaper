@@ -50,13 +50,8 @@ public class CraftContainer extends AbstractContainerMenu {
     public CraftContainer(final Inventory inventory, final Player player, int id) {
         this(new CraftAbstractInventoryView() {
 
-<<<<<<< silkard
-            private final String originalTitle = (inventory instanceof CraftInventoryCustom) ? ((CraftInventoryCustom.MinecraftInventory) ((CraftInventory) inventory).getInventory()).getTitle() : inventory.getType().getDefaultTitle();
-            private String title;
-=======
             private final String originalTitle = inventory instanceof CraftInventoryCustom ? ((CraftInventoryCustom) inventory).getTitle() : inventory.getType().getDefaultTitle(); // Paper
             private String title = this.originalTitle;
->>>>>>> paper
 
             @Override
             public Inventory getTopInventory() {
@@ -91,14 +86,7 @@ public class CraftContainer extends AbstractContainerMenu {
 
             @Override
             public String getTitle() {
-<<<<<<< silkard
-                if (title == null) {
-                    this.title = originalTitle;
-                }
-                return title;
-=======
                 return this.title;
->>>>>>> paper
             }
 
             @Override
@@ -212,11 +200,7 @@ public class CraftContainer extends AbstractContainerMenu {
                 this.delegate = new BlastFurnaceMenu(windowId, bottom, top, new SimpleContainerData(AbstractFurnaceMenu.DATA_COUNT));
                 break;
             case LECTERN:
-<<<<<<< silkard
                 delegate = new LecternMenu(windowId, top, new SimpleContainerData(1)).silkard$player(bottom);
-=======
-                this.delegate = new LecternMenu(windowId, top, new SimpleContainerData(LecternMenu.DATA_COUNT), bottom);
->>>>>>> paper
                 break;
             case SMOKER:
                 this.delegate = new SmokerMenu(windowId, bottom, top, new SimpleContainerData(AbstractFurnaceMenu.DATA_COUNT));

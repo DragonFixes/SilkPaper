@@ -1,10 +1,7 @@
 package org.bukkit.craftbukkit.inventory;
 
-<<<<<<< silkard
 import com.mohistmc.silkard.bukkit.BukkitUtils;
-=======
 import net.minecraft.core.registries.Registries;
->>>>>>> paper
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.bukkit.NamespacedKey;
@@ -31,21 +28,13 @@ public class CraftSmithingTransformRecipe extends SmithingTransformRecipe implem
     }
 
     @Override
-<<<<<<< silkard
-    public void addToCraftingManager() {
-        ItemStack result = this.getResult();
-
-        BukkitUtils.getServer().getRecipeManager().addRecipe(new RecipeHolder<>(CraftRecipe.toMinecraft(this.getKey()), new net.minecraft.world.item.crafting.SmithingTransformRecipe(getCommon(), toNMSOptional(this.getTemplate(), false), toNMS(this.getBase(), false), toNMSOptional(this.getAddition(), false), CraftItemStack.asNMSTemplate(result))));
-=======
     public RecipeHolder<?> toMinecraftRecipe() {
         return new RecipeHolder<>(CraftNamespacedKey.toResourceKey(Registries.RECIPE, this.getKey()), new net.minecraft.world.item.crafting.SmithingTransformRecipe(
             new net.minecraft.world.item.crafting.Recipe.CommonInfo(true),
             CraftRecipe.toPossibleIngredient(this.getTemplate(), false),
             CraftRecipe.toIngredient(this.getBase(), false),
             CraftRecipe.toPossibleIngredient(this.getAddition(), false),
-            CraftItemStack.asTemplate(this.getResult()),
-            this.willCopyDataComponents()
+            CraftItemStack.asTemplate(this.getResult())
         ));
->>>>>>> paper
     }
 }

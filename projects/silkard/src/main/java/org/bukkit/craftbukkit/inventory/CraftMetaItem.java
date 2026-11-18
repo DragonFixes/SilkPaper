@@ -11,11 +11,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
-<<<<<<< silkard
 import com.mohistmc.silkard.bukkit.BukkitUtils;
-=======
 import com.mojang.logging.LogUtils;
->>>>>>> paper
 import com.mojang.serialization.DynamicOps;
 import io.papermc.paper.registry.RegistryKey;
 import io.papermc.paper.registry.data.util.Conversions;
@@ -539,9 +536,6 @@ public class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDat
             }
         });
 
-<<<<<<< silkard
-        Set<Map.Entry<DataComponentType<?>, Object>> keys = tag.map.entrySet();
-=======
         getOrEmpty(patch, CraftMetaItem.CAN_PLACE_ON.TYPE).ifPresent(canPlaceOn -> {
             this.canPlaceOnPredicates = List.copyOf(canPlaceOn.predicates);
         });
@@ -555,7 +549,6 @@ public class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDat
             handledComponents = extraHandledComponents;
         }
         Set<Map.Entry<DataComponentType<?>, Object>> keys = patch.map.entrySet();
->>>>>>> paper
         for (Map.Entry<DataComponentType<?>, Object> key : keys) {
             final Object value = key.getValue();
             if (!handledComponents.contains(key.getKey())) {
@@ -774,10 +767,6 @@ public class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDat
             ByteArrayInputStream buf = new ByteArrayInputStream(Base64.getDecoder().decode(unhandled));
             try {
                 CompoundTag unhandledTag = NbtIo.readCompressed(buf, NbtAccounter.unlimitedHeap());
-<<<<<<< silkard
-                DataComponentPatch unhandledPatch = DataComponentPatch.CODEC.parse(BukkitUtils.getDefaultRegistryAccess().createSerializationContext(NbtOps.INSTANCE), unhandledTag).result().get();
-                this.unhandledTags.copy(unhandledPatch);
-=======
                 DataComponentPatch unhandledPatch = DataComponentPatch.CODEC.parse(CraftRegistry.getMinecraftRegistry().createSerializationContext(NbtOps.INSTANCE), unhandledTag).result().get();
 
                 getOrEmpty(unhandledPatch, CraftMetaItem.CAN_PLACE_ON).ifPresent(data -> {
@@ -787,7 +776,6 @@ public class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDat
                     this.canBreakPredicates = List.copyOf(data.predicates);
                 });
                 this.unhandledTags.copy(unhandledPatch.forget(type -> type == CraftMetaItem.CAN_PLACE_ON.TYPE || type == CraftMetaItem.CAN_BREAK.TYPE));
->>>>>>> paper
 
                 for (Entry<DataComponentType<?>, Object> entry : unhandledPatch.map.entrySet()) {
                     // Move removed unhandled tags to dedicated removedTags
@@ -1066,16 +1054,10 @@ public class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDat
             tag.put(CraftMetaItem.CAN_BREAK, new net.minecraft.world.item.AdventureModePredicate(this.canBreakPredicates));
         }
 
-<<<<<<< silkard
-        for (Map.Entry<DataComponentType<?>, Object> e : unhandledTags.build().map.entrySet()) {
-            if (!Removed.isRemoved(e.getValue())) {
-                itemTag.builder.set((DataComponentType) e.getKey(), e.getValue());
-=======
         for (Map.Entry<DataComponentType<?>, Object> e : this.unhandledTags.build().map.entrySet()) {
             final Object value = e.getValue();
             if (Removed.isNotRemoved(value)) {
                 tag.builder.set((DataComponentType) e.getKey(), value);
->>>>>>> paper
             }
         }
 
@@ -1883,11 +1865,7 @@ public class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDat
         CraftMetaItem.Applicator tag = new CraftMetaItem.Applicator() {}; // Paper - support updating profile after resolving it
         this.applyToItem(tag);
         DataComponentPatch patch = tag.build();
-<<<<<<< silkard
-        net.minecraft.nbt.Tag nbt = DataComponentPatch.CODEC.encodeStart(BukkitUtils.getDefaultRegistryAccess().createSerializationContext(NbtOps.INSTANCE), patch).getOrThrow();
-=======
         net.minecraft.nbt.Tag nbt = DataComponentPatch.CODEC.encodeStart(CraftRegistry.getMinecraftRegistry().createSerializationContext(NbtOps.INSTANCE), patch).getOrThrow();
->>>>>>> paper
         return nbt.toString();
     }
 
@@ -1899,10 +1877,6 @@ public class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDat
 
         DynamicOps<net.minecraft.nbt.Tag> ops = CraftRegistry.getMinecraftRegistry().createSerializationContext(NbtOps.INSTANCE);
         StringJoiner componentString = new StringJoiner(",", "[", "]");
-<<<<<<< silkard
-        for (Entry<DataComponentType<?>, Object> entry : patch.map.entrySet()) {
-            DataComponentType<?> componentType = entry.getKey();
-=======
 
         for (Entry<DataComponentType<?>, Object> entry : patch.map.entrySet()) {
             DataComponentType<?> type = entry.getKey();
@@ -1910,7 +1884,6 @@ public class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDat
                 continue;
             }
 
->>>>>>> paper
             Object componentValue = entry.getValue();
             String componentKey = requireNonNull(BuiltInRegistries.DATA_COMPONENT_TYPE.getKey(type)).toString();
 
@@ -2314,10 +2287,6 @@ public class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDat
             }
         }
 
-<<<<<<< silkard
-        if (!unhandledTags.isEmpty()) {
-            net.minecraft.nbt.Tag unhandled = DataComponentPatch.CODEC.encodeStart(BukkitUtils.getDefaultRegistryAccess().createSerializationContext(NbtOps.INSTANCE), unhandledTags.build()).getOrThrow(IllegalStateException::new);
-=======
         final boolean canBreakAddToUnhandled = this.canBreakPredicates != null && !this.canBreakPredicates.isEmpty();
         if (canBreakAddToUnhandled) {
             this.unhandledTags.set(DataComponents.CAN_BREAK, new net.minecraft.world.item.AdventureModePredicate(this.canBreakPredicates));
@@ -2329,7 +2298,6 @@ public class CraftMetaItem implements ItemMeta, Damageable, Repairable, BlockDat
 
         if (!this.unhandledTags.isEmpty()) {
             net.minecraft.nbt.Tag unhandled = DataComponentPatch.CODEC.encodeStart(CraftRegistry.getMinecraftRegistry().createSerializationContext(NbtOps.INSTANCE), this.unhandledTags.build()).getOrThrow(IllegalStateException::new);
->>>>>>> paper
             try {
                 ByteArrayOutputStream buf = new ByteArrayOutputStream();
                 NbtIo.writeCompressed((CompoundTag) unhandled, buf);

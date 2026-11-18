@@ -73,15 +73,9 @@ public class CraftConduit extends CraftBlockEntityState<ConduitBlockEntity> impl
 
     @Override
     public int getRange() {
-<<<<<<< silkard
-        ensureNoWorldGeneration();
-        ConduitBlockEntity conduit = (ConduitBlockEntity) getTileEntityFromWorld();
-        return (conduit != null) ? BukkitUtils.getRange(conduit.effectBlocks) : 0;
-=======
         this.ensureNoWorldGeneration();
         ConduitBlockEntity conduit = (ConduitBlockEntity) this.getBlockEntityFromWorld();
-        return (conduit != null) ? ConduitBlockEntity.getRange(conduit.effectBlocks, this.world.getHandle()) : 0; // Purpur - Conduit behavior configuration
->>>>>>> paper
+        return (conduit != null) ? BukkitUtils.getRange(conduit.effectBlocks) : 0;
     }
 
     @Override
@@ -107,18 +101,7 @@ public class CraftConduit extends CraftBlockEntityState<ConduitBlockEntity> impl
             conduit.destroyTarget = EntityReference.of(((CraftLivingEntity) target).getHandle());
         }
 
-<<<<<<< silkard
-        BukkitUtils.updateAndAttackTarget((ServerLevel) conduit.getLevel(), getPosition(), data, conduit, conduit.effectBlocks.size() >= 42, false);
-=======
-        ConduitBlockEntity.updateAndAttackTarget(
-            conduit.getLevel().getMinecraftWorld(),
-            this.getPosition(),
-            this.block,
-            conduit,
-            conduit.effectBlocks.size() >= ConduitBlockEntity.MIN_KILL_SIZE,
-            false
-        );
->>>>>>> paper
+        BukkitUtils.updateAndAttackTarget((net.minecraft.server.level.ServerLevel) conduit.getLevel(), this.getPosition(), this.block, conduit, conduit.effectBlocks.size() >= 42, false);
         return true;
     }
 

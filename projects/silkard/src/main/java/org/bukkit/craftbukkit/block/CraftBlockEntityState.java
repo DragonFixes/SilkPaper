@@ -1,10 +1,7 @@
 package org.bukkit.craftbukkit.block;
 
-<<<<<<< silkard
 import com.mohistmc.silkard.bukkit.BukkitUtils;
-=======
 import com.mojang.logging.LogUtils;
->>>>>>> paper
 import java.util.Set;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponentMap;
@@ -75,15 +72,9 @@ public abstract class CraftBlockEntityState<T extends BlockEntity> extends Craft
         this.loadData(state.getSnapshotNBT());
     }
 
-<<<<<<< silkard
-    protected RegistryAccess getRegistryAccess() {
-        LevelAccessor worldHandle = getWorldHandle();
-        return (worldHandle != null) ? worldHandle.registryAccess() : BukkitUtils.getDefaultRegistryAccess();
-=======
     public RegistryAccess getRegistryAccess() {
         LevelAccessor worldHandle = this.getWorldHandle();
         return (worldHandle != null) ? worldHandle.registryAccess() : CraftRegistry.getMinecraftRegistry();
->>>>>>> paper
     }
 
     private T createSnapshot(T from) {

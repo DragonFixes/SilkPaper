@@ -13,13 +13,8 @@ public class CraftInventoryLectern extends CraftInventory implements LecternInve
 
     public CraftInventoryLectern(Container inventory) {
         super(inventory);
-<<<<<<< silkard
         if (inventory instanceof BukkitLecternInventory bukkitLecternInventory) {
-            this.tile = bukkitLecternInventory.getLectern();
-=======
-        if (inventory instanceof LecternBlockEntity.LecternInventory) {
-            this.provider = ((LecternBlockEntity.LecternInventory) inventory).getLectern();
->>>>>>> paper
+            this.provider = bukkitLecternInventory.getLectern();
         }
     }
 

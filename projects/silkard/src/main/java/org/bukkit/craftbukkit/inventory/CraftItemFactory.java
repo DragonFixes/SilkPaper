@@ -153,21 +153,10 @@ public final class CraftItemFactory implements ItemFactory {
     @Override
     public ItemStack createItemStack(String input) throws IllegalArgumentException {
         try {
-<<<<<<< silkard
-            ItemInput arg = new ItemParser(BukkitUtils.getDefaultRegistryAccess()).parse(new StringReader(input));
-
-            Item item = arg.item().value();
-            net.minecraft.world.item.ItemStack nmsItemStack = new net.minecraft.world.item.ItemStack(item);
-
-            DataComponentPatch nbt = arg.components();
-            if (nbt != null) {
-                nmsItemStack.applyComponents(nbt);
-=======
             StringReader reader = new StringReader(input);
             net.minecraft.commands.arguments.item.ItemInput in = new ItemParser(CraftRegistry.getMinecraftRegistry()).parse(reader);
             if (reader.canRead()) {
                 throw new IllegalArgumentException("Trailing input found when parsing ItemStack: " + reader.getRemaining());
->>>>>>> paper
             }
             return CraftItemStack.asBukkitMirror(in.createItemStack(1));
         } catch (CommandSyntaxException ex) {

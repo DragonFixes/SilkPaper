@@ -3,12 +3,9 @@ package org.bukkit.craftbukkit.event;
 import com.google.common.base.Function;
 import com.google.common.base.Functions;
 import com.google.common.collect.Lists;
-<<<<<<< silkard
 import com.google.gson.JsonElement;
 import com.mohistmc.silkard.injected.world.entity.player.ContextPlayerBedSleepingProblem;
-=======
 import com.mojang.authlib.GameProfile;
->>>>>>> paper
 import com.mojang.datafixers.util.Either;
 import io.papermc.paper.adventure.PaperAdventure;
 import io.papermc.paper.block.bed.BedEnterProblem;
@@ -311,18 +308,7 @@ public class CraftEventFactory {
         return callPlayerSignOpenEvent((Player) player.getBukkitEntity(), sign, side, cause);
     }
 
-<<<<<<< silkard
-    public static boolean callPlayerSignOpenEvent(Player player, SignBlockEntity tileEntitySign, boolean front, PlayerSignOpenEvent.Cause cause) {
-        return callPlayerSignOpenEvent(player, tileEntitySign, front ? SignTextSlot.FRONT : SignTextSlot.BACK, cause);
-    }
-
-    /**
-     * PlayerSignOpenEvent
-     */
-    public static boolean callPlayerSignOpenEvent(org.bukkit.entity.Player player, Sign sign, Side side, PlayerSignOpenEvent.Cause cause) {
-=======
     public static boolean callPlayerSignOpenEvent(Player player, Sign sign, Side side, PlayerSignOpenEvent.Cause cause) {
->>>>>>> paper
         final PlayerSignOpenEvent event = new PlayerSignOpenEvent(player, sign, side, cause);
         Bukkit.getPluginManager().callEvent(event);
         return !event.isCancelled();
@@ -1042,12 +1028,8 @@ public class CraftEventFactory {
             return event;
         }
 
-<<<<<<< silkard
-        victim.silkard$expToDrop(event.getDroppedExp());
-=======
         playDeathSound(victim, event, damageSource);
-        victim.expToDrop = event.getDroppedExp();
->>>>>>> paper
+        victim.silkard$expToDrop(event.getDroppedExp());
 
         Runnable dropAll = () -> {
             dropAllItems(drops, item -> victim.spawnAtLocation(level, item));
@@ -1077,12 +1059,8 @@ public class CraftEventFactory {
         CraftDamageSource bukkitDamageSource = new CraftDamageSource(damageSource);
         PlayerDeathEvent event = new PlayerDeathEvent(entity, bukkitDamageSource, new io.papermc.paper.util.TransformingRandomAccessList<>(drops, Entity.DefaultDrop::stack, FROM_FUNCTION), victim.getExpReward(victim.level(), damageSource.getEntity()), 0, deathMessage, showDeathMessages);
         event.setKeepInventory(keepInventory);
-<<<<<<< silkard
         event.setKeepLevel(victim.silkard$keepLevel()); // SPIGOT-2222: pre-set keepLevel
-=======
-        event.setKeepLevel(victim.keepLevel); // SPIGOT-2222: pre-set keepLevel
         populateFields(victim, event); // Paper - make cancellable
->>>>>>> paper
         Bukkit.getServer().getPluginManager().callEvent(event);
         // Paper start - make cancellable
         if (event.isCancelled()) {
@@ -1097,21 +1075,7 @@ public class CraftEventFactory {
         victim.silkard$expToDrop(event.getDroppedExp());
         victim.silkard$newExp(event.getNewExp());
 
-<<<<<<< silkard
-        for (org.bukkit.inventory.ItemStack stack : event.getDrops()) {
-            if (stack == null || stack.getType() == Material.AIR) continue;
-
-            if (stack instanceof CraftItemStack craftItemStack && craftItemStack.isForInventoryDrop()) {
-                victim.drop(CraftItemStack.asNMSCopy(stack), true, Prediction.PREDICTED); // SPIGOT-7800, SPIGOT-7801: Vanilla Behaviour for Player Inventory dropped items // TODO
-            } else {
-                victim.silkard$forceDrops(true);
-                victim.spawnAtLocation(victim.level(), CraftItemStack.asNMSCopy(stack)); // SPIGOT-7806: Vanilla Behaviour for items not related to Player Inventory dropped items
-                victim.silkard$forceDrops(false);
-            }
-        }
-=======
         dropAllItems(drops, item -> victim.drop(item, false, Prediction.PREDICTED, true, true, null));
->>>>>>> paper
 
         return event;
     }
@@ -2017,13 +1981,8 @@ public class CraftEventFactory {
         org.bukkit.block.Block block = CraftBlock.at(level, pos);
         BlockPhysicsEvent event = new BlockPhysicsEvent(block, block.getBlockData());
         // Suppress during worldgen
-<<<<<<< silkard
-        if (world instanceof Level) {
-            ((Level) world).getServer().silkard$server().getPluginManager().callEvent(event);
-=======
         if (level instanceof Level) {
             event.callEvent();
->>>>>>> paper
         }
         return event;
     }
@@ -2278,23 +2237,6 @@ public class CraftEventFactory {
             return null;
         }
 
-<<<<<<< silkard
-        // Handle based on explosion or damage source whether we need to call EntityExplodeEvent
-        if (serverExplosion.getDirectSourceEntity() != null || serverExplosion.getDamageSource().getCausingDamager() != null) {
-            EntityExplodeEvent event = CraftEventFactory.callEntityExplodeEvent((serverExplosion.getDirectSourceEntity() != null) ? serverExplosion.getDirectSourceEntity() : serverExplosion.getDamageSource().getCausingDamager(), blockList, serverExplosion.silkard$getYield(), serverExplosion.getBlockInteraction());
-            serverExplosion.silkard$wasCanceled(event.isCancelled());
-            serverExplosion.silkard$setYield(event.getYield());
-            return event.blockList();
-        }
-
-        // Else BlockExplodeEvent when entity not found in previous if statement
-        Location location = CraftLocation.toBukkit(serverExplosion.center(), bworld);
-        org.bukkit.block.Block block = location.getBlock();
-        org.bukkit.block.BlockState blockState = (serverExplosion.getDamageSource().getDirectBlockState() != null) ? serverExplosion.getDamageSource().getDirectBlockState() : block.getState();
-        BlockExplodeEvent event = CraftEventFactory.callBlockExplodeEvent(block, blockState, blockList, serverExplosion.silkard$getYield(), serverExplosion.getBlockInteraction());
-        serverExplosion.silkard$wasCanceled(event.isCancelled());
-        serverExplosion.silkard$setYield(event.getYield());
-=======
         return new PortalEventResult(
             event.getTo(),
             event.getSearchRadius(),
@@ -2306,9 +2248,42 @@ public class CraftEventFactory {
     public static boolean callEntityInteractEvent(Entity nmsEntity, Block block) {
         EntityInteractEvent event = new EntityInteractEvent(nmsEntity.getBukkitEntity(), block);
         Bukkit.getPluginManager().callEvent(event);
->>>>>>> paper
 
         return !event.isCancelled();
+    }
+
+    // MixinServerExplosion routes explosion block lists through this method to fire
+    // EntityExplodeEvent / BlockExplodeEvent and write the result back to the explosion.
+    public static List<org.bukkit.block.Block> handleExplodeEvent(net.minecraft.world.level.ServerExplosion serverExplosion, List<BlockPos> blockPositions) {
+        // First convert the blockPositionList related to the explosion to Bukkit objects
+        org.bukkit.World bworld = serverExplosion.level().getWorld();
+
+        List<org.bukkit.block.Block> blockList = new it.unimi.dsi.fastutil.objects.ObjectArrayList<>();
+        for (int i1 = blockPositions.size() - 1; i1 >= 0; i1--) {
+            BlockPos cpos = blockPositions.get(i1);
+            org.bukkit.block.Block bblock = bworld.getBlockAt(cpos.getX(), cpos.getY(), cpos.getZ());
+            if (!bblock.getType().isAir()) {
+                blockList.add(bblock);
+            }
+        }
+
+        // Handle based on explosion or damage source whether we need to call EntityExplodeEvent
+        if (serverExplosion.getDirectSourceEntity() != null || serverExplosion.getDamageSource().getCausingDamager() != null) {
+            EntityExplodeEvent event = CraftEventFactory.callEntityExplodeEvent((serverExplosion.getDirectSourceEntity() != null) ? serverExplosion.getDirectSourceEntity() : serverExplosion.getDamageSource().getCausingDamager(), blockList, serverExplosion.silkard$getYield(), serverExplosion.getBlockInteraction());
+            serverExplosion.silkard$wasCanceled(event.isCancelled());
+            serverExplosion.silkard$setYield(event.getYield());
+            return event.blockList();
+        }
+
+        // Else BlockExplodeEvent when entity not found in previous if statement
+        Location location = org.bukkit.craftbukkit.util.CraftLocation.toBukkit(serverExplosion.center(), bworld);
+        org.bukkit.block.Block block = location.getBlock();
+        org.bukkit.block.BlockState blockState = (serverExplosion.getDamageSource().getDirectBlockState() != null) ? serverExplosion.getDamageSource().getDirectBlockState() : block.getState();
+        BlockExplodeEvent event = CraftEventFactory.callBlockExplodeEvent(block, blockState, blockList, serverExplosion.silkard$getYield(), serverExplosion.getBlockInteraction());
+        serverExplosion.silkard$wasCanceled(event.isCancelled());
+        serverExplosion.silkard$setYield(event.getYield());
+
+        return event.blockList();
     }
 
     public static EntityExplodeEvent callEntityExplodeEvent(Entity entity, List<Block> blocks, float yield, Explosion.BlockInteraction effect) {
@@ -2374,15 +2349,8 @@ public class CraftEventFactory {
             return;
         }
 
-<<<<<<< silkard
-        // SPIGOT-8041: Do not call event unless entity has been spawned into world
-        if (!entity.silkard_inWorld()) {
-            return;
-        }
-=======
         // Do not call during generation.
-        if (entity.generation) return;
->>>>>>> paper
+        if (entity.silkard_generation()) return;
 
         Bukkit.getPluginManager().callEvent(new EntityRemoveEvent(entity.getBukkitEntity(), cause));
     }

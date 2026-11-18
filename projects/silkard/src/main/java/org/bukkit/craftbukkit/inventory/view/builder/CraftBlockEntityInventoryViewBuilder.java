@@ -68,29 +68,18 @@ public class CraftBlockEntityInventoryViewBuilder<V extends InventoryView> exten
         return atBlock;
     }
 
-<<<<<<< silkard
-    private AbstractContainerMenu buildFakeTile(ServerPlayer player) {
-        if (this.builder == null) {
-            return handle.create(player.nextContainerCounterInt(), player.getInventory());
-        }
-=======
     private AbstractContainerMenu buildFakeBlockEntity(final ServerPlayer player) {
->>>>>>> paper
         final MenuProvider inventory = this.builder.build(this.position, this.block.defaultBlockState());
         if (inventory instanceof final BlockEntity blockEntity) {
             blockEntity.setLevel(this.world);
             super.defaultTitle = inventory.getDisplayName();
         }
-<<<<<<< silkard
-        return inventory.createMenu(player.nextContainerCounterInt(), player.getInventory(), player);
-=======
 
         if (!this.useFakeBlockEntity) { // gets around open noise for chest
-            return handle.create(player.nextContainerCounter(), player.getInventory());
+            return handle.create(player.nextContainerCounterInt(), player.getInventory());
         }
 
-        return inventory.createMenu(player.nextContainerCounter(), player.getInventory(), player);
->>>>>>> paper
+        return inventory.createMenu(player.nextContainerCounterInt(), player.getInventory(), player);
     }
 
     @Override

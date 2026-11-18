@@ -32,11 +32,7 @@ public class CraftAnvilView extends CraftInventoryView<AnvilMenu, AnvilInventory
 
     @Override
     public int getMaximumRepairCost() {
-<<<<<<< silkard
-        return container.silkard$maximumRepairCost();
-=======
-        return this.container.maximumRepairCost;
->>>>>>> paper
+        return this.container.silkard$maximumRepairCost();
     }
 
     @Override
@@ -51,10 +47,7 @@ public class CraftAnvilView extends CraftInventoryView<AnvilMenu, AnvilInventory
 
     @Override
     public void setMaximumRepairCost(final int cost) {
-<<<<<<< silkard
-        container.silkard$maximumRepairCost(cost);
-=======
-        this.container.maximumRepairCost = cost;
+        this.container.silkard(cost);
     }
 
     @Override
@@ -65,7 +58,6 @@ public class CraftAnvilView extends CraftInventoryView<AnvilMenu, AnvilInventory
     @Override
     public void bypassEnchantmentLevelRestriction(final boolean bypassEnchantmentLevelRestriction) {
         this.container.bypassEnchantmentLevelRestriction = bypassEnchantmentLevelRestriction;
->>>>>>> paper
     }
 
     public void updateFromLegacy(CraftInventoryAnvil legacy) {

@@ -1,13 +1,10 @@
 package org.bukkit.craftbukkit.block;
 
 import com.google.common.base.Preconditions;
-<<<<<<< silkard
 import com.mohistmc.silkard.bukkit.BukkitUtils;
 import com.mohistmc.silkard.bukkit.block.SilkardModsBlockEntityState;
 import java.util.Arrays;
 import java.util.Collections;
-=======
->>>>>>> paper
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -82,35 +79,20 @@ public final class CraftBlockStates {
         }
     }
 
-<<<<<<< silkard
-    private static final Map<Material, BlockStateFactory<?>> FACTORIES = new HashMap<>();
+    private static final Map<Material, BlockStateFactory<?>> FACTORIES = new java.util.EnumMap<>(Material.class); // Leaf - Use optimized collections in CB classes
 
     private static final String VANILLA_BLOCK_ENTITY_PKG = "net.minecraft.world.level.block.entity.";
 
-    private static final BlockStateFactory<?> DEFAULT_FACTORY = new BlockStateFactory<CraftBlockState>(CraftBlockState.class) {
-        @Override
-        public CraftBlockState createBlockState(World world, BlockPos blockPosition, net.minecraft.world.level.block.state.BlockState blockData, BlockEntity tileEntity) {
-            // SPIGOT-6754, SPIGOT-6817: Restore previous behaviour for tile entities with removed blocks (loot generation post-destroy)
-            if (tileEntity != null) {
-                // Fabric mod BlockEntity → generic wrapper that extends CraftBlockEntityState
-                String pkg = tileEntity.getClass().getName();
-                if (!pkg.startsWith(VANILLA_BLOCK_ENTITY_PKG)) {
-                    return new SilkardModsBlockEntityState(world, tileEntity);
-                }
-                // block with unhandled TileEntity:
-                return new CraftBlockEntityState<>(world, tileEntity);
-            }
-            Preconditions.checkState(tileEntity == null, "Unexpected BlockState for %s", CraftBlockType.minecraftToBukkit(blockData.getBlock()));
-            return new CraftBlockState(world, blockPosition, blockData);
-=======
-    private static final Map<Material, BlockStateFactory<?>> FACTORIES = new java.util.EnumMap<>(Material.class); // Leaf - Use optimized collections in CB classes
     private static final BlockStateFactory<?> DEFAULT_FACTORY = new BlockStateFactory<>(CraftBlockState.class) {
         @Override
         public CraftBlockState createBlockState(World world, BlockPos pos, net.minecraft.world.level.block.state.BlockState state, BlockEntity blockEntity, boolean useSnapshot) {
+            // Fabric mod block entities have no dedicated factory; wrap them in a generic CraftBlockEntityState.
+            if (blockEntity != null && !blockEntity.getClass().getName().startsWith(VANILLA_BLOCK_ENTITY_PKG)) {
+                return new SilkardModsBlockEntityState(world, blockEntity, useSnapshot);
+            }
             // Paper - revert upstream's revert of the block state changes. Block entities that have already had the block type set to AIR are still valid, upstream decided to ignore them
             Preconditions.checkState(blockEntity == null, "Unexpected BlockState for %s", CraftBlockType.minecraftToBukkit(state.getBlock()));
             return new CraftBlockState(world, pos, state);
->>>>>>> paper
         }
     };
 
@@ -238,13 +220,8 @@ public final class CraftBlockStates {
     }
 
     @Deprecated
-<<<<<<< silkard
-    public static BlockState getBlockState(BlockPos blockPosition, Material material, @Nullable CompoundTag blockEntityTag) {
-        return getBlockState(BukkitUtils.getDefaultRegistryAccess(), blockPosition, material, blockEntityTag);
-=======
     public static BlockState getBlockState(BlockPos pos, Material material, @Nullable CompoundTag blockEntityTag) {
         return CraftBlockStates.getBlockState(CraftRegistry.getMinecraftRegistry(), pos, material, blockEntityTag);
->>>>>>> paper
     }
 
     public static BlockState getBlockState(LevelReader level, BlockPos pos, Material material, @Nullable CompoundTag blockEntityTag) {
@@ -258,17 +235,12 @@ public final class CraftBlockStates {
     }
 
     @Deprecated
-<<<<<<< silkard
-    public static BlockState getBlockState(net.minecraft.world.level.block.state.BlockState blockData, @Nullable CompoundTag blockEntityTag) {
-        return getBlockState(BukkitUtils.getDefaultRegistryAccess(), BlockPos.ZERO, blockData, blockEntityTag);
-=======
     public static BlockState getBlockState(net.minecraft.world.level.block.state.BlockState state, @Nullable CompoundTag blockEntityTag) {
         return CraftBlockStates.getBlockState(CraftRegistry.getMinecraftRegistry(), BlockPos.ZERO, state, blockEntityTag);
     }
 
     public static BlockState getBlockState(LevelReader level, BlockPos blockPosition, net.minecraft.world.level.block.state.BlockState state, @Nullable CompoundTag blockEntityTag) {
         return CraftBlockStates.getBlockState(level.registryAccess(), blockPosition, state, blockEntityTag);
->>>>>>> paper
     }
 
     public static BlockState getBlockState(RegistryAccess registry, BlockPos pos, net.minecraft.world.level.block.state.BlockState state, @Nullable CompoundTag blockEntityTag) {
