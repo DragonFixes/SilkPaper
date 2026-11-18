@@ -1217,7 +1217,7 @@ public abstract class CraftEntity implements org.bukkit.entity.Entity {
 
         // Without Paper's async chunk system the destination chunks load synchronously on the main
         // thread during the teleport itself, so the future completes on the next main-thread task.
-        com.mohistmc.silkard.util.BukkitUtils.getServer().execute(() -> {
+        com.mohistmc.silkard.bukkit.BukkitUtils.getServer().execute(() -> {
             try {
                 world.getChunk(locationClone.getBlockX() >> 4, locationClone.getBlockZ() >> 4);
                 ret.complete(CraftEntity.this.teleport0(locationClone, cause, teleportFlags) ? Boolean.TRUE : Boolean.FALSE);

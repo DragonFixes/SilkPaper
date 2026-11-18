@@ -1183,7 +1183,7 @@ public class CraftLivingEntity extends CraftEntity implements LivingEntity {
         if (override != null) {
             return override;
         }
-        return this.getHandle() instanceof Mob && this.getHandle().getType().is(net.minecraft.tags.EntityTypeTags.BURN_IN_DAYLIGHT);
+        return this.getHandle() instanceof Mob && this.getHandle().getType().builtInRegistryHolder().is(net.minecraft.tags.EntityTypeTags.BURN_IN_DAYLIGHT);
     }
 
     @Override
