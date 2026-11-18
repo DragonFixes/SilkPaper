@@ -80,4 +80,28 @@ public class CraftCopperGolem extends CraftGolem implements CopperGolem, PaperSh
         getHandle().setSummoner(summoner);
     }
     // Purpur end - Summoner API
+
+    // Silkard start - Spigot API
+    @Override
+    public long getNextWeatheringTick() {
+        return getHandle().nextWeatheringTick;
+    }
+
+    @Override
+    public void setNextWeatheringTick(long tick) {
+        getHandle().nextWeatheringTick = tick;
+    }
+
+    @Override
+    public CopperWeatherState getWeatherState() {
+        return CopperWeatherState.valueOf(getHandle().getWeatherState().name());
+    }
+
+    @Override
+    public void setWeatherState(CopperWeatherState state) {
+        Preconditions.checkArgument(state != null, "state cannot be null");
+
+        getHandle().setWeatherState(WeatheringCopper.WeatherState.valueOf(state.name()));
+    }
+    // Silkard end
 }

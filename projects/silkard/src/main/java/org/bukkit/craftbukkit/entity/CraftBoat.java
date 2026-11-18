@@ -14,6 +14,21 @@ public abstract class CraftBoat extends CraftVehicle implements Boat, io.papermc
     }
 
     @Override
+    public boolean isLeashed() {
+        return io.papermc.paper.entity.PaperLeashable.super.isLeashed();
+    }
+
+    @Override
+    public org.bukkit.entity.Entity getLeashHolder() throws IllegalStateException {
+        return io.papermc.paper.entity.PaperLeashable.super.getLeashHolder();
+    }
+
+    @Override
+    public boolean setLeashHolder(org.bukkit.entity.Entity holder) {
+        return io.papermc.paper.entity.PaperLeashable.super.setLeashHolder(holder);
+    }
+
+    @Override
     public AbstractBoat getHandle() {
         return (AbstractBoat) this.entity;
     }

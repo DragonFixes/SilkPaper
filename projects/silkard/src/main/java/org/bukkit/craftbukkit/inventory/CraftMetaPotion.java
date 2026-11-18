@@ -406,4 +406,22 @@ public class CraftMetaPotion extends CraftMetaItem implements PotionMeta {
 
         return builder;
     }
+
+    // Silkard start - Spigot PotionMeta duration scale
+    @Override
+    public boolean hasDurationScale() {
+        return this.silkard$component(net.minecraft.core.component.DataComponents.POTION_DURATION_SCALE) != null;
+    }
+
+    @Override
+    public float getDurationScale() {
+        final Float scale = this.silkard$component(net.minecraft.core.component.DataComponents.POTION_DURATION_SCALE);
+        return (scale == null) ? 1.0F : scale;
+    }
+
+    @Override
+    public void setDurationScale(final Float scale) {
+        this.silkard$component(net.minecraft.core.component.DataComponents.POTION_DURATION_SCALE, scale);
+    }
+    // Silkard end
 }

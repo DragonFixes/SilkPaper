@@ -97,6 +97,11 @@ public class CraftPig extends CraftAnimals implements Pig {
 
     public static class CraftVariant extends HolderableBase<PigVariant> implements Variant {
 
+        @Override
+        public org.bukkit.NamespacedKey getKeyOrNull() {
+            return super.getKeyOrNull();
+        }
+
         public static Variant minecraftHolderToBukkit(Holder<PigVariant> minecraft) {
             return CraftRegistry.minecraftHolderToBukkit(minecraft, Registries.PIG_VARIANT);
         }

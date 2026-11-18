@@ -48,6 +48,11 @@ public class CraftFrog extends CraftAnimals implements org.bukkit.entity.Frog {
     }
 
     public static class CraftVariant extends OldEnumHolderable<Variant, FrogVariant> implements Variant {
+
+        @Override
+        public org.bukkit.NamespacedKey getKeyOrNull() {
+            return super.getKeyOrNull();
+        }
         private static int count = 0;
 
         public static Variant minecraftHolderToBukkit(Holder<FrogVariant> minecraft) {

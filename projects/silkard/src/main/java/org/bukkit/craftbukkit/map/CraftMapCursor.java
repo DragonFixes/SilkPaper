@@ -11,6 +11,11 @@ public final class CraftMapCursor {
 
     public static final class CraftType extends OldEnumHolderable<MapCursor.Type, MapDecorationType> implements MapCursor.Type {
 
+        @Override
+        public org.bukkit.NamespacedKey getKeyOrNull() {
+            return super.getKeyOrNull();
+        }
+
         private static int count = 0;
 
         public static MapCursor.Type minecraftHolderToBukkit(Holder<MapDecorationType> minecraft) {

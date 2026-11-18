@@ -28,6 +28,11 @@ public class CraftMenuType<V extends @NonNull InventoryView, B extends Inventory
     }
 
     @Override
+    public org.bukkit.NamespacedKey getKeyOrNull() {
+        return super.getKeyOrNull();
+    }
+
+    @Override
     public V create(final HumanEntity player, final @Nullable String title) {
         return this.builder().title(title != null ? LegacyComponentSerializer.legacySection().deserialize(title) : null).build(player);
     }

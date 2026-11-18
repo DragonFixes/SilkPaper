@@ -49,6 +49,11 @@ public class CraftCow extends CraftAbstractCow implements Cow {
 
     public static class CraftVariant extends HolderableBase<CowVariant> implements Variant {
 
+        @Override
+        public org.bukkit.NamespacedKey getKeyOrNull() {
+            return super.getKeyOrNull();
+        }
+
         public static Variant minecraftHolderToBukkit(Holder<CowVariant> minecraft) {
             return CraftRegistry.minecraftHolderToBukkit(minecraft, Registries.COW_VARIANT);
         }

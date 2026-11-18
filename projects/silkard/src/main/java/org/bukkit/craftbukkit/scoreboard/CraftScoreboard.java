@@ -42,7 +42,7 @@ public final class CraftScoreboard implements org.bukkit.scoreboard.Scoreboard {
         Preconditions.checkArgument(this.getHandle().getObjective(name) == null, "An objective of name '%s' already exists", name);
         // Paper start - lazily track plugin scoreboards
         if (((CraftCriteria) criteria).criteria != net.minecraft.world.scores.criteria.ObjectiveCriteria.DUMMY && !this.registeredGlobally) {
-            net.minecraft.server.MinecraftServer.getServer().server.getScoreboardManager().registerScoreboardForVanilla(this);
+            com.mohistmc.silkard.bukkit.BukkitUtils.getServer().server.getScoreboardManager().registerScoreboardForVanilla(this);
             this.registeredGlobally = true;
         }
         // Paper end - lazily track plugin scoreboards

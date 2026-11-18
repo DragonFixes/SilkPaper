@@ -40,7 +40,7 @@ public abstract class CraftAbstractInventoryViewBuilder<V extends InventoryView>
         final ServerPlayer serverPlayer = (ServerPlayer) craftHuman.getHandle();
 
         final AbstractContainerMenu container = buildContainer(serverPlayer);
-        container.silkard(this.checkReachable);
+        container.silkard$checkReachable(this.checkReachable);
         container.setTitle(this.title != null ? PaperAdventure.asVanilla(this.title) : this.defaultTitle);
         return (V) container.getBukkitView();
     }

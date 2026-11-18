@@ -29,9 +29,9 @@ public class RecipeIterator implements Iterator<Recipe> {
 
     @Override
     public void remove() {
-        MinecraftServer.getServer().getRecipeManager().recipes.byKey.remove(this.currentRecipe.id());
+        com.mohistmc.silkard.bukkit.BukkitUtils.getServer().getRecipeManager().recipes.byKey.remove(this.currentRecipe.id());
         this.recipes.remove();
-        MinecraftServer.getServer().getRecipeManager().finalizeRecipeLoading();
-        MinecraftServer.getServer().getPlayerList().reloadRecipes();
+        com.mohistmc.silkard.bukkit.BukkitUtils.getServer().getRecipeManager().finalizeRecipeLoading();
+        com.mohistmc.silkard.bukkit.BukkitUtils.getServer().getPlayerList().reloadRecipes();
     }
 }

@@ -9,7 +9,6 @@ import java.util.Map;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 import org.bukkit.configuration.serialization.SerializableAs;
-import org.bukkit.craftbukkit.inventory.ItemMetaKey;
 import org.bukkit.craftbukkit.inventory.SerializableMeta;
 import org.bukkit.craftbukkit.potion.CraftPotionUtil;
 import org.bukkit.inventory.meta.components.consumable.effects.ConsumableApplyEffects;
@@ -18,7 +17,7 @@ import org.bukkit.potion.PotionEffect;
 @SerializableAs("ConsumableApplyEffects")
 public class CraftConsumableApplyEffects extends CraftConsumableEffect<ApplyStatusEffectsConsumeEffect> implements ConsumableApplyEffects {
 
-    static final ItemMetaKey POTIONS = new ItemMetaKey("effects");
+    static final String POTIONS = "effects";
 
     public CraftConsumableApplyEffects(ApplyStatusEffectsConsumeEffect consumeEffect) {
         super(consumeEffect);
@@ -80,7 +79,7 @@ public class CraftConsumableApplyEffects extends CraftConsumableEffect<ApplyStat
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> result = new LinkedHashMap<>();
-        result.put(POTIONS.BUKKIT, ImmutableList.copyOf(this.getEffects()));
+        result.put(POTIONS, ImmutableList.copyOf(this.getEffects()));
 
         return result;
     }

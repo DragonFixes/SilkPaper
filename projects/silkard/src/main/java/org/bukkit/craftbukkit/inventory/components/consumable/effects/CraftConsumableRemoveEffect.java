@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import net.minecraft.core.HolderSet;
 import net.minecraft.world.item.consume_effects.RemoveStatusEffectsConsumeEffect;
 import org.bukkit.configuration.serialization.SerializableAs;
-import org.bukkit.craftbukkit.inventory.ItemMetaKey;
 import org.bukkit.craftbukkit.inventory.SerializableMeta;
 import org.bukkit.craftbukkit.potion.CraftPotionEffectType;
 import org.bukkit.inventory.meta.components.consumable.effects.ConsumableRemoveEffect;
@@ -19,7 +18,7 @@ import org.bukkit.potion.PotionEffectType;
 @SerializableAs("ConsumableRemoveEffect")
 public class CraftConsumableRemoveEffect extends CraftConsumableEffect<RemoveStatusEffectsConsumeEffect> implements ConsumableRemoveEffect {
 
-    static final ItemMetaKey POTION_TYPES = new ItemMetaKey("effects");
+    static final String POTION_TYPES = "effects";
 
     public CraftConsumableRemoveEffect(RemoveStatusEffectsConsumeEffect consumeEffect) {
         super(consumeEffect);
@@ -33,7 +32,7 @@ public class CraftConsumableRemoveEffect extends CraftConsumableEffect<RemoveSta
         super(map);
 
         List<PotionEffectType> effectTypeList = new ArrayList<>();
-        Iterable<?> rawEffectTypeList = SerializableMeta.getObject(Iterable.class, map, POTION_TYPES.BUKKIT, true);
+        Iterable<?> rawEffectTypeList = SerializableMeta.getObject(Iterable.class, map, POTION_TYPES, true);
         if (rawEffectTypeList == null) {
             return;
         }
@@ -71,7 +70,7 @@ public class CraftConsumableRemoveEffect extends CraftConsumableEffect<RemoveSta
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> result = new LinkedHashMap<>();
-        result.put(POTION_TYPES.BUKKIT, ImmutableList.copyOf(this.getEffectTypes()));
+        result.put(POTION_TYPES, ImmutableList.copyOf(this.getEffectTypes()));
 
         return result;
     }
