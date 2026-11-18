@@ -998,6 +998,9 @@ accessible method net/minecraft/world/level/block/entity/BlockEntity saveId (Lne
 accessible field net/minecraft/world/level/block/entity/BlockEntityType validBlocks Ljava/util/Set;
 accessible field net/minecraft/world/level/block/entity/BrewingStandBlockEntity totalBrewTime I
 accessible field net/minecraft/world/level/block/entity/ConduitBlockEntity MIN_KILL_SIZE I
+# Silkard paper-server start - members Paper's CraftBukkit (server/world/block/event area) reaches directly
+transitive-inject-interface	net/minecraft/world/level/block/state/BlockBehaviour$BlockStateBase	com/mohistmc/silkard/injected/paper/server/PaperBlockStateBase
+accessible field net/minecraft/world/level/block/state/BlockBehaviour hasCollision Z
 accessible method net/minecraft/world/level/block/entity/CreakingHeartBlockEntity clearCreakingInfo ()V
 accessible method net/minecraft/world/level/block/entity/CreakingHeartBlockEntity getCreakingProtector ()Ljava/util/Optional;
 accessible method net/minecraft/world/level/block/entity/CreakingHeartBlockEntity spawnProtector (Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/level/block/entity/CreakingHeartBlockEntity;)Lnet/minecraft/world/entity/monster/creaking/Creaking;
@@ -1012,8 +1015,10 @@ accessible field net/minecraft/world/level/block/entity/vault/VaultBlockEntity s
 accessible method net/minecraft/world/level/block/entity/vault/VaultServerData pauseStateUpdatingUntil (J)V
 accessible method net/minecraft/world/level/block/entity/vault/VaultServerData stateUpdatingResumesAt ()J
 accessible method net/minecraft/world/level/block/entity/vault/VaultSharedData getConnectedPlayers ()Ljava/util/Set;
-accessible field net/minecraft/world/level/block/state/BlockBehaviour hasCollision Z
 accessible method net/minecraft/world/level/chunk/status/ChunkStatusTasks postLoadProtoChunk (Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/level/storage/ValueInput$ValueInputList;)V
+accessible method net/minecraft/world/level/block/state/StateHolder createValue (Lnet/minecraft/world/level/block/state/properties/Property;Ljava/lang/Comparable;)Lnet/minecraft/world/level/block/state/properties/Property$Value;
+accessible class net/minecraft/world/level/block/entity/BeehiveBlockEntity$BeeData
+accessible field net/minecraft/world/level/block/entity/BeehiveBlockEntity stored Ljava/util/List;
 accessible field net/minecraft/world/level/dimension/end/EnderDragonFight GATEWAY_COUNT I
 accessible field net/minecraft/world/level/dimension/end/EnderDragonFight gateways Ljava/util/List;
 accessible field net/minecraft/world/level/dimension/end/EnderDragonFight respawnCrystals Ljava/util/List;
@@ -1066,7 +1071,6 @@ accessible field net/minecraft/world/level/block/FrogspawnBlock MAX_TADPOLES_SPA
 accessible field net/minecraft/world/level/block/FrogspawnBlock MIN_TADPOLES_SPAWN I
 accessible method net/minecraft/world/level/block/PoweredRailBlock findPoweredRailSignal (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;ZI)Z
 accessible method net/minecraft/world/level/block/ShulkerBoxBlock canOpen (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/ShulkerBoxBlockEntity;)Z
-accessible class net/minecraft/world/level/block/entity/BeehiveBlockEntity$BeeData
 accessible field net/minecraft/world/level/block/entity/BeehiveBlockEntity$BeeData occupant Lnet/minecraft/world/level/block/entity/BeehiveBlockEntity$Occupant;
 accessible class net/minecraft/world/level/chunk/PaletteResize
 accessible method net/minecraft/world/level/chunk/storage/RegionFile write (Lnet/minecraft/world/level/ChunkPos;Ljava/nio/ByteBuffer;)V
@@ -1083,3 +1087,12 @@ accessible method net/minecraft/world/entity/projectile/Projectile canHitEntity 
 transitive-inject-interface	net/minecraft/world/entity/Entity	com/mohistmc/silkard/injected/paper/core/PaperEntity
 transitive-inject-interface	net/minecraft/world/entity/LivingEntity	com/mohistmc/silkard/injected/paper/core/PaperLivingEntity
 accessible method net/minecraft/world/entity/animal/frog/Tadpole setAgeLocked (Z)V
+accessible method net/minecraft/world/level/storage/TagValueOutput <init> (Lnet/minecraft/util/ProblemReporter;Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/nbt/CompoundTag;)V
+transitive-inject-interface	net/minecraft/world/level/block/entity/BeaconBlockEntity	com/mohistmc/silkard/injected/paper/server/PaperBeaconBlockEntity
+transitive-inject-interface	net/minecraft/world/level/block/entity/BeehiveBlockEntity	com/mohistmc/silkard/injected/paper/server/PaperBeehiveBlockEntity
+transitive-inject-interface	net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity	com/mohistmc/silkard/injected/paper/server/PaperAbstractFurnaceBlockEntity
+transitive-inject-interface	net/minecraft/world/level/block/entity/CampfireBlockEntity	com/mohistmc/silkard/injected/paper/server/PaperCampfireBlockEntity
+transitive-inject-interface	net/minecraft/world/level/block/entity/SculkSensorBlockEntity	com/mohistmc/silkard/injected/paper/server/PaperSculkSensorBlockEntity
+accessible field net/minecraft/world/level/block/entity/vault/VaultServerData rewardedPlayers Ljava/util/Set;
+accessible method net/minecraft/world/level/block/entity/vault/VaultServerData markChanged ()V
+# Silkard paper-server end

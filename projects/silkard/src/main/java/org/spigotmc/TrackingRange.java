@@ -25,7 +25,7 @@ public final class TrackingRange {
             return defaultRange;
         }
 
-        final SpigotWorldConfig config = entity.level().spigotConfig;
+        final SpigotWorldConfig config = entity.level().spigotConfig();
         if (entity instanceof ServerPlayer) {
             return config.playerTrackingRange;
         }

@@ -197,7 +197,7 @@ public class CraftChunk implements Chunk {
         }
         return org.dreeam.leaf.config.modules.misc.SecureSeed.enabled
             ? level.getChunk(this.getX(), this.getZ()).isSlimeChunk()
-            : WorldgenRandom.seedSlimeChunk(this.getX(), this.getZ(), this.getWorld().getSeed(), level.spigotConfig.slimeSeed).nextInt(10) == 0; // Paper;
+            : WorldgenRandom.seedSlimeChunk(this.getX(), this.getZ(), this.getWorld().getSeed(), level.spigotConfig().slimeSeed).nextInt(10) == 0; // Paper;
         // Leaf end - Matter - Secure Seed
     }
 

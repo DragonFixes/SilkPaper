@@ -783,7 +783,7 @@ public class CraftEventFactory {
 
         // Spigot start - SPIGOT-7523: Merge after spawn event and only merge if the event was not cancelled (gets checked above)
         if (entity instanceof net.minecraft.world.entity.ExperienceOrb xp) {
-            double radius = level.spigotConfig.expMerge;
+            double radius = level.spigotConfig().expMerge;
             if (radius > 0 && !xp.leaf$skipInitialMerge) { // Leaf - Fix Pufferfish and Purpur patches - Improve Purpur shift-click mending
                 // Paper start - Maximum exp value when merging; Whole section has been tweaked, see comments for specifics
                 final long maxValue = level.paperConfig().entities.behavior.experienceMergeMaxValue;

@@ -24,8 +24,8 @@ public class CraftEnderChest extends CraftBlockEntityState<EnderChestBlockEntity
             BlockState block = this.getBlockEntity().getBlockState();
             int openCount = this.getBlockEntity().openersCounter.getOpenerCount();
 
-            this.getBlockEntity().openersCounter.onOpenAPI(level, this.getPosition(), block);
-            this.getBlockEntity().openersCounter.openerCountChangedAPI(level, this.getPosition(), block, openCount, openCount + 1);
+            this.getBlockEntity().openersCounter.onAPIOpen(level, this.getPosition(), block);
+            this.getBlockEntity().openersCounter.openerAPICountChanged(level, this.getPosition(), block, openCount, openCount + 1);
         }
         this.getBlockEntity().openersCounter.silkard_opened(true);
     }
@@ -37,8 +37,8 @@ public class CraftEnderChest extends CraftBlockEntityState<EnderChestBlockEntity
             BlockState block = this.getBlockEntity().getBlockState();
             int openCount = this.getBlockEntity().openersCounter.getOpenerCount();
 
-            this.getBlockEntity().openersCounter.onCloseAPI(level, this.getPosition(), block);
-            this.getBlockEntity().openersCounter.openerCountChangedAPI(level, this.getPosition(), block, openCount, 0);
+            this.getBlockEntity().openersCounter.onAPIClose(level, this.getPosition(), block);
+            this.getBlockEntity().openersCounter.openerAPICountChanged(level, this.getPosition(), block, openCount, 0);
         }
         this.getBlockEntity().openersCounter.silkard_opened(false);
     }

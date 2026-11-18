@@ -46,7 +46,7 @@ public class CraftSculkSensor<T extends SculkSensorBlockEntity> extends CraftBlo
     @Override
     public void setListenerRange(int range) {
         Preconditions.checkArgument(range > 0, "Vibration listener range must be greater than 0");
-        this.getSnapshot().rangeOverride = range;
+        this.getSnapshot().silkard$setRangeOverride(range);
     }
     // Paper end
 }

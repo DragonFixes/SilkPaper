@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "package": "com.mohistmc.silkard.mixin.paper.server",
+  "compatibilityLevel": "JAVA_25",
+  "plugin": "com.mohistmc.silkard.SilkardMixinPlugin",
+  "mixins": [
+    "MixinPaperSculkSensorVibrationUser",
+    "MixinPaperSculkSensorBlockEntity",
+    "MixinPaperCampfireBlockEntity",
+    "MixinPaperAbstractFurnaceBlockEntity",
+    "MixinPaperBeehiveBlockEntity",
+    "MixinPaperBeaconBlockEntity",
+    "MixinPaperBlockStateBase"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
