@@ -55,7 +55,7 @@ public abstract class MixinCraftingMenu extends AbstractCraftingMenu {
     @Redirect(method = "slotChangedCraftingGrid", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/ResultContainer;setItem(ILnet/minecraft/world/item/ItemStack;)V"))
     private static void silkard$slotChangedCraftingGrid$setItem(ResultContainer resultSlots, int slot, ItemStack itemstack) {
         // CraftBukkit - callPreCraftEvent
-        itemstack = org.bukkit.craftbukkit.event.CraftEventFactory.callPreCraftEvent(null, resultSlots, itemstack, null, java.util.Optional.empty());
+        itemstack = org.bukkit.craftbukkit.event.CraftEventFactory.callPreCraftEvent(null, resultSlots, itemstack, null, false);
         resultSlots.setItem(slot, itemstack);
     }
 }

@@ -55,9 +55,7 @@ public class MixinBlockEntity implements ContextBlockEntity {
     public void silkard_bukkitRead(ValueInput input, CallbackInfo ci) {
         this.persistentDataContainer = new CraftPersistentDataContainer(DATA_TYPE_REGISTRY);
 
-        input.child("PublicBukkitValues").ifPresent((persistentDataTag) -> {
-            this.persistentDataContainer.putAll(persistentDataTag);
-        });
+        input.read("PublicBukkitValues", net.minecraft.nbt.CompoundTag.CODEC).ifPresent(this.persistentDataContainer::putAll);
     }
     // CraftBukkit end
 
@@ -70,7 +68,7 @@ public class MixinBlockEntity implements ContextBlockEntity {
     private void silkard_bukkitStore(ValueOutput output, CallbackInfo ci) {
         // CraftBukkit start - store container
         if (this.persistentDataContainer != null && !this.persistentDataContainer.isEmpty()) {
-            this.persistentDataContainer.store(output.child("PublicBukkitValues"));
+            output.store("PublicBukkitValues", net.minecraft.nbt.CompoundTag.CODEC, this.persistentDataContainer.toTagCompound());
         }
         // CraftBukkit end
     }

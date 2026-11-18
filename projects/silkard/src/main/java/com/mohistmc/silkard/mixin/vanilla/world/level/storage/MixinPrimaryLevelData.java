@@ -38,7 +38,10 @@ public class MixinPrimaryLevelData implements ContextPrimaryLevelData {
             return;
         }
         this.world = world;
-        world.getWorld().readBukkitValues(pdc);
+        // World PDC lives in level.dat under "BukkitValues", as Spigot stores it.
+        if (pdc instanceof net.minecraft.nbt.CompoundTag compound) {
+            ((org.bukkit.craftbukkit.persistence.CraftPersistentDataContainer) world.getWorld().getPersistentDataContainer()).putAll(compound);
+        }
         pdc = null;
     }
     // CraftBukkit end
@@ -67,7 +70,10 @@ public class MixinPrimaryLevelData implements ContextPrimaryLevelData {
             return;
         }
         tag.putString("Bukkit.Version", org.bukkit.Bukkit.getName() + "/" + org.bukkit.Bukkit.getVersion() + "/" + org.bukkit.Bukkit.getBukkitVersion());
-        this.world.getWorld().storeBukkitValues(tag);
+        org.bukkit.craftbukkit.persistence.CraftPersistentDataContainer worldPdc = (org.bukkit.craftbukkit.persistence.CraftPersistentDataContainer) this.world.getWorld().getPersistentDataContainer();
+        if (!worldPdc.isEmpty()) {
+            tag.put("BukkitValues", worldPdc.toTagCompound());
+        }
         // CraftBukkit end
     }
 }
