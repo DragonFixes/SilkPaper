@@ -7,7 +7,7 @@ import net.minecraft.world.RandomizableContainer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.vehicle.ContainerEntity;
 import org.bukkit.craftbukkit.block.CraftBlock;
-import org.bukkit.loot.LootableInventory;
+import com.destroystokyo.paper.loottable.LootableInventory;
 import org.jspecify.annotations.Nullable;
 
 /**
