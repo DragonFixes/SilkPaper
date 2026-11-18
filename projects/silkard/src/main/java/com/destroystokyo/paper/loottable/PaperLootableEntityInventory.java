@@ -16,7 +16,7 @@ public interface PaperLootableEntityInventory extends LootableEntityInventory, P
 
     @Override
     default PaperLootableInventoryData lootableDataForAPI() {
-        return this.getHandle().lootableData();
+        return java.util.Objects.requireNonNull(com.mohistmc.silkard.paper.paper.PaperLootables.lootableData(this.getHandle()), "Can only manage loot tables on entities with lootableData");
     }
 
     /* LootableEntityInventory */

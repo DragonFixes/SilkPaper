@@ -20,7 +20,7 @@ public record PaperCombatTrackerWrapper(
 
     @Override
     public LivingEntity getEntity() {
-        return this.handle.mob.getBukkitEntity();
+        return (LivingEntity) this.handle.mob.getBukkitEntity();
     }
 
     @Override
@@ -60,7 +60,7 @@ public record PaperCombatTrackerWrapper(
     @Override
     public void addCombatEntry(final CombatEntry combatEntry) {
         final net.minecraft.world.damagesource.CombatEntry entry = ((PaperCombatEntryWrapper) combatEntry).handle();
-        this.handle.recordDamageAndCheckCombatState(entry);
+        com.mohistmc.silkard.paper.paper.CombatTrackers.recordDamageAndCheckCombatState(this.handle, entry);
     }
 
     @Override
@@ -70,7 +70,7 @@ public record PaperCombatTrackerWrapper(
 
     @Override
     public void resetCombatState() {
-        this.handle.resetCombatState();
+        com.mohistmc.silkard.paper.paper.CombatTrackers.resetCombatState(this.handle);
     }
 
     @Override

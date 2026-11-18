@@ -18,8 +18,14 @@ public final class DisplayNames {
         final String legacy = player.silkard$displayName();
         if (legacy != null) {
             // thank you for being worse than wet socks, Bukkit
-            return LegacyComponentSerializer.legacySection().serialize(player.adventure$displayName) + ChatColor.getLastColors(player.silkard$displayName());
+            return LegacyComponentSerializer.legacySection().serialize(adventureDisplayName(player)) + ChatColor.getLastColors(player.silkard$displayName());
         }
-        return LegacyComponentSerializer.legacySection().serialize(player.adventure$displayName);
+        return LegacyComponentSerializer.legacySection().serialize(adventureDisplayName(player));
+    }
+
+    // Paper keeps a non-null Adventure display name on the player, defaulting to the scoreboard name.
+    private static net.kyori.adventure.text.Component adventureDisplayName(final ServerPlayer player) {
+        final net.kyori.adventure.text.Component name = player.paper$adventureDisplayName();
+        return name != null ? name : net.kyori.adventure.text.Component.text(player.getScoreboardName());
     }
 }

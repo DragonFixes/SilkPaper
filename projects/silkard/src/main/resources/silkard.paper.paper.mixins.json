@@ -6,6 +6,7 @@
     "MixinPaperCommandSourceStack",
     "MixinPaperConnection",
     "MixinPaperGoal",
+    "MixinPaperLootableHolder",
     "MixinPaperMinecraftServer",
     "MixinPaperServerCommonPacketListenerImpl",
     "MixinPaperServerConfigurationPacketListenerImpl",

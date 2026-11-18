@@ -1115,3 +1115,8 @@ transitive-inject-interface	net/minecraft/server/network/ServerConfigurationPack
 accessible class net/minecraft/world/level/block/entity/SculkSensorBlockEntity$VibrationUser
 accessible class net/minecraft/world/level/BaseCommandBlock$CloseableCommandBlockSource
 transitive-inject-interface	net/minecraft/world/entity/ai/goal/Goal	com/mohistmc/silkard/injected/paper/paper/PaperGoalAccess
+accessible field net/minecraft/world/damagesource/CombatTracker combatStartTime I
+accessible field net/minecraft/world/damagesource/CombatTracker combatEndTime I
+transitive-inject-interface	net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity	com/mohistmc/silkard/injected/paper/paper/PaperLootableHolderAccess
+transitive-inject-interface	net/minecraft/world/entity/vehicle/minecart/AbstractMinecartContainer	com/mohistmc/silkard/injected/paper/paper/PaperLootableHolderAccess
+transitive-inject-interface	net/minecraft/world/entity/vehicle/boat/AbstractChestBoat	com/mohistmc/silkard/injected/paper/paper/PaperLootableHolderAccess

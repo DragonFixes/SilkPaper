@@ -19,7 +19,7 @@ public interface PaperShearable extends io.papermc.paper.entity.Shearable {
 
     @Override
     default void shear(@NotNull Sound.Source source) {
-        if (!(this.getHandle().level() instanceof final ServerLevel serverLevel)) return;
+        if (!(((net.minecraft.world.entity.Entity) this.getHandle()).level() instanceof final ServerLevel serverLevel)) return;
         this.getHandle().shear(serverLevel, PaperAdventure.asVanilla(source), new ItemStack(Items.SHEARS));
     }
 }

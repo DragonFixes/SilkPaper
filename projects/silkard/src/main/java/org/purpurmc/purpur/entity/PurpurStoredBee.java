@@ -37,7 +37,7 @@ public class PurpurStoredBee implements StoredEntity<Bee> {
         this.handle = data;
         this.blockStorage = blockStorage;
 
-        CompoundTag customData = handle.occupant.entityData().copyTagWithEntityId();
+        CompoundTag customData = handle.occupant.entityData().copyTagWithoutId();
 
         try (ProblemReporter.ScopedCollector scopedCollector = new ProblemReporter.ScopedCollector(blockEntity.problemPath(), LOGGER)) {
             ValueInput valueInput = TagValueInput.create(scopedCollector, RegistryAccess.EMPTY, customData);
@@ -106,11 +106,11 @@ public class PurpurStoredBee implements StoredEntity<Bee> {
 
     @Override
     public void update() {
-        handle.occupant.entityData().copyTagWithEntityId().put("BukkitValues", this.persistentDataContainer.toTagCompound());
+        handle.occupant.entityData().getUnsafe().put("BukkitValues", this.persistentDataContainer.toTagCompound());
         if(customName == null) {
-            handle.occupant.entityData().copyTagWithEntityId().remove("CustomName");
+            handle.occupant.entityData().getUnsafe().remove("CustomName");
         } else {
-            handle.occupant.entityData().copyTagWithEntityId().putString("CustomName", CraftChatMessage.toJSON(PaperAdventure.asVanilla(customName)));
+            handle.occupant.entityData().getUnsafe().putString("CustomName", CraftChatMessage.toJSON(PaperAdventure.asVanilla(customName)));
         }
     }
 }

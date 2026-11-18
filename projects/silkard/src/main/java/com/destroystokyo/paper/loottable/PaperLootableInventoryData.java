@@ -114,7 +114,7 @@ public class PaperLootableInventoryData {
 
         @Override
         public LootableInventory getInventoryForEvent(final RandomizableContainer holder) {
-            return holder.getLootableInventory();
+            return com.mohistmc.silkard.paper.paper.PaperLootables.getLootableInventory(holder);
         }
     };
 
@@ -136,7 +136,7 @@ public class PaperLootableInventoryData {
 
         @Override
         public LootableInventory getInventoryForEvent(final ContainerEntity holder) {
-            return holder.getLootableInventory();
+            return com.mohistmc.silkard.paper.paper.PaperLootables.getLootableInventory(holder);
         }
     };
 
