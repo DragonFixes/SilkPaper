@@ -3,7 +3,7 @@ plugins {
 	id 'net.neoforged.gradleutils' version '4.0.1'
 }
 
-version = project.minecraft_version + "-" + gradleutils.gitInfo.abbreviatedId
+version = project.minecraft_version + "-" + rootProject.ext.silkardGitId
 group = project.maven_group
 
 base {

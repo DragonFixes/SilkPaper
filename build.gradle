@@ -4,7 +4,17 @@ plugins {
     id 'net.neoforged.gradleutils' version '4.0.1'
 }
 
-version = project.minecraft_version + "-" + gradleutils.gitInfo.abbreviatedId
+// JGit cannot resolve HEAD inside a linked git worktree; fall back to plain git there.
+String silkardGitId() {
+    try {
+        return gradleutils.gitInfo.abbreviatedId
+    } catch (Exception ignored) {
+        return ['git', 'rev-parse', '--short=10', 'HEAD'].execute(null, rootDir).text.trim()
+    }
+}
+ext.silkardGitId = silkardGitId()
+
+version = project.minecraft_version + "-" + ext.silkardGitId
 group = project.maven_group
 
 base {
@@ -66,7 +76,7 @@ jar {
 
     def serverLibsDir = project(":server").layout.buildDirectory.dir("libs").get().asFile
     from(serverLibsDir) {
-        include "${project.archives_base_name}-${project.minecraft_version}-${gradleutils.gitInfo.abbreviatedId}-server.jar"
+        include "${project.archives_base_name}-${project.minecraft_version}-${rootProject.ext.silkardGitId}-server.jar"
         into "META-INF/libraries/com/mohistmc/silkard/${version}"
     }
 
