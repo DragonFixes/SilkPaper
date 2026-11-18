@@ -1,0 +1,270 @@
+diff --git a/projects/silkard/src/paper-api/java/org/bukkit/Material.java b/projects/silkard/src/paper-api/java/org/bukkit/Material.java
+index d564f52..0815aba 100644
+--- a/projects/silkard/src/paper-api/java/org/bukkit/Material.java
++++ b/projects/silkard/src/paper-api/java/org/bukkit/Material.java
+@@ -2908,7 +2908,7 @@ public enum Material implements Keyed, Translatable, net.kyori.adventure.transla
+     private static final Map<String, Material> BY_NAME = Maps.newHashMap();
+     public final Class<?> data;
+     private final boolean legacy;
+-    private final NamespacedKey key;
++    private NamespacedKey key; // Silkard - assigned for modded materials
+     private final Supplier<ItemType> itemType;
+     private final Supplier<BlockType> blockType;
+ 
+@@ -3938,4 +3938,30 @@ public enum Material implements Keyed, Translatable, net.kyori.adventure.transla
+         }
+     }
+     // Purpur end - ItemStack convenience methods
++
++    // Silkard start - modded items/blocks
++    /**
++     * Adds a new Material dynamically for mod items/blocks.
++     *
++     * @param name the material name
++     * @param id the legacy material id
++     * @param block whether this is a block material
++     * @param item whether this is an item material
++     * @param key the namespaced key
++     * @return the new Material, or null if it already exists
++     */
++    @ApiStatus.Internal
++    public static @Nullable Material addMaterial(String name, int id, boolean block, boolean item, NamespacedKey key) {
++        if (BY_NAME.containsKey(name)) {
++            return null;
++        }
++        Material material = com.mohistmc.silkard.util.DynamicEnumUtil.addEnum(Material.class, name, java.util.List.of(Integer.TYPE, Class.class), java.util.List.of(id, org.bukkit.material.MaterialData.class));
++        if (material == null) {
++            return null;
++        }
++        material.key = key;
++        BY_NAME.put(name, material);
++        return material;
++    }
++    // Silkard end
+ }
+diff --git a/projects/silkard/src/paper-api/java/org/bukkit/Particle.java b/projects/silkard/src/paper-api/java/org/bukkit/Particle.java
+index 712036c..59e1aca 100644
+--- a/projects/silkard/src/paper-api/java/org/bukkit/Particle.java
++++ b/projects/silkard/src/paper-api/java/org/bukkit/Particle.java
+@@ -206,7 +206,7 @@ public enum Particle implements Keyed {
+     GEYSER_POOF("geyser_poof", GeyserBase.class),
+     ;
+ 
+-    private final NamespacedKey key;
++    private NamespacedKey key; // Silkard - assigned for modded particles
+     private final Class<?> dataType;
+     // Paper - all particles are registered
+ 
+@@ -227,6 +227,16 @@ public enum Particle implements Keyed {
+         // Paper - all particles are registered
+     }
+ 
++    // Silkard start
++    /**
++     * Assigns the real registry key for a modded particle.
++     */
++    @org.jetbrains.annotations.ApiStatus.Internal
++    public void hookModParticle(net.minecraft.resources.Identifier id) {
++        this.key = org.bukkit.craftbukkit.util.CraftNamespacedKey.fromMinecraft(id);
++    }
++    // Silkard end
++
+     /**
+      * Returns the required data type for the particle
+      * @return the required data type
+diff --git a/projects/silkard/src/paper-api/java/org/bukkit/Registry.java b/projects/silkard/src/paper-api/java/org/bukkit/Registry.java
+index 6fb4522..f81ebe0 100644
+--- a/projects/silkard/src/paper-api/java/org/bukkit/Registry.java
++++ b/projects/silkard/src/paper-api/java/org/bukkit/Registry.java
+@@ -589,7 +589,7 @@ public interface Registry<T extends Keyed> extends Iterable<T> {
+     class SimpleRegistry<T extends Enum<T> & Keyed> extends NotARegistry<T> { // Paper - remove final
+ 
+         private final Class<T> type;
+-        private final Map<NamespacedKey, T> map;
++        private Map<NamespacedKey, T> map; // Silkard - rebuilt by reload()
+ 
+         protected SimpleRegistry(final Class<T> type) {
+             this(type, Predicates.alwaysTrue());
+@@ -608,6 +608,17 @@ public interface Registry<T extends Keyed> extends Iterable<T> {
+             this.type = type;
+         }
+ 
++        // Silkard start - pick up enum constants added for mods
++        @org.jetbrains.annotations.ApiStatus.Internal
++        public void reload() {
++            final ImmutableMap.Builder<NamespacedKey, T> builder = ImmutableMap.builder();
++            for (final T entry : this.type.getEnumConstants()) {
++                builder.put(entry.getKey(), entry);
++            }
++            this.map = builder.build();
++        }
++        // Silkard end
++
+         @Override
+         public @Nullable T get(final NamespacedKey key) {
+             return this.map.get(key);
+diff --git a/projects/silkard/src/paper-api/java/org/bukkit/Statistic.java b/projects/silkard/src/paper-api/java/org/bukkit/Statistic.java
+index ce51290..a692e17 100644
+--- a/projects/silkard/src/paper-api/java/org/bukkit/Statistic.java
++++ b/projects/silkard/src/paper-api/java/org/bukkit/Statistic.java
+@@ -99,7 +99,7 @@ public enum Statistic implements Keyed {
+     // End generate - StatisticType
+ 
+     private final Type type;
+-    private final NamespacedKey key;
++    public NamespacedKey key; // Silkard - assigned for modded statistics
+ 
+     private Statistic() {
+         this(Type.UNTYPED);
+diff --git a/projects/silkard/src/paper-api/java/org/bukkit/entity/EntityType.java b/projects/silkard/src/paper-api/java/org/bukkit/entity/EntityType.java
+index cca08a7..7423c5c 100644
+--- a/projects/silkard/src/paper-api/java/org/bukkit/entity/EntityType.java
++++ b/projects/silkard/src/paper-api/java/org/bukkit/entity/EntityType.java
+@@ -213,11 +213,60 @@ public enum EntityType implements Keyed, Translatable, net.kyori.adventure.trans
+      */
+     UNKNOWN(null, null, -1, false);
+ 
++    // Silkard start - modded entity types
++    private net.minecraft.resources.Identifier minecraftKey;
++    private net.minecraft.world.entity.EntityType<?> minecraftEntityType;
++    private net.minecraft.world.entity.EntityType<?> handleType;
++    private java.util.function.Function<Location, ? extends net.minecraft.world.entity.Entity> factory;
++
++    @org.jetbrains.annotations.ApiStatus.Internal
++    public void hookForgeEntity(net.minecraft.resources.Identifier key, net.minecraft.world.entity.EntityType<?> minecraftEntityType) {
++        this.minecraftKey = key;
++        this.minecraftEntityType = minecraftEntityType;
++        this.key = org.bukkit.craftbukkit.util.CraftNamespacedKey.fromMinecraft(key);
++        this.handleType = minecraftEntityType;
++        if (this.name != null) {
++            NAME_MAP.put(this.name.toLowerCase(Locale.ROOT), this);
++        }
++        ID_MAP.put(this.typeId, this);
++        com.mohistmc.silkard.fabric.FabricEntityRegistry.register(minecraftEntityType, this.name, this);
++        this.factory = bukkitLocation -> {
++            if (bukkitLocation == null || bukkitLocation.getWorld() == null) {
++                return null;
++            }
++            net.minecraft.server.level.ServerLevel serverLevel = ((org.bukkit.craftbukkit.CraftWorld) bukkitLocation.getWorld()).getHandle();
++            net.minecraft.world.entity.Entity entity = minecraftEntityType.create(serverLevel, net.minecraft.world.entity.EntitySpawnReason.COMMAND);
++            if (entity != null) {
++                entity.snapTo(bukkitLocation.getX(), bukkitLocation.getY(), bukkitLocation.getZ(), bukkitLocation.getYaw(), bukkitLocation.getPitch());
++            }
++            return entity;
++        };
++    }
++
++    /**
++     * Creates the native entity for a modded type, or {@code null} for non-modded types.
++     */
++    @org.jetbrains.annotations.ApiStatus.Internal
++    public net.minecraft.world.entity.Entity create(Location location) {
++        return this.factory == null ? null : this.factory.apply(location);
++    }
++
++    @org.jetbrains.annotations.ApiStatus.Internal
++    public net.minecraft.resources.Identifier getMinecraftKey() {
++        return minecraftKey;
++    }
++
++    @org.jetbrains.annotations.ApiStatus.Internal
++    public net.minecraft.world.entity.EntityType<?> getMinecraftEntityType() {
++        return minecraftEntityType;
++    }
++    // Silkard end
++
+     private final String name;
+     private final Class<? extends Entity> clazz;
+     private final short typeId;
+     private final boolean independent, living;
+-    private final NamespacedKey key;
++    private NamespacedKey key; // Silkard - assigned for modded entity types
+ 
+     private static final Map<String, EntityType> NAME_MAP = new HashMap<String, EntityType>();
+     private static final Map<Short, EntityType> ID_MAP = new HashMap<Short, EntityType>();
+diff --git a/projects/silkard/src/paper-api/java/org/bukkit/entity/SpawnCategory.java b/projects/silkard/src/paper-api/java/org/bukkit/entity/SpawnCategory.java
+index b1a0de5..f245578 100644
+--- a/projects/silkard/src/paper-api/java/org/bukkit/entity/SpawnCategory.java
++++ b/projects/silkard/src/paper-api/java/org/bukkit/entity/SpawnCategory.java
+@@ -40,4 +40,6 @@ public enum SpawnCategory {
+      * Entities not related to a mob, eg: Player, ArmorStand, Boat, etc.
+      */
+     MISC;
++
++    public boolean isMods = false; // Silkard
+ }
+diff --git a/projects/silkard/src/paper-api/java/org/bukkit/inventory/InventoryView.java b/projects/silkard/src/paper-api/java/org/bukkit/inventory/InventoryView.java
+index 76e869d..13d5c51 100644
+--- a/projects/silkard/src/paper-api/java/org/bukkit/inventory/InventoryView.java
++++ b/projects/silkard/src/paper-api/java/org/bukkit/inventory/InventoryView.java
+@@ -155,6 +155,16 @@ public interface InventoryView {
+     @NotNull
+     public HumanEntity getPlayer();
+ 
++    // Silkard start
++    /**
++     * Sets the player viewing.
++     *
++     * @param player the player
++     */
++    @org.jetbrains.annotations.ApiStatus.Internal
++    public void setPlayer(HumanEntity player);
++    // Silkard end
++
+     /**
+      * Determine the type of inventory involved in the transaction. This
+      * indicates the window style being shown. It will never return PLAYER,
+diff --git a/projects/silkard/src/paper-api/java/org/bukkit/plugin/SimplePluginManager.java b/projects/silkard/src/paper-api/java/org/bukkit/plugin/SimplePluginManager.java
+index 878bd44..00d9b6c 100644
+--- a/projects/silkard/src/paper-api/java/org/bukkit/plugin/SimplePluginManager.java
++++ b/projects/silkard/src/paper-api/java/org/bukkit/plugin/SimplePluginManager.java
+@@ -626,6 +626,7 @@ public final class SimplePluginManager implements PluginManager {
+      */
+     @Override
+     public void callEvent(@NotNull Event event) {
++        com.mohistmc.silkard.feature.SilkardPlugin.registerListener(event); // Silkard
+         if (true) {this.paperPluginManager.callEvent(event); return;} // Paper
+         if (event.isAsynchronous()) {
+             if (Thread.holdsLock(this)) {
+diff --git a/projects/silkard/src/paper-api/java/org/bukkit/plugin/java/JavaPluginLoader.java b/projects/silkard/src/paper-api/java/org/bukkit/plugin/java/JavaPluginLoader.java
+index 498e3f7..1dfd38d 100644
+--- a/projects/silkard/src/paper-api/java/org/bukkit/plugin/java/JavaPluginLoader.java
++++ b/projects/silkard/src/paper-api/java/org/bukkit/plugin/java/JavaPluginLoader.java
+@@ -74,9 +74,9 @@ public final class JavaPluginLoader implements PluginLoader {
+         LibraryLoader libraryLoader = null;
+         try {
+             libraryLoader = new LibraryLoader(server.getLogger());
+-        } catch (NoClassDefFoundError ex) {
++        } catch (Throwable ex) { // Silkard - report any failure, not only missing classes
+             // Provided depends were not added back
+-            server.getLogger().warning("Could not initialize LibraryLoader (missing dependencies?)");
++            server.getLogger().log(java.util.logging.Level.WARNING, "Could not initialize LibraryLoader (missing dependencies?)", ex);
+         }
+         this.libraryLoader = libraryLoader;
+     }
+diff --git a/projects/silkard/src/paper-api/java/org/bukkit/plugin/java/LibraryLoader.java b/projects/silkard/src/paper-api/java/org/bukkit/plugin/java/LibraryLoader.java
+index 1d2f29c..e23fd6d 100644
+--- a/projects/silkard/src/paper-api/java/org/bukkit/plugin/java/LibraryLoader.java
++++ b/projects/silkard/src/paper-api/java/org/bukkit/plugin/java/LibraryLoader.java
+@@ -57,10 +57,21 @@ public class LibraryLoader {
+         this.logger = logger;
+ 
+         DefaultServiceLocator locator = MavenRepositorySystemUtils.newServiceLocator();
++        // Silkard start - surface service creation failures instead of a null repository
++        locator.setErrorHandler(new DefaultServiceLocator.ErrorHandler() {
++            @Override
++            public void serviceCreationFailed(Class<?> type, Class<?> impl, Throwable exception) {
++                logger.log(java.util.logging.Level.SEVERE, "Could not create service " + type.getName(), exception);
++            }
++        });
++        // Silkard end
+         locator.addService(RepositoryConnectorFactory.class, BasicRepositoryConnectorFactory.class);
+         locator.addService(TransporterFactory.class, HttpTransporterFactory.class);
+ 
+         this.repository = locator.getService(RepositorySystem.class);
++        if (this.repository == null) { // Silkard
++            throw new IllegalStateException("Could not create the maven repository system");
++        }
+         this.session = MavenRepositorySystemUtils.newSession();
+ 
+         session.setSystemProperties(System.getProperties()); // Paper - paper plugins, backport system properties fix for transitive dependency parsing, see #10116

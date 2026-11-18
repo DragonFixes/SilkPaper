@@ -57,10 +57,21 @@ public class LibraryLoader {
         this.logger = logger;
 
         DefaultServiceLocator locator = MavenRepositorySystemUtils.newServiceLocator();
+        // Silkard start - surface service creation failures instead of a null repository
+        locator.setErrorHandler(new DefaultServiceLocator.ErrorHandler() {
+            @Override
+            public void serviceCreationFailed(Class<?> type, Class<?> impl, Throwable exception) {
+                logger.log(java.util.logging.Level.SEVERE, "Could not create service " + type.getName(), exception);
+            }
+        });
+        // Silkard end
         locator.addService(RepositoryConnectorFactory.class, BasicRepositoryConnectorFactory.class);
         locator.addService(TransporterFactory.class, HttpTransporterFactory.class);
 
         this.repository = locator.getService(RepositorySystem.class);
+        if (this.repository == null) { // Silkard
+            throw new IllegalStateException("Could not create the maven repository system");
+        }
         this.session = MavenRepositorySystemUtils.newSession();
 
         session.setSystemProperties(System.getProperties()); // Paper - paper plugins, backport system properties fix for transitive dependency parsing, see #10116

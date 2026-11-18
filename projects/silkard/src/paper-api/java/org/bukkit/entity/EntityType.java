@@ -213,11 +213,60 @@ public enum EntityType implements Keyed, Translatable, net.kyori.adventure.trans
      */
     UNKNOWN(null, null, -1, false);
 
+    // Silkard start - modded entity types
+    private net.minecraft.resources.Identifier minecraftKey;
+    private net.minecraft.world.entity.EntityType<?> minecraftEntityType;
+    private net.minecraft.world.entity.EntityType<?> handleType;
+    private java.util.function.Function<Location, ? extends net.minecraft.world.entity.Entity> factory;
+
+    @org.jetbrains.annotations.ApiStatus.Internal
+    public void hookForgeEntity(net.minecraft.resources.Identifier key, net.minecraft.world.entity.EntityType<?> minecraftEntityType) {
+        this.minecraftKey = key;
+        this.minecraftEntityType = minecraftEntityType;
+        this.key = org.bukkit.craftbukkit.util.CraftNamespacedKey.fromMinecraft(key);
+        this.handleType = minecraftEntityType;
+        if (this.name != null) {
+            NAME_MAP.put(this.name.toLowerCase(Locale.ROOT), this);
+        }
+        ID_MAP.put(this.typeId, this);
+        com.mohistmc.silkard.fabric.FabricEntityRegistry.register(minecraftEntityType, this.name, this);
+        this.factory = bukkitLocation -> {
+            if (bukkitLocation == null || bukkitLocation.getWorld() == null) {
+                return null;
+            }
+            net.minecraft.server.level.ServerLevel serverLevel = ((org.bukkit.craftbukkit.CraftWorld) bukkitLocation.getWorld()).getHandle();
+            net.minecraft.world.entity.Entity entity = minecraftEntityType.create(serverLevel, net.minecraft.world.entity.EntitySpawnReason.COMMAND);
+            if (entity != null) {
+                entity.snapTo(bukkitLocation.getX(), bukkitLocation.getY(), bukkitLocation.getZ(), bukkitLocation.getYaw(), bukkitLocation.getPitch());
+            }
+            return entity;
+        };
+    }
+
+    /**
+     * Creates the native entity for a modded type, or {@code null} for non-modded types.
+     */
+    @org.jetbrains.annotations.ApiStatus.Internal
+    public net.minecraft.world.entity.Entity create(Location location) {
+        return this.factory == null ? null : this.factory.apply(location);
+    }
+
+    @org.jetbrains.annotations.ApiStatus.Internal
+    public net.minecraft.resources.Identifier getMinecraftKey() {
+        return minecraftKey;
+    }
+
+    @org.jetbrains.annotations.ApiStatus.Internal
+    public net.minecraft.world.entity.EntityType<?> getMinecraftEntityType() {
+        return minecraftEntityType;
+    }
+    // Silkard end
+
     private final String name;
     private final Class<? extends Entity> clazz;
     private final short typeId;
     private final boolean independent, living;
-    private final NamespacedKey key;
+    private NamespacedKey key; // Silkard - assigned for modded entity types
 
     private static final Map<String, EntityType> NAME_MAP = new HashMap<String, EntityType>();
     private static final Map<Short, EntityType> ID_MAP = new HashMap<Short, EntityType>();

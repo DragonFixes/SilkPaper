@@ -626,6 +626,7 @@ public final class SimplePluginManager implements PluginManager {
      */
     @Override
     public void callEvent(@NotNull Event event) {
+        com.mohistmc.silkard.feature.SilkardPlugin.registerListener(event); // Silkard
         if (true) {this.paperPluginManager.callEvent(event); return;} // Paper
         if (event.isAsynchronous()) {
             if (Thread.holdsLock(this)) {

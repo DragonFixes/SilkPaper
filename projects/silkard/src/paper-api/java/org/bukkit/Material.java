@@ -2908,7 +2908,7 @@ public enum Material implements Keyed, Translatable, net.kyori.adventure.transla
     private static final Map<String, Material> BY_NAME = Maps.newHashMap();
     public final Class<?> data;
     private final boolean legacy;
-    private final NamespacedKey key;
+    private NamespacedKey key; // Silkard - assigned for modded materials
     private final Supplier<ItemType> itemType;
     private final Supplier<BlockType> blockType;
 
@@ -3938,4 +3938,30 @@ public enum Material implements Keyed, Translatable, net.kyori.adventure.transla
         }
     }
     // Purpur end - ItemStack convenience methods
+
+    // Silkard start - modded items/blocks
+    /**
+     * Adds a new Material dynamically for mod items/blocks.
+     *
+     * @param name the material name
+     * @param id the legacy material id
+     * @param block whether this is a block material
+     * @param item whether this is an item material
+     * @param key the namespaced key
+     * @return the new Material, or null if it already exists
+     */
+    @ApiStatus.Internal
+    public static @Nullable Material addMaterial(String name, int id, boolean block, boolean item, NamespacedKey key) {
+        if (BY_NAME.containsKey(name)) {
+            return null;
+        }
+        Material material = com.mohistmc.silkard.util.DynamicEnumUtil.addEnum(Material.class, name, java.util.List.of(Integer.TYPE, Class.class), java.util.List.of(id, org.bukkit.material.MaterialData.class));
+        if (material == null) {
+            return null;
+        }
+        material.key = key;
+        BY_NAME.put(name, material);
+        return material;
+    }
+    // Silkard end
 }

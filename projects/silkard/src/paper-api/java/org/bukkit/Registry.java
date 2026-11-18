@@ -589,7 +589,7 @@ public interface Registry<T extends Keyed> extends Iterable<T> {
     class SimpleRegistry<T extends Enum<T> & Keyed> extends NotARegistry<T> { // Paper - remove final
 
         private final Class<T> type;
-        private final Map<NamespacedKey, T> map;
+        private Map<NamespacedKey, T> map; // Silkard - rebuilt by reload()
 
         protected SimpleRegistry(final Class<T> type) {
             this(type, Predicates.alwaysTrue());
@@ -607,6 +607,17 @@ public interface Registry<T extends Keyed> extends Iterable<T> {
             this.map = builder.build();
             this.type = type;
         }
+
+        // Silkard start - pick up enum constants added for mods
+        @org.jetbrains.annotations.ApiStatus.Internal
+        public void reload() {
+            final ImmutableMap.Builder<NamespacedKey, T> builder = ImmutableMap.builder();
+            for (final T entry : this.type.getEnumConstants()) {
+                builder.put(entry.getKey(), entry);
+            }
+            this.map = builder.build();
+        }
+        // Silkard end
 
         @Override
         public @Nullable T get(final NamespacedKey key) {

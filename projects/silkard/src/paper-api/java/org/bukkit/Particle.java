@@ -206,7 +206,7 @@ public enum Particle implements Keyed {
     GEYSER_POOF("geyser_poof", GeyserBase.class),
     ;
 
-    private final NamespacedKey key;
+    private NamespacedKey key; // Silkard - assigned for modded particles
     private final Class<?> dataType;
     // Paper - all particles are registered
 
@@ -226,6 +226,16 @@ public enum Particle implements Keyed {
         dataType = data;
         // Paper - all particles are registered
     }
+
+    // Silkard start
+    /**
+     * Assigns the real registry key for a modded particle.
+     */
+    @org.jetbrains.annotations.ApiStatus.Internal
+    public void hookModParticle(net.minecraft.resources.Identifier id) {
+        this.key = org.bukkit.craftbukkit.util.CraftNamespacedKey.fromMinecraft(id);
+    }
+    // Silkard end
 
     /**
      * Returns the required data type for the particle

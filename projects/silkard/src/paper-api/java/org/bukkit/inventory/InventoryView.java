@@ -155,6 +155,16 @@ public interface InventoryView {
     @NotNull
     public HumanEntity getPlayer();
 
+    // Silkard start
+    /**
+     * Sets the player viewing.
+     *
+     * @param player the player
+     */
+    @org.jetbrains.annotations.ApiStatus.Internal
+    public void setPlayer(HumanEntity player);
+    // Silkard end
+
     /**
      * Determine the type of inventory involved in the transaction. This
      * indicates the window style being shown. It will never return PLAYER,
