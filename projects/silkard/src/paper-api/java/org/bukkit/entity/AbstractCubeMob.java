@@ -3,7 +3,7 @@ package org.bukkit.entity;
 /**
  * Represents an abstract cube mob.
  */
-public interface AbstractCubeMob extends Creature {
+public interface AbstractCubeMob extends Creature, org.bukkit.entity.Ageable /* Silkard - Spigot API compat */ {
 
     /**
      * @return the size of the cube mob

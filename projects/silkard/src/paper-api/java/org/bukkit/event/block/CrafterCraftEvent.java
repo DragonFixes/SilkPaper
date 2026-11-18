@@ -1,5 +1,6 @@
 package org.bukkit.event.block;
 
+import java.util.List; // Silkard - Spigot API compat
 import org.bukkit.block.Block;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
@@ -76,4 +77,23 @@ public class CrafterCraftEvent extends BlockEvent implements Cancellable {
     public static HandlerList getHandlerList() {
         return HANDLER_LIST;
     }
+    // Silkard start - Spigot API compat
+    private List<ItemStack> remainingItems = new java.util.ArrayList<>();
+
+    public CrafterCraftEvent(@NotNull Block theBlock, @NotNull CraftingRecipe recipe, @NotNull ItemStack result, @NotNull List<ItemStack> remainingItems) {
+        this(theBlock, recipe, result);
+        this.remainingItems = remainingItems;
+    }
+
+    /**
+     * Gets the items that will remain in the crafter after crafting.
+     *
+     * @return a list of the remaining items
+     */
+    @NotNull
+    public List<ItemStack> getRemainingItems() {
+        return this.remainingItems;
+    }
+    // Silkard end
+
 }

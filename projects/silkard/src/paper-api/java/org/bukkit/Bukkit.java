@@ -1,5 +1,6 @@
 package org.bukkit;
 
+import org.bukkit.packs.DataPackManager; // Silkard - Spigot API compat
 import com.google.common.collect.ImmutableList;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -3278,4 +3279,27 @@ public final class Bukkit {
         server.clearBlockHighlights();
     }
     // Purpur end - Debug Marker API
+    // Silkard start - Spigot API compat
+    /**
+     * Get the DataPack Manager.
+     *
+     * @return the manager
+     */
+    @NotNull
+    public static DataPackManager getDataPackManager() {
+        return server.getDataPackManager();
+    }
+
+    /**
+     * Gets the code of conducts enabled on the server. The returned map is a
+     * map of string language codes (eg, en_us) to codes of conducts.
+     *
+     * @return the codes of conduct or empty if none
+     */
+    @NotNull
+    public static Map<String, String> getCodeOfConducts() {
+        return server.getCodeOfConducts();
+    }
+    // Silkard end
+
 }

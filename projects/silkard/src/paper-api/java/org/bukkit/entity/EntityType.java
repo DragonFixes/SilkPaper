@@ -43,7 +43,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public enum EntityType implements Keyed, Translatable, net.kyori.adventure.translation.Translatable, io.papermc.paper.world.flag.FeatureDependant { // Paper - translatable
+public enum EntityType implements Keyed, Translatable, net.kyori.adventure.translation.Translatable, io.papermc.paper.world.flag.FeatureDependant, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ { // Paper - translatable
 
     // Start generate - EntityType
     ACACIA_BOAT("acacia_boat", AcaciaBoat.class, -1),
@@ -431,4 +431,16 @@ public enum EntityType implements Keyed, Translatable, net.kyori.adventure.trans
         return InternalAPIBridge.get().getDefaultEntityAttributes(this.key);
     }
     // Paper end
+    // Silkard start - Spigot API compat
+    /**
+     * Checks if this type is enabled by feature in a world.
+     *
+     * @param world the world to check
+     * @return true if this type can be used in the world
+     */
+    public boolean isEnabledByFeature(@NotNull World world) {
+        return org.bukkit.Bukkit.getDataPackManager().isEnabledByFeature(this, world);
+    }
+    // Silkard end
+
 }

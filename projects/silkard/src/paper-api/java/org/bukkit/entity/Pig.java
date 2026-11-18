@@ -44,7 +44,7 @@ public interface Pig extends Steerable, Vehicle {
     /**
      * Represents the variant of a pig.
      */
-    interface Variant extends Keyed {
+    interface Variant extends Keyed, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ {
 
         // Start generate - PigVariant
         Variant COLD = getVariant("cold");

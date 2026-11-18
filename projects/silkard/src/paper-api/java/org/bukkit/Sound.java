@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
  * guarantee values will not be removed from this interface. As such, you should not
  * depend on the ordinal values of this class.
  */
-public interface Sound extends OldEnum<Sound>, Keyed, net.kyori.adventure.sound.Sound.Type { // Paper - implement Sound.Type
+public interface Sound extends OldEnum<Sound>, Keyed, net.kyori.adventure.sound.Sound.Type, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ { // Paper - implement Sound.Type
 
     // Start generate - Sound
     Sound AMBIENT_BASALT_DELTAS_ADDITIONS = getSound("ambient.basalt_deltas.additions");

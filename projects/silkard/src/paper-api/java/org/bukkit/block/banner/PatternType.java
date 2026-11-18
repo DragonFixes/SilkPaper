@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public interface PatternType extends OldEnum<PatternType>, Keyed {
+public interface PatternType extends OldEnum<PatternType>, Keyed, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ {
 
     // Start generate - PatternType
     PatternType BASE = getType("base");

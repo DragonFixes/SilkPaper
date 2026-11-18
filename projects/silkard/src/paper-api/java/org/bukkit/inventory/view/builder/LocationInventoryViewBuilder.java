@@ -1,5 +1,6 @@
 package org.bukkit.inventory.view.builder;
 
+import org.jetbrains.annotations.NotNull; // Silkard - Spigot API compat
 import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
 import org.bukkit.inventory.InventoryView;
@@ -52,4 +53,10 @@ public interface LocationInventoryViewBuilder<V extends InventoryView> extends I
      * @return this builder
      */
     LocationInventoryViewBuilder<V> location(final Location location);
+    // Silkard start - Spigot API compat
+    @NotNull
+    @Override
+    LocationInventoryViewBuilder<V> title(@NotNull final String title);
+    // Silkard end
+
 }

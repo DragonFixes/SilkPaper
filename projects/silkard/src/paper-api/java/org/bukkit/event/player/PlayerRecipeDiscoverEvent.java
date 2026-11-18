@@ -71,4 +71,10 @@ public class PlayerRecipeDiscoverEvent extends PlayerEvent implements Cancellabl
     public static HandlerList getHandlerList() {
         return HANDLER_LIST;
     }
+    // Silkard start - Spigot API compat
+    public PlayerRecipeDiscoverEvent(Player who, NamespacedKey recipe) {
+        this(who, recipe, true);
+    }
+    // Silkard end
+
 }

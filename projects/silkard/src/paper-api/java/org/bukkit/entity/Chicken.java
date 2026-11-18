@@ -72,7 +72,7 @@ public interface Chicken extends Animals {
     /**
      * Represents the variant of a chicken.
      */
-    interface Variant extends Keyed {
+    interface Variant extends Keyed, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ {
 
         // Start generate - ChickenVariant
         Variant COLD = getVariant("cold");

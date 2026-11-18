@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
  *
  * @see <a href="https://minecraft.wiki/w/Damage_type">Minecraft Wiki</a>
  */
-public interface DamageType extends Keyed, Translatable {
+public interface DamageType extends Keyed, Translatable, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ {
 
     // Start generate - DamageType
     DamageType ARROW = getDamageType("arrow");

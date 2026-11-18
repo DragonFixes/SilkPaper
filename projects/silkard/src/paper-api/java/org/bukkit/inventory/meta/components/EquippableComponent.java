@@ -192,4 +192,13 @@ public interface EquippableComponent extends ConfigurationSerializable {
      * @param sound sound or null for current default
      */
     void setShearingSound(@Nullable Sound sound);
+    // Silkard start - Spigot API compat
+    /**
+     * Gets if the item will be sheared off by shears.
+     *
+     * @return whether the item can be sheared off
+     */
+    boolean isCanBeSheared();
+    // Silkard end
+
 }

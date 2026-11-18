@@ -313,4 +313,10 @@ public class SimpleCommandMap implements CommandMap {
         return knownCommands;
     }
     // Paper end
+    // Silkard start - Spigot API compat
+    public SimpleCommandMap(@NotNull final Server server) {
+        this(server, new java.util.HashMap<>());
+    }
+    // Silkard end
+
 }

@@ -1,5 +1,6 @@
 package org.bukkit.event.entity;
 
+import org.jetbrains.annotations.NotNull; // Silkard - Spigot API compat
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Cancellable;
@@ -288,4 +289,10 @@ public class EntityPotionEffectEvent extends EntityEvent implements Cancellable 
          */
         WITHER_ROSE
     }
+    // Silkard start - Spigot API compat
+    public EntityPotionEffectEvent(@NotNull LivingEntity livingEntity, @Nullable PotionEffect oldEffect, @Nullable PotionEffect newEffect, @NotNull Cause cause, @NotNull Action action, boolean override) {
+        this(livingEntity, oldEffect, newEffect, null, cause, action, override);
+    }
+    // Silkard end
+
 }

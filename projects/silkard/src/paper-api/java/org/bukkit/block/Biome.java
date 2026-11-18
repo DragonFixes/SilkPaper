@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
  * There may be additional biomes present in the server, for example from a {@link io.papermc.paper.datapack.Datapack}
  * which can be accessed via {@link io.papermc.paper.registry.RegistryAccess#getRegistry(RegistryKey)} and {@link RegistryKey#BIOME}.
  */
-public interface Biome extends OldEnum<Biome>, Keyed, net.kyori.adventure.translation.Translatable { // Paper - Adventure translations
+public interface Biome extends OldEnum<Biome>, Keyed, net.kyori.adventure.translation.Translatable, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ { // Paper - Adventure translations
 
     // Start generate - Biome
     Biome BADLANDS = getBiome("badlands");

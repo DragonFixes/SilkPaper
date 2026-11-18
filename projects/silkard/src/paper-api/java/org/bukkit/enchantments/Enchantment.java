@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * The various type of enchantments that may be added to armour or weapons
  */
-public abstract class Enchantment implements Keyed, Translatable, net.kyori.adventure.translation.Translatable { // Paper - Adventure translations
+public abstract class Enchantment implements Keyed, Translatable, net.kyori.adventure.translation.Translatable, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ { // Paper - Adventure translations
     /**
      * Provides protection against environmental damage
      */

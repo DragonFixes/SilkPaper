@@ -1,5 +1,6 @@
 package org.bukkit;
 
+import org.jetbrains.annotations.NotNull; // Silkard - Spigot API compat
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryBuilderFactory;
 import io.papermc.paper.registry.RegistryKey;
@@ -14,7 +15,7 @@ import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 
 @NullMarked
-public abstract class MusicInstrument implements Keyed, net.kyori.adventure.translation.Translatable {
+public abstract class MusicInstrument implements Keyed, net.kyori.adventure.translation.Translatable, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ {
 
     /**
      * Creates an inlined music instrument.
@@ -125,4 +126,22 @@ public abstract class MusicInstrument implements Keyed, net.kyori.adventure.tran
     @Override
     @Deprecated(forRemoval = true)
     public abstract String translationKey();
+    // Silkard start - Spigot API compat
+    /**
+     * Gets the description of this instrument.
+     *
+     * @return the description.
+     */
+    @NotNull
+    public abstract String getDescription();
+
+    /**
+     * Gets the sound/sound-event for this instrument.
+     *
+     * @return a sound.
+     */
+    @NotNull
+    public abstract Sound getSoundEvent();
+    // Silkard end
+
 }

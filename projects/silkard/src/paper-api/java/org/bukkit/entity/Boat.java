@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Represents a boat entity.
  */
-public interface Boat extends Vehicle, io.papermc.paper.entity.Leashable { // Paper - Leashable API
+public interface Boat extends Vehicle, io.papermc.paper.entity.Leashable, org.bukkit.entity.Leashable /* Silkard - Spigot API compat */ { // Paper - Leashable API
 
     /**
      * Gets the wood type of the boat.

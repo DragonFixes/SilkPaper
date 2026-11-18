@@ -1,5 +1,6 @@
 package org.bukkit.inventory.view.builder;
 
+import org.jetbrains.annotations.NotNull; // Silkard - Spigot API compat
 import net.kyori.adventure.text.Component;
 import org.bukkit.Server;
 import org.bukkit.inventory.InventoryView;
@@ -40,4 +41,10 @@ public interface MerchantInventoryViewBuilder<V extends InventoryView> extends I
      * @return this builder
      */
     MerchantInventoryViewBuilder<V> checkReachable(final boolean checkReachable);
+    // Silkard start - Spigot API compat
+    @NotNull
+    @Override
+    MerchantInventoryViewBuilder<V> title(@NotNull final String title);
+    // Silkard end
+
 }

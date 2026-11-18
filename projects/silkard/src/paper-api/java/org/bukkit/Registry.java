@@ -687,4 +687,31 @@ public interface Registry<T extends Keyed> extends Iterable<T> {
             throw new UnsupportedOperationException("This is not a real registry and therefore cannot support tags");
         }
     }
+    // Silkard start - Spigot API compat
+    /**
+     * Pig variants.
+     *
+     * @see org.bukkit.entity.Pig.Variant
+     */
+    Registry<org.bukkit.entity.Pig.Variant> PIG_VARIANT = io.papermc.paper.registry.RegistryAccess.registryAccess().getRegistry(io.papermc.paper.registry.RegistryKey.PIG_VARIANT);
+    /**
+     * Cow variants.
+     *
+     * @see org.bukkit.entity.Cow.Variant
+     */
+    Registry<org.bukkit.entity.Cow.Variant> COW_VARIANT = io.papermc.paper.registry.RegistryAccess.registryAccess().getRegistry(io.papermc.paper.registry.RegistryKey.COW_VARIANT);
+    /**
+     * Chicken variants.
+     *
+     * @see org.bukkit.entity.Chicken.Variant
+     */
+    Registry<org.bukkit.entity.Chicken.Variant> CHICKEN_VARIANT = io.papermc.paper.registry.RegistryAccess.registryAccess().getRegistry(io.papermc.paper.registry.RegistryKey.CHICKEN_VARIANT);
+    /**
+     * ZombieNautilus variants.
+     *
+     * @see org.bukkit.entity.ZombieNautilus.Variant
+     */
+    Registry<org.bukkit.entity.ZombieNautilus.Variant> ZOMBIE_NAUTILUS_VARIANT = io.papermc.paper.registry.RegistryAccess.registryAccess().getRegistry(io.papermc.paper.registry.RegistryKey.ZOMBIE_NAUTILUS_VARIANT);
+    // Silkard end
+
 }

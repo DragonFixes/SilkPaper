@@ -725,4 +725,28 @@ public class WorldCreator {
     public WorldCreator keepSpawnLoaded(@NotNull net.kyori.adventure.util.TriState keepSpawnLoaded) {
         return this;
     }
+    // Silkard start - Spigot API compat
+    /**
+     * Sets whether the spawn chunks will be kept loaded.
+     *
+     * @param keepSpawnInMemory Whether the spawn chunks will be kept loaded
+     * @return This object, for chaining
+     * @see #keepSpawnLoaded(net.kyori.adventure.util.TriState)
+     */
+    @NotNull
+    public WorldCreator keepSpawnInMemory(boolean keepSpawnInMemory) {
+        return this.keepSpawnLoaded(net.kyori.adventure.util.TriState.byBoolean(keepSpawnInMemory));
+    }
+
+    /**
+     * Returns whether the spawn chunks will be kept loaded.
+     *
+     * @return True if the spawn chunks will be kept loaded
+     * @see #keepSpawnLoaded()
+     */
+    public boolean keepSpawnInMemory() {
+        return this.keepSpawnLoaded() != net.kyori.adventure.util.TriState.FALSE;
+    }
+    // Silkard end
+
 }

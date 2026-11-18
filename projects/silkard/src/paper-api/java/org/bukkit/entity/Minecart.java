@@ -159,4 +159,22 @@ public interface Minecart extends Vehicle, io.papermc.paper.entity.Frictional { 
     @NotNull
     public Material getMinecartMaterial();
     // Paper end
+    // Silkard start - Spigot API compat
+    /**
+     * Gets the multiplier of the minecart's acceleration while on powered
+     * rails.
+     *
+     * @return acceleration multiplier
+     */
+    public double getPoweredRailAccelerationMultiplier();
+
+    /**
+     * Sets the multiplier of the minecart's acceleration while on powered
+     * rails.
+     *
+     * @param multiplier a value of 1.0 is the default acceleration
+     */
+    public void setPoweredRailAccelerationMultiplier(double multiplier);
+    // Silkard end
+
 }

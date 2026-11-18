@@ -1,5 +1,7 @@
 package org.bukkit.inventory;
 
+import org.bukkit.Location; // Silkard - Spigot API compat
+import org.bukkit.map.MapCursor; // Silkard - Spigot API compat
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.Server;
@@ -356,4 +358,17 @@ public interface ItemFactory {
      */
     @NotNull ItemStack enchantWithLevels(@NotNull ItemStack itemStack, int levels, @NotNull io.papermc.paper.registry.set.RegistryKeySet<@NotNull Enchantment> keySet, @NotNull java.util.Random random);
     // Paper end - enchantWithLevels with tag specification
+    // Silkard start - Spigot API compat
+    /**
+     * Create a new explorer map targeting the given structure location.
+     *
+     * @param world the world the map will belong to
+     * @param structureLocation the location of the structure
+     * @param mapIcon the icon displayed for the given structure
+     * @return the newly created item stack
+     */
+    @NotNull
+    public ItemStack createExplorerMap(@NotNull World world, @NotNull Location structureLocation, @NotNull MapCursor.Type mapIcon);
+    // Silkard end
+
 }

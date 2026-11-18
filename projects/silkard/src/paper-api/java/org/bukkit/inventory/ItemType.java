@@ -47,7 +47,7 @@ import org.jspecify.annotations.Nullable;
  * Represents an item type.
  */
 @NullMarked
-public interface ItemType extends Keyed, Translatable, net.kyori.adventure.translation.Translatable, io.papermc.paper.world.flag.FeatureDependant { // Paper - add Translatable & feature flag API
+public interface ItemType extends Keyed, Translatable, net.kyori.adventure.translation.Translatable, io.papermc.paper.world.flag.FeatureDependant, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ { // Paper - add Translatable & feature flag API
 
     /**
      * Typed represents a subtype of {@link ItemType}s that have a known item meta type

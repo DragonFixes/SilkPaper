@@ -287,7 +287,7 @@ public final class MapCursor {
      * index in the file './assets/minecraft/textures/map/map_icons.png' from minecraft.jar or from a
      * resource pack.
      */
-    public interface Type extends OldEnum<Type>, Keyed {
+    public interface Type extends OldEnum<Type>, Keyed, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ {
 
         // Start generate - MapCursorType
         Type ABANDONED_CAMP = getType("abandoned_camp");

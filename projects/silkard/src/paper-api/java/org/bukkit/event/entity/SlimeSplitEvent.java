@@ -66,4 +66,10 @@ public class SlimeSplitEvent extends EntityEvent implements Cancellable {
     public static HandlerList getHandlerList() {
         return HANDLER_LIST;
     }
+    // Silkard start - Spigot API compat
+    public SlimeSplitEvent(@NotNull final org.bukkit.entity.Slime slime, final int count) {
+        this((org.bukkit.entity.AbstractCubeMob) slime, count);
+    }
+    // Silkard end
+
 }

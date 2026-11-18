@@ -65,4 +65,10 @@ public class FurnaceExtractEvent extends BlockExpEvent {
     public int getItemAmount() {
         return this.itemAmount;
     }
+    // Silkard start - Spigot API compat
+    public FurnaceExtractEvent(@NotNull Player player, @NotNull Block block, @NotNull org.bukkit.Material itemType, int itemAmount, int exp) {
+        this(player, block, new ItemStack(itemType, itemAmount), itemAmount, exp);
+    }
+    // Silkard end
+
 }

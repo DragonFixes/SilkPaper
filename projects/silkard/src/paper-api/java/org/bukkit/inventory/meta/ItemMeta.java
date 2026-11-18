@@ -1,5 +1,14 @@
 package org.bukkit.inventory.meta;
 
+import org.bukkit.Sound; // Silkard - Spigot API compat
+import org.bukkit.inventory.meta.components.WeaponComponent; // Silkard - Spigot API compat
+import org.bukkit.inventory.meta.components.UseEffectsComponent; // Silkard - Spigot API compat
+import org.bukkit.inventory.meta.components.AttackRangeComponent; // Silkard - Spigot API compat
+import org.bukkit.inventory.meta.components.PiercingWeaponComponent; // Silkard - Spigot API compat
+import org.bukkit.inventory.meta.components.KineticWeaponComponent; // Silkard - Spigot API compat
+import org.bukkit.inventory.meta.components.consumable.ConsumableComponent; // Silkard - Spigot API compat
+import org.bukkit.inventory.meta.components.SwingAnimationComponent; // Silkard - Spigot API compat
+import org.bukkit.inventory.meta.components.BlocksAttacksComponent; // Silkard - Spigot API compat
 import com.google.common.collect.Multimap;
 import io.papermc.paper.datacomponent.DataComponentType;
 import io.papermc.paper.datacomponent.DataComponentTypes;
@@ -1202,4 +1211,359 @@ public interface ItemMeta extends Cloneable, ConfigurationSerializable, Persiste
      */
     @Deprecated(forRemoval = true, since = "1.20.6")
     boolean hasDestroyableKeys();
+    // Silkard start - Spigot API compat
+    /**
+     * Gets the sound to play when the item is broken.
+     *
+     * Plugins should check {@link #hasBreakSound()} before calling this method.
+     *
+     * @return the sound
+     */
+    @Nullable
+    Sound getBreakSound();
+
+    /**
+     * Gets the weapon set on this item, or creates an empty weapon instance.
+     * <p>
+     * The returned component is a snapshot of its current state and does not
+     * reflect a live view of what is on an item. After changing any value on
+     * this component, it must be set with {@link #setWeapon(WeaponComponent)} to
+     * apply the changes.
+     *
+     * @return weapon
+     */
+    @NotNull
+    WeaponComponent getWeapon();
+
+    /**
+     * Sets the item weapon.
+     *
+     * @param weapon new weapon
+     */
+    void setWeapon(@Nullable WeaponComponent weapon);
+
+    /**
+     * Gets the type of damage this item will deliver.
+     *
+     * Plugins should check {@link #hasDamageType()} before calling this method.
+     *
+     * @return damage type
+     */
+    @Nullable
+    DamageType getDamageType();
+
+    /**
+     * Sets the type of damage this item will deliver.
+     *
+     * @param type the type, or null to clear
+     */
+    void setDamageType(@Nullable DamageType type);
+
+    /**
+     * Gets the types of damage this item will be resistant to when in entity
+     * form.
+     *
+     * Plugins should check {@link #hasDamageResistant()} before calling this
+     * method.
+     *
+     * @return damage type
+     */
+    @Nullable
+    Collection<DamageType> getDamageResistances();
+
+    /**
+     * Sets the type of damage this item will deliver.
+     *
+     * @param type the type, or null to clear
+     */
+    void setDamageTypeKey(@Nullable NamespacedKey type);
+
+    /**
+     * Sets the additional_trade_cost. This is the additional cost for villager
+     * trades.
+     *
+     * @param cost additional_trade_cost
+     */
+    void setAdditionalTradeCost(@Nullable Integer cost);
+
+    /**
+     * Gets the additional_trade_cost. This is the additional cost for villager
+     * trades.
+     *
+     * @return max_stack_size
+     */
+    int getAdditionalTradeCost();
+
+    /**
+     * Sets the item use effects.
+     *
+     * @param effects new effects
+     */
+    void setUseEffects(@Nullable UseEffectsComponent effects);
+
+    /**
+     * Checks if a swing animation is set.
+     *
+     * @return if a swing animation is set
+     */
+    boolean hasSwingAnimation();
+
+    /**
+     * Sets the attack range component.
+     *
+     * @param component new attack range component
+     */
+    void setAttackRange(@Nullable AttackRangeComponent component);
+
+    /**
+     * Gets the piercing weapon component set on this item, or creates an empty
+     * instance.
+     * <p>
+     * The returned component is a snapshot of its current state and does not
+     * reflect a live view of what is on an item. After changing any value on
+     * this component, it must be set with
+     * {@link #setPiercingWeapon(PiercingWeaponComponent)} to apply the changes.
+     *
+     * @return piercing weapon component
+     */
+    @NotNull
+    PiercingWeaponComponent getPiercingWeapon();
+
+    /**
+     * Sets the piercing weapon component.
+     *
+     * @param component new piercing weapon component
+     */
+    void setPiercingWeapon(@Nullable PiercingWeaponComponent component);
+
+    /**
+     * Gets the kinetic weapon component set on this item, or creates an empty
+     * instance.
+     * <p>
+     * The returned component is a snapshot of its current state and does not
+     * reflect a live view of what is on an item. After changing any value on
+     * this component, it must be set with
+     * {@link #setKineticWeapon(KineticWeaponComponent)} to apply the changes.
+     *
+     * @return kinetic weapon component
+     */
+    @NotNull
+    KineticWeaponComponent getKineticWeapon();
+
+    /**
+     * Sets the kinetic weapon component.
+     *
+     * @param component new kinetic weapon component
+     */
+    void setKineticWeapon(@Nullable KineticWeaponComponent component);
+
+    /**
+     * Checks if the consumable is set.
+     *
+     * @return if a consumable is set
+     */
+    boolean hasConsumable();
+
+    /**
+     * Gets the consumable set on this item, or creates an empty consumable instance.
+     * <p>
+     * The returned component is a snapshot of its current state and does not
+     * reflect a live view of what is on an item. After changing any value on
+     * this component, it must be set with {@link #setConsumable(ConsumableComponent)} to
+     * apply the changes.
+     *
+     * @return food
+     */
+    @NotNull
+    ConsumableComponent getConsumable();
+
+    /**
+     * Checks if the {@link BlocksAttacksComponent} is set.
+     *
+     * @return if a {@link BlocksAttacksComponent} is set
+     */
+    boolean hasBlocksAttacks();
+
+    /**
+     * Checks if a kinetic weapon component is set.
+     *
+     * @return if a kinetic weapon component is set
+     */
+    boolean hasKineticWeapon();
+
+    /**
+     * Gets the swing animation set on this item, or creates an empty animation
+     * instance.
+     * <p>
+     * The returned component is a snapshot of its current state and does not
+     * reflect a live view of what is on an item. After changing any value on
+     * this component, it must be set with
+     * {@link #setSwingAnimation(SwingAnimationComponent)} to apply the changes.
+     *
+     * @return swing animation
+     */
+    @NotNull
+    SwingAnimationComponent getSwingAnimation();
+
+    /**
+     * Checks if a attack range component is set.
+     *
+     * @return if a attack range component is set
+     */
+    boolean hasAttackRange();
+
+    /**
+     * Checks if the use effects is set.
+     *
+     * @return if a use effects is set
+     */
+    boolean hasUseEffects();
+
+    /**
+     * Sets the item swing animation.
+     *
+     * @param component new animation component
+     */
+    void setSwingAnimation(@Nullable SwingAnimationComponent component);
+
+    /**
+     * Gets the attack range component set on this item, or creates an empty
+     * instance.
+     * <p>
+     * The returned component is a snapshot of its current state and does not
+     * reflect a live view of what is on an item. After changing any value on
+     * this component, it must be set with
+     * {@link #setAttackRange(AttackRangeComponent)} to apply the changes.
+     *
+     * @return attack range component
+     */
+    @NotNull
+    AttackRangeComponent getAttackRange();
+
+    /**
+     * Gets if the additional_trade_cost is set.
+     *
+     * @return if a additional_trade_cost is set.
+     */
+    boolean hasAdditionalTradeCost();
+
+    /**
+     * Checks if a piercing weapon component is set.
+     *
+     * @return if a piercing weapon component is set
+     */
+    boolean hasPiercingWeapon();
+
+    /**
+     * Sets the item consumable.
+     *
+     * @param consumable new consumable
+     */
+    void setConsumable(@Nullable ConsumableComponent consumable);
+
+    /**
+     * Gets the {@link BlocksAttacksComponent} set on this item, or creates an
+     * empty {@link BlocksAttacksComponent} instance.
+     * <p>
+     * The returned component is a snapshot of its current state and does not
+     * reflect a live view of what is on an item. After changing any value on
+     * this component, it must be set with
+     * {@link #setBlocksAttacks(BlocksAttacksComponent)} to apply the changes.
+     *
+     * @return component
+     */
+    @NotNull
+    BlocksAttacksComponent getBlocksAttacks();
+
+    /**
+     * Sets the item {@link BlocksAttacksComponent}.
+     *
+     * @param blocksAttacks new component
+     */
+    void setBlocksAttacks(@Nullable BlocksAttacksComponent blocksAttacks);
+
+    /**
+     * Gets if the break sound is set.
+     *
+     * @return if break sound is set
+     */
+    boolean hasBreakSound();
+
+    /**
+     * Gets the type of damage this item will deliver.
+     *
+     * Plugins should check {@link #hasDamageType()} before calling this method.
+     *
+     * @return damage type
+     */
+    @Nullable
+    NamespacedKey getDamageTypeKey();
+
+    /**
+     * Gets the use effects set on this item, or creates an empty effects
+     * instance.
+     * <p>
+     * The returned component is a snapshot of its current state and does not
+     * reflect a live view of what is on an item. After changing any value on
+     * this component, it must be set with
+     * {@link #setUseEffects(UseEffectsComponent)} to apply the changes.
+     *
+     * @return use effects
+     */
+    @NotNull
+    UseEffectsComponent getUseEffects();
+
+    /**
+     * Sets the type of damage this item will be resistant to when in entity
+     * form.
+     *
+     * @param damages the tag, or null to clear
+     */
+    void setDamageResistant(@Nullable Collection<DamageType> damages);
+
+    /**
+     * Gets if this item delivers a certain type of damage.
+     *
+     * @return true if a resistance is set
+     */
+    boolean hasDamageType();
+
+    /**
+     * Checks if the weapon is set.
+     *
+     * @return if a weapon is set
+     */
+    boolean hasWeapon();
+
+    /**
+     * Checks to see if this item has a minimum attack charge.
+     *
+     * @return true if this has a minimum attack charge
+     */
+    boolean hasMinimumAttackCharge();
+
+    /**
+     * Gets the minimum attack charge.
+     *
+     * Plugins should check {@link #hasMinimumAttackCharge()} before calling this method.
+     *
+     * @return the minimum attack charge
+     */
+    float getMinimumAttackCharge();
+
+    /**
+     * Sets the minimum attack charge.
+     *
+     * @param minimumAttackCharge minimum attack charge
+     */
+    void setMinimumAttackCharge(@Nullable Float minimumAttackCharge);
+
+    /**
+     * Sets the sound to play when the item is broken.
+     *
+     * @param sound sound
+     */
+    void setBreakSound(@Nullable Sound sound);
+    // Silkard end
+
 }

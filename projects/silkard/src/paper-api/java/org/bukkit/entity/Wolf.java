@@ -124,7 +124,7 @@ public interface Wolf extends Tameable, Sittable, io.papermc.paper.entity.Collar
     /**
      * Represents the variant of a wolf.
      */
-    interface Variant extends Keyed {
+    interface Variant extends Keyed, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ {
 
         // Start generate - WolfVariant
         // @GeneratedFrom 1.21.5

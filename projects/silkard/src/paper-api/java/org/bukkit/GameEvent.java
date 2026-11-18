@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Represents a generic Mojang game event.
  */
-public abstract class GameEvent implements Keyed {
+public abstract class GameEvent implements Keyed, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ {
 
     // Start generate - GameEvent
     public static final GameEvent BLOCK_ACTIVATE = getEvent("block_activate");

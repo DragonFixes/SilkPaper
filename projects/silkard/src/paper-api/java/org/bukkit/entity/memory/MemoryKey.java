@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @param <T> the class type of the memory value
  */
-public final class MemoryKey<T> implements Keyed {
+public final class MemoryKey<T> implements Keyed, org.bukkit.registry.RegistryAware /* Silkard - Spigot API compat */ {
 
     private final NamespacedKey namespacedKey;
     private final Class<T> tClass;
@@ -165,4 +165,8 @@ public final class MemoryKey<T> implements Keyed {
     public static Set<MemoryKey<?>> values() {
         return new HashSet<>(MEMORY_KEYS.values());
     }
+    // Silkard start - Spigot API compat
+    public static final MemoryKey<Boolean> IS_TEMPTED = new MemoryKey<>(NamespacedKey.minecraft("is_tempted"), Boolean.class);
+    // Silkard end
+
 }
