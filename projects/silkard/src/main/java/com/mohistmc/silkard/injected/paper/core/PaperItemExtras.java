@@ -8,7 +8,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * State that Paper adds to vanilla item, menu and damage classes. Each nested interface is injected
  * into the class named in its documentation and implemented by the matching
- * {@code MixinPaperItemExtras} nested mixin in {@code com.mohistmc.silkard.mixin.paper.core}.
+ * {@code MixinPaper*} mixin in {@code com.mohistmc.silkard.mixin.paper.core}.
  */
 public final class PaperItemExtras {
 
