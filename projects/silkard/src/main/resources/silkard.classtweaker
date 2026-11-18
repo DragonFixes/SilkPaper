@@ -823,3 +823,12 @@ accessible method net/minecraft/server/players/PlayerList verifyChatTrusted (Lne
 accessible method net/minecraft/world/damagesource/CombatTracker getMostSignificantFall ()Lnet/minecraft/world/damagesource/CombatEntry;
 accessible method net/minecraft/world/entity/ai/attributes/AttributeSupplier getAttributeInstance (Lnet/minecraft/core/Holder;)Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;
 accessible method net/minecraft/world/item/component/ResolvableProfile unpack ()Lcom/mojang/datafixers/util/Either;
+transitive-inject-interface	net/minecraft/commands/CommandSourceStack	com/mohistmc/silkard/injected/paper/paper/PaperCommandSourceStackAccess
+transitive-inject-interface	net/minecraft/server/level/ServerPlayer	com/mohistmc/silkard/injected/paper/paper/PaperServerPlayerAccess
+transitive-inject-interface	net/minecraft/network/Connection	com/mohistmc/silkard/injected/paper/paper/PaperConnectionAccess
+transitive-inject-interface	net/minecraft/server/network/ServerLoginPacketListenerImpl	com/mohistmc/silkard/injected/paper/paper/PaperLoginListenerAccess
+transitive-inject-interface	net/minecraft/server/MinecraftServer	com/mohistmc/silkard/injected/paper/paper/PaperMinecraftServerAccess
+transitive-inject-interface	net/minecraft/server/level/ServerLevel	com/mohistmc/silkard/injected/paper/paper/PaperServerLevelAccess
+accessible method net/minecraft/util/Util onThreadException (Ljava/lang/Thread;Ljava/lang/Throwable;)V
+mutable field net/minecraft/world/entity/EntityType dimensions Lnet/minecraft/world/entity/EntityDimensions;
+mutable field net/minecraft/world/level/block/state/BlockBehaviour explosionResistance F

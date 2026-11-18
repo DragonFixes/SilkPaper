@@ -43,7 +43,7 @@ public final class PaperBrigadier {
             argumentCommandNode = argumentCommandNode.getRedirect();
         }
 
-        Map<CommandNode<CommandSourceStack>, String> map = PaperCommands.INSTANCE.getDispatcherInternal().getSmartUsage(argumentCommandNode, DUMMY);
+        Map<CommandNode<CommandSourceStack>, String> map = PaperCommands.INSTANCE.getDispatcherInternal().getSmartUsage(argumentCommandNode, (CommandSourceStack) (Object) DUMMY);
         String usage = map.isEmpty() ? node.getUsageText() :  node.getUsageText() + " " + String.join("\n" + node.getUsageText() + " ", map.values());
 
         // Internal command
