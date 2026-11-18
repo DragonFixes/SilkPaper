@@ -44,15 +44,6 @@ public interface PaperItemEntity {
         throw new IllegalStateException("Not implemented");
     }
 
-    /** Purpur: immune to fire and lava. */
-    default boolean paper$immuneToFire() {
-        throw new IllegalStateException("Not implemented");
-    }
-
-    default void paper$setImmuneToFire(boolean immune) {
-        throw new IllegalStateException("Not implemented");
-    }
-
     /** Purpur: immune to lightning damage. */
     default boolean paper$immuneToLightning() {
         throw new IllegalStateException("Not implemented");

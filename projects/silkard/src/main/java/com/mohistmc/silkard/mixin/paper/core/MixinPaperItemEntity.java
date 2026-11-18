@@ -18,7 +18,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
  * Paper's mob pickup switch and Purpur's item damage immunities on {@link ItemEntity}. The
- * immunities cancel damage of the matching kind and are saved under Purpur's keys.
+ * immunities cancel damage of the matching kind and are saved under Purpur's keys. Fire immunity
+ * uses the entity-wide override in {@code MixinPaperEntity}.
  */
 @Mixin(ItemEntity.class)
 public abstract class MixinPaperItemEntity implements PaperItemEntity {
@@ -27,23 +28,14 @@ public abstract class MixinPaperItemEntity implements PaperItemEntity {
     @Unique private TriState paper$frictionState = TriState.NOT_SET;
     @Unique private boolean paper$immuneToCactus;
     @Unique private boolean paper$immuneToExplosion;
-    @Unique private boolean paper$immuneToFire;
     @Unique private boolean paper$immuneToLightning;
 
     @Inject(method = "hurtServer", at = @At("HEAD"), cancellable = true)
     private void paper$immunities(ServerLevel level, DamageSource source, float damage, CallbackInfoReturnable<Boolean> cir) {
         if ((this.paper$immuneToCactus && source.is(DamageTypes.CACTUS))
             || (this.paper$immuneToExplosion && source.is(DamageTypeTags.IS_EXPLOSION))
-            || (this.paper$immuneToFire && source.is(DamageTypeTags.IS_FIRE))
             || (this.paper$immuneToLightning && source.is(DamageTypes.LIGHTNING_BOLT))) {
             cir.setReturnValue(false);
-        }
-    }
-
-    @Inject(method = "fireImmune", at = @At("HEAD"), cancellable = true)
-    private void paper$fireImmune(CallbackInfoReturnable<Boolean> cir) {
-        if (this.paper$immuneToFire) {
-            cir.setReturnValue(true);
         }
     }
 
@@ -60,9 +52,6 @@ public abstract class MixinPaperItemEntity implements PaperItemEntity {
         }
         if (this.paper$immuneToExplosion) {
             output.putBoolean("Purpur.ImmuneToExplosion", true);
-        }
-        if (this.paper$immuneToFire) {
-            output.putBoolean("Purpur.ImmuneToFire", true);
         }
         if (this.paper$immuneToLightning) {
             output.putBoolean("Purpur.ImmuneToLightning", true);
@@ -81,7 +70,6 @@ public abstract class MixinPaperItemEntity implements PaperItemEntity {
         });
         this.paper$immuneToCactus = input.getBooleanOr("Purpur.ImmuneToCactus", false);
         this.paper$immuneToExplosion = input.getBooleanOr("Purpur.ImmuneToExplosion", false);
-        this.paper$immuneToFire = input.getBooleanOr("Purpur.ImmuneToFire", false);
         this.paper$immuneToLightning = input.getBooleanOr("Purpur.ImmuneToLightning", false);
     }
 
@@ -125,16 +113,6 @@ public abstract class MixinPaperItemEntity implements PaperItemEntity {
     @Override
     public void paper$setImmuneToExplosion(boolean immune) {
         this.paper$immuneToExplosion = immune;
-    }
-
-    @Override
-    public boolean paper$immuneToFire() {
-        return this.paper$immuneToFire;
-    }
-
-    @Override
-    public void paper$setImmuneToFire(boolean immune) {
-        this.paper$immuneToFire = immune;
     }
 
     @Override

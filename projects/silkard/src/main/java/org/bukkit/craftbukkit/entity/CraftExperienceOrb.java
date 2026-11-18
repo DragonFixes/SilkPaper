@@ -47,6 +47,6 @@ public class CraftExperienceOrb extends CraftEntity implements ExperienceOrb {
 
     @Override
     public SpawnReason getSpawnReason() {
-        return this.getHandle().paper$spawnReason();
+        return this.getHandle().paper$orbSpawnReason();
     }
 }

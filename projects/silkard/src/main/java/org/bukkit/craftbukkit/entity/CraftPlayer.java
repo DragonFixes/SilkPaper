@@ -1801,7 +1801,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
                 return amount;
             }
             orb.setValue(amount);
-            orb.paper$setSpawnReason(org.bukkit.entity.ExperienceOrb.SpawnReason.CUSTOM);
+            orb.paper$setOrbSpawnReason(org.bukkit.entity.ExperienceOrb.SpawnReason.CUSTOM);
             orb.setPosRaw(handle.getX(), handle.getY(), handle.getZ());
 
             final int toRepairFromXpAmount = net.minecraft.world.item.enchantment.EnchantmentHelper.modifyDurabilityToRepairFromXp(
@@ -2448,6 +2448,11 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     }
 
     @Override
+    public void clearDialog() {
+        this.closeDialog();
+    }
+
+    @Override
     public void closeDialog() {
         if (this.getHandle().connection == null) return;
         this.getHandle().connection.send(ClientboundClearDialogPacket.INSTANCE);
@@ -2926,12 +2931,12 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     // Paper start
     @Override
     public net.kyori.adventure.text.Component displayName() {
-        return this.getHandle().adventure$displayName;
+        return this.getHandle().paper$adventureDisplayName();
     }
 
     @Override
     public void displayName(final net.kyori.adventure.text.Component displayName) {
-        this.getHandle().adventure$displayName = displayName != null ? displayName : net.kyori.adventure.text.Component.text(this.getName());
+        this.getHandle().paper$adventureDisplayName(displayName != null ? displayName : net.kyori.adventure.text.Component.text(this.getName()));
         this.getHandle().silkard$displayName(null);
     }
 

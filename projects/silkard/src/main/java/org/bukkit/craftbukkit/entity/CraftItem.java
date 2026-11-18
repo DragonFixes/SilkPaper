@@ -168,7 +168,7 @@ public class CraftItem extends CraftEntity implements Item {
     // Purpur start - Fire Immunity API
     @Override
     public void setImmuneToFire(@org.jetbrains.annotations.Nullable Boolean immuneToFire) {
-        this.getHandle().paper$setImmuneToFire(immuneToFire != null && immuneToFire);
+        this.getHandle().paper$setImmuneToFire(immuneToFire);
     }
     // Purpur end - Fire Immunity API
 
@@ -179,7 +179,7 @@ public class CraftItem extends CraftEntity implements Item {
 
     @Override
     public boolean isImmuneToFire() {
-        return this.getHandle().paper$immuneToFire();
+        return this.getHandle().fireImmune();
     }
 
     @Override

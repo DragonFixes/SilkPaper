@@ -76,12 +76,12 @@ public abstract class MixinPaperExperienceOrb implements PaperMobExtras.Experien
     }
 
     @Override
-    public SpawnReason paper$spawnReason() {
+    public SpawnReason paper$orbSpawnReason() {
         return this.paper$spawnReason;
     }
 
     @Override
-    public void paper$setSpawnReason(SpawnReason reason) {
+    public void paper$setOrbSpawnReason(SpawnReason reason) {
         this.paper$spawnReason = reason;
     }
 }

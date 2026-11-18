@@ -108,11 +108,11 @@ public final class PaperMobExtras {
             throw new IllegalStateException("Not implemented");
         }
 
-        default ExperienceOrb.SpawnReason paper$spawnReason() {
+        default ExperienceOrb.SpawnReason paper$orbSpawnReason() {
             throw new IllegalStateException("Not implemented");
         }
 
-        default void paper$setSpawnReason(ExperienceOrb.SpawnReason reason) {
+        default void paper$setOrbSpawnReason(ExperienceOrb.SpawnReason reason) {
             throw new IllegalStateException("Not implemented");
         }
     }

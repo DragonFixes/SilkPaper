@@ -136,7 +136,7 @@ public final class PaperEntities {
                                                                      @org.jspecify.annotations.Nullable Entity triggerEntity,
                                                                      @org.jspecify.annotations.Nullable Entity sourceEntity) {
         net.minecraft.world.entity.ExperienceOrb orb = new net.minecraft.world.entity.ExperienceOrb(level, x, y, z, value);
-        orb.paper$setSpawnReason(reason);
+        orb.paper$setOrbSpawnReason(reason);
         orb.paper$setTriggerEntityId(triggerEntity == null ? null : triggerEntity.getUUID());
         orb.paper$setSourceEntityId(sourceEntity == null ? null : sourceEntity.getUUID());
         return orb;
