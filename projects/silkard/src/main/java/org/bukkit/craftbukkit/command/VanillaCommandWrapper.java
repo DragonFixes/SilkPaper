@@ -35,7 +35,7 @@ public class VanillaCommandWrapper extends BukkitCommand { // Paper
     }
 
     Commands commands() {
-        return net.minecraft.server.MinecraftServer.getServer().getCommands();
+        return com.mohistmc.silkard.bukkit.BukkitUtils.getServer().getCommands();
     }
 
     public VanillaCommandWrapper(CommandNode<CommandSourceStack> vanillaCommand) {

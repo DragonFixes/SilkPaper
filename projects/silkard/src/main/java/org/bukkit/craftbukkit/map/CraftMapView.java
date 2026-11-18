@@ -33,11 +33,7 @@ public final class CraftMapView implements MapView {
 
     @Override
     public int getId() {
-<<<<<<< silkard
         return worldMap.silkard_id().id();
-=======
-        return this.worldMap.id.id();
->>>>>>> paper
     }
 
     @Override
@@ -57,38 +53,23 @@ public final class CraftMapView implements MapView {
 
     @Override
     public World getWorld() {
-<<<<<<< silkard
         ResourceKey<net.minecraft.world.level.Level> dimension = worldMap.dimension;
         ServerLevel world = BukkitUtils.getServer().getLevel(dimension);
-=======
-        ResourceKey<net.minecraft.world.level.Level> dimension = this.worldMap.dimension;
-        ServerLevel world = MinecraftServer.getServer().getLevel(dimension);
->>>>>>> paper
 
         if (world != null) {
             return world.getWorld();
         }
 
-<<<<<<< silkard
         if (worldMap.silkard_uniqueId() != null) {
             return Bukkit.getServer().getWorld(worldMap.silkard_uniqueId());
-=======
-        if (this.worldMap.uniqueId != null) {
-            return Bukkit.getServer().getWorld(this.worldMap.uniqueId);
->>>>>>> paper
         }
         return null;
     }
 
     @Override
     public void setWorld(World world) {
-<<<<<<< silkard
         worldMap.dimension = ((CraftWorld) world).getHandle().dimension();
         worldMap.silkard_uniqueId(world.getUID());
-=======
-        this.worldMap.dimension = ((CraftWorld) world).getHandle().dimension();
-        this.worldMap.uniqueId = world.getUID();
->>>>>>> paper
     }
 
     @Override

@@ -15,13 +15,6 @@ public class ServerShutdownThread extends TickThread {
     @Override
     public void run() {
         try {
-<<<<<<< silkard
-            server.close();
-        } finally {
-            try {
-               // server.terminal.close();
-            } catch (Exception e) {
-=======
             // Paper start - try to shutdown on main
             server.halt(false, false);
 
@@ -38,7 +31,6 @@ public class ServerShutdownThread extends TickThread {
             if (server.hasStopped()) {
                 while (!server.hasFullyShutdown) Thread.sleep(1000);
                 return;
->>>>>>> paper
             }
             // Looks stalled, close async
             server.forceTicks = true;

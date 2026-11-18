@@ -22,7 +22,12 @@ public class Main {
     // Paper end - Reset loggers after shutdown
 
     public static void main(String[] args) {
-<<<<<<< silkard
+        if (System.getProperty("jdk.nio.maxCachedBufferSize") == null) System.setProperty("jdk.nio.maxCachedBufferSize", "262144"); // Paper - cap per-thread NIO cache size; https://www.evanjones.ca/java-bytebuffer-leak.html
+
+        if (System.getProperty("joml.nounsafe") == null) {
+            System.setProperty("joml.nounsafe", "true");
+        }
+
         // Todo: Installation script
         OptionParser parser = bukkitOptionParser();
 
@@ -100,15 +105,6 @@ public class Main {
     // MixinMain 在 vanilla Main.main HEAD 调用 bukkitOptions 注入这份选项
     public static OptionParser bukkitOptionParser() {
         return new OptionParser() {
-=======
-        if (System.getProperty("jdk.nio.maxCachedBufferSize") == null) System.setProperty("jdk.nio.maxCachedBufferSize", "262144"); // Paper - cap per-thread NIO cache size; https://www.evanjones.ca/java-bytebuffer-leak.html
-
-        if (System.getProperty("joml.nounsafe") == null) {
-            System.setProperty("joml.nounsafe", "true");
-        }
-
-        OptionParser parser = new OptionParser() {
->>>>>>> paper
             {
                 this.acceptsAll(asList("?", "help"), "Show the help");
 
@@ -249,64 +245,10 @@ public class Main {
             return parser.parse(args);
         } catch (joptsimple.OptionException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
-<<<<<<< silkard
             try {
                 return bukkitOptionParser().parse(new String[0]);
             } catch (joptsimple.OptionException ex2) {
                 return new OptionParser().parse(new String[0]);
-=======
-        }
-
-        if ((options == null) || (options.has("?"))) {
-            try {
-                parser.printHelpOn(System.out);
-            } catch (IOException ex) {
-                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } else if (options.has("v")) {
-            System.out.println(CraftServer.class.getPackage().getImplementationVersion());
-        } else {
-            // Do you love Java using + and ! as string based identifiers? I sure do!
-            String path = new File(".").getAbsolutePath();
-            if (path.contains("!") || path.contains("+")) {
-                System.err.println("Cannot run server in a directory with ! or + in the pathname. Please rename the affected folders and try again.");
-                return;
-            }
-
-            // Paper start - Improve java version check
-            boolean skip = Boolean.getBoolean("Paper.IgnoreJavaVersion");
-            String javaVersionName = System.getProperty("java.version");
-            // J2SE SDK/JRE Version String Naming Convention
-            boolean isPreRelease = javaVersionName.contains("-");
-            if (isPreRelease) {
-                if (!skip) {
-                    System.err.println("Unsupported Java detected (" + javaVersionName + "). You are running an unsupported, non official, version. Only general availability versions of Java are supported. Please update your Java version. See https://docs.papermc.io/paper/faq#unsupported-java-detected-what-do-i-do for more information.");
-                    return;
-                }
-
-                System.err.println("Unsupported Java detected ("+ javaVersionName + "), but the check was skipped. Proceed with caution! ");
-            }
-            // Paper end - Improve java version check
-
-            try {
-                if (options.has("nojline")) {
-                    System.setProperty(net.minecrell.terminalconsole.TerminalConsoleAppender.JLINE_OVERRIDE_PROPERTY, "false");
-                    useJline = false;
-                }
-
-                if (options.has("noconsole")) {
-                    Main.useConsole = false;
-                    useJline = false; // Paper
-                    System.setProperty(net.minecrell.terminalconsole.TerminalConsoleAppender.JLINE_OVERRIDE_PROPERTY, "false"); // Paper
-                }
-
-                System.setProperty("library.jansi.version", "Paper"); // Paper - set meaningless jansi version to prevent git builds from crashing on Windows
-                System.setProperty("jdk.console", "java.base"); // Paper - revert default console provider back to java.base so we can have our own jline
-
-                io.papermc.paper.PaperBootstrap.boot(options);
-            } catch (Throwable t) {
-                t.printStackTrace();
->>>>>>> paper
             }
         }
     }

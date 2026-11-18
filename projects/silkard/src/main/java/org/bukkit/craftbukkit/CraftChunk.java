@@ -50,17 +50,10 @@ public class CraftChunk implements Chunk {
     private static final byte[] FULL_LIGHT = new byte[2048];
     private static final byte[] EMPTY_LIGHT = new byte[2048];
 
-<<<<<<< silkard
-    public CraftChunk(net.minecraft.world.level.chunk.LevelChunk levelchunk) {
-        worldServer = levelchunk.level.getMinecraftWorld();
-        x = levelchunk.getPos().x();
-        z = levelchunk.getPos().z();
-=======
     public CraftChunk(net.minecraft.world.level.chunk.LevelChunk chunk) {
         this.level = (ServerLevel) chunk.getLevel();
         this.x = chunk.getPos().x();
         this.z = chunk.getPos().z();
->>>>>>> paper
     }
 
     public CraftChunk(ServerLevel level, int x, int z) {
@@ -338,11 +331,7 @@ public class CraftChunk implements Chunk {
 
     @Override
     public PersistentDataContainer getPersistentDataContainer() {
-<<<<<<< silkard
         return getHandle(ChunkStatus.STRUCTURE_STARTS).silkard_persistentDataContainer();
-=======
-        return this.getHandle(ChunkStatus.STRUCTURE_STARTS).persistentDataContainer;
->>>>>>> paper
     }
 
     @Override

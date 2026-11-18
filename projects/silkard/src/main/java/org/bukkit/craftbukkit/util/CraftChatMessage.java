@@ -6,14 +6,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-<<<<<<< silkard
 import com.google.gson.JsonParser;
 import com.mohistmc.silkard.bukkit.BukkitUtils;
 import com.mojang.serialization.JsonOps;
 import java.net.URISyntaxException;
-=======
 import java.net.URI;
->>>>>>> paper
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -237,15 +234,11 @@ public final class CraftChatMessage {
     }
 
     public static String toJSON(Component component) {
-<<<<<<< silkard
-        return ChatSerializer.toJson(component, BukkitUtils.getDefaultRegistryAccess());
-=======
         return GSON.toJson(
             ComponentSerialization.CODEC
                 .encodeStart(CraftRegistry.getMinecraftRegistry().createSerializationContext(JsonOps.INSTANCE), component)
                 .getOrThrow(JsonParseException::new)
         );
->>>>>>> paper
     }
 
     public static String toJSONOrNull(Component component) {
@@ -256,14 +249,10 @@ public final class CraftChatMessage {
     public static Component fromJSON(String jsonMessage) throws JsonParseException {
         // Note: This also parses plain Strings to text components.
         // Note: An empty message (empty, or only consisting of whitespace) results in null rather than a parse exception.
-<<<<<<< silkard
-        return ChatSerializer.fromJson(jsonMessage, BukkitUtils.getDefaultRegistryAccess());
-=======
         final JsonElement jsonElement = GSON.fromJson(jsonMessage, JsonElement.class);
         return jsonElement == null ? null : ComponentSerialization.CODEC.parse(
             CraftRegistry.getMinecraftRegistry().createSerializationContext(JsonOps.INSTANCE), jsonElement
         ).getOrThrow(JsonParseException::new);
->>>>>>> paper
     }
 
     public static Component fromJSONOrNull(String jsonMessage) {
@@ -326,14 +315,9 @@ public final class CraftChatMessage {
             TextColor color = modi.getColor();
             if (c.getContents() != PlainTextContents.EMPTY || color != null) {
                 if (color != null) {
-<<<<<<< silkard
-                    if (color.silkard$format() != null) {
-                        out.append(color.silkard$format());
-=======
                     final ChatFormatting format = toLegacyFormat(color);
                     if (format != null) {
                         out.append(format);
->>>>>>> paper
                     } else {
                         out.append(ChatColor.COLOR_CHAR).append("x");
                         for (char magic : color.serialize().substring(1).toCharArray()) {
@@ -420,28 +404,5 @@ public final class CraftChatMessage {
     }
 
     private CraftChatMessage() {
-    }
-
-    public static @org.jspecify.annotations.Nullable ChatFormatting toLegacyFormat(final TextColor color) {
-        // rgb values of the named text colors mapped to the legacy chat formatting enum
-        return switch (color.getValue()) {
-            case 0 -> ChatFormatting.BLACK;
-            case 170 -> ChatFormatting.DARK_BLUE;
-            case 43520 -> ChatFormatting.DARK_GREEN;
-            case 43690 -> ChatFormatting.DARK_AQUA;
-            case 11141120 -> ChatFormatting.DARK_RED;
-            case 11141290 -> ChatFormatting.DARK_PURPLE;
-            case 16755200 -> ChatFormatting.GOLD;
-            case 11184810 -> ChatFormatting.GRAY;
-            case 5592405 -> ChatFormatting.DARK_GRAY;
-            case 5592575 -> ChatFormatting.BLUE;
-            case 5635925 -> ChatFormatting.GREEN;
-            case 5636095 -> ChatFormatting.AQUA;
-            case 16733525 -> ChatFormatting.RED;
-            case 16733695 -> ChatFormatting.LIGHT_PURPLE;
-            case 16777045 -> ChatFormatting.YELLOW;
-            case 16777215 -> ChatFormatting.WHITE;
-            default -> null;
-        };
     }
 }

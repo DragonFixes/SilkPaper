@@ -4,14 +4,11 @@ import ca.spottedleaf.moonrise.common.list.ReferenceList;
 import ca.spottedleaf.moonrise.common.util.CoordinateUtils;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicates;
-<<<<<<< silkard
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.mohistmc.silkard.bukkit.BukkitUtils;
 import com.mohistmc.silkard.injected.server.level.ContextTicket;
-=======
 import com.google.common.collect.Lists;
->>>>>>> paper
 import com.mojang.datafixers.util.Pair;
 import io.papermc.paper.FeatureHooks;
 import io.papermc.paper.entity.poi.PaperPoiSearchResult;
@@ -81,13 +78,11 @@ import net.minecraft.world.entity.raid.Raids;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Explosion;
-<<<<<<< silkard
 import net.minecraft.world.level.TicketStorage;
 import net.minecraft.world.level.biome.Climate;
-=======
 import net.minecraft.world.level.Level;
->>>>>>> paper
 import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.storage.LevelResource;
 import net.minecraft.world.level.chunk.ImposterProtoChunk;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.status.ChunkStatus;
@@ -383,7 +378,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
             if (plugin != null) {
                 plugin.getLogger().warning("Plugin is %s at (%s, %s), this might cause issues.".formatted(reason, x, z));
             }
-            if (net.minecraft.server.MinecraftServer.getServer().isDebugging()) {
+            if (com.mohistmc.silkard.bukkit.BukkitUtils.getServer().isDebugging()) {
                 io.papermc.paper.util.TraceUtil.dumpTraceForThread("Dangerous chunk retrieval");
             }
         }
@@ -610,16 +605,10 @@ public class CraftWorld extends CraftRegionAccessor implements World {
         Preconditions.checkArgument(plugin != null, "null plugin");
         Preconditions.checkArgument(plugin.isEnabled(), "plugin is not enabled");
 
-<<<<<<< silkard
         TicketStorage chunkDistanceManager = this.world.getChunkSource().ticketStorage;
 
         if (chunkDistanceManager.addTicket(ChunkPos.pack(x, z), ContextTicket.of(TicketType.PLUGIN_TICKET, ChunkMap.FORCED_TICKET_LEVEL, plugin))) { // keep in-line with force loading, add at level 31
             this.getChunkAt(x, z); // ensure loaded
-=======
-        final DistanceManager distanceManager = this.world.getChunkSource().chunkMap.getDistanceManager();
-        if (distanceManager.ticketStorage.addPluginRegionTicket(new ChunkPos(x, z), plugin)) {
-            this.getChunkAt(x, z); // ensure it's loaded
->>>>>>> paper
             return true;
         }
 
@@ -630,31 +619,20 @@ public class CraftWorld extends CraftRegionAccessor implements World {
     public boolean removePluginChunkTicket(int x, int z, Plugin plugin) {
         Preconditions.checkNotNull(plugin, "null plugin");
 
-<<<<<<< silkard
         TicketStorage chunkDistanceManager = this.world.getChunkSource().ticketStorage;
         return chunkDistanceManager.removeTicket(ChunkPos.pack(x, z), ContextTicket.of(TicketType.PLUGIN_TICKET, ChunkMap.FORCED_TICKET_LEVEL, plugin)); // keep in-line with force loading, remove at level 31
-=======
-        final DistanceManager distanceManager = this.world.getChunkSource().chunkMap.getDistanceManager();
-        return distanceManager.ticketStorage.removePluginRegionTicket(new ChunkPos(x, z), plugin);
->>>>>>> paper
     }
 
     @Override
     public void removePluginChunkTickets(Plugin plugin) {
         Preconditions.checkNotNull(plugin, "null plugin");
 
-<<<<<<< silkard
         TicketStorage chunkDistanceManager = this.world.getChunkSource().ticketStorage;
         chunkDistanceManager.removeTicketIf((ticket, i) -> ticket.getType() == TicketType.PLUGIN_TICKET && Objects.equals(ticket.silkard_key(), plugin), null);
-=======
-        DistanceManager chunkDistanceManager = this.world.getChunkSource().chunkMap.getDistanceManager();
-        chunkDistanceManager.ticketStorage.removeAllPluginRegionTickets(TicketType.PLUGIN_TICKET, ChunkMap.FORCED_TICKET_LEVEL, plugin);
->>>>>>> paper
     }
 
     @Override
     public Collection<Plugin> getPluginChunkTickets(int x, int z) {
-<<<<<<< silkard
         TicketStorage chunkDistanceManager = this.world.getChunkSource().ticketStorage;
         List<Ticket> tickets = chunkDistanceManager.getTickets(ChunkPos.pack(x, z));
 
@@ -670,14 +648,10 @@ public class CraftWorld extends CraftRegionAccessor implements World {
         }
 
         return ret.build();
-=======
-        return FeatureHooks.getPluginChunkTickets(this.world, x, z); // Paper - chunk system
->>>>>>> paper
     }
 
     @Override
     public Map<Plugin, Collection<Chunk>> getPluginChunkTickets() {
-<<<<<<< silkard
         Map<Plugin, ImmutableList.Builder<Chunk>> ret = new HashMap<>();
         TicketStorage chunkDistanceManager = this.world.getChunkSource().ticketStorage;
 
@@ -700,9 +674,6 @@ public class CraftWorld extends CraftRegionAccessor implements World {
         }
 
         return ret.entrySet().stream().collect(ImmutableMap.toImmutableMap(Map.Entry::getKey, (entry) -> entry.getValue().build()));
-=======
-        return FeatureHooks.getPluginChunkTickets(this.world); // Paper - chunk system
->>>>>>> paper
     }
 
     @NotNull
@@ -845,40 +816,19 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
     @Override
     public boolean generateTree(Location loc, TreeType type, BlockChangeDelegate delegate) {
-<<<<<<< silkard
-        world.silkard$captureTreeGeneration(true);
-        world.silkard$captureBlockStates(true);
-        boolean grownTree = generateTree(loc, type);
-        world.silkard$captureBlockStates(false);
-        world.silkard$captureTreeGeneration(false);
-        if (grownTree) { // Copy block data to delegate
-            for (BlockState blockstate : world.silkard$capturedBlockStates().values()) {
-                BlockPos position = ((CraftBlockState) blockstate).getPosition();
-                net.minecraft.world.level.block.state.BlockState oldBlock = world.getBlockState(position);
-                int flag = ((CraftBlockState) blockstate).getFlag();
-                delegate.setBlockData(blockstate.getX(), blockstate.getY(), blockstate.getZ(), blockstate.getBlockData());
-                net.minecraft.world.level.block.state.BlockState newBlock = world.getBlockState(position);
-                world.notifyAndUpdatePhysics(position, null, oldBlock, newBlock, newBlock, flag, 512);
-            }
-            world.silkard$capturedBlockStates().clear();
-            return true;
-        } else {
-            world.silkard$capturedBlockStates().clear();
-            return false;
-=======
         if (org.dreeam.leaf.config.modules.async.SparklyPaperParallelWorldTicking.enabled) ca.spottedleaf.moonrise.common.util.TickThread.ensureTickThread(this.world, loc.getX(), loc.getZ(), "Cannot generate tree asynchronously"); // Leaf - SparklyPaper - parallel world ticking (additional concurrency issues logs)
-        this.world.captureTreeGeneration = true;
-        this.world.captureBlockStates = true;
+        this.world.silkard$captureTreeGeneration(true);
+        this.world.silkard$captureBlockStates(true);
         List<org.bukkit.craftbukkit.block.CraftBlockState> capturedBlockStates;
         boolean grownTree;
         try {
             grownTree = this.generateTree(loc, type);
         } finally {
-            this.world.captureTreeGeneration = false;
-            this.world.captureBlockStates = false;
+            this.world.silkard$captureTreeGeneration(false);
+            this.world.silkard$captureBlockStates(false);
 
-            capturedBlockStates = new ArrayList<>(this.world.capturedBlockStates.values());
-            this.world.capturedBlockStates.clear();
+            capturedBlockStates = new ArrayList<>(this.world.silkard$capturedBlockStates().values());
+            this.world.silkard$capturedBlockStates().clear();
         }
         if (grownTree) { // Copy block data to delegate
             for (CraftBlockState snapshot : capturedBlockStates) {
@@ -889,7 +839,6 @@ public class CraftWorld extends CraftRegionAccessor implements World {
                 net.minecraft.world.level.block.state.BlockState newBlock = this.world.getBlockState(position);
                 this.world.notifyAndUpdatePhysics(position, null, oldBlock, newBlock, newBlock, flags, net.minecraft.world.level.block.Block.UPDATE_LIMIT);
             }
->>>>>>> paper
         }
         return grownTree;
     }
@@ -901,11 +850,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
     @Override
     public UUID getUID() {
-<<<<<<< silkard
         return world.silkard$uuid();
-=======
-        return this.world.uuid;
->>>>>>> paper
     }
 
     @Override
@@ -979,28 +924,15 @@ public class CraftWorld extends CraftRegionAccessor implements World {
         if (!breakBlocks) {
             explosionType = net.minecraft.world.level.Level.ExplosionInteraction.NONE; // Don't break blocks
         } else if (source == null) {
-<<<<<<< silkard
-            explosionType = net.minecraft.world.level.Level.ExplosionInteraction.BLOCK; // Break blocks, don't decay drops
-=======
             explosionType = net.minecraft.world.level.Level.ExplosionInteraction.STANDARD; // Break blocks, don't decay drops
         } else if (source instanceof org.bukkit.entity.minecart.ExplosiveMinecart || source instanceof org.bukkit.entity.TNTPrimed) {
             explosionType = net.minecraft.world.level.Level.ExplosionInteraction.TNT;
->>>>>>> paper
         } else {
             explosionType = net.minecraft.world.level.Level.ExplosionInteraction.MOB; // Respect mobGriefing gamerule
         }
 
         net.minecraft.world.entity.Entity entity = (source == null) ? null : ((CraftEntity) source).getHandle();
-<<<<<<< silkard
-        return !world.explode0(entity, Explosion.getDefaultDamageSource(world, entity), null, x, y, z, power, setFire, explosionType, ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, net.minecraft.world.level.Level.DEFAULT_EXPLOSION_BLOCK_PARTICLES, SoundEvents.GENERIC_EXPLODE).silkard$wasCanceled();
-    }
-
-    @Override
-    public boolean createExplosion(Location loc, float power) {
-        return createExplosion(loc, power, false);
-=======
-        return !this.world.explode0(entity, Explosion.getDefaultDamageSource(this.world, entity), null, x, y, z, power, setFire, explosionType, ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, Level.DEFAULT_EXPLOSION_BLOCK_PARTICLES, SoundEvents.GENERIC_EXPLODE, configurator).wasCanceled; // Paper - expand explosion API
->>>>>>> paper
+        return !this.world.explode0(entity, Explosion.getDefaultDamageSource(this.world, entity), null, x, y, z, power, setFire, explosionType, ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, Level.DEFAULT_EXPLOSION_BLOCK_PARTICLES, SoundEvents.GENERIC_EXPLODE, configurator).silkard$wasCanceled(); // Paper - expand explosion API
     }
     // Paper start
     @Override
@@ -1304,11 +1236,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
     @Override
     public void setDifficulty(Difficulty difficulty) {
-<<<<<<< silkard
         this.getHandle().silkard$serverLevelDataCB().setDifficulty(net.minecraft.world.Difficulty.byId(difficulty.getValue()));
-=======
-        this.getHandle().getServer().setDifficulty(this.getHandle(), CraftDifficulty.toMinecraft(difficulty), null, true);
->>>>>>> paper
     }
 
     @Override
@@ -1451,16 +1379,12 @@ public class CraftWorld extends CraftRegionAccessor implements World {
         Preconditions.checkArgument(material != null, "Material cannot be null");
         Preconditions.checkArgument(material.isBlock(), "Material.%s must be a block", material);
 
-<<<<<<< silkard
-        FallingBlockEntity entity = BukkitUtils.fall(world, BlockPos.containing(location.getX(), location.getY(), location.getZ()), CraftBlockType.bukkitToMinecraft(material).defaultBlockState(), SpawnReason.CUSTOM);
-=======
         // Paper start - restore API behavior for spawning falling blocks
         FallingBlockEntity entity = new FallingBlockEntity(this.world, location.getX(), location.getY(), location.getZ(), CraftBlockType.bukkitToMinecraft(material).defaultBlockState()); // Paper
         entity.time = 1;
 
         this.world.addFreshEntity(entity, SpawnReason.CUSTOM);
         // Paper end - restore API behavior for spawning falling blocks
->>>>>>> paper
         return (FallingBlock) entity.getBukkitEntity();
     }
 
@@ -1469,16 +1393,12 @@ public class CraftWorld extends CraftRegionAccessor implements World {
         Preconditions.checkArgument(location != null, "Location cannot be null");
         Preconditions.checkArgument(data != null, "BlockData cannot be null");
 
-<<<<<<< silkard
-        FallingBlockEntity entity = BukkitUtils.fall(world, BlockPos.containing(location.getX(), location.getY(), location.getZ()), ((CraftBlockData) data).getState(), SpawnReason.CUSTOM);
-=======
         // Paper start - restore API behavior for spawning falling blocks
         FallingBlockEntity entity = new FallingBlockEntity(this.world, location.getX(), location.getY(), location.getZ(), ((CraftBlockData) data).getState());
         entity.time = 1;
 
         this.world.addFreshEntity(entity, SpawnReason.CUSTOM);
         // Paper end - restore API behavior for spawning falling blocks
->>>>>>> paper
         return (FallingBlock) entity.getBukkitEntity();
     }
 
@@ -1595,13 +1515,9 @@ public class CraftWorld extends CraftRegionAccessor implements World {
     }
 
     @Override
-<<<<<<< silkard
-    public File getWorldFolder() {
-        return world.silkard_storageSource().getLevelPath(LevelResource.ROOT).toFile().getParentFile();
-=======
     public Path getWorldPath() {
-        return this.world.getServer().storageSource.getDimensionPath(this.world.dimension());
->>>>>>> paper
+        // Each Silkard world keeps its own storage folder (Bukkit layout), not a dimension folder of the main world.
+        return this.world.silkard_storageSource().getLevelPath(LevelResource.ROOT).getParent();
     }
 
     @Override
@@ -1640,99 +1556,21 @@ public class CraftWorld extends CraftRegionAccessor implements World {
     }
 
     @Override
-<<<<<<< silkard
-    public void setHardcore(boolean hardcore) {
-        world.silkard$serverLevelDataCB().settings.difficultySettings().hardcore = hardcore;
-=======
     public boolean isHardcore() {
         return this.world.getLevelData().isHardcore();
->>>>>>> paper
     }
 
     @Override
     public void setHardcore(boolean hardcore) {
-        this.world.serverLevelData.setHardcore(hardcore);
+        this.world.silkard$serverLevelDataCB().settings.difficultySettings().hardcore = hardcore;
     }
 
     @Override
-<<<<<<< silkard
-    @Deprecated
-    public void setTicksPerAnimalSpawns(int ticksPerAnimalSpawns) {
-        setTicksPerSpawns(SpawnCategory.ANIMAL, ticksPerAnimalSpawns);
-    }
-
-    @Override
-    @Deprecated
-    public long getTicksPerMonsterSpawns() {
-        return getTicksPerSpawns(SpawnCategory.MONSTER);
-    }
-
-    @Override
-    @Deprecated
-    public void setTicksPerMonsterSpawns(int ticksPerMonsterSpawns) {
-        setTicksPerSpawns(SpawnCategory.MONSTER, ticksPerMonsterSpawns);
-    }
-
-    @Override
-    @Deprecated
-    public long getTicksPerWaterSpawns() {
-        return getTicksPerSpawns(SpawnCategory.WATER_ANIMAL);
-    }
-
-    @Override
-    @Deprecated
-    public void setTicksPerWaterSpawns(int ticksPerWaterSpawns) {
-        setTicksPerSpawns(SpawnCategory.WATER_ANIMAL, ticksPerWaterSpawns);
-    }
-
-    @Override
-    @Deprecated
-    public long getTicksPerWaterAmbientSpawns() {
-        return getTicksPerSpawns(SpawnCategory.WATER_AMBIENT);
-    }
-
-    @Override
-    @Deprecated
-    public void setTicksPerWaterAmbientSpawns(int ticksPerWaterAmbientSpawns) {
-        setTicksPerSpawns(SpawnCategory.WATER_AMBIENT, ticksPerWaterAmbientSpawns);
-    }
-
-    @Override
-    @Deprecated
-    public long getTicksPerWaterUndergroundCreatureSpawns() {
-        return getTicksPerSpawns(SpawnCategory.WATER_UNDERGROUND_CREATURE);
-    }
-
-    @Override
-    @Deprecated
-    public void setTicksPerWaterUndergroundCreatureSpawns(int ticksPerWaterUndergroundCreatureSpawns) {
-        setTicksPerSpawns(SpawnCategory.WATER_UNDERGROUND_CREATURE, ticksPerWaterUndergroundCreatureSpawns);
-    }
-
-    @Override
-    @Deprecated
-    public long getTicksPerAmbientSpawns() {
-        return getTicksPerSpawns(SpawnCategory.AMBIENT);
-    }
-
-    @Override
-    @Deprecated
-    public void setTicksPerAmbientSpawns(int ticksPerAmbientSpawns) {
-        setTicksPerSpawns(SpawnCategory.AMBIENT, ticksPerAmbientSpawns);
-    }
-
-    @Override
-=======
->>>>>>> paper
     public void setTicksPerSpawns(SpawnCategory spawnCategory, int ticksPerCategorySpawn) {
         Preconditions.checkArgument(spawnCategory != null, "SpawnCategory cannot be null");
         Preconditions.checkArgument(CraftSpawnCategory.isValidForLimits(spawnCategory), "SpawnCategory.%s are not supported", spawnCategory);
 
-<<<<<<< silkard
         world.silkard$ticksPerSpawnCategory().put(spawnCategory, (long) ticksPerCategorySpawn);
-=======
-        this.world.ticksPerSpawnCategory.put(spawnCategory, ticksPerCategorySpawn);
->>>>>>> paper
     }
 
     @Override
@@ -1740,11 +1578,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
         Preconditions.checkArgument(spawnCategory != null, "SpawnCategory cannot be null");
         Preconditions.checkArgument(CraftSpawnCategory.isValidForLimits(spawnCategory), "SpawnCategory.%s are not supported", spawnCategory);
 
-<<<<<<< silkard
         return world.silkard$ticksPerSpawnCategory().getLong(spawnCategory);
-=======
-        return this.world.ticksPerSpawnCategory.getLong(spawnCategory);
->>>>>>> paper
     }
 
     @Override

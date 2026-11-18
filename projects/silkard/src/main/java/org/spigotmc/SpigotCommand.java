@@ -1,12 +1,15 @@
 package org.spigotmc;
 
 import java.io.File;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-public class SpigotCommand extends Command
-{
+import static net.kyori.adventure.text.Component.text;
+
+public class SpigotCommand extends Command {
 
     public SpigotCommand(String name) {
         super(name);
@@ -17,23 +20,30 @@ public class SpigotCommand extends Command
 
     @Override
     public boolean execute(CommandSender sender, String commandLabel, String[] args) {
-        if (!testPermission(sender)) return true;
+        if (!this.testPermission(sender)) return true;
 
-        if (args.length != 1) {
-            sender.sendMessage(ChatColor.RED + "Usage: " + usageMessage);
+        if (args.length != 1 || !args[0].equals("reload")) {
+            sender.sendMessage(text("Usage: " + this.usageMessage, NamedTextColor.RED));
             return false;
         }
 
-        if (args[0].equals("reload")) {
-            Command.broadcastCommandMessage(sender, ChatColor.RED + "Please note that this command is not supported and may cause issues.");
-            Command.broadcastCommandMessage(sender, ChatColor.RED + "If you encounter any issues please use the /stop command to restart your server.");
 
-            SpigotConfig.init(new File("spigot.yml"));
-            org.bukkit.craftbukkit.CraftServer craftServer = (org.bukkit.craftbukkit.CraftServer) org.bukkit.Bukkit.getServer();
-            craftServer.reloadCount++;
+        Command.broadcastCommandMessage(sender, text().color(NamedTextColor.RED)
+            .append(text("Please note that this command is not supported and may cause issues."))
+            .appendNewline()
+            .append(text("If you encounter any issues please use the /stop command to restart your server."))
+            .build()
+        );
 
-            Command.broadcastCommandMessage(sender, ChatColor.GREEN + "Reload complete.");
+        MinecraftServer console = com.mohistmc.silkard.bukkit.BukkitUtils.getServer();
+        org.spigotmc.SpigotConfig.init((File) console.silkard_options().valueOf("spigot-settings"));
+        for (ServerLevel world : console.getAllLevels()) {
+            world.spigotConfig.init();
         }
+        console.silkard$server().reloadCount++;
+
+        Command.broadcastCommandMessage(sender, text("Reload complete.", NamedTextColor.GREEN));
+        
 
         return true;
     }

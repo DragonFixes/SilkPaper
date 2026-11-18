@@ -80,11 +80,7 @@ public class ConsoleCommandCompleter implements Completer {
                 return tabEvent.isCancelled() ? Collections.emptyList() : tabEvent.getCompletions();
             }
         };
-<<<<<<< silkard
         server.getServer().silkard_processQueue().add(waitable);
-=======
-        server.getServer().processQueue.add(waitable); // Paper - Remove "this."
->>>>>>> paper
         try {
             List<String> offers = waitable.get();
             if (offers == null) {
