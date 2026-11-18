@@ -8,6 +8,7 @@
     "MixinPaperGoal",
     "MixinPaperLootableHolder",
     "MixinPaperMinecraftServer",
+    "MixinPaperReloadableServerResources",
     "MixinPaperServerCommonPacketListenerImpl",
     "MixinPaperServerConfigurationPacketListenerImpl",
     "MixinPaperServerGamePacketListenerImpl",
