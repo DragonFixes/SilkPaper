@@ -33,7 +33,7 @@ public abstract class MixinShapedRecipe implements ContextShapedRecipe {
     // CraftBukkit start
     @Override
     public org.bukkit.inventory.ShapedRecipe toBukkitRecipe(NamespacedKey id) {
-        CraftItemStack result = CraftItemStack.asCraftMirror(this.result);
+        CraftItemStack result = com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(this.result);
         CraftShapedRecipe recipe = new CraftShapedRecipe(id, result, (ShapedRecipe) (Object) this);
         recipe.setGroup(((ShapedRecipe) (Object) this).group());
         recipe.setCategory(CraftRecipe.getCategory(((ShapedRecipe) (Object) this).category()));
@@ -81,7 +81,7 @@ public abstract class MixinShapedRecipe implements ContextShapedRecipe {
         }
         char c = 'a';
         for (Optional<Ingredient> list : this.pattern.ingredients()) {
-            RecipeChoice choice = CraftRecipe.toBukkit(list);
+            RecipeChoice choice = CraftRecipe.toChoice(list);
             if (choice != null) {
                 recipe.setIngredient(c, choice);
             }

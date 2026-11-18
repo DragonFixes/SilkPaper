@@ -30,7 +30,7 @@ public class MixinMaceItem {
         EntityKnockbackEvent event = CraftEventFactory.callEntityKnockbackEvent((CraftLivingEntity) nearby.getBukkitEntity(), attacker, EntityKnockbackEvent.KnockbackCause.ENTITY_ATTACK, knockbackPower, raw, x, y, z);
 
         if (!event.isCancelled()) {
-            nearby.push(CraftVector.toNMS(event.getFinalKnockback()));
+            nearby.push(CraftVector.toVec3(event.getFinalKnockback()));
         }
     }
 }

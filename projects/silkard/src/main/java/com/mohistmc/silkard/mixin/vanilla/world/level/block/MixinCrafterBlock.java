@@ -141,7 +141,7 @@ public abstract class MixinCrafterBlock {
     // CraftBukkit end
 
     private InventoryMoveItemEvent silkard$moveItemEvent(ServerLevel level, CrafterBlockEntity blockEntity, Container into, ItemStack item) {
-        CraftItemStack craftItemStack = CraftItemStack.asCraftMirror(item);
+        CraftItemStack craftItemStack = com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(item);
 
         Inventory destinationInventory;
         // Have to special case large chests as they work oddly

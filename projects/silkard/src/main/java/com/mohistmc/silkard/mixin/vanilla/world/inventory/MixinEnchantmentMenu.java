@@ -87,7 +87,7 @@ public abstract class MixinEnchantmentMenu extends AbstractContainerMenu {
     private void silkard$slotsChanged$broadcastChanges(EnchantmentMenu menu) {
         // CraftBukkit start - PrepareItemEnchantEvent
         net.minecraft.world.item.ItemStack itemstack = this.enchantSlots.getItem(0);
-        org.bukkit.craftbukkit.inventory.CraftItemStack item = CraftItemStack.asCraftMirror(itemstack);
+        org.bukkit.craftbukkit.inventory.CraftItemStack item = com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(itemstack);
         EnchantmentOffer[] offers = new EnchantmentOffer[3];
         // access idmap needs registry access - use player's level
         net.minecraft.world.level.Level level = this.player.getWorld() != null ?
@@ -152,7 +152,7 @@ public abstract class MixinEnchantmentMenu extends AbstractContainerMenu {
                     for (EnchantmentInstance instance : list) {
                         enchants.put(CraftEnchantment.minecraftHolderToBukkit(instance.enchantment()), instance.level());
                     }
-                    CraftItemStack item = CraftItemStack.asCraftMirror(itemstack2);
+                    CraftItemStack item = com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(itemstack2);
 
                     org.bukkit.enchantments.Enchantment hintedEnchantment = CraftEnchantment.minecraftHolderToBukkit(idmap.byId(enchantClue[buttonId]));
                     int hintedEnchantmentLevel = levelClue[buttonId];

@@ -29,7 +29,7 @@ public class MixinStandingAndWallBlockItem {
         boolean defaultReturn = levelReader.isUnobstructed(blockState, blockPos, collisionContext);
         org.bukkit.entity.Player player = (context.getPlayer() instanceof ServerPlayer serverPlayer) ? (org.bukkit.entity.Player) serverPlayer.getBukkitEntity() : null;
 
-        BlockCanBuildEvent event = new BlockCanBuildEvent(CraftBlock.at(context.getLevel(), blockPos), player, CraftBlockData.fromData(blockState), defaultReturn);
+        BlockCanBuildEvent event = new BlockCanBuildEvent(CraftBlock.at(context.getLevel(), blockPos), player, CraftBlockData.createData(blockState), defaultReturn);
         context.getLevel().getCraftServer().getPluginManager().callEvent(event);
 
         return event.isBuildable();

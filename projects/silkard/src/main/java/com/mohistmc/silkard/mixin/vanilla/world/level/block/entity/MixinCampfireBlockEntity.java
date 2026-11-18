@@ -53,7 +53,7 @@ public class MixinCampfireBlockEntity {
                     ItemStack itemstack1 = check.getRecipeFor(input, level).map(holder -> holder.value().assemble(input)).orElse(itemstack);
 
                     if (itemstack1.isItemEnabled(level.enabledFeatures())) {
-                        BlockCookEvent event = new BlockCookEvent(CraftBlock.at(level, pos), CraftItemStack.asCraftMirror(itemstack), CraftItemStack.asBukkitCopy(itemstack1));
+                        BlockCookEvent event = new BlockCookEvent(CraftBlock.at(level, pos), com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(itemstack), CraftItemStack.asBukkitCopy(itemstack1));
                         ((ContextLevel) level).getCraftServer().getPluginManager().callEvent(event);
                         if (event.isCancelled()) {
                             return;
@@ -78,7 +78,7 @@ public class MixinCampfireBlockEntity {
     @ModifyExpressionValue(method = "placeFood", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/crafting/CampfireCookingRecipe;cookingTime()I"))
     private int silkard$campfireStart(int original, ServerLevel level, LivingEntity sourceEntity, ItemStack placeItem, @Local(ordinal = 0) Optional<RecipeHolder<CampfireCookingRecipe>> optional) {
         BlockPos pos = ((net.minecraft.world.level.block.entity.BlockEntity) (Object) this).getBlockPos();
-        CampfireStartEvent event = new CampfireStartEvent(CraftBlock.at(level, pos), CraftItemStack.asCraftMirror(placeItem), (org.bukkit.inventory.CampfireRecipe) optional.get().toBukkitRecipe());
+        CampfireStartEvent event = new CampfireStartEvent(CraftBlock.at(level, pos), com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(placeItem), (org.bukkit.inventory.CampfireRecipe) optional.get().toBukkitRecipe());
         ((ContextLevel) level).getCraftServer().getPluginManager().callEvent(event);
         return event.getTotalCookTime();
     }

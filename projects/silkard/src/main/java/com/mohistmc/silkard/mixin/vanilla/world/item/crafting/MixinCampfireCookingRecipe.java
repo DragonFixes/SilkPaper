@@ -20,9 +20,9 @@ public abstract class MixinCampfireCookingRecipe implements ContextRecipe, Conte
     @Override
     public org.bukkit.inventory.Recipe toBukkitRecipe(NamespacedKey id) {
         CampfireCookingRecipe handle = (CampfireCookingRecipe) (Object) this;
-        CraftItemStack result = CraftItemStack.asCraftMirror(this.silkard$result());
+        CraftItemStack result = com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(this.silkard$result());
 
-        CraftCampfireRecipe recipe = new CraftCampfireRecipe(id, result, CraftRecipe.toBukkit(handle.input()), handle.experience(), handle.cookingTime());
+        CraftCampfireRecipe recipe = new CraftCampfireRecipe(id, result, CraftRecipe.toChoice(handle.input()), handle.experience(), handle.cookingTime());
         recipe.setGroup(handle.group());
         recipe.setCategory(CraftRecipe.getCategory(handle.category()));
 

@@ -20,9 +20,9 @@ public abstract class MixinSmokingRecipe implements ContextRecipe, ContextSingle
     @Override
     public org.bukkit.inventory.Recipe toBukkitRecipe(NamespacedKey id) {
         SmokingRecipe handle = (SmokingRecipe) (Object) this;
-        CraftItemStack result = CraftItemStack.asCraftMirror(this.silkard$result());
+        CraftItemStack result = com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(this.silkard$result());
 
-        CraftSmokingRecipe recipe = new CraftSmokingRecipe(id, result, CraftRecipe.toBukkit(handle.input()), handle.experience(), handle.cookingTime());
+        CraftSmokingRecipe recipe = new CraftSmokingRecipe(id, result, CraftRecipe.toChoice(handle.input()), handle.experience(), handle.cookingTime());
         recipe.setGroup(handle.group());
         recipe.setCategory(CraftRecipe.getCategory(handle.category()));
 

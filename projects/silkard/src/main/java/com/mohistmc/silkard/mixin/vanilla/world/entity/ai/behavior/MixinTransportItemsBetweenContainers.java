@@ -23,7 +23,7 @@ public class MixinTransportItemsBetweenContainers {
     private void silkard$targetBlockEvent(ServerLevel level, PathfinderMob body, CallbackInfoReturnable<Optional<TransportItemsBetweenContainers.TransportItemTarget>> cir) {
         if (cir.getReturnValue().isPresent()) {
             TransportItemsBetweenContainers.TransportItemTarget target = cir.getReturnValue().get();
-            EntityTargetBlockEvent event = CraftEventFactory.callEntityTargetBlockEvent(body, level, target.pos());
+            EntityTargetBlockEvent event = com.mohistmc.silkard.bukkit.CraftCompat.callEntityTargetBlockEvent(body, level, target.pos());
             if (event.isCancelled()) {
                 cir.setReturnValue(Optional.empty());
             }

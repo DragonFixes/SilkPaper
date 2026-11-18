@@ -84,13 +84,13 @@ public class MixinPortalForcer implements ContextPortalForcer {
 
     @Inject(method = "createPortal", at = @At("RETURN"), cancellable = true)
     private void silkard$portalCreateEvent(BlockPos origin, Direction.Axis portalAxis, CallbackInfoReturnable<Optional<BlockUtil.FoundRectangle>> cir) {
-        PortalCreateEvent event = new PortalCreateEvent((java.util.List<org.bukkit.block.BlockState>) (java.util.List) this.silkard$blockList.getList(), this.level.getWorld(), this.portalCreateEntity == null ? null : this.portalCreateEntity.getBukkitEntity(), PortalCreateEvent.CreateReason.NETHER_PAIR);
+        PortalCreateEvent event = new PortalCreateEvent((java.util.List<org.bukkit.block.BlockState>) (java.util.List) this.silkard$blockList.getSnapshotBlocks(), this.level.getWorld(), this.portalCreateEntity == null ? null : this.portalCreateEntity.getBukkitEntity(), PortalCreateEvent.CreateReason.NETHER_PAIR);
         this.level.getCraftServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             cir.setReturnValue(Optional.empty());
             return;
         }
-        this.silkard$blockList.updateList();
+        this.silkard$blockList.placeBlocks();
     }
     // CraftBukkit end
 }

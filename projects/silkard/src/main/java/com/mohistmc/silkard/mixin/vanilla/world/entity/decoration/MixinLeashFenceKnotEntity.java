@@ -42,7 +42,7 @@ public class MixinLeashFenceKnotEntity {
     @WrapOperation(method = "interact", at = @At(value = "INVOKE", ordinal = 1, target = "Lnet/minecraft/world/entity/Leashable;setLeashedTo(Lnet/minecraft/world/entity/Entity;Z)V"))
     private void silkard$unleashFromKnot(Leashable leashable, Entity holder, boolean sendPacket, Operation<Void> original, Player player, InteractionHand hand, Vec3 position, @Local(ordinal = 1) LocalBooleanRef flag1) {
         if (leashable instanceof Entity leashed) {
-            if (CraftEventFactory.callPlayerUnleashEntityEvent(leashed, player, hand).isCancelled()) {
+            if (com.mohistmc.silkard.bukkit.CraftCompat.callPlayerUnleashEntityEvent(leashed, player, hand).isCancelled()) {
                 return;
             }
             if (CraftEventFactory.callPlayerLeashEntityEvent(leashed, (Entity) (Object) this, player, hand).isCancelled()) {

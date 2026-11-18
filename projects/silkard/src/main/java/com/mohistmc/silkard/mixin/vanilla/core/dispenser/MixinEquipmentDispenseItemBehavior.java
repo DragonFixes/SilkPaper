@@ -42,7 +42,7 @@ public abstract class MixinEquipmentDispenseItemBehavior {
             // CraftBukkit start
             ItemStack itemstack1 = dispensed.split(1);
             org.bukkit.block.Block block = CraftBlock.at(source.level(), source.pos());
-            BlockDispenseArmorEvent event = new BlockDispenseArmorEvent(block, CraftItemStack.asCraftMirror(itemstack1).clone(), (CraftLivingEntity) livingentity.getBukkitEntity());
+            BlockDispenseArmorEvent event = new BlockDispenseArmorEvent(block, com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(itemstack1).clone(), (CraftLivingEntity) livingentity.getBukkitEntity());
             source.level().getCraftServer().getPluginManager().callEvent(event);
 
             if (event.isCancelled()) {
@@ -50,7 +50,7 @@ public abstract class MixinEquipmentDispenseItemBehavior {
                 return false;
             }
 
-            if (!event.getItem().equals(CraftItemStack.asCraftMirror(itemstack1))) {
+            if (!event.getItem().equals(com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(itemstack1))) {
                 dispensed.grow(1);
                 // Chain to handler for new item
                 ItemStack eventStack = CraftItemStack.asNMSCopy(event.getItem());

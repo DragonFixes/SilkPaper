@@ -246,7 +246,7 @@ public class BukkitUtils {
 
     public static boolean changeCauldronLevel(Level level, BlockPos pos, BlockState newBlock, Entity entity, CauldronLevelChangeEvent.ChangeReason reason) {
         CraftBlockState newState = CraftBlockStates.getBlockState(level, pos);
-        newState.setData(newBlock);
+        newState.setBlock(newBlock);
 
         CauldronLevelChangeEvent event = new CauldronLevelChangeEvent(
                 ((ContextLevel) level).getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ()),

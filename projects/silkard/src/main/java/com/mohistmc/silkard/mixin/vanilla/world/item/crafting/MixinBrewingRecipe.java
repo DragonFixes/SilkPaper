@@ -22,7 +22,7 @@ public abstract class MixinBrewingRecipe implements ContextRecipe {
     // CraftBukkit start
     @Override
     public org.bukkit.inventory.Recipe toBukkitRecipe(NamespacedKey id) {
-        CraftItemStack result = CraftItemStack.asCraftMirror(this.getOutput());
+        CraftItemStack result = com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(this.getOutput());
 
         CraftBrewingRecipe recipe = new CraftBrewingRecipe(id, result, (BrewingRecipe) (Object) this);
 

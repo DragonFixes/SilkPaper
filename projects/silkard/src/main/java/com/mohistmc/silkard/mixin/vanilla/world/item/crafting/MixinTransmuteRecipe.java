@@ -50,7 +50,7 @@ public abstract class MixinTransmuteRecipe implements ContextRecipe {
     // CraftBukkit start
     @Override
     public org.bukkit.inventory.Recipe toBukkitRecipe(NamespacedKey id) {
-        return new CraftTransmuteRecipe(id, CraftItemStack.asCraftMirror(this.resultDisplay(1).resolveForFirstStack(ContextMap.EMPTY)), CraftRecipe.toBukkit(this.input), CraftRecipe.toBukkit(this.material), this.minMaterialCount(), this.maxMaterialCount(), this.addMaterialCountToResult);
+        return new CraftTransmuteRecipe(id, com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(this.resultDisplay(1).resolveForFirstStack(ContextMap.EMPTY)), CraftRecipe.toChoice(this.input), CraftRecipe.toChoice(this.material), this.minMaterialCount(), this.maxMaterialCount(), this.addMaterialCountToResult);
     }
     // CraftBukkit end
 }

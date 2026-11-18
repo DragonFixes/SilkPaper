@@ -186,7 +186,7 @@ public abstract class MixinMinecraftServer extends net.minecraft.util.thread.Ree
     @Override
     public void handleCustomClickAction(net.minecraft.resources.Identifier id, Optional<net.minecraft.nbt.Tag> payload, ServerPlayer player) {
         ((net.minecraft.server.MinecraftServer) (Object) this).handleCustomClickAction(id, payload);
-        org.bukkit.craftbukkit.event.CraftEventFactory.callPlayerCustomClickEvent(id, payload, player);
+        com.mohistmc.silkard.bukkit.CraftCompat.callPlayerCustomClickEvent(id, payload, player);
     }
 
     // CraftBukkit start

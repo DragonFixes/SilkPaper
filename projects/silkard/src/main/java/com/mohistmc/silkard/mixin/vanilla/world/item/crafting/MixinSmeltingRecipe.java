@@ -20,9 +20,9 @@ public abstract class MixinSmeltingRecipe implements ContextRecipe, ContextSingl
     @Override
     public org.bukkit.inventory.Recipe toBukkitRecipe(NamespacedKey id) {
         SmeltingRecipe handle = (SmeltingRecipe) (Object) this;
-        CraftItemStack result = CraftItemStack.asCraftMirror(this.silkard$result());
+        CraftItemStack result = com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(this.silkard$result());
 
-        CraftFurnaceRecipe recipe = new CraftFurnaceRecipe(id, result, CraftRecipe.toBukkit(handle.input()), handle.experience(), handle.cookingTime());
+        CraftFurnaceRecipe recipe = new CraftFurnaceRecipe(id, result, CraftRecipe.toChoice(handle.input()), handle.experience(), handle.cookingTime());
         recipe.setGroup(handle.group());
         recipe.setCategory(CraftRecipe.getCategory(handle.category()));
 

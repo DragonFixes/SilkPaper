@@ -71,7 +71,7 @@ public class MixinBlockItem {
     private void silkard$canBuild(BlockPlaceContext context, BlockState stateForPlacement, CallbackInfoReturnable<Boolean> cir) {
         Player player = context.getPlayer();
         org.bukkit.entity.Player bukkitPlayer = player instanceof ServerPlayer ? (org.bukkit.entity.Player) player.getBukkitEntity() : null;
-        BlockCanBuildEvent event = new BlockCanBuildEvent(CraftBlock.at(context.getLevel(), context.getClickedPos()), bukkitPlayer, CraftBlockData.fromData(stateForPlacement), cir.getReturnValue());
+        BlockCanBuildEvent event = new BlockCanBuildEvent(CraftBlock.at(context.getLevel(), context.getClickedPos()), bukkitPlayer, CraftBlockData.createData(stateForPlacement), cir.getReturnValue());
         context.getLevel().getCraftServer().getPluginManager().callEvent(event);
         cir.setReturnValue(event.isBuildable());
     }

@@ -25,7 +25,7 @@ public class MixinVibrationSystem$Listener {
     private boolean silkard$receiveGameEvent(VibrationSystem.User instance, ServerLevel serverLevel, BlockPos blockPos, Holder<GameEvent> gameEventHolder, GameEvent.Context context, Operation<Boolean> original) {
         boolean canReceive = original.call(instance, serverLevel, blockPos, gameEventHolder, context);
         BlockReceiveGameEvent bukkitEvent = new BlockReceiveGameEvent(
-                CraftGameEvent.minecraftToBukkit(gameEventHolder.value()),
+                CraftGameEvent.minecraftHolderToBukkit(gameEventHolder),
                 CraftBlock.at(serverLevel, blockPos),
                 context.sourceEntity() == null ? null : context.sourceEntity().getBukkitEntity());
         bukkitEvent.setCancelled(!canReceive);

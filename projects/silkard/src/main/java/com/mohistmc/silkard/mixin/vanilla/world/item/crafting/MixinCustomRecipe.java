@@ -20,7 +20,7 @@ public abstract class MixinCustomRecipe implements ContextRecipe {
     @Override
     public org.bukkit.inventory.Recipe toBukkitRecipe(NamespacedKey id) {
         CustomRecipe handle = (CustomRecipe) (Object) this;
-        CraftItemStack result = CraftItemStack.asCraftMirror(ItemStack.EMPTY);
+        CraftItemStack result = com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(ItemStack.EMPTY);
         CraftComplexRecipe recipe = new CraftComplexRecipe(id, result, handle);
         recipe.setGroup(handle.group());
         recipe.setCategory(CraftRecipe.getCategory(handle.category()));

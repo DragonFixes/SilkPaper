@@ -72,7 +72,7 @@ public abstract class MixinShulker {
                 if (event.isCancelled()) {
                     return false;
                 }
-                blockpos1 = CraftLocation.toBlockPosition(event.getTo());
+                blockpos1 = CraftLocation.toBlockPos(event.getTo());
 
                 ((Entity) (Object) this).unRide();
                 this.setAttachFace(direction);

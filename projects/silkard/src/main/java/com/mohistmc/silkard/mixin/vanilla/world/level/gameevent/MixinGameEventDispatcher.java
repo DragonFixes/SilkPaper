@@ -30,7 +30,7 @@ public class MixinGameEventDispatcher {
 
     @Inject(method = "post", cancellable = true, at = @At(value = "INVOKE", target = "Lnet/minecraft/core/SectionPos;blockToSectionCoord(I)I", ordinal = 0))
     private void silkard$genericGameEvent(Holder<GameEvent> gameEvent, Vec3 position, GameEvent.Context context, CallbackInfo ci, @Local(ordinal = 0) LocalIntRef radius) {
-        GenericGameEvent event = new GenericGameEvent(CraftGameEvent.minecraftToBukkit(gameEvent.value()),
+        GenericGameEvent event = new GenericGameEvent(CraftGameEvent.minecraftHolderToBukkit(gameEvent),
                 CraftLocation.toBukkit(BlockPos.containing(position), this.level.getWorld()),
                 context.sourceEntity() == null ? null : context.sourceEntity().getBukkitEntity(),
                 radius.get(), !Bukkit.isPrimaryThread());

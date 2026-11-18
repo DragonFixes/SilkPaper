@@ -102,7 +102,7 @@ public abstract class MixinAbstractFurnaceBlockEntity implements ContextAbstract
     @Redirect(method = "serverTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity;getBurnDuration(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/item/ItemStack;)I"))
     private static int silkard$furnaceBurnEvent(AbstractFurnaceBlockEntity entity, ServerLevel level, ItemStack fuel) {
         int burnTime = ((ContextAbstractFurnaceBlockEntity) entity).silkard$getBurnDuration(level, fuel);
-        FurnaceBurnEvent event = new FurnaceBurnEvent(CraftBlock.at(level, entity.getBlockPos()), CraftItemStack.asCraftMirror(fuel), burnTime);
+        FurnaceBurnEvent event = new FurnaceBurnEvent(CraftBlock.at(level, entity.getBlockPos()), com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(fuel), burnTime);
         level.getCraftServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             silkard$burnCancelled = true;
@@ -139,7 +139,7 @@ public abstract class MixinAbstractFurnaceBlockEntity implements ContextAbstract
         BlockPos pos = entity.getBlockPos();
 
         org.bukkit.inventory.ItemStack bukkitResult = CraftItemStack.asBukkitCopy(result);
-        FurnaceSmeltEvent event = new FurnaceSmeltEvent(CraftBlock.at(level, pos), CraftItemStack.asCraftMirror(input), bukkitResult);
+        FurnaceSmeltEvent event = new FurnaceSmeltEvent(CraftBlock.at(level, pos), com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(input), bukkitResult);
         level.getCraftServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) {
             silkard$smeltCancelled = true;
@@ -153,7 +153,7 @@ public abstract class MixinAbstractFurnaceBlockEntity implements ContextAbstract
         if (!result.isEmpty()) {
             if (output.isEmpty()) {
                 items.set(2, result.copy());
-            } else if (CraftItemStack.asCraftMirror(output).isSimilar(bukkitResult)) {
+            } else if (com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(output).isSimilar(bukkitResult)) {
                 output.grow(result.getCount());
             } else {
                 silkard$smeltCancelled = true;
@@ -193,7 +193,7 @@ public abstract class MixinAbstractFurnaceBlockEntity implements ContextAbstract
         if (holder == null) {
             return;
         }
-        FurnaceStartSmeltEvent event = new FurnaceStartSmeltEvent(CraftBlock.at(world, pos), CraftItemStack.asCraftMirror(input), (CookingRecipe<?>) holder.toBukkitRecipe());
+        FurnaceStartSmeltEvent event = new FurnaceStartSmeltEvent(CraftBlock.at(world, pos), com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(input), (CookingRecipe<?>) holder.toBukkitRecipe());
         world.getCraftServer().getPluginManager().callEvent(event);
         this.cookingTotalTime = event.getTotalCookTime();
     }

@@ -22,7 +22,7 @@ public class MixinServerRecipeBook {
     // CraftBukkit - PlayerRecipeListUpdateEvent
     @Redirect(method = "addRecipes", at = @At(value = "INVOKE", target = "Ljava/util/Set;contains(Ljava/lang/Object;)Z"))
     private boolean silkard$knownOrEvent(Set<Object> known, Object key, @Local(argsOnly = true) ServerPlayer player) {
-        return known.contains(key) || !CraftEventFactory.handlePlayerRecipeListUpdateEvent(player, ((ResourceKey<?>) key).identifier());
+        return known.contains(key) || !com.mohistmc.silkard.bukkit.CraftCompat.handlePlayerRecipeListUpdateEvent(player, ((ResourceKey<?>) key).identifier());
     }
 
     // SPIGOT-4478 - player.connection is null during PlayerLoginEvent

@@ -31,7 +31,7 @@ public final class DispenseEventHooks {
      */
     public static BlockDispenseEvent callBlockDispenseEvent(Level level, BlockSource source, ItemStack mirrored, org.bukkit.util.Vector velocity) {
         org.bukkit.block.Block block = CraftBlock.at(level, source.pos());
-        CraftItemStack craftItem = CraftItemStack.asCraftMirror(mirrored);
+        CraftItemStack craftItem = com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(mirrored);
         BlockDispenseEvent event = new BlockDispenseEvent(block, craftItem.clone(), velocity);
         level.getCraftServer().getPluginManager().callEvent(event);
         return event;
@@ -43,7 +43,7 @@ public final class DispenseEventHooks {
      * @return 已转发到新行为时为 true
      */
     public static boolean chainToChangedItem(BlockSource source, ItemStack mirrored, BlockDispenseEvent event, Object self) {
-        CraftItemStack craftItem = CraftItemStack.asCraftMirror(mirrored);
+        CraftItemStack craftItem = com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(mirrored);
         if (!event.getItem().equals(craftItem)) {
             // Chain to handler for new item
             ItemStack eventStack = CraftItemStack.asNMSCopy(event.getItem());
@@ -73,9 +73,9 @@ public final class DispenseEventHooks {
         }
 
         itemEntity.setItem(CraftItemStack.asNMSCopy(event.getItem()));
-        itemEntity.setDeltaMovement(CraftVector.toNMS(event.getVelocity()));
+        itemEntity.setDeltaMovement(CraftVector.toVec3(event.getVelocity()));
 
-        if (!dropper && !event.getItem().getType().equals(CraftItemStack.asCraftMirror(itemStack).getType())) {
+        if (!dropper && !event.getItem().getType().equals(com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(itemStack).getType())) {
             // Chain to handler for new item
             ItemStack eventStack = CraftItemStack.asNMSCopy(event.getItem());
             DispenseItemBehavior behavior = DispenserBlock.DISPENSER_REGISTRY.get(eventStack.getItem());

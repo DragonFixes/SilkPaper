@@ -35,7 +35,7 @@ public class MixinBrushableBlockEntity {
     // CraftBukkit start - BlockBrushEvent on dusting
     @Redirect(method = "brush", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z"))
     private boolean silkard$brushDusted(ServerLevel level, BlockPos pos, BlockState state, long time, ServerLevel levelArg, LivingEntity user, net.minecraft.core.Direction direction, ItemStack brush) {
-        BlockBrushEvent event = CraftEventFactory.callBlockBrushEvent(level, pos, state, 3, (ServerPlayer) user);
+        BlockBrushEvent event = com.mohistmc.silkard.bukkit.CraftCompat.callBlockBrushEvent(level, pos, state, 3, (ServerPlayer) user);
         if (event.isCancelled()) {
             return false;
         }
@@ -55,7 +55,7 @@ public class MixinBrushableBlockEntity {
 
     @Redirect(method = "brushingCompleted", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z"))
     private boolean silkard$brushCompleted(ServerLevel level, BlockPos pos, BlockState state, ServerLevel levelArg, LivingEntity user, ItemStack brush) {
-        BlockBrushEvent event = CraftEventFactory.callBlockBrushEvent(level, pos, state, 3, (ServerPlayer) user);
+        BlockBrushEvent event = com.mohistmc.silkard.bukkit.CraftCompat.callBlockBrushEvent(level, pos, state, 3, (ServerPlayer) user);
         if (event.isCancelled()) {
             return false;
         }

@@ -261,7 +261,7 @@ public abstract class MixinAbstractContainerMenu implements ContextAbstractConta
         if (!silkard$draggedSlots.isEmpty()) {
             // CraftBukkit start - InventoryDragEvent
             InventoryView view = getBukkitView();
-            org.bukkit.inventory.ItemStack newcursor = CraftItemStack.asCraftMirror(carriedStack);
+            org.bukkit.inventory.ItemStack newcursor = com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(carriedStack);
             newcursor.setAmount(carriedStack.getCount());
             Map<Integer, org.bukkit.inventory.ItemStack> eventmap = new HashMap<>();
             for (Map.Entry<Integer, ItemStack> ditem : silkard$draggedSlots.entrySet()) {

@@ -20,9 +20,9 @@ public abstract class MixinStonecutterRecipe implements ContextRecipe, ContextSi
     @Override
     public org.bukkit.inventory.Recipe toBukkitRecipe(NamespacedKey id) {
         StonecutterRecipe handle = (StonecutterRecipe) (Object) this;
-        CraftItemStack result = CraftItemStack.asCraftMirror(this.silkard$result());
+        CraftItemStack result = com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(this.silkard$result());
 
-        CraftStonecuttingRecipe recipe = new CraftStonecuttingRecipe(id, result, CraftRecipe.toBukkit(handle.input()));
+        CraftStonecuttingRecipe recipe = new CraftStonecuttingRecipe(id, result, CraftRecipe.toChoice(handle.input()));
         recipe.setGroup(handle.group());
 
         return recipe;

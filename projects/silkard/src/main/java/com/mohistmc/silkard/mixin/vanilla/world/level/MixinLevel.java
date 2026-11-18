@@ -221,8 +221,8 @@ public abstract class MixinLevel implements ContextLevel {
                 capturedBlockState = CapturedBlockState.getTreeBlockState((Level) (Object) this, pos, updateFlags);
                 capturedBlockStates.put(pos.immutable(), capturedBlockState);
             }
-            capturedBlockState.setData(blockState);
-            capturedBlockState.setFlag(updateFlags);
+            capturedBlockState.setBlock(blockState);
+            capturedBlockState.setFlags(updateFlags);
             cir.setReturnValue(true);
         }
     }
@@ -231,7 +231,7 @@ public abstract class MixinLevel implements ContextLevel {
     private BlockState silkard$captureBlockState(LevelChunk chunk, BlockPos pos, BlockState blockState, int updateFlags, Operation<BlockState> original) {
         boolean captured = false;
         if (captureBlockStates && !capturedBlockStates.containsKey(pos)) {
-            capturedBlockStates.put(pos.immutable(), CapturedBlockState.getBlockState((Level) (Object) this, pos, updateFlags));
+            capturedBlockStates.put(pos.immutable(), new CapturedBlockState(org.bukkit.craftbukkit.block.CraftBlock.at((Level) (Object) this, pos), updateFlags, false));
             captured = true;
         }
         BlockState oldState = original.call(chunk, pos, blockState, updateFlags);

@@ -73,8 +73,8 @@ public class MixinArmorStand implements ContextArmorStand {
         PlayerArmorStandManipulateEvent event = new PlayerArmorStandManipulateEvent(
                 (org.bukkit.entity.Player) player.getBukkitEntity(),
                 (org.bukkit.entity.ArmorStand) ((Entity) (Object) this).getBukkitEntity(),
-                CraftItemStack.asCraftMirror(playerItemStack),
-                CraftItemStack.asCraftMirror(armorStandItemStack),
+                com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(playerItemStack),
+                com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(armorStandItemStack),
                 CraftEquipmentSlot.getSlot(slot),
                 CraftEquipmentSlot.getHand(hand));
         ((ContextLevel) ((Entity) (Object) this).level()).getCraftServer().getPluginManager().callEvent(event);

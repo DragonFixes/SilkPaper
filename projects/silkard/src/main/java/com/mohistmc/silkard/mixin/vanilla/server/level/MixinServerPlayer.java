@@ -439,7 +439,7 @@ public abstract class MixinServerPlayer extends Player implements ContextServerP
         Bukkit.getPluginManager().callEvent(respawnEvent);
         location = respawnEvent.getRespawnLocation();
 
-        return new TeleportTransition(((org.bukkit.craftbukkit.CraftWorld) location.getWorld()).getHandle(), CraftLocation.toVec3D(location), teleportTransition.deltaMovement(), location.getYaw(), location.getPitch(), teleportTransition.relatives(), teleportTransition.postTeleportTransition());
+        return new TeleportTransition(((org.bukkit.craftbukkit.CraftWorld) location.getWorld()).getHandle(), CraftLocation.toVec3(location), teleportTransition.deltaMovement(), location.getYaw(), location.getPitch(), teleportTransition.relatives(), teleportTransition.postTeleportTransition());
     }
 
     @Override

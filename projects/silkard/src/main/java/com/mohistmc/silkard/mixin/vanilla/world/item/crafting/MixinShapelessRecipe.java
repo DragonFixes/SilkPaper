@@ -32,13 +32,13 @@ public abstract class MixinShapelessRecipe implements ContextShapelessRecipe {
     @SuppressWarnings("unchecked")
     @Override
     public org.bukkit.inventory.ShapelessRecipe toBukkitRecipe(NamespacedKey id) {
-        CraftItemStack result = CraftItemStack.asCraftMirror(this.result);
+        CraftItemStack result = com.mohistmc.silkard.bukkit.CraftCompat.craftMirror(this.result);
         CraftShapelessRecipe recipe = new CraftShapelessRecipe(id, result, (ShapelessRecipe) (Object) this);
         recipe.setGroup(((ShapelessRecipe) (Object) this).group());
         recipe.setCategory(CraftRecipe.getCategory(((ShapelessRecipe) (Object) this).category()));
 
         for (Ingredient list : this.ingredients) {
-            recipe.addIngredient(CraftRecipe.toBukkit(list));
+            recipe.addIngredient(CraftRecipe.toChoice(list));
         }
         return recipe;
     }
