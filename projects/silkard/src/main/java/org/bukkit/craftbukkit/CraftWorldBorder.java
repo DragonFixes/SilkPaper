@@ -28,7 +28,7 @@ public class CraftWorldBorder implements WorldBorder {
 
     @Override
     public void reset() {
-        this.getHandle().applySettings(net.minecraft.world.level.border.WorldBorder.Settings.DEFAULT);
+        com.mohistmc.silkard.paper.server.PaperWorldHooks.applyBorderSettings(this.getHandle(), net.minecraft.world.level.border.WorldBorder.Settings.DEFAULT);
     }
 
     @Override

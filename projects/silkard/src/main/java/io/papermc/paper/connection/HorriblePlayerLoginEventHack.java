@@ -47,7 +47,7 @@ public class HorriblePlayerLoginEventHack {
         return true;
     }
 
-    public static @Nullable Component execute(final Connection connection, MinecraftServer server, GameProfile profile, PlayerList.LoginResult result) {
+    public static @Nullable Component execute(final Connection connection, MinecraftServer server, GameProfile profile, com.mohistmc.silkard.paper.server.LoginResult result) {
         if (PlayerLoginEvent.getHandlerList().getRegisteredListeners().length == 0) {
             return result.message();
         }

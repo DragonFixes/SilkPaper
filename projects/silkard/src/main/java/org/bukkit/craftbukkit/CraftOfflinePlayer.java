@@ -83,7 +83,7 @@ public class CraftOfflinePlayer implements OfflinePlayer, ConfigurationSerializa
 
     @Override
     public com.destroystokyo.paper.profile.PlayerProfile getPlayerProfile() { // Paper
-        return com.destroystokyo.paper.profile.CraftPlayerProfile.asBukkitCopy(this.nameAndId.toUncompletedGameProfile()); // Paper
+        return com.destroystokyo.paper.profile.CraftPlayerProfile.asBukkitCopy(new com.mojang.authlib.GameProfile(this.nameAndId.id(), this.nameAndId.name())); // Paper
     }
 
     public Server getServer() {
@@ -391,7 +391,7 @@ public class CraftOfflinePlayer implements OfflinePlayer, ConfigurationSerializa
     }
 
     private ServerStatsCounter getStatisticManager() {
-        return this.server.getHandle().getPlayerStats(this.nameAndId.toUncompletedGameProfile());
+        return this.server.getHandle().getPlayerStats(new com.mojang.authlib.GameProfile(this.nameAndId.id(), this.nameAndId.name()));
     }
 
     @Override
@@ -752,7 +752,17 @@ public class CraftOfflinePlayer implements OfflinePlayer, ConfigurationSerializa
      * @param compoundTag
      */
     private void save(CompoundTag compoundTag) {
-        server.console.playerDataStorage.save(this.getName(), this.getUniqueId(), this.getUniqueId().toString(), compoundTag); // Leaf - Async playerdata saving
+        // Purpur's synchronous write: Leaf's async player data saving is not ported
+        try {
+            File playerDir = server.console.playerDataStorage.getPlayerDir();
+            File tempFile = File.createTempFile(this.getUniqueId() + "-", ".dat", playerDir);
+            net.minecraft.nbt.NbtIo.writeCompressed(compoundTag, tempFile.toPath());
+            File file = new File(playerDir, this.getUniqueId() + ".dat");
+            File oldFile = new File(playerDir, this.getUniqueId() + ".dat_old");
+            net.minecraft.util.Util.safeReplaceFile(file.toPath(), tempFile.toPath(), oldFile.toPath());
+        } catch (java.io.IOException ex) {
+            this.server.getLogger().log(java.util.logging.Level.WARNING, "Failed to save player data for " + this.getName(), ex);
+        }
     }
     // Purpur end - OfflinePlayer API
 }

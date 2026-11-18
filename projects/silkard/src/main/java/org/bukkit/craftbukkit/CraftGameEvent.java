@@ -8,6 +8,12 @@ import org.bukkit.NamespacedKey;
 
 public class CraftGameEvent extends GameEvent implements Holderable<net.minecraft.world.level.gameevent.GameEvent> {
 
+    // Paper's Holderable and the Spigot-compat RegistryAware both default getKeyOrNull; Paper's wins.
+    @Override
+    public org.bukkit.NamespacedKey getKeyOrNull() {
+        return this.getHolder().unwrapKey().map(org.bukkit.craftbukkit.util.CraftNamespacedKey::fromResourceKey).orElse(null);
+    }
+
     public static GameEvent minecraftHolderToBukkit(Holder<net.minecraft.world.level.gameevent.GameEvent> minecraft) {
         return CraftRegistry.minecraftHolderToBukkit(minecraft, Registries.GAME_EVENT);
     }

@@ -9,6 +9,12 @@ import org.bukkit.craftbukkit.CraftRegistry;
 
 public class CraftPatternType extends OldEnumHolderable<PatternType, BannerPattern> implements PatternType {
 
+    // Paper's Holderable and the Spigot-compat RegistryAware both default getKeyOrNull; Paper's wins.
+    @Override
+    public org.bukkit.NamespacedKey getKeyOrNull() {
+        return this.getHolder().unwrapKey().map(org.bukkit.craftbukkit.util.CraftNamespacedKey::fromResourceKey).orElse(null);
+    }
+
     private static int count = 0;
 
     public static PatternType minecraftHolderToBukkit(Holder<BannerPattern> minecraft) {

@@ -1,6 +1,6 @@
 package org.spigotmc;
 
-import io.papermc.paper.FeatureHooks;
+import com.mohistmc.silkard.paper.server.FeatureHooks;
 import io.papermc.paper.configuration.GlobalConfiguration;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MonitorInfo;

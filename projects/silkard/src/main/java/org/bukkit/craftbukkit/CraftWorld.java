@@ -10,7 +10,7 @@ import com.mohistmc.silkard.bukkit.BukkitUtils;
 import com.mohistmc.silkard.injected.server.level.ContextTicket;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
-import io.papermc.paper.FeatureHooks;
+import com.mohistmc.silkard.paper.server.FeatureHooks;
 import io.papermc.paper.entity.poi.PaperPoiSearchResult;
 import io.papermc.paper.entity.poi.PaperPoiType;
 import io.papermc.paper.entity.poi.PoiSearchResult;
@@ -173,6 +173,9 @@ import org.bukkit.util.StructureSearchResult;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import java.util.HashMap;
+import net.minecraft.server.level.Ticket;
 
 public class CraftWorld extends CraftRegionAccessor implements World {
     private static final PointersSupplier<World> POINTERS_SUPPLIER = PointersSupplier.<World>builder()
@@ -185,6 +188,9 @@ public class CraftWorld extends CraftRegionAccessor implements World {
     private final @Nullable BiomeProvider biomeProvider;
     private final List<BlockPopulator> populators = new ArrayList<>();
     private final BlockMetadataStore blockMetadata = new BlockMetadataStore(this);
+    // Saved to and loaded from level.dat ("BukkitValues") by MixinPrimaryLevelData.
+    private static final org.bukkit.craftbukkit.persistence.CraftPersistentDataTypeRegistry DATA_TYPE_REGISTRY = new org.bukkit.craftbukkit.persistence.CraftPersistentDataTypeRegistry();
+    private final org.bukkit.craftbukkit.persistence.CraftPersistentDataContainer persistentDataContainer = new org.bukkit.craftbukkit.persistence.CraftPersistentDataContainer(DATA_TYPE_REGISTRY);
     private static final SpawnCategory[] SPAWN_CATEGORIES = SpawnCategory.values(); // Leaf - optimize mob spawning
     private final int[] spawnCategoryLimit = new int[SPAWN_CATEGORIES.length]; // Leaf - optimize mob spawning
     private final ServerLevel world;
@@ -230,7 +236,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
     // Paper start - Provide fast information methods
     @Override
     public int getEntityCount() {
-        return this.world.getEntityCount();
+        return com.mohistmc.silkard.paper.server.PaperWorldHooks.getEntityCount(this.world);
     }
 
     @Override
@@ -255,7 +261,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
     @Override
     public int getChunkCount() {
-        return this.world.getChunkSource().getFullChunksCount();
+        return com.mohistmc.silkard.paper.server.PaperWorldHooks.getFullChunks(this.world).size();
     }
 
     @Override
@@ -422,7 +428,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
                 return CraftWorld.this.isChunkGenerated(x, z);
             }, world.getChunkSource().mainThreadProcessor).join();
         }
-        ChunkAccess chunk = world.getChunkSource().getChunkAtImmediately(x, z);
+        ChunkAccess chunk = com.mohistmc.silkard.paper.server.PaperWorldHooks.getChunkAtImmediately(world, x, z);
         if (chunk != null) {
             return chunk instanceof ImposterProtoChunk || chunk instanceof net.minecraft.world.level.chunk.LevelChunk;
         }
@@ -454,21 +460,9 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
     @Override
     public Chunk[] getLoadedChunks() {
-        ServerChunkCache serverChunkCache = this.getHandle().getChunkSource();
-        ReferenceList<Chunk> chunks = new ReferenceList<>(new Chunk[serverChunkCache.fullChunks.size()]);
-
-        for (PrimitiveIterator.OfLong iterator = serverChunkCache.fullChunks.keyIterator(); iterator.hasNext();) {
-            long chunk = iterator.nextLong();
-            chunks.add(new CraftChunk(this.world, CoordinateUtils.getChunkX(chunk), CoordinateUtils.getChunkZ(chunk)));
-        }
-
-        Chunk[] raw = chunks.getRawDataUnchecked();
-        int size = chunks.size();
-        if (raw.length == size) {
-            // always true when on main
-            return raw;
-        }
-        return Arrays.copyOf(raw, size);
+        return com.mohistmc.silkard.paper.server.PaperWorldHooks.getFullChunks(this.world).stream()
+            .map(CraftChunk::new)
+            .toArray(Chunk[]::new);
     }
 
     @Override
@@ -787,7 +781,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
         LightningBolt lightning = EntityTypes.LIGHTNING_BOLT.create(this.world, EntitySpawnReason.COMMAND);
         lightning.snapTo(loc.getX(), loc.getY(), loc.getZ());
-        lightning.isEffect = isVisual; // Paper - Properly handle lightning effects api
+        lightning.setVisualOnly(isVisual);
         this.world.strikeLightning(lightning, LightningStrikeEvent.Cause.CUSTOM);
         return (LightningStrike) lightning.getBukkitEntity();
     }
@@ -804,7 +798,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
     @Override
     public Location findLightningTarget(Location location) {
-        final BlockPos pos = this.world.findLightningTargetAround(CraftLocation.toBlockPos(location), true);
+        final BlockPos pos = com.mohistmc.silkard.paper.server.PaperWorldHooks.findLightningTargetAround(this.world, CraftLocation.toBlockPos(location), true);
         return pos == null ? null : CraftLocation.toBukkit(pos, this.world);
     }
     // Paper end - Add methods to find targets for lightning strikes
@@ -845,7 +839,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
     @Override
     public String getName() {
-        return this.world.bukkitName;
+        return this.world.serverLevelData.getLevelName();
     }
 
     @Override
@@ -932,12 +926,12 @@ public class CraftWorld extends CraftRegionAccessor implements World {
         }
 
         net.minecraft.world.entity.Entity entity = (source == null) ? null : ((CraftEntity) source).getHandle();
-        return !this.world.explode0(entity, Explosion.getDefaultDamageSource(this.world, entity), null, x, y, z, power, setFire, explosionType, ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, Level.DEFAULT_EXPLOSION_BLOCK_PARTICLES, SoundEvents.GENERIC_EXPLODE, configurator).silkard$wasCanceled(); // Paper - expand explosion API
+        return !this.world.explode0(entity, Explosion.getDefaultDamageSource(this.world, entity), null, x, y, z, power, setFire, explosionType, ParticleTypes.EXPLOSION, ParticleTypes.EXPLOSION_EMITTER, Level.DEFAULT_EXPLOSION_BLOCK_PARTICLES, SoundEvents.GENERIC_EXPLODE).silkard$wasCanceled(); // TODO Silkard - Silkard's explode0 takes no ServerExplosion configurator, so the Paper explosion options are not applied
     }
     // Paper start
     @Override
     public boolean createExplosion(Entity source, Location loc, float power, boolean setFire, boolean breakBlocks, boolean excludeSourceFromDamage) {
-        return this.createExplosion(loc.x(), loc.getY(), loc.getZ(), power, setFire, breakBlocks, source, e -> e.excludeSourceFromDamage = excludeSourceFromDamage);
+        return this.createExplosion(loc.x(), loc.getY(), loc.getZ(), power, setFire, breakBlocks, source, null); // TODO Silkard - excludeSourceFromDamage is not supported by Silkard's explosions
     }
     // Paper end
 
@@ -956,7 +950,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
     @Override
     public @Nullable ChunkGenerator getGenerator() {
-        return this.world.generator;
+        return this.world.silkard$generator();
     }
 
     @Override
@@ -998,7 +992,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
         if (this.world.hasChunkAt(pos)) {
             net.minecraft.world.level.chunk.LevelChunk chunk = this.world.getChunkAt(pos);
 
-            chunk.setNoiseBiome(QuartPos.fromBlock(x), QuartPos.fromBlock(y), QuartPos.fromBlock(z), biome);
+            chunk.setBiome(QuartPos.fromBlock(x), QuartPos.fromBlock(y), QuartPos.fromBlock(z), biome);
             chunk.markUnsaved(); // SPIGOT-2890
         }
     }
@@ -1031,7 +1025,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
         // Be more lenient than ServerLevel#tryAddFreshEntityWithPassengers and ignore already added entities instead of failing completely.
         // This otherwise causes problems when an entity already added to the world is added as a passenger inside of the pre-spawn consumer.
         entity.getSelfAndPassengers()
-            .filter(e -> !e.valid)
+            .filter(e -> !e.silkard_valid())
             .forEach(e -> this.getHandle().addFreshEntity(e, reason));
     }
 
@@ -1129,7 +1123,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
         Vector dir = direction.clone().normalize().multiply(maxDistance);
         Vec3 startPos = io.papermc.paper.util.MCUtil.toVec3(start); // Paper - Add predicate for blocks when raytracing
         Vec3 endPos = startPos.add(dir.getX(), dir.getY(), dir.getZ());
-        HitResult hitResult = this.getHandle().clip(new ClipContext(startPos, endPos, ClipContext.Block.values()[blockCollisionMode.ordinal()], CraftFluidCollisionMode.toFluid(fluidCollisionMode), CollisionContext.empty()), canCollide);
+        HitResult hitResult = com.mohistmc.silkard.paper.server.PaperWorldHooks.clip(this.getHandle(), new ClipContext(startPos, endPos, ClipContext.Block.values()[blockCollisionMode.ordinal()], CraftFluidCollisionMode.toFluid(fluidCollisionMode), CollisionContext.empty()), canCollide);
 
         return CraftRayTraceResult.convertFromInternal(this.getHandle(), hitResult);
     }
@@ -1265,7 +1259,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
     @Override
     public void setStorm(boolean hasStorm) {
-        this.world.getWeatherData().setRaining(hasStorm, WeatherChangeEvent.Cause.PLUGIN);
+        this.world.getWeatherData().setRaining(hasStorm); // TODO Silkard - the weather change event reports the vanilla cause, not PLUGIN
         this.setWeatherDuration(0); // Reset weather duration (legacy behaviour)
         this.setClearWeatherDuration(0); // Reset clear weather duration (reset "/weather clear" commands)
     }
@@ -1287,7 +1281,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
     @Override
     public void setThundering(boolean thundering) {
-        this.world.getWeatherData().setThundering(thundering, ThunderChangeEvent.Cause.PLUGIN);
+        this.world.getWeatherData().setThundering(thundering); // TODO Silkard - the thunder change event reports the vanilla cause, not PLUGIN
         this.setThunderDuration(0); // Reset weather duration (legacy behaviour)
         this.setClearWeatherDuration(0); // Reset clear weather duration (reset "/weather clear" commands)
     }
@@ -1414,12 +1408,12 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
     @Override
     public void setSpawnFlags(boolean allowMonsters, boolean allowAnimals) {
-        this.world.getChunkSource().setSpawnSettings(allowMonsters, allowAnimals);
+        this.world.getChunkSource().setSpawnSettings(allowMonsters); // TODO Silkard - vanilla always spawns animals
     }
 
     @Override
     public boolean getAllowAnimals() {
-        return this.world.getChunkSource().spawnFriendlies;
+        return true;
     }
 
     @Override
@@ -1547,12 +1541,12 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
     @Override
     public boolean canGenerateStructures() {
-        return this.world.worldGenSettings.options().generateStructures();
+        return this.world.getWorldGenSettings().options().generateStructures();
     }
 
     @Override
     public boolean hasBonusChest() {
-        return this.world.worldGenSettings.options().generateBonusChest();
+        return this.world.getWorldGenSettings().options().generateBonusChest();
     }
 
     @Override
@@ -2100,7 +2094,7 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
     @Override
     public PersistentDataContainer getPersistentDataContainer() {
-        return this.getHandle().persistentDataContainer;
+        return this.persistentDataContainer;
     }
 
     // Spigot start
@@ -2139,13 +2133,13 @@ public class CraftWorld extends CraftRegionAccessor implements World {
     public void getChunksAtAsync(int minX, int minZ, int maxX, int maxZ, boolean urgent, Runnable cb) {
         warnUnsafeChunk("getting a faraway chunk async", minX, minZ); // Paper
         warnUnsafeChunk("getting a faraway chunk async", maxX, maxZ); // Paper
-        this.getHandle().loadChunks(
-            minX, minZ, maxX, maxZ,
-            urgent ? ca.spottedleaf.concurrentutil.util.Priority.HIGHER : ca.spottedleaf.concurrentutil.util.Priority.NORMAL,
-            (List<ChunkAccess> chunks) -> {
-                cb.run();
+        final List<CompletableFuture<Chunk>> futures = new ArrayList<>();
+        for (int chunkX = minX; chunkX <= maxX; ++chunkX) {
+            for (int chunkZ = minZ; chunkZ <= maxZ; ++chunkZ) {
+                futures.add(this.getChunkAtAsync(chunkX, chunkZ, true, urgent));
             }
-        );
+        }
+        CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new)).whenComplete((ignored, throwable) -> cb.run());
     }
 
     @Override
@@ -2178,11 +2172,11 @@ public class CraftWorld extends CraftRegionAccessor implements World {
     // Fish start - Parallel World Ticking API
     @Override
     public long @NotNull [] getTickTimes() {
-        return this.world.tickTimes5s.getTimes();
+        return this.world.paper$tickTimes5s().getTimes();
     }
     @Override
     public double getAverageTickTime() {
-        return this.world.tickTimes5s.getAverage();
+        return this.world.paper$tickTimes5s().getAverage();
     }
     // Fish end - Parallel World Ticking API
 }

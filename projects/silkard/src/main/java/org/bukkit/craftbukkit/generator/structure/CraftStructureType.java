@@ -9,6 +9,12 @@ import org.bukkit.generator.structure.StructureType;
 
 public class CraftStructureType extends StructureType implements Holderable<net.minecraft.world.level.levelgen.structure.StructureType<?>> {
 
+    // Paper's Holderable and the Spigot-compat RegistryAware both default getKeyOrNull; Paper's wins.
+    @Override
+    public org.bukkit.NamespacedKey getKeyOrNull() {
+        return this.getHolder().unwrapKey().map(org.bukkit.craftbukkit.util.CraftNamespacedKey::fromResourceKey).orElse(null);
+    }
+
     public static StructureType minecraftToBukkit(net.minecraft.world.level.levelgen.structure.StructureType<?> minecraft) {
         return CraftRegistry.minecraftToBukkit(minecraft, Registries.STRUCTURE_TYPE);
     }
