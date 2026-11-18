@@ -103,7 +103,7 @@ public class MixinArmorStand implements ContextArmorStand {
     // CraftBukkit - EntityDeathEvent + death remove cause
     @Inject(method = "kill", at = @At("HEAD"))
     private void silkard$deathEvent(ServerLevel level, Entity killer, CallbackInfo ci) {
-        CraftEventFactory.callEntityDeathEvent((LivingEntity) (Object) this, ((Entity) (Object) this).damageSources().genericKill(), ((ContextLivingEntity) (Object) this).silkard$drops());
+        com.mohistmc.silkard.bukkit.CraftCompat.callEntityDeathEvent((LivingEntity) (Object) this, ((Entity) (Object) this).damageSources().genericKill(), ((ContextLivingEntity) (Object) this).silkard$drops());
     }
 
     @Redirect(method = "kill", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/decoration/ArmorStand;remove(Lnet/minecraft/world/entity/Entity$RemovalReason;)V"))

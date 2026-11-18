@@ -39,7 +39,7 @@ public abstract class MixinRaids {
 
     @Inject(method = "createOrExtendRaid", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/raid/Raid;absorbRaidOmen(Lnet/minecraft/server/level/ServerPlayer;)Z"), cancellable = true)
     private void silkard$trigger(ServerPlayer player, BlockPos pos, CallbackInfoReturnable<Raid> cir, @Local(ordinal = 0) Raid raid) {
-        if (!CraftEventFactory.callRaidTriggerEvent(raid, player.level(), player)) {
+        if (!CraftEventFactory.callRaidTriggerEvent(player.level(), raid, player)) {
             player.removeEffect(MobEffects.RAID_OMEN);
             if (!raid.isStarted()) {
                 this.raidMap.remove(this.silkard$getUniqueId());

@@ -91,7 +91,7 @@ public abstract class MixinDedicatedServer extends MinecraftServer implements Co
         org.jline.reader.LineReader reader = org.jline.reader.LineReaderBuilder.builder()
                 .terminal(terminal)
                 .option(org.jline.reader.LineReader.Option.DISABLE_EVENT_EXPANSION, true)
-                .completer(new org.bukkit.craftbukkit.command.ConsoleCommandCompleter())
+                .completer(new org.bukkit.craftbukkit.command.ConsoleCommandCompleter((net.minecraft.server.dedicated.DedicatedServer) (Object) this))
                 .build();
         // jline inserts a tab instead of completing when this option is set
         reader.unsetOpt(org.jline.reader.LineReader.Option.INSERT_TAB);
@@ -290,7 +290,7 @@ public abstract class MixinDedicatedServer extends MinecraftServer implements Co
             }
             consoleinput = new net.minecraft.server.ConsoleInput(event.getCommand(), consoleinput.source);
 
-            craftServer.dispatchServerCommand(consoleSender, consoleinput);
+            com.mohistmc.silkard.bukkit.CraftCompat.dispatchServerCommand(craftServer, consoleSender, consoleinput.msg);
         }
         // CraftBukkit end
     }
@@ -310,7 +310,7 @@ public abstract class MixinDedicatedServer extends MinecraftServer implements Co
                 return;
             }
             if (craftServer != null) {
-                craftServer.dispatchServerCommand(event.getSender(), new net.minecraft.server.ConsoleInput(event.getCommand(), wrapper));
+                com.mohistmc.silkard.bukkit.CraftCompat.dispatchServerCommand(craftServer, event.getSender(), event.getCommand());
             }
         });
         return rconConsoleSource.getCommandResponse();

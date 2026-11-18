@@ -730,7 +730,16 @@ public abstract class MixinMinecraftServer extends net.minecraft.util.thread.Ree
             List<net.minecraft.world.level.CustomSpawner> list = com.google.common.collect.ImmutableList.of(new net.minecraft.world.level.levelgen.PhantomSpawner(), new net.minecraft.world.level.levelgen.PatrolSpawner(), new net.minecraft.world.entity.npc.CatSpawner(), new net.minecraft.world.entity.ai.village.VillageSiege(), new net.minecraft.world.entity.npc.wanderingtrader.WanderingTraderSpawner(dimensiondatastorage));
             LevelStem levelstem = dimensions.getValue(dimensionKey);
 
-            org.bukkit.generator.WorldInfo worldInfo = new org.bukkit.craftbukkit.generator.CraftWorldInfo(serverleveldata, worldoptions, worldSession, org.bukkit.World.Environment.getEnvironment(dimension), levelstem.type().value());
+            org.bukkit.generator.WorldInfo worldInfo = new org.bukkit.craftbukkit.generator.CraftWorldInfo(
+                    serverleveldata.getLevelName(),
+                    org.bukkit.craftbukkit.util.CraftNamespacedKey.fromMinecraft(dimensionKey.identifier()),
+                    worldoptions.seed(),
+                    worlddata.enabledFeatures(),
+                    org.bukkit.World.Environment.getEnvironment(dimension),
+                    levelstem.type().value(),
+                    levelstem.generator(),
+                    this.registryAccess(),
+                    org.bukkit.craftbukkit.util.WorldUUID.getUUID(worldSession.levelDirectory.path().toFile()));
             if (biomeProvider == null && gen != null) {
                 biomeProvider = gen.getDefaultBiomeProvider(worldInfo);
             }

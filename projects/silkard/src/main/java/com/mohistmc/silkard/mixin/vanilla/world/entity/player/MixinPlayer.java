@@ -325,7 +325,7 @@ public abstract class MixinPlayer extends Avatar implements ContextPlayer {
         }
         MobEffectInstance current = this.getEffect(MobEffects.WATER_BREATHING);
         boolean override = current != null && new MobEffectInstance(current).update(effect);
-        EntityPotionEffectEvent event = CraftEventFactory.callEntityPotionEffectChangeEvent(this, current, effect, EntityPotionEffectEvent.Cause.TURTLE_HELMET, override);
+        EntityPotionEffectEvent event = CraftEventFactory.callEntityPotionEffectChangeEvent(this, current, effect, null, EntityPotionEffectEvent.Cause.TURTLE_HELMET, null, override);
         if (!event.isCancelled()) {
             this.addEffect(effect);
         }

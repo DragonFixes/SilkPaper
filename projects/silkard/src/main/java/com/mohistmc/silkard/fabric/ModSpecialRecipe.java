@@ -29,6 +29,6 @@ public class ModSpecialRecipe extends CraftComplexRecipe {
 
     public void addToRecipeManager() {
         ServerAPI.getNMSServer().getRecipeManager().addRecipe(
-            new RecipeHolder<>(CraftRecipe.toMinecraft(this.getKey()), this.recipe));
+            new RecipeHolder<>(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.RECIPE, org.bukkit.craftbukkit.util.CraftNamespacedKey.toMinecraft(this.getKey())), this.recipe));
     }
 }

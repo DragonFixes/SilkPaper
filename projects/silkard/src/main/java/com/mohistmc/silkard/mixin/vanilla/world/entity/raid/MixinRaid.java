@@ -78,7 +78,7 @@ public abstract class MixinRaid implements ContextRaid {
     @Inject(method = "spawnGroup", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/raid/Raid;setDirty(Lnet/minecraft/server/level/ServerLevel;)V", shift = At.Shift.BEFORE))
     private void silkard$fireSpawnWave(ServerLevel level, BlockPos pos, CallbackInfo ci) {
         if (this.silkard$waveLeader != null) {
-            CraftEventFactory.callRaidSpawnWaveEvent((Raid) (Object) this, level, this.silkard$waveLeader, this.silkard$waveRaiders);
+            CraftEventFactory.callRaidSpawnWaveEvent(level, (Raid) (Object) this, this.silkard$waveLeader, this.silkard$waveRaiders);
         }
     }
 
@@ -89,27 +89,27 @@ public abstract class MixinRaid implements ContextRaid {
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/raid/Raid;stop()V", ordinal = 0))
     private void silkard$stopPeace(ServerLevel level, CallbackInfo ci) {
-        CraftEventFactory.callRaidStopEvent((Raid) (Object) this, level, org.bukkit.event.raid.RaidStopEvent.Reason.PEACE);
+        CraftEventFactory.callRaidStopEvent(level, (Raid) (Object) this, org.bukkit.event.raid.RaidStopEvent.Reason.PEACE);
     }
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/raid/Raid;stop()V", ordinal = 1))
     private void silkard$stopNotInVillage(ServerLevel level, CallbackInfo ci) {
-        CraftEventFactory.callRaidStopEvent((Raid) (Object) this, level, org.bukkit.event.raid.RaidStopEvent.Reason.NOT_IN_VILLAGE);
+        CraftEventFactory.callRaidStopEvent(level, (Raid) (Object) this, org.bukkit.event.raid.RaidStopEvent.Reason.NOT_IN_VILLAGE);
     }
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/raid/Raid;stop()V", ordinal = 2))
     private void silkard$stopTimeout(ServerLevel level, CallbackInfo ci) {
-        CraftEventFactory.callRaidStopEvent((Raid) (Object) this, level, org.bukkit.event.raid.RaidStopEvent.Reason.TIMEOUT);
+        CraftEventFactory.callRaidStopEvent(level, (Raid) (Object) this, org.bukkit.event.raid.RaidStopEvent.Reason.TIMEOUT);
     }
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/raid/Raid;stop()V", ordinal = 3))
     private void silkard$stopUnspawnable(ServerLevel level, CallbackInfo ci) {
-        CraftEventFactory.callRaidStopEvent((Raid) (Object) this, level, org.bukkit.event.raid.RaidStopEvent.Reason.UNSPAWNABLE);
+        CraftEventFactory.callRaidStopEvent(level, (Raid) (Object) this, org.bukkit.event.raid.RaidStopEvent.Reason.UNSPAWNABLE);
     }
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/raid/Raid;stop()V", ordinal = 4))
     private void silkard$stopFinished(ServerLevel level, CallbackInfo ci) {
-        CraftEventFactory.callRaidStopEvent((Raid) (Object) this, level, org.bukkit.event.raid.RaidStopEvent.Reason.FINISHED);
+        CraftEventFactory.callRaidStopEvent(level, (Raid) (Object) this, org.bukkit.event.raid.RaidStopEvent.Reason.FINISHED);
     }
 
     @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/raid/Raid;setDirty(Lnet/minecraft/server/level/ServerLevel;)V", shift = At.Shift.BEFORE))
@@ -125,7 +125,7 @@ public abstract class MixinRaid implements ContextRaid {
                     }
                 }
             }
-            CraftEventFactory.callRaidFinishEvent((Raid) (Object) this, level, winners);
+            CraftEventFactory.callRaidFinishEvent(level, (Raid) (Object) this, winners);
         }
     }
 }

@@ -66,7 +66,7 @@ public abstract class MixinThrownSplashPotion extends AbstractThrownPotion {
             }
         }
 
-        PotionSplashEvent event = CraftEventFactory.callPotionSplashEvent(this, hitResult, affected);
+        PotionSplashEvent event = CraftEventFactory.callPotionSplashEvent((net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownSplashPotion) (Object) this, hitResult, affected);
         if (!event.isCancelled() && !list.isEmpty()) {
             Entity entity1 = this.getEffectSource();
             for (org.bukkit.entity.LivingEntity victim : event.getAffectedEntities()) {

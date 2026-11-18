@@ -188,7 +188,8 @@ public abstract class MixinServerLevel implements ContextServerLevel {
     @Override
     public org.bukkit.craftbukkit.CraftWorld getWorld() {
         if (this.silkard$bukkitWorld == null) {
-            this.silkard$bukkitWorld = new org.bukkit.craftbukkit.CraftWorld((ServerLevel) (Object) this, this.generator, this.biomeProvider,
+            this.silkard$bukkitWorld = new org.bukkit.craftbukkit.CraftWorld((ServerLevel) (Object) this,
+                    org.bukkit.craftbukkit.util.CraftNamespacedKey.fromMinecraft(((ServerLevel) (Object) this).dimension().identifier()), this.biomeProvider,
                     (this.environment == null) ? org.bukkit.World.Environment.NORMAL : this.environment);
         }
         return this.silkard$bukkitWorld;

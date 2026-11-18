@@ -68,7 +68,49 @@ public final class CraftCompat {
         }
     }
 
+    /**
+     * Runs a console or RCON command line: input goes to a running conversation first, then to
+     * {@code CraftServer#dispatchCommand}. Exceptions are logged rather than thrown so one bad
+     * command cannot stop the console loop.
+     */
+    public static boolean dispatchServerCommand(org.bukkit.craftbukkit.CraftServer server, org.bukkit.command.CommandSender sender, String commandLine) {
+        if (sender instanceof org.bukkit.conversations.Conversable conversable && conversable.isConversing()) {
+            conversable.acceptConversationInput(commandLine);
+            return true;
+        }
+        try {
+            return server.dispatchCommand(sender, commandLine);
+        } catch (Exception ex) {
+            server.getLogger().log(java.util.logging.Level.WARNING, "Unexpected exception while parsing console command \"" + commandLine + '"', ex);
+            return false;
+        }
+    }
+
     // Spigot CraftEventFactory events that Paper's CraftEventFactory does not provide.
+
+    /**
+     * EntityDeathEvent over a list of Bukkit drops that the caller collected, dropping whatever
+     * the event leaves in that list at the victim's location.
+     */
+    public static org.bukkit.event.entity.EntityDeathEvent callEntityDeathEvent(net.minecraft.world.entity.LivingEntity victim, net.minecraft.world.damagesource.DamageSource damageSource, java.util.List<org.bukkit.inventory.ItemStack> drops) {
+        org.bukkit.craftbukkit.entity.CraftLivingEntity entity = (org.bukkit.craftbukkit.entity.CraftLivingEntity) victim.getBukkitEntity();
+        org.bukkit.craftbukkit.CraftWorld world = (org.bukkit.craftbukkit.CraftWorld) entity.getWorld();
+        org.bukkit.event.entity.EntityDeathEvent event = new org.bukkit.event.entity.EntityDeathEvent(
+            entity, new org.bukkit.craftbukkit.damage.CraftDamageSource(damageSource), drops, victim.getExpReward(world.getHandle(), damageSource.getEntity()));
+        Bukkit.getPluginManager().callEvent(event);
+        if (event.isCancelled()) {
+            return event;
+        }
+
+        ((com.mohistmc.silkard.injected.world.entity.ContextLivingEntity) victim).silkard$expToDrop(event.getDroppedExp());
+        for (org.bukkit.inventory.ItemStack stack : event.getDrops()) {
+            if (stack == null || stack.getType().isAir() || stack.getAmount() == 0) {
+                continue;
+            }
+            world.dropItem(entity.getLocation(), stack);
+        }
+        return event;
+    }
 
     public static PlayerCustomClickEvent callPlayerCustomClickEvent(Identifier identifier, Optional<Tag> payload, ServerPlayer player) {
         NamespacedKey id = CraftNamespacedKey.fromMinecraft(identifier);

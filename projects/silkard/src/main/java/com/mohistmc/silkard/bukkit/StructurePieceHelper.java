@@ -31,7 +31,13 @@ public final class StructurePieceHelper {
         boolean result = level.setBlock(position, craftState.getHandle(), flags);
         BlockEntity blockEntity = level.getBlockEntity(position);
         if (blockEntity != null) {
-            blockEntity.loadWithComponents(craftState.getSnapshotInput());
+            try (net.minecraft.util.ProblemReporter.ScopedCollector problemReporter = new net.minecraft.util.ProblemReporter.ScopedCollector(
+                () -> "StructurePieceHelper@" + position.toShortString(), com.mojang.logging.LogUtils.getLogger()
+            )) {
+                blockEntity.loadWithComponents(net.minecraft.world.level.storage.TagValueInput.create(
+                    problemReporter, level.registryAccess(), craftState.getSnapshotNBT()
+                ));
+            }
         }
         return result;
     }
