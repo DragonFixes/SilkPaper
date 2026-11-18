@@ -9,8 +9,8 @@ import org.bukkit.inventory.BrewerInventory;
 
 public class CraftBrewingStand extends CraftContainer<BrewingStandBlockEntity> implements BrewingStand {
 
-    public CraftBrewingStand(World world, BrewingStandBlockEntity tileEntity) {
-        super(world, tileEntity);
+    public CraftBrewingStand(World world, BrewingStandBlockEntity blockEntity, boolean useSnapshot) {
+        super(world, blockEntity, useSnapshot);
     }
 
     protected CraftBrewingStand(CraftBrewingStand state, Location location) {
@@ -28,7 +28,7 @@ public class CraftBrewingStand extends CraftContainer<BrewingStandBlockEntity> i
             return this.getSnapshotInventory();
         }
 
-        return new CraftInventoryBrewer(this.getTileEntity());
+        return new CraftInventoryBrewer(this.getBlockEntity());
     }
 
     @Override
@@ -39,6 +39,17 @@ public class CraftBrewingStand extends CraftContainer<BrewingStandBlockEntity> i
     @Override
     public void setBrewingTime(int brewTime) {
         this.getSnapshot().brewTime = brewTime;
+    }
+
+    @Override
+    public void setRecipeBrewTime(int recipeBrewTime) {
+        com.google.common.base.Preconditions.checkArgument(recipeBrewTime > 0, "recipeBrewTime must be positive");
+        this.getSnapshot().totalBrewTime = recipeBrewTime;
+    }
+
+    @Override
+    public int getRecipeBrewTime() {
+        return this.getSnapshot().totalBrewTime;
     }
 
     @Override

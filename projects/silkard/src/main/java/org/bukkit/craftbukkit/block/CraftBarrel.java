@@ -12,8 +12,8 @@ import org.bukkit.inventory.Inventory;
 
 public class CraftBarrel extends CraftLootable<BarrelBlockEntity> implements Barrel {
 
-    public CraftBarrel(World world, BarrelBlockEntity tileEntity) {
-        super(world, tileEntity);
+    public CraftBarrel(World world, BarrelBlockEntity blockEntity, boolean useSnapshot) {
+        super(world, blockEntity, useSnapshot);
     }
 
     protected CraftBarrel(CraftBarrel state, Location location) {
@@ -31,28 +31,36 @@ public class CraftBarrel extends CraftLootable<BarrelBlockEntity> implements Bar
             return this.getSnapshotInventory();
         }
 
-        return new CraftInventory(this.getTileEntity());
+        return new CraftInventory(this.getBlockEntity());
     }
 
     @Override
     public void open() {
+<<<<<<< silkard
         requirePlaced();
         if (!getTileEntity().openersCounter.silkard_opened()) {
             BlockState blockData = getTileEntity().getBlockState();
             boolean open = blockData.getValue(BarrelBlock.OPEN);
+=======
+        this.requirePlaced();
+        if (!this.getBlockEntity().openersCounter.opened && this.getWorldHandle() instanceof net.minecraft.world.level.Level level) {
+            BlockState block = this.getBlockEntity().getBlockState();
+            int openCount = this.getBlockEntity().openersCounter.getOpenerCount();
+>>>>>>> paper
 
-            if (!open) {
-                getTileEntity().updateBlockState(blockData, true);
-                if (getWorldHandle() instanceof net.minecraft.world.level.Level) {
-                    getTileEntity().playSound(blockData, SoundEvents.BARREL_OPEN);
-                }
-            }
+            this.getBlockEntity().openersCounter.onOpenAPI(level, this.getPosition(), block);
+            this.getBlockEntity().openersCounter.openerCountChangedAPI(level, this.getPosition(), block, openCount, openCount + 1);
         }
+<<<<<<< silkard
         getTileEntity().openersCounter.silkard_opened(true);
+=======
+        this.getBlockEntity().openersCounter.opened = true;
+>>>>>>> paper
     }
 
     @Override
     public void close() {
+<<<<<<< silkard
         requirePlaced();
         if (getTileEntity().openersCounter.silkard_opened()) {
             BlockState blockData = getTileEntity().getBlockState();
@@ -62,6 +70,17 @@ public class CraftBarrel extends CraftLootable<BarrelBlockEntity> implements Bar
             }
         }
         getTileEntity().openersCounter.silkard_opened(false);
+=======
+        this.requirePlaced();
+        if (this.getBlockEntity().openersCounter.opened && this.getWorldHandle() instanceof net.minecraft.world.level.Level level) {
+            BlockState block = this.getBlockEntity().getBlockState();
+            int openCount = this.getBlockEntity().openersCounter.getOpenerCount();
+
+            this.getBlockEntity().openersCounter.onCloseAPI(level, this.getPosition(), block);
+            this.getBlockEntity().openersCounter.openerCountChangedAPI(level, this.getPosition(), block, openCount, 0);
+        }
+        this.getBlockEntity().openersCounter.opened = false;
+>>>>>>> paper
     }
 
     @Override
@@ -73,4 +92,11 @@ public class CraftBarrel extends CraftLootable<BarrelBlockEntity> implements Bar
     public CraftBarrel copy(Location location) {
         return new CraftBarrel(this, location);
     }
+
+    // Paper start - More Lidded Block API
+    @Override
+    public boolean isOpen() {
+        return getBlockEntity().openersCounter.opened;
+    }
+    // Paper end - More Lidded Block API
 }

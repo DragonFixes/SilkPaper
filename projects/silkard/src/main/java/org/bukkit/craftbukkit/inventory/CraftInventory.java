@@ -5,6 +5,7 @@ import com.mohistmc.silkard.bukkit.inventory.BukkitLecternInventory;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
+import io.papermc.paper.util.BoundChecker;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.MerchantContainer;
@@ -16,12 +17,12 @@ import net.minecraft.world.level.block.entity.BlastFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
 import net.minecraft.world.level.block.entity.ChiseledBookShelfBlockEntity;
 import net.minecraft.world.level.block.entity.CrafterBlockEntity;
-import net.minecraft.world.level.block.entity.DecoratedPotBlockEntity;
 import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.world.level.block.entity.DropperBlockEntity;
 import net.minecraft.world.level.block.entity.Hopper;
 import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
 import net.minecraft.world.level.block.entity.LecternBlockEntity;
+import net.minecraft.world.level.block.entity.ShelfBlockEntity;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.level.block.entity.SmokerBlockEntity;
 import org.bukkit.Location;
@@ -41,18 +42,18 @@ public class CraftInventory implements Inventory {
     }
 
     public Container getInventory() {
-        return inventory;
+        return this.inventory;
     }
 
     @Override
     public int getSize() {
-        return getInventory().getContainerSize();
+        return this.getInventory().getContainerSize();
     }
 
     @Override
     public ItemStack getItem(int index) {
-        net.minecraft.world.item.ItemStack item = getInventory().getItem(index);
-        return item.isEmpty() ? null : CraftItemStack.asCraftMirror(item);
+        net.minecraft.world.item.ItemStack item = this.getInventory().getItem(index);
+        return item.isEmpty() ? null : CraftItemStack.asBukkitMirror(item);
     }
 
     protected ItemStack[] asCraftMirror(List<net.minecraft.world.item.ItemStack> mcItems) {
@@ -61,7 +62,7 @@ public class CraftInventory implements Inventory {
 
         for (int i = 0; i < size; i++) {
             net.minecraft.world.item.ItemStack mcItem = mcItems.get(i);
-            items[i] = (mcItem.isEmpty()) ? null : CraftItemStack.asCraftMirror(mcItem);
+            items[i] = (mcItem.isEmpty()) ? null : CraftItemStack.asBukkitMirror(mcItem);
         }
 
         return items;
@@ -69,44 +70,44 @@ public class CraftInventory implements Inventory {
 
     @Override
     public ItemStack[] getStorageContents() {
-        return getContents();
+        return this.getContents();
     }
 
     @Override
     public void setStorageContents(ItemStack[] items) throws IllegalArgumentException {
-        setContents(items);
+        this.setContents(items);
     }
 
     @Override
     public ItemStack[] getContents() {
-        List<net.minecraft.world.item.ItemStack> mcItems = getInventory().getContents();
+        List<net.minecraft.world.item.ItemStack> mcItems = this.getInventory().getContents();
 
-        return asCraftMirror(mcItems);
+        return this.asCraftMirror(mcItems);
     }
 
     @Override
     public void setContents(ItemStack[] items) {
-        Preconditions.checkArgument(items.length <= getSize(), "Invalid inventory size (%s); expected %s or less", items.length, getSize());
+        // Preconditions.checkArgument(items.length <= this.getSize(), "Invalid inventory size (%s); expected %s or less", items.length, this.getSize()); // Purpur - Barrels and enderchests 6 rows
 
-        for (int i = 0; i < getSize(); i++) {
+        for (int i = 0; i < this.getSize(); i++) {
             if (i >= items.length) {
-                setItem(i, null);
+                this.setItem(i, null);
             } else {
-                setItem(i, items[i]);
+                this.setItem(i, items[i]);
             }
         }
     }
 
     @Override
     public void setItem(int index, ItemStack item) {
-        getInventory().setItem(index, CraftItemStack.asNMSCopy(item));
+        this.getInventory().setItem(index, CraftItemStack.asNMSCopy(item));
     }
 
     @Override
     public boolean contains(Material material) {
         Preconditions.checkArgument(material != null, "Material cannot be null");
         material = CraftLegacy.fromLegacy(material);
-        for (ItemStack item : getStorageContents()) {
+        for (ItemStack item : this.getStorageContents()) {
             if (item != null && item.getType() == material) {
                 return true;
             }
@@ -119,7 +120,7 @@ public class CraftInventory implements Inventory {
         if (item == null) {
             return false;
         }
-        for (ItemStack i : getStorageContents()) {
+        for (ItemStack i : this.getStorageContents()) {
             if (item.equals(i)) {
                 return true;
             }
@@ -134,7 +135,7 @@ public class CraftInventory implements Inventory {
         if (amount <= 0) {
             return true;
         }
-        for (ItemStack item : getStorageContents()) {
+        for (ItemStack item : this.getStorageContents()) {
             if (item != null && item.getType() == material) {
                 if ((amount -= item.getAmount()) <= 0) {
                     return true;
@@ -152,7 +153,7 @@ public class CraftInventory implements Inventory {
         if (amount <= 0) {
             return true;
         }
-        for (ItemStack i : getStorageContents()) {
+        for (ItemStack i : this.getStorageContents()) {
             if (item.equals(i) && --amount <= 0) {
                 return true;
             }
@@ -168,7 +169,7 @@ public class CraftInventory implements Inventory {
         if (amount <= 0) {
             return true;
         }
-        for (ItemStack i : getStorageContents()) {
+        for (ItemStack i : this.getStorageContents()) {
             if (item.isSimilar(i) && (amount -= i.getAmount()) <= 0) {
                 return true;
             }
@@ -182,7 +183,7 @@ public class CraftInventory implements Inventory {
         material = CraftLegacy.fromLegacy(material);
         HashMap<Integer, ItemStack> slots = new HashMap<>();
 
-        ItemStack[] inventory = getStorageContents();
+        ItemStack[] inventory = this.getStorageContents();
         for (int i = 0; i < inventory.length; i++) {
             ItemStack item = inventory[i];
             if (item != null && item.getType() == material) {
@@ -196,7 +197,7 @@ public class CraftInventory implements Inventory {
     public HashMap<Integer, ItemStack> all(ItemStack item) {
         HashMap<Integer, ItemStack> slots = new HashMap<>();
         if (item != null) {
-            ItemStack[] inventory = getStorageContents();
+            ItemStack[] inventory = this.getStorageContents();
             for (int i = 0; i < inventory.length; i++) {
                 if (item.equals(inventory[i])) {
                     slots.put(i, inventory[i]);
@@ -210,7 +211,7 @@ public class CraftInventory implements Inventory {
     public int first(Material material) {
         Preconditions.checkArgument(material != null, "Material cannot be null");
         material = CraftLegacy.fromLegacy(material);
-        ItemStack[] inventory = getStorageContents();
+        ItemStack[] inventory = this.getStorageContents();
         for (int i = 0; i < inventory.length; i++) {
             ItemStack item = inventory[i];
             if (item != null && item.getType() == material) {
@@ -222,14 +223,20 @@ public class CraftInventory implements Inventory {
 
     @Override
     public int first(ItemStack item) {
-        return first(item, true);
+        return this.first(item, true);
     }
 
     private int first(ItemStack item, boolean withAmount) {
+        // Paper start
+        return first(item, withAmount, getStorageContents());
+    }
+
+    private int first(ItemStack item, boolean withAmount, ItemStack[] inventory) {
+        // Paper end
         if (item == null) {
             return -1;
         }
-        ItemStack[] inventory = getStorageContents();
+        // ItemStack[] inventory = this.getStorageContents(); // Paper - let param deal
         for (int i = 0; i < inventory.length; i++) {
             if (inventory[i] == null) continue;
 
@@ -242,7 +249,7 @@ public class CraftInventory implements Inventory {
 
     @Override
     public int firstEmpty() {
-        ItemStack[] inventory = getStorageContents();
+        ItemStack[] inventory = this.getStorageContents();
         for (int i = 0; i < inventory.length; i++) {
             if (inventory[i] == null) {
                 return i;
@@ -253,18 +260,15 @@ public class CraftInventory implements Inventory {
 
     @Override
     public boolean isEmpty() {
-        return inventory.isEmpty();
+        return this.inventory.isEmpty();
     }
 
     private int firstPartial(ItemStack item) {
-        ItemStack[] inventory = getStorageContents();
-        ItemStack filteredItem = CraftItemStack.asCraftCopy(item);
-        if (item == null) {
-            return -1;
-        }
+        ItemStack[] inventory = this.getStorageContents();
+        ItemStack filteredItem = item.clone();
         for (int i = 0; i < inventory.length; i++) {
             ItemStack cItem = inventory[i];
-            if (cItem != null && cItem.getAmount() < getMaxItemStack(cItem) && cItem.isSimilar(filteredItem)) {
+            if (cItem != null && cItem.getAmount() < this.getMaxItemStack(cItem) && cItem.isSimilar(filteredItem)) {
                 return i;
             }
         }
@@ -285,18 +289,14 @@ public class CraftInventory implements Inventory {
         for (int i = 0; i < items.length; i++) {
             ItemStack item = items[i];
             Preconditions.checkArgument(item != null, "ItemStack cannot be null");
-            // SPIGOT-8038: Cannot add/remove air. Probably should be an exception, but ignored for compatibility
-            if (item.getType().isAir()) {
-                continue;
-            }
             while (true) {
                 // Do we already have a stack of it?
-                int firstPartial = firstPartial(item);
+                int firstPartial = this.firstPartial(item);
 
                 // Drat! no partial stack
                 if (firstPartial == -1) {
                     // Find a free spot!
-                    int firstFree = firstEmpty();
+                    int firstFree = this.firstEmpty();
 
                     if (firstFree == -1) {
                         // No space at all!
@@ -304,47 +304,97 @@ public class CraftInventory implements Inventory {
                         break;
                     } else {
                         // More than a single stack!
-                        int maxAmount = getMaxItemStack(item);
+                        int maxAmount = this.getMaxItemStack(item);
                         if (item.getAmount() > maxAmount) {
-                            CraftItemStack stack = CraftItemStack.asCraftCopy(item);
+                            ItemStack stack = item.clone();
                             stack.setAmount(maxAmount);
-                            setItem(firstFree, stack);
+                            this.setItem(firstFree, stack);
                             item.setAmount(item.getAmount() - maxAmount);
                         } else {
                             // Just store it
-                            setItem(firstFree, item);
+                            this.setItem(firstFree, item);
                             break;
                         }
                     }
                 } else {
                     // So, apparently it might only partially fit, well lets do just that
-                    ItemStack partialItem = getItem(firstPartial);
+                    ItemStack partialItem = this.getItem(firstPartial);
 
                     int amount = item.getAmount();
                     int partialAmount = partialItem.getAmount();
-                    int maxAmount = getMaxItemStack(partialItem);
+                    int maxAmount = this.getMaxItemStack(partialItem);
 
                     // Check if it fully fits
                     if (amount + partialAmount <= maxAmount) {
                         partialItem.setAmount(amount + partialAmount);
                         // To make sure the packet is sent to the client
-                        setItem(firstPartial, partialItem);
+                        this.setItem(firstPartial, partialItem);
                         break;
                     }
 
                     // It fits partially
                     partialItem.setAmount(maxAmount);
                     // To make sure the packet is sent to the client
-                    setItem(firstPartial, partialItem);
+                    this.setItem(firstPartial, partialItem);
                     item.setAmount(amount + partialAmount - maxAmount);
                 }
             }
         }
+
+        // Leaf start - PlayerInventoryOverflowEvent
+        if (isListeningInventoryOverflowEvent()
+            && !leftover.isEmpty() && this.inventory instanceof net.minecraft.world.entity.player.Inventory && this.inventory.getOwner() instanceof org.bukkit.entity.Player player) {
+            new org.dreeam.leaf.event.player.PlayerInventoryOverflowEvent(player, leftover).callEvent();
+
+            return new HashMap<>();
+        }
+        // Leaf end - PlayerInventoryOverflowEvent
+
         return leftover;
     }
 
+    // Leaf start - PlayerInventoryOverflowEvent
+    private static boolean isListeningInventoryOverflowEvent() {
+        if (org.bukkit.event.HandlerList.isListeningInvOverflowCached == -1) {
+            org.bukkit.event.HandlerList.isListeningInvOverflowCached = 0;
+
+            if (!org.dreeam.leaf.config.modules.gameplay.ConfigurableInventoryOverflowEvent.enabled) {
+                return false;
+            }
+
+            org.bukkit.plugin.RegisteredListener[] listeners = org.dreeam.leaf.event.player.PlayerInventoryOverflowEvent.getHandlerList().getRegisteredListeners();
+            if (listeners.length == 1) {
+                if (listeners[0].getListener().getClass().getName().equals(org.dreeam.leaf.config.modules.gameplay.ConfigurableInventoryOverflowEvent.listenerClass)) {
+                    org.bukkit.event.HandlerList.isListeningInvOverflowCached = 1;
+                    return true;
+                }
+            } else if (listeners.length > 1) {
+                for (org.bukkit.plugin.RegisteredListener registeredListener : listeners) {
+                    if (registeredListener.getListener().getClass().getName().equals(org.dreeam.leaf.config.modules.gameplay.ConfigurableInventoryOverflowEvent.listenerClass)) {
+                        org.bukkit.event.HandlerList.isListeningInvOverflowCached = 1;
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return org.bukkit.event.HandlerList.isListeningInvOverflowCached == 1;
+    }
+    // Leaf end - PlayerInventoryOverflowEvent
+
     @Override
     public HashMap<Integer, ItemStack> removeItem(ItemStack... items) {
+        // Paper start
+        return removeItem(false, items);
+    }
+
+    @Override
+    public HashMap<Integer, ItemStack> removeItemAnySlot(ItemStack... items) {
+        return removeItem(true, items);
+    }
+
+    private HashMap<Integer, ItemStack> removeItem(boolean searchEntire, ItemStack... items) {
+        // Paper end
         Preconditions.checkArgument(items != null, "items cannot be null");
         HashMap<Integer, ItemStack> leftover = new HashMap<Integer, ItemStack>();
 
@@ -353,14 +403,13 @@ public class CraftInventory implements Inventory {
         for (int i = 0; i < items.length; i++) {
             ItemStack item = items[i];
             Preconditions.checkArgument(item != null, "ItemStack cannot be null");
-            // SPIGOT-8038: Cannot add/remove air. Probably should be an exception, but ignored for compatibility
-            if (item.getType().isAir()) {
-                continue;
-            }
             int toDelete = item.getAmount();
 
             while (true) {
-                int first = first(item, false);
+                // Paper start - Allow searching entire contents
+                ItemStack[] toSearch = searchEntire ? getContents() : getStorageContents();
+                int first = this.first(item, false, toSearch);
+                // Paper end
 
                 // Drat! we don't have this type in the inventory
                 if (first == -1) {
@@ -368,17 +417,17 @@ public class CraftInventory implements Inventory {
                     leftover.put(i, item);
                     break;
                 } else {
-                    ItemStack itemStack = getItem(first);
+                    ItemStack itemStack = this.getItem(first);
                     int amount = itemStack.getAmount();
 
                     if (amount <= toDelete) {
                         toDelete -= amount;
                         // clear the slot, all used up
-                        clear(first);
+                        this.clear(first);
                     } else {
                         // split the stack and store
                         itemStack.setAmount(amount - toDelete);
-                        setItem(first, itemStack);
+                        this.setItem(first, itemStack);
                         toDelete = 0;
                     }
                 }
@@ -393,42 +442,50 @@ public class CraftInventory implements Inventory {
     }
 
     private int getMaxItemStack(ItemStack itemstack) {
-        return Math.min(itemstack.getMaxStackSize(), getInventory().getMaxStackSize());
+        return Math.min(itemstack.getMaxStackSize(), this.getInventory().getMaxStackSize());
     }
 
     @Override
     public void remove(Material material) {
         Preconditions.checkArgument(material != null, "Material cannot be null");
         material = CraftLegacy.fromLegacy(material);
-        ItemStack[] items = getStorageContents();
+        ItemStack[] items = this.getStorageContents();
         for (int i = 0; i < items.length; i++) {
             if (items[i] != null && items[i].getType() == material) {
-                clear(i);
+                this.clear(i);
             }
         }
     }
 
     @Override
     public void remove(ItemStack item) {
-        ItemStack[] items = getStorageContents();
+        ItemStack[] items = this.getStorageContents();
         for (int i = 0; i < items.length; i++) {
             if (items[i] != null && items[i].equals(item)) {
-                clear(i);
+                this.clear(i);
             }
         }
     }
 
     @Override
     public void clear(int index) {
-        setItem(index, null);
+        this.setItem(index, null);
     }
 
     @Override
     public void clear() {
-        for (int i = 0; i < getSize(); i++) {
-            clear(i);
+        for (int i = 0; i < this.getSize(); i++) {
+            this.clear(i);
         }
     }
+    // Paper start
+    @Override
+    public int close() {
+        int count = this.inventory.getViewers().size();
+        com.google.common.collect.Lists.newArrayList(this.inventory.getViewers()).forEach(HumanEntity::closeInventory);
+        return count;
+    }
+    // Paper end
 
     @Override
     public ListIterator<ItemStack> iterator() {
@@ -438,7 +495,7 @@ public class CraftInventory implements Inventory {
     @Override
     public ListIterator<ItemStack> iterator(int index) {
         if (index < 0) {
-            index += getSize() + 1; // ie, with -1, previous() will return the last element
+            index += this.getSize() + 1; // ie, with -1, previous() will return the last element
         }
         return new InventoryIterator(this, index);
     }
@@ -451,33 +508,37 @@ public class CraftInventory implements Inventory {
     @Override
     public InventoryType getType() {
         // Thanks to Droppers extending Dispensers, Blast Furnaces & Smokers extending Furnace, order is important.
-        if (inventory instanceof CraftingContainer) {
-            if (inventory instanceof CrafterBlockEntity) {
+        if (this.inventory instanceof CraftingContainer) {
+            if (this.inventory instanceof CrafterBlockEntity) {
                 return InventoryType.CRAFTER;
             } else {
-                return inventory.getContainerSize() >= 9 ? InventoryType.WORKBENCH : InventoryType.CRAFTING;
+                return this.inventory.getContainerSize() >= 9 ? InventoryType.WORKBENCH : InventoryType.CRAFTING;
             }
-        } else if (inventory instanceof net.minecraft.world.entity.player.Inventory) {
+        } else if (this.inventory instanceof net.minecraft.world.entity.player.Inventory) {
             return InventoryType.PLAYER;
-        } else if (inventory instanceof DropperBlockEntity) {
+        } else if (this.inventory instanceof DropperBlockEntity) {
             return InventoryType.DROPPER;
-        } else if (inventory instanceof DispenserBlockEntity) {
+        } else if (this.inventory instanceof DispenserBlockEntity) {
             return InventoryType.DISPENSER;
-        } else if (inventory instanceof BlastFurnaceBlockEntity) {
+        } else if (this.inventory instanceof BlastFurnaceBlockEntity) {
             return InventoryType.BLAST_FURNACE;
-        } else if (inventory instanceof SmokerBlockEntity) {
+        } else if (this.inventory instanceof SmokerBlockEntity) {
             return InventoryType.SMOKER;
-        } else if (inventory instanceof AbstractFurnaceBlockEntity) {
+        } else if (this.inventory instanceof AbstractFurnaceBlockEntity) {
             return InventoryType.FURNACE;
         } else if (this instanceof CraftInventoryEnchanting) {
             return InventoryType.ENCHANTING;
-        } else if (inventory instanceof BrewingStandBlockEntity) {
+        } else if (this.inventory instanceof BrewingStandBlockEntity) {
             return InventoryType.BREWING;
-        } else if (inventory instanceof CraftInventoryCustom.MinecraftInventory) {
-            return ((CraftInventoryCustom.MinecraftInventory) inventory).getType();
-        } else if (inventory instanceof PlayerEnderChestContainer) {
+        } else if (this.inventory instanceof CraftInventoryCustom.MinecraftInventory) {
+            return ((CraftInventoryCustom.MinecraftInventory) this.inventory).getType();
+            // Paper start
+        } else if (this.inventory instanceof io.papermc.paper.inventory.PaperInventoryCustomHolderContainer holderContainer) {
+            return holderContainer.getType();
+        // Paper end
+        } else if (this.inventory instanceof PlayerEnderChestContainer) {
             return InventoryType.ENDER_CHEST;
-        } else if (inventory instanceof MerchantContainer) {
+        } else if (this.inventory instanceof MerchantContainer) {
             return InventoryType.MERCHANT;
         } else if (this instanceof CraftInventoryBeacon) {
             return InventoryType.BEACON;
@@ -485,16 +546,22 @@ public class CraftInventory implements Inventory {
             return InventoryType.ANVIL;
         } else if (this instanceof CraftInventorySmithing) {
             return InventoryType.SMITHING;
-        } else if (inventory instanceof Hopper) {
+        } else if (this.inventory instanceof Hopper) {
             return InventoryType.HOPPER;
-        } else if (inventory instanceof ShulkerBoxBlockEntity) {
+        } else if (this.inventory instanceof ShulkerBoxBlockEntity) {
             return InventoryType.SHULKER_BOX;
-        } else if (inventory instanceof BarrelBlockEntity) {
+        } else if (this.inventory instanceof BarrelBlockEntity) {
             return InventoryType.BARREL;
+<<<<<<< silkard
         } else if (inventory instanceof BukkitLecternInventory) {
+=======
+        } else if (this.inventory instanceof LecternBlockEntity.LecternInventory) {
+>>>>>>> paper
             return InventoryType.LECTERN;
-        } else if (inventory instanceof ChiseledBookShelfBlockEntity) {
+        } else if (this.inventory instanceof ChiseledBookShelfBlockEntity) {
             return InventoryType.CHISELED_BOOKSHELF;
+        } else if (this.inventory instanceof ShelfBlockEntity) {
+            return InventoryType.SHELF;
         } else if (this instanceof CraftInventoryLoom) {
             return InventoryType.LOOM;
         } else if (this instanceof CraftInventoryCartography) {
@@ -503,12 +570,14 @@ public class CraftInventory implements Inventory {
             return InventoryType.GRINDSTONE;
         } else if (this instanceof CraftInventoryStonecutter) {
             return InventoryType.STONECUTTER;
-        } else if (inventory instanceof ComposterBlock.EmptyContainer || inventory instanceof ComposterBlock.InputContainer || inventory instanceof ComposterBlock.OutputContainer) {
+        } else if (this.inventory instanceof ComposterBlock.EmptyContainer || this.inventory instanceof ComposterBlock.InputContainer || this.inventory instanceof ComposterBlock.OutputContainer) {
             return InventoryType.COMPOSTER;
-        } else if (inventory instanceof JukeboxBlockEntity) {
+        } else if (this.inventory instanceof JukeboxBlockEntity) {
             return InventoryType.JUKEBOX;
-        } else if (inventory instanceof DecoratedPotBlockEntity) {
-            return InventoryType.DECORATED_POT;
+            // Paper start
+        } else if (this.inventory instanceof net.minecraft.world.level.block.entity.DecoratedPotBlockEntity) {
+            return org.bukkit.event.inventory.InventoryType.DECORATED_POT;
+            // Paper end
         } else {
             return InventoryType.CHEST;
         }
@@ -516,22 +585,30 @@ public class CraftInventory implements Inventory {
 
     @Override
     public InventoryHolder getHolder() {
-        return inventory.getOwner();
+        return this.inventory.getOwner();
     }
+
+    // Paper start - getHolder without snapshot
+    @Override
+    public InventoryHolder getHolder(boolean useSnapshot) {
+        return this.inventory instanceof net.minecraft.world.level.block.entity.BlockEntity blockEntity ? blockEntity.getOwner(useSnapshot) : getHolder();
+    }
+    // Paper end
 
     @Override
     public int getMaxStackSize() {
-        return inventory.getMaxStackSize();
+        return this.inventory.getMaxStackSize();
     }
 
     @Override
     public void setMaxStackSize(int size) {
-        inventory.setMaxStackSize(size);
+        BoundChecker.requireNonNegative(size, "size");
+        this.inventory.setMaxStackSize(size);
     }
 
     @Override
     public int hashCode() {
-        return inventory.hashCode();
+        return this.inventory.hashCode();
     }
 
     @Override
@@ -541,6 +618,6 @@ public class CraftInventory implements Inventory {
 
     @Override
     public Location getLocation() {
-        return inventory.getLocation();
+        return this.inventory.getLocation();
     }
 }

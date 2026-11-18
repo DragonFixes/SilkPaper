@@ -3,71 +3,72 @@ package org.bukkit.craftbukkit.inventory;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
+import java.util.Objects;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.MapPostProcessing;
 import net.minecraft.world.level.saveddata.maps.MapId;
 import org.bukkit.Bukkit;
-import org.bukkit.Color;
 import org.bukkit.configuration.serialization.DelegateDeserialization;
 import org.bukkit.inventory.meta.MapMeta;
 import org.bukkit.map.MapView;
 
 @DelegateDeserialization(SerializableMeta.class)
-class CraftMetaMap extends CraftMetaItem implements MapMeta {
+public class CraftMetaMap extends CraftMetaItem implements MapMeta {
+
     @ItemMetaKey.Specific(ItemMetaKey.Specific.To.NBT)
     static final ItemMetaKeyType<MapPostProcessing> MAP_POST_PROCESSING = new ItemMetaKeyType<>(DataComponents.MAP_POST_PROCESSING);
     static final ItemMetaKey MAP_SCALING = new ItemMetaKey("scaling");
     @Deprecated // SPIGOT-6308
     static final ItemMetaKey MAP_LOC_NAME = new ItemMetaKey("display-loc-name");
     static final ItemMetaKeyType<MapId> MAP_ID = new ItemMetaKeyType<>(DataComponents.MAP_ID, "map-id");
+
     static final byte SCALING_EMPTY = (byte) 0;
     static final byte SCALING_TRUE = (byte) 1;
     static final byte SCALING_FALSE = (byte) 2;
 
     private Integer mapId;
-    private byte scaling = SCALING_EMPTY;
+    private byte scaling = CraftMetaMap.SCALING_EMPTY;
 
     CraftMetaMap(CraftMetaItem meta) {
         super(meta);
 
-        if (!(meta instanceof CraftMetaMap)) {
+        if (!(meta instanceof final CraftMetaMap mapMeta)) {
             return;
         }
 
-        CraftMetaMap map = (CraftMetaMap) meta;
-        this.mapId = map.mapId;
-        this.scaling = map.scaling;
+        this.mapId = mapMeta.mapId;
+        this.scaling = mapMeta.scaling;
     }
 
-    CraftMetaMap(DataComponentPatch tag) {
-        super(tag);
+    CraftMetaMap(DataComponentPatch patch, java.util.Set<net.minecraft.core.component.DataComponentType<?>> extraHandledComponents) {
+        super(patch, extraHandledComponents);
 
-        getOrEmpty(tag, MAP_ID).ifPresent((mapId) -> {
-            this.mapId = mapId.id();
+        getOrEmpty(patch, CraftMetaMap.MAP_ID).ifPresent((map) -> {
+            this.mapId = map.id();
         });
 
-        getOrEmpty(tag, MAP_POST_PROCESSING).ifPresent((mapPostProcessing) -> {
-            this.scaling = (mapPostProcessing == MapPostProcessing.SCALE) ? SCALING_TRUE : SCALING_FALSE;
+        getOrEmpty(patch, CraftMetaMap.MAP_POST_PROCESSING).ifPresent((mapPostProcessing) -> {
+            this.scaling = (mapPostProcessing == MapPostProcessing.SCALE) ? CraftMetaMap.SCALING_TRUE : CraftMetaMap.SCALING_FALSE;
         });
     }
 
     CraftMetaMap(Map<String, Object> map) {
         super(map);
 
-        Integer id = SerializableMeta.getObject(Integer.class, map, MAP_ID.BUKKIT, true);
+        Integer id = SerializableMeta.getObject(Integer.class, map, CraftMetaMap.MAP_ID.BUKKIT, true);
         if (id != null) {
-            setMapId(id);
+            this.setMapId(id);
         }
 
-        Boolean scaling = SerializableMeta.getObject(Boolean.class, map, MAP_SCALING.BUKKIT, true);
+        Boolean scaling = SerializableMeta.getObject(Boolean.class, map, CraftMetaMap.MAP_SCALING.BUKKIT, true);
         if (scaling != null) {
-            setScaling(scaling);
+            this.setScaling(scaling);
         }
 
-        String locName = SerializableMeta.getString(map, MAP_LOC_NAME.BUKKIT, true);
+        String locName = SerializableMeta.getString(map, CraftMetaMap.MAP_LOC_NAME.BUKKIT, true);
         if (locName != null) {
-            setLocationName(locName);
+            this.setLocationName(locName);
         }
     }
 
@@ -75,32 +76,33 @@ class CraftMetaMap extends CraftMetaItem implements MapMeta {
     void applyToItem(CraftMetaItem.Applicator tag) {
         super.applyToItem(tag);
 
-        if (hasMapId()) {
-            tag.put(MAP_ID, new MapId(getMapId()));
+        if (this.hasMapId()) {
+            tag.put(CraftMetaMap.MAP_ID, new MapId(this.getMapId()));
         }
 
-        if (hasScaling()) {
-            tag.put(MAP_POST_PROCESSING, (isScaling()) ? MapPostProcessing.SCALE : MapPostProcessing.LOCK);
+        if (this.hasScaling()) {
+            tag.put(CraftMetaMap.MAP_POST_PROCESSING, (this.isScaling()) ? MapPostProcessing.SCALE : MapPostProcessing.LOCK);
         }
     }
 
     @Override
     boolean isEmpty() {
-        return super.isEmpty() && isMapEmpty();
+        return super.isEmpty() && this.isMapEmpty();
     }
 
     boolean isMapEmpty() {
-        return !(hasMapId() || hasScaling() | hasLocationName() || hasColor());
+        return !(this.hasMapId() || this.hasScaling());
     }
 
     @Override
     public boolean hasMapId() {
-        return mapId != null;
+        return this.mapId != null;
     }
 
     @Override
     public int getMapId() {
-        return mapId;
+        Preconditions.checkState(this.hasMapId(), "Item does not have map associated - check hasMapId() first!");
+        return this.mapId;
     }
 
     @Override
@@ -110,13 +112,13 @@ class CraftMetaMap extends CraftMetaItem implements MapMeta {
 
     @Override
     public boolean hasMapView() {
-        return mapId != null;
+        return this.mapId != null;
     }
 
     @Override
     public MapView getMapView() {
-        Preconditions.checkState(hasMapView(), "Item does not have map associated - check hasMapView() first!");
-        return Bukkit.getMap(mapId);
+        Preconditions.checkState(this.hasMapView(), "Item does not have map associated - check hasMapView() first!");
+        return Bukkit.getMap(this.mapId);
     }
 
     @Override
@@ -125,46 +127,17 @@ class CraftMetaMap extends CraftMetaItem implements MapMeta {
     }
 
     boolean hasScaling() {
-        return scaling != SCALING_EMPTY;
+        return this.scaling != CraftMetaMap.SCALING_EMPTY;
     }
 
     @Override
     public boolean isScaling() {
-        return scaling == SCALING_TRUE;
+        return this.scaling == CraftMetaMap.SCALING_TRUE;
     }
 
     @Override
     public void setScaling(boolean scaling) {
-        this.scaling = scaling ? SCALING_TRUE : SCALING_FALSE;
-    }
-
-    @Override
-    public boolean hasLocationName() {
-        return this.hasLocalizedName(); // SPIGOT-6308
-    }
-
-    @Override
-    public String getLocationName() {
-        return this.getLocalizedName(); // SPIGOT-6308
-    }
-
-    @Override
-    public void setLocationName(String name) {
-        this.setLocalizedName(name); // SPIGOT-6308
-    }
-
-    @Override
-    public boolean hasColor() {
-        return false;
-    }
-
-    @Override
-    public Color getColor() {
-        return null;
-    }
-
-    @Override
-    public void setColor(Color color) {
+        this.scaling = scaling ? CraftMetaMap.SCALING_TRUE : CraftMetaMap.SCALING_FALSE;
     }
 
     @Override
@@ -172,18 +145,16 @@ class CraftMetaMap extends CraftMetaItem implements MapMeta {
         if (!super.equalsCommon(meta)) {
             return false;
         }
-        if (meta instanceof CraftMetaMap) {
-            CraftMetaMap that = (CraftMetaMap) meta;
-
-            return (this.scaling == that.scaling)
-                    && (hasMapId() ? that.hasMapId() && this.mapId.equals(that.mapId) : !that.hasMapId());
+        if (meta instanceof final CraftMetaMap other) {
+            return this.scaling == other.scaling
+                    && Objects.equals(this.mapId, other.mapId);
         }
         return true;
     }
 
     @Override
     boolean notUncommon(CraftMetaItem meta) {
-        return super.notUncommon(meta) && (meta instanceof CraftMetaMap || isMapEmpty());
+        return super.notUncommon(meta) && (meta instanceof CraftMetaMap || this.isMapEmpty());
     }
 
     @Override
@@ -191,11 +162,11 @@ class CraftMetaMap extends CraftMetaItem implements MapMeta {
         final int original;
         int hash = original = super.applyHash();
 
-        if (hasMapId()) {
-            hash = 61 * hash + mapId.hashCode();
+        if (this.hasMapId()) {
+            hash = 61 * hash + this.mapId.hashCode();
         }
-        if (hasScaling()) {
-            hash ^= 0x22222222 << (isScaling() ? 1 : -1);
+        if (this.hasScaling()) {
+            hash ^= 0x22222222 << (this.isScaling() ? 1 : -1);
         }
 
         return original != hash ? CraftMetaMap.class.hashCode() ^ hash : hash;
@@ -211,12 +182,12 @@ class CraftMetaMap extends CraftMetaItem implements MapMeta {
     ImmutableMap.Builder<String, Object> serialize(ImmutableMap.Builder<String, Object> builder) {
         super.serialize(builder);
 
-        if (hasMapId()) {
-            builder.put(MAP_ID.BUKKIT, getMapId());
+        if (this.hasMapId()) {
+            builder.put(CraftMetaMap.MAP_ID.BUKKIT, this.getMapId());
         }
 
-        if (hasScaling()) {
-            builder.put(MAP_SCALING.BUKKIT, isScaling());
+        if (this.hasScaling()) {
+            builder.put(CraftMetaMap.MAP_SCALING.BUKKIT, this.isScaling());
         }
 
         return builder;

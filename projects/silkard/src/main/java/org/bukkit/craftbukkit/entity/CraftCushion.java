@@ -1,17 +1,19 @@
 package org.bukkit.craftbukkit.entity;
 
-import com.google.common.base.Preconditions;
-import org.bukkit.block.BlockFace;
+import org.bukkit.DyeColor;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Cushion;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class CraftCushion extends CraftBlockAttachedEntity implements Cushion {
 
-    public CraftCushion(CraftServer server, net.minecraft.world.entity.decoration.Cushion entity) {
+    public CraftCushion(final CraftServer server, final net.minecraft.world.entity.decoration.Cushion entity) {
         super(server, entity);
     }
 
     @Override
+<<<<<<< silkard
     public boolean setFacingDirection(BlockFace face, boolean force) {
         Preconditions.checkArgument(face == BlockFace.UP, "%s is not a valid facing direction", face);
 
@@ -30,15 +32,19 @@ public class CraftCushion extends CraftBlockAttachedEntity implements Cushion {
 
     @Override
     public void setFacingDirection(BlockFace face) {
-    }
-
-    @Override
+=======
     public net.minecraft.world.entity.decoration.Cushion getHandle() {
-        return (net.minecraft.world.entity.decoration.Cushion) entity;
+        return (net.minecraft.world.entity.decoration.Cushion) this.entity;
+>>>>>>> paper
     }
 
     @Override
-    public String toString() {
-        return "CraftCushion";
+    public DyeColor getColor() {
+        return DyeColor.getByWoolData((byte) this.getHandle().getColor().getId());
+    }
+
+    @Override
+    public void setColor(final DyeColor color) {
+        this.getHandle().setColor(net.minecraft.world.item.DyeColor.byId(color.getWoolData()));
     }
 }

@@ -14,29 +14,38 @@ public class CraftRemoteConsoleCommandSender extends ServerCommandSender impleme
     }
 
     public RconConsoleSource getListener() {
-        return listener;
+        return this.listener;
     }
 
     @Override
     public SocketAddress getAddress() {
+<<<<<<< silkard
        return listener.silkard$socketAddress();
+=======
+       return this.listener.socketAddress;
+>>>>>>> paper
     }
 
     @Override
     public void sendMessage(String message) {
-        listener.sendSystemMessage(Component.literal(message + "\n")); // Send a newline after each message, to preserve formatting.
+        this.listener.sendSystemMessage(Component.literal(message + "\n")); // Send a newline after each message, to preserve formatting.
     }
 
     @Override
     public void sendMessage(String... messages) {
         for (String message : messages) {
-            sendMessage(message);
+            this.sendMessage(message);
         }
     }
 
     @Override
     public String getName() {
         return "Rcon";
+    }
+
+    @Override
+    public net.kyori.adventure.text.Component name() {
+        return net.kyori.adventure.text.Component.text(this.getName());
     }
 
     @Override
@@ -47,5 +56,15 @@ public class CraftRemoteConsoleCommandSender extends ServerCommandSender impleme
     @Override
     public void setOp(boolean value) {
         throw new UnsupportedOperationException("Cannot change operator status of remote controller.");
+    }
+
+    @Override
+    public boolean hasPermission(String name) {
+        return io.papermc.paper.configuration.GlobalConfiguration.get().console.hasAllPermissions || super.hasPermission(name);
+    }
+
+    @Override
+    public boolean hasPermission(org.bukkit.permissions.Permission perm) {
+        return io.papermc.paper.configuration.GlobalConfiguration.get().console.hasAllPermissions || super.hasPermission(perm);
     }
 }

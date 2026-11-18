@@ -33,28 +33,8 @@ public class CraftBiomeParameterPoint implements BiomeParameterPoint {
     }
 
     @Override
-    public double getMaxTemperature() {
-        throw new UnsupportedOperationException("Not supported.");
-    }
-
-    @Override
-    public double getMinTemperature() {
-        throw new UnsupportedOperationException("Not supported.");
-    }
-
-    @Override
     public double getHumidity() {
         return this.humidity;
-    }
-
-    @Override
-    public double getMaxHumidity() {
-        throw new UnsupportedOperationException("Not supported.");
-    }
-
-    @Override
-    public double getMinHumidity() {
-        throw new UnsupportedOperationException("Not supported.");
     }
 
     @Override
@@ -63,28 +43,8 @@ public class CraftBiomeParameterPoint implements BiomeParameterPoint {
     }
 
     @Override
-    public double getMaxContinentalness() {
-        throw new UnsupportedOperationException("Not supported.");
-    }
-
-    @Override
-    public double getMinContinentalness() {
-        throw new UnsupportedOperationException("Not supported.");
-    }
-
-    @Override
     public double getErosion() {
         return this.erosion;
-    }
-
-    @Override
-    public double getMaxErosion() {
-        throw new UnsupportedOperationException("Not supported.");
-    }
-
-    @Override
-    public double getMinErosion() {
-        throw new UnsupportedOperationException("Not supported.");
     }
 
     @Override
@@ -93,27 +53,7 @@ public class CraftBiomeParameterPoint implements BiomeParameterPoint {
     }
 
     @Override
-    public double getMaxDepth() {
-        throw new UnsupportedOperationException("Not supported.");
-    }
-
-    @Override
-    public double getMinDepth() {
-        throw new UnsupportedOperationException("Not supported.");
-    }
-
-    @Override
     public double getWeirdness() {
         return this.weirdness;
-    }
-
-    @Override
-    public double getMaxWeirdness() {
-        throw new UnsupportedOperationException("Not supported.");
-    }
-
-    @Override
-    public double getMinWeirdness() {
-        throw new UnsupportedOperationException("Not supported.");
     }
 }

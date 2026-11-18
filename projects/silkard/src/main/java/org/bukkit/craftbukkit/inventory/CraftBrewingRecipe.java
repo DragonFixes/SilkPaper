@@ -1,29 +1,44 @@
 package org.bukkit.craftbukkit.inventory;
 
+<<<<<<< silkard
 import com.mohistmc.silkard.bukkit.BukkitUtils;
+=======
+import java.util.Optional;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.item.crafting.PotionIngredient;
+>>>>>>> paper
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.bukkit.NamespacedKey;
+import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.inventory.BrewingRecipe;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.RecipeChoice;
 
 public class CraftBrewingRecipe extends BrewingRecipe implements CraftRecipe {
 
-    private final net.minecraft.world.item.crafting.BrewingRecipe recipe;
-
-    public CraftBrewingRecipe(NamespacedKey key, ItemStack result, net.minecraft.world.item.crafting.BrewingRecipe recipe) {
-        super(key, result);
-        this.recipe = recipe;
+    public CraftBrewingRecipe(final NamespacedKey key, final ItemStack result, final RecipeChoice input, final RecipeChoice ingredient) {
+        super(key, result, input, ingredient);
     }
 
-    public static CraftBrewingRecipe fromBukkitRecipe(BrewingRecipe recipe) {
-        if (recipe instanceof CraftBrewingRecipe) {
-            return (CraftBrewingRecipe) recipe;
+    public static CraftBrewingRecipe fromBukkitRecipe(final BrewingRecipe recipe) {
+        if (recipe instanceof final CraftBrewingRecipe craftBrewingRecipe) {
+            return craftBrewingRecipe;
         }
-        throw new UnsupportedOperationException("Cannot add custom brewing recipe");
+
+        return new CraftBrewingRecipe(recipe.getKey(), recipe.getResult(), recipe.getInput(), recipe.getIngredient());
     }
 
     @Override
+<<<<<<< silkard
     public void addToCraftingManager() {
         BukkitUtils.getServer().getRecipeManager().addRecipe(new RecipeHolder<>(CraftRecipe.toMinecraft(this.getKey()), recipe));
+=======
+    public RecipeHolder<?> toMinecraftRecipe() {
+        return new RecipeHolder<>(CraftNamespacedKey.toResourceKey(Registries.RECIPE, this.getKey()), new net.minecraft.world.item.crafting.BrewingRecipe(
+            new PotionIngredient(CraftRecipe.toIngredient(this.getInput(), false), Optional.empty()),
+            new PotionIngredient(CraftRecipe.toIngredient(this.getIngredient(), false), Optional.empty()),
+            CraftItemStack.asTemplate(this.getResult())
+        ));
+>>>>>>> paper
     }
 }

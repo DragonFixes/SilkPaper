@@ -1,62 +1,83 @@
 package org.bukkit.craftbukkit.entity;
 
 import com.google.common.base.Preconditions;
+import net.minecraft.world.entity.monster.Enderman;
 import net.minecraft.world.level.block.state.BlockState;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.craftbukkit.block.data.CraftBlockData;
 import org.bukkit.craftbukkit.util.CraftMagicNumbers;
-import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
 import org.bukkit.material.MaterialData;
 
-public class CraftEnderman extends CraftMonster implements Enderman {
-    public CraftEnderman(CraftServer server, net.minecraft.world.entity.monster.Enderman entity) {
+public class CraftEnderman extends CraftMonster implements org.bukkit.entity.Enderman {
+
+    public CraftEnderman(CraftServer server, Enderman entity) {
         super(server, entity);
     }
 
     @Override
+    public Enderman getHandle() {
+        return (Enderman) this.entity;
+    }
+
+    @Override
+    public boolean teleportRandomly() {
+        return getHandle().teleport();
+    }
+
+    @Override
     public MaterialData getCarriedMaterial() {
-        BlockState blockData = getHandle().getCarriedBlock();
-        return (blockData == null) ? Material.AIR.getNewData((byte) 0) : CraftMagicNumbers.getMaterial(blockData);
+        BlockState carried = this.getHandle().getCarriedBlock();
+        return (carried == null) ? Material.AIR.getNewData((byte) 0) : CraftMagicNumbers.getMaterial(carried);
     }
 
     @Override
     public BlockData getCarriedBlock() {
-        BlockState blockData = getHandle().getCarriedBlock();
-        return (blockData == null) ? null : CraftBlockData.fromData(blockData);
+        BlockState carried = this.getHandle().getCarriedBlock();
+        return (carried == null) ? null : carried.asBlockData();
     }
 
     @Override
     public void setCarriedMaterial(MaterialData data) {
-        getHandle().setCarriedBlock(CraftMagicNumbers.getBlock(data));
+        this.getHandle().setCarriedBlock(CraftMagicNumbers.getBlock(data));
     }
 
     @Override
     public void setCarriedBlock(BlockData blockData) {
-        getHandle().setCarriedBlock(blockData == null ? null : ((CraftBlockData) blockData).getState());
+        this.getHandle().setCarriedBlock(blockData == null ? null : ((CraftBlockData) blockData).getState());
     }
 
     @Override
-    public net.minecraft.world.entity.monster.Enderman getHandle() {
-        return (net.minecraft.world.entity.monster.Enderman) entity;
+    public boolean isScreaming() {
+        return this.getHandle().isCreepy();
     }
 
     @Override
-    public String toString() {
-        return "CraftEnderman";
+    public void setScreaming(boolean screaming) {
+        this.getHandle().setCreepy(screaming);
+    }
+
+    @Override
+    public boolean hasBeenStaredAt() {
+        return this.getHandle().hasBeenStaredAt();
+    }
+
+    @Override
+    public void setHasBeenStaredAt(boolean hasBeenStaredAt) {
+        this.getHandle().setHasBeenStaredAt(hasBeenStaredAt);
     }
 
     @Override
     public boolean teleport() {
-        return getHandle().teleport();
+        return this.getHandle().teleport();
     }
 
     @Override
     public boolean teleportTowards(Entity entity) {
         Preconditions.checkArgument(entity != null, "entity cannot be null");
 
-        return getHandle().teleportTowards(((CraftEntity) entity).getHandle());
+        return this.getHandle().teleportTowards(((CraftEntity) entity).getHandle());
     }
 }

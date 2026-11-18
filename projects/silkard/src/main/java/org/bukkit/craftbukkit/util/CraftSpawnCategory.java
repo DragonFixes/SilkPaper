@@ -49,8 +49,8 @@ public class CraftSpawnCategory {
         };
     }
 
-    public static SpawnCategory toBukkit(MobCategory enumCreatureType) {
-        return switch (enumCreatureType) {
+    public static SpawnCategory toBukkit(MobCategory category) {
+        return switch (category) {
             case MONSTER -> SpawnCategory.MONSTER;
             case CREATURE -> SpawnCategory.ANIMAL;
             case AMBIENT -> SpawnCategory.AMBIENT;
@@ -59,7 +59,10 @@ public class CraftSpawnCategory {
             case WATER_AMBIENT -> SpawnCategory.WATER_AMBIENT;
             case UNDERGROUND_WATER_CREATURE -> SpawnCategory.WATER_UNDERGROUND_CREATURE;
             case MISC -> SpawnCategory.MISC;
+<<<<<<< silkard
             default -> SpawnCategory.valueOf(enumCreatureType.name());
+=======
+>>>>>>> paper
         };
     }
 
@@ -76,7 +79,10 @@ public class CraftSpawnCategory {
             case WATER_AMBIENT -> MobCategory.WATER_AMBIENT;
             case WATER_UNDERGROUND_CREATURE -> MobCategory.UNDERGROUND_WATER_CREATURE;
             case MISC -> MobCategory.MISC;
+<<<<<<< silkard
             default -> MobCategory.valueOf(spawnCategory.name());
+=======
+>>>>>>> paper
         };
     }
 

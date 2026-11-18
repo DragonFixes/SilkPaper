@@ -1,24 +1,26 @@
 package org.bukkit.craftbukkit.entity;
 
-import com.google.common.base.Preconditions;
-import java.util.stream.Collectors;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
 import org.bukkit.TreeSpecies;
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Boat;
-import org.bukkit.entity.Entity;
 
-public abstract class CraftBoat extends CraftVehicle implements Boat {
+public abstract class CraftBoat extends CraftVehicle implements Boat, io.papermc.paper.entity.PaperLeashable { // Paper - Leashable API
 
     public CraftBoat(CraftServer server, AbstractBoat entity) {
         super(server, entity);
     }
 
     @Override
+    public AbstractBoat getHandle() {
+        return (AbstractBoat) this.entity;
+    }
+
+    @Override
     public TreeSpecies getWoodType() {
-        return getTreeSpecies(getHandle().getType());
+        return CraftBoat.getTreeSpecies(this.getHandle().getType());
     }
 
     @Override
@@ -28,7 +30,7 @@ public abstract class CraftBoat extends CraftVehicle implements Boat {
 
     @Override
     public Type getBoatType() {
-        return boatTypeFromNms(getHandle().getType());
+        return CraftBoat.boatTypeFromNms(this.getHandle().getType());
     }
 
     @Override
@@ -38,73 +40,89 @@ public abstract class CraftBoat extends CraftVehicle implements Boat {
 
     @Override
     public double getMaxSpeed() {
+<<<<<<< silkard
         return getHandle().silkard_maxSpeed();
+=======
+        return this.getHandle().maxSpeed;
+>>>>>>> paper
     }
 
     @Override
     public void setMaxSpeed(double speed) {
+<<<<<<< silkard
         if (speed >= 0D) {
             getHandle().silkard_maxSpeed(speed);
+=======
+        if (speed >= 0) {
+            this.getHandle().maxSpeed = speed;
+>>>>>>> paper
         }
     }
 
     @Override
     public double getOccupiedDeceleration() {
+<<<<<<< silkard
         return getHandle().silkard_occupiedDeceleration();
+=======
+        return this.getHandle().occupiedDeceleration;
+>>>>>>> paper
     }
 
     @Override
     public void setOccupiedDeceleration(double speed) {
+<<<<<<< silkard
         if (speed >= 0D) {
             getHandle().silkard_occupiedDeceleration(speed);
+=======
+        if (speed >= 0) {
+            this.getHandle().occupiedDeceleration = speed;
+>>>>>>> paper
         }
     }
 
     @Override
     public double getUnoccupiedDeceleration() {
+<<<<<<< silkard
         return getHandle().silkard_unoccupiedDeceleration();
+=======
+        return this.getHandle().unoccupiedDeceleration;
+>>>>>>> paper
     }
 
     @Override
     public void setUnoccupiedDeceleration(double speed) {
+<<<<<<< silkard
         getHandle().silkard_unoccupiedDeceleration(speed);
+=======
+        this.getHandle().unoccupiedDeceleration = speed;
+>>>>>>> paper
     }
 
     @Override
     public boolean getWorkOnLand() {
+<<<<<<< silkard
         return getHandle().silkard_landBoats();
+=======
+        return this.getHandle().landBoats;
+>>>>>>> paper
     }
 
     @Override
     public void setWorkOnLand(boolean workOnLand) {
+<<<<<<< silkard
         getHandle().silkard_landBoats(workOnLand);
+=======
+        this.getHandle().landBoats = workOnLand;
+>>>>>>> paper
     }
 
     @Override
-    public Status getStatus() {
-        return boatStatusFromNms(getHandle().status);
+    public org.bukkit.Material getBoatMaterial() {
+        return org.bukkit.craftbukkit.util.CraftMagicNumbers.getMaterial(this.getHandle().getDropItem());
     }
 
     @Override
-    public boolean isLeashed() {
-        return getHandle().getLeashHolder() != null;
-    }
-
-    @Override
-    public Entity getLeashHolder() throws IllegalStateException {
-        Preconditions.checkState(isLeashed(), "Entity not leashed");
-        return getHandle().getLeashHolder().getBukkitEntity();
-    }
-
-    private boolean unleash() {
-        if (!isLeashed()) {
-            return false;
-        }
-        getHandle().removeLeash();
-        return true;
-    }
-
-    @Override
+<<<<<<< silkard
     public boolean setLeashHolder(Entity holder) {
         if (getHandle().silkard_generation()) {
             return false;
@@ -113,24 +131,20 @@ public abstract class CraftBoat extends CraftVehicle implements Boat {
         if (holder == null) {
             return unleash();
         }
+=======
+    public Status getStatus() {
+        final net.minecraft.world.entity.vehicle.boat.AbstractBoat handle = this.getHandle();
+        AbstractBoat.Status status = this.getHandle().status;
+        if (status == null) {
+            if (!handle.valid) {
+                return Status.NOT_IN_WORLD;
+            }
+>>>>>>> paper
 
-        if (holder.isDead()) {
-            return false;
+            // Don't actually set the status because it would skew the old status check in the next tick
+            status = handle.getStatus();
         }
-
-        unleash();
-        getHandle().setLeashedTo(((CraftEntity) holder).getHandle(), true);
-        return true;
-    }
-
-    @Override
-    public AbstractBoat getHandle() {
-        return (AbstractBoat) entity;
-    }
-
-    @Override
-    public String toString() {
-        return "CraftBoat{boatType=" + getBoatType() + ",status=" + getStatus() + ",passengers=" + getPassengers().stream().map(Entity::toString).collect(Collectors.joining("-", "{", "}")) + "}";
+        return CraftBoat.boatStatusFromNms(status);
     }
 
     public static Boat.Type boatTypeFromNms(EntityType<?> boatType) {
@@ -173,7 +187,7 @@ public abstract class CraftBoat extends CraftVehicle implements Boat {
         throw new EnumConstantNotPresentException(Type.class, boatType.toString());
     }
 
-    public static Status boatStatusFromNms(AbstractBoat.Status enumStatus) {
+    public static Status boatStatusFromNms(net.minecraft.world.entity.vehicle.boat.AbstractBoat.Status enumStatus) { // Paper - remap fixes
         return switch (enumStatus) {
             default -> throw new EnumConstantNotPresentException(Status.class, enumStatus.name());
             case IN_AIR -> Status.IN_AIR;

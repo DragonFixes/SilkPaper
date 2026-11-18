@@ -2,14 +2,15 @@ package org.bukkit.craftbukkit.entity;
 
 import org.bukkit.craftbukkit.CraftServer;
 import org.bukkit.entity.Projectile;
-import org.bukkit.projectiles.ProjectileSource;
 
-public abstract class CraftProjectile extends CraftEntity implements Projectile {
+public abstract class CraftProjectile extends AbstractProjectile implements Projectile {
+
     public CraftProjectile(CraftServer server, net.minecraft.world.entity.projectile.Projectile entity) {
         super(server, entity);
     }
 
     @Override
+<<<<<<< silkard
     public ProjectileSource getShooter() {
         return getHandle().silkard_projectileSource();
     }
@@ -33,12 +34,9 @@ public abstract class CraftProjectile extends CraftEntity implements Projectile 
     public void setBounce(boolean doesBounce) {}
 
     @Override
+=======
+>>>>>>> paper
     public net.minecraft.world.entity.projectile.Projectile getHandle() {
-        return (net.minecraft.world.entity.projectile.Projectile) entity;
-    }
-
-    @Override
-    public String toString() {
-        return "CraftProjectile";
+        return (net.minecraft.world.entity.projectile.Projectile) this.entity;
     }
 }

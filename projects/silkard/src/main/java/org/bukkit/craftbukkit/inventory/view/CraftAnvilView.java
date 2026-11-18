@@ -17,50 +17,90 @@ public class CraftAnvilView extends CraftInventoryView<AnvilMenu, AnvilInventory
     @Nullable
     @Override
     public String getRenameText() {
-        return container.itemName;
+        return this.container.itemName;
     }
 
     @Override
     public int getRepairItemCountCost() {
-        return container.repairItemCountCost;
+        return this.container.repairItemCountCost;
     }
 
     @Override
     public int getRepairCost() {
-        return container.getCost();
+        return this.container.getCost();
     }
 
     @Override
     public int getMaximumRepairCost() {
+<<<<<<< silkard
         return container.silkard$maximumRepairCost();
+=======
+        return this.container.maximumRepairCost;
+>>>>>>> paper
     }
 
     @Override
     public void setRepairItemCountCost(final int cost) {
-        container.repairItemCountCost = cost;
+        this.container.repairItemCountCost = cost;
     }
 
     @Override
     public void setRepairCost(final int cost) {
-        container.cost.set(cost);
+        this.container.cost.set(cost);
     }
 
     @Override
     public void setMaximumRepairCost(final int cost) {
+<<<<<<< silkard
         container.silkard$maximumRepairCost(cost);
+=======
+        this.container.maximumRepairCost = cost;
+    }
+
+    @Override
+    public boolean bypassesEnchantmentLevelRestriction() {
+        return this.container.bypassEnchantmentLevelRestriction;
+    }
+
+    @Override
+    public void bypassEnchantmentLevelRestriction(final boolean bypassEnchantmentLevelRestriction) {
+        this.container.bypassEnchantmentLevelRestriction = bypassEnchantmentLevelRestriction;
+>>>>>>> paper
     }
 
     public void updateFromLegacy(CraftInventoryAnvil legacy) {
         if (legacy.isRepairCostSet()) {
-            setRepairCost(legacy.getRepairCost());
+            this.setRepairCost(legacy.getRepairCost());
         }
 
         if (legacy.isRepairCostAmountSet()) {
-            setRepairItemCountCost(legacy.getRepairCostAmount());
+            this.setRepairItemCountCost(legacy.getRepairCostAmount());
         }
 
         if (legacy.isMaximumRepairCostSet()) {
-            setMaximumRepairCost(legacy.getMaximumRepairCost());
+            this.setMaximumRepairCost(legacy.getMaximumRepairCost());
         }
     }
+
+    // Purpur start - Anvil API
+    @Override
+    public boolean canBypassCost() {
+        return this.container.bypassCost;
+    }
+
+    @Override
+    public void setBypassCost(boolean bypassCost) {
+        this.container.bypassCost = bypassCost;
+    }
+
+    @Override
+    public boolean canDoUnsafeEnchants() {
+        return this.container.canDoUnsafeEnchants;
+    }
+
+    @Override
+    public void setDoUnsafeEnchants(boolean canDoUnsafeEnchants) {
+        this.container.canDoUnsafeEnchants = canDoUnsafeEnchants;
+    }
+    // Purpur end - Anvil API
 }

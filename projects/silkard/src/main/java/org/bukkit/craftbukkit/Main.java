@@ -2,25 +2,27 @@ package org.bukkit.craftbukkit;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.util.PathConverter;
-import org.jline.terminal.Terminal;
-import org.jline.terminal.TerminalBuilder;
+
+import static java.util.Arrays.asList;
 
 public class Main {
+    public static final java.time.Instant BOOT_TIME = java.time.Instant.now(); // Paper - track initial start time
     public static boolean useJline = true;
     public static boolean useConsole = true;
 
+    // Paper start - Reset loggers after shutdown
+    static {
+        System.setProperty("java.util.logging.manager", "io.papermc.paper.log.CustomLogManager");
+    }
+    // Paper end - Reset loggers after shutdown
+
     public static void main(String[] args) {
+<<<<<<< silkard
         // Todo: Installation script
         OptionParser parser = bukkitOptionParser();
 
@@ -98,119 +100,143 @@ public class Main {
     // MixinMain 在 vanilla Main.main HEAD 调用 bukkitOptions 注入这份选项
     public static OptionParser bukkitOptionParser() {
         return new OptionParser() {
-            {
-                acceptsAll(asList("?", "help"), "Show the help");
+=======
+        if (System.getProperty("jdk.nio.maxCachedBufferSize") == null) System.setProperty("jdk.nio.maxCachedBufferSize", "262144"); // Paper - cap per-thread NIO cache size; https://www.evanjones.ca/java-bytebuffer-leak.html
 
-                acceptsAll(asList("c", "config"), "Properties file to use")
+        if (System.getProperty("joml.nounsafe") == null) {
+            System.setProperty("joml.nounsafe", "true");
+        }
+
+        OptionParser parser = new OptionParser() {
+>>>>>>> paper
+            {
+                this.acceptsAll(asList("?", "help"), "Show the help");
+
+                this.acceptsAll(asList("c", "config"), "Properties file to use")
                         .withRequiredArg()
                         .ofType(File.class)
                         .defaultsTo(new File("server.properties"))
                         .describedAs("Properties file");
 
-                acceptsAll(asList("P", "plugins"), "Plugin directory to use")
+                this.acceptsAll(asList("P", "plugins"), "Plugin directory to use")
                         .withRequiredArg()
                         .ofType(File.class)
                         .defaultsTo(new File("plugins"))
                         .describedAs("Plugin directory");
 
-                acceptsAll(asList("h", "host", "server-ip"), "Host to listen on")
+                this.acceptsAll(asList("h", "host", "server-ip"), "Host to listen on")
                         .withRequiredArg()
                         .ofType(String.class)
                         .describedAs("Hostname or IP");
 
-                acceptsAll(asList("W", "world-dir", "universe", "world-container"), "World container")
+                this.acceptsAll(asList("W", "world-dir", "universe", "world-container"), "World container")
                         .withRequiredArg()
                         .ofType(File.class)
                         .defaultsTo(new File("."))
                         .describedAs("Directory containing worlds");
 
-                acceptsAll(asList("w", "world", "level-name"), "World name")
+                this.acceptsAll(asList("w", "world", "level-name"), "World name")
                         .withRequiredArg()
                         .ofType(String.class)
                         .describedAs("World name");
 
-                acceptsAll(asList("p", "port", "server-port"), "Port to listen on")
+                this.acceptsAll(asList("p", "port", "server-port"), "Port to listen on")
                         .withRequiredArg()
                         .ofType(Integer.class)
                         .describedAs("Port");
 
-                accepts("serverId", "Server ID")
+                this.accepts("serverId", "Server ID")
                         .withRequiredArg();
 
-                accepts("jfrProfile", "Enable JFR profiling");
+                this.accepts("jfrProfile", "Enable JFR profiling");
 
-                accepts("pidFile", "pid File")
+                this.accepts("pidFile", "pid File")
                         .withRequiredArg()
                         .withValuesConvertedBy(new PathConverter());
 
-                acceptsAll(asList("o", "online-mode"), "Whether to use online authentication")
+                this.acceptsAll(asList("o", "online-mode"), "Whether to use online authentication")
                         .withRequiredArg()
                         .ofType(Boolean.class)
                         .describedAs("Authentication");
 
-                acceptsAll(asList("s", "size", "max-players"), "Maximum amount of players")
+                this.acceptsAll(asList("s", "size", "max-players"), "Maximum amount of players")
                         .withRequiredArg()
                         .ofType(Integer.class)
                         .describedAs("Server size");
 
-                acceptsAll(asList("d", "date-format"), "Format of the date to display in the console (for log entries)")
-                        .withRequiredArg()
-                        .ofType(SimpleDateFormat.class)
-                        .describedAs("Log date format");
-
-                acceptsAll(asList("log-pattern"), "Specfies the log filename pattern")
-                        .withRequiredArg()
-                        .ofType(String.class)
-                        .defaultsTo("server.log")
-                        .describedAs("Log filename");
-
-                acceptsAll(asList("log-limit"), "Limits the maximum size of the log file (0 = unlimited)")
-                        .withRequiredArg()
-                        .ofType(Integer.class)
-                        .defaultsTo(0)
-                        .describedAs("Max log size");
-
-                acceptsAll(asList("log-count"), "Specified how many log files to cycle through")
-                        .withRequiredArg()
-                        .ofType(Integer.class)
-                        .defaultsTo(1)
-                        .describedAs("Log count");
-
-                acceptsAll(asList("log-append"), "Whether to append to the log file")
-                        .withRequiredArg()
-                        .ofType(Boolean.class)
-                        .defaultsTo(true)
-                        .describedAs("Log append");
-
-                acceptsAll(asList("log-strip-color"), "Strips color codes from log file");
-
-                acceptsAll(asList("b", "bukkit-settings"), "File for bukkit settings")
+                this.acceptsAll(asList("b", "bukkit-settings"), "File for bukkit settings")
                         .withRequiredArg()
                         .ofType(File.class)
                         .defaultsTo(new File("bukkit.yml"))
                         .describedAs("Yml file");
 
-                acceptsAll(asList("C", "commands-settings"), "File for command settings")
+                this.acceptsAll(asList("C", "commands-settings"), "File for command settings")
                         .withRequiredArg()
                         .ofType(File.class)
                         .defaultsTo(new File("commands.yml"))
                         .describedAs("Yml file");
 
-                acceptsAll(asList("forceUpgrade"), "Whether to force a world upgrade");
-                acceptsAll(asList("eraseCache"), "Whether to force cache erase during world upgrade");
-                acceptsAll(asList("recreateRegionFiles"), "Whether to recreate region files during world upgrade");
-                acceptsAll(asList("safeMode"), "Loads level with vanilla datapack only");
-                acceptsAll(asList("nogui"), "Disables the graphical console");
+                this.accepts("forceUpgrade", "Whether to force a world upgrade");
+                this.accepts("eraseCache", "Whether to force cache erase during world upgrade");
+                this.accepts("recreateRegionFiles", "Whether to recreate region files during world upgrade");
+                this.accepts("safeMode", "Loads level with vanilla datapack only"); // Paper
+                this.accepts("nogui", "Disables the graphical console");
 
-                acceptsAll(asList("nojline"), "Disables jline and emulates the vanilla console");
+                this.accepts("nojline", "Disables jline and emulates the vanilla console");
 
-                acceptsAll(asList("noconsole"), "Disables the console");
+                this.accepts("noconsole", "Disables the console");
 
-                acceptsAll(asList("v", "version"), "Show the CraftBukkit Version");
+                this.acceptsAll(asList("v", "version"), "Show the CraftBukkit Version");
 
-                acceptsAll(asList("demo"), "Demo mode");
+                this.accepts("demo", "Demo mode");
 
-                acceptsAll(asList("initSettings"), "Only create configuration files and then exit"); // SPIGOT-5761: Add initSettings option
+                this.accepts("bonusChest", "Enable the bonus chest");
+
+                this.accepts("initSettings", "Only create configuration files and then exit"); // SPIGOT-5761: Add initSettings option
+
+                this.acceptsAll(asList("S", "spigot-settings"), "File for spigot settings")
+                        .withRequiredArg()
+                        .ofType(File.class)
+                        .defaultsTo(new File("spigot.yml"))
+                        .describedAs("Yml file");
+
+                this.acceptsAll(asList("paper-dir", "paper-settings-directory"), "Directory for Paper settings")
+                        .withRequiredArg()
+                        .ofType(File.class)
+                        .defaultsTo(new File(io.papermc.paper.configuration.PaperConfigurations.CONFIG_DIR))
+                        .describedAs("Config directory");
+
+                this.acceptsAll(asList("paper", "paper-settings"), "File for Paper settings")
+                        .withRequiredArg()
+                        .ofType(File.class)
+                        .defaultsTo(new File("paper.yml"))
+                        .describedAs("Yml file");
+
+                this.acceptsAll(asList("add-plugin", "add-extra-plugin-jar"), "Specify paths to extra plugin jars to be loaded in addition to those in the plugins folder. This argument can be specified multiple times, once for each extra plugin jar path.")
+                        .withRequiredArg()
+                        .ofType(File.class)
+                        .defaultsTo(new File[] {})
+                        .describedAs("Jar file");
+
+                this.acceptsAll(asList("add-plugin-dir", "add-extra-plugin-dir"), "Specify paths to extra plugin directories to be loaded in addition to the plugins folder. This argument can be specified multiple times, once for each extra plugin dir path.")
+                        .withRequiredArg()
+                        .ofType(File.class)
+                        .defaultsTo(new File[] {})
+                        .describedAs("Plugin directory");
+
+                // Purpur start - Purpur config files
+                this.acceptsAll(asList("purpur", "purpur-settings"), "File for purpur settings")
+                    .withRequiredArg()
+                    .ofType(File.class)
+                    .defaultsTo(new File("purpur.yml"))
+                    .describedAs("Yml file");
+                // Purpur end - Purpur config files
+
+                this.accepts("server-name", "Name of the server")
+                        .withRequiredArg()
+                        .ofType(String.class)
+                        .defaultsTo("Unknown Server")
+                        .describedAs("Name");
             }
         };
     }
@@ -223,15 +249,65 @@ public class Main {
             return parser.parse(args);
         } catch (joptsimple.OptionException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, ex.getLocalizedMessage());
+<<<<<<< silkard
             try {
                 return bukkitOptionParser().parse(new String[0]);
             } catch (joptsimple.OptionException ex2) {
                 return new OptionParser().parse(new String[0]);
+=======
+        }
+
+        if ((options == null) || (options.has("?"))) {
+            try {
+                parser.printHelpOn(System.out);
+            } catch (IOException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else if (options.has("v")) {
+            System.out.println(CraftServer.class.getPackage().getImplementationVersion());
+        } else {
+            // Do you love Java using + and ! as string based identifiers? I sure do!
+            String path = new File(".").getAbsolutePath();
+            if (path.contains("!") || path.contains("+")) {
+                System.err.println("Cannot run server in a directory with ! or + in the pathname. Please rename the affected folders and try again.");
+                return;
+            }
+
+            // Paper start - Improve java version check
+            boolean skip = Boolean.getBoolean("Paper.IgnoreJavaVersion");
+            String javaVersionName = System.getProperty("java.version");
+            // J2SE SDK/JRE Version String Naming Convention
+            boolean isPreRelease = javaVersionName.contains("-");
+            if (isPreRelease) {
+                if (!skip) {
+                    System.err.println("Unsupported Java detected (" + javaVersionName + "). You are running an unsupported, non official, version. Only general availability versions of Java are supported. Please update your Java version. See https://docs.papermc.io/paper/faq#unsupported-java-detected-what-do-i-do for more information.");
+                    return;
+                }
+
+                System.err.println("Unsupported Java detected ("+ javaVersionName + "), but the check was skipped. Proceed with caution! ");
+            }
+            // Paper end - Improve java version check
+
+            try {
+                if (options.has("nojline")) {
+                    System.setProperty(net.minecrell.terminalconsole.TerminalConsoleAppender.JLINE_OVERRIDE_PROPERTY, "false");
+                    useJline = false;
+                }
+
+                if (options.has("noconsole")) {
+                    Main.useConsole = false;
+                    useJline = false; // Paper
+                    System.setProperty(net.minecrell.terminalconsole.TerminalConsoleAppender.JLINE_OVERRIDE_PROPERTY, "false"); // Paper
+                }
+
+                System.setProperty("library.jansi.version", "Paper"); // Paper - set meaningless jansi version to prevent git builds from crashing on Windows
+                System.setProperty("jdk.console", "java.base"); // Paper - revert default console provider back to java.base so we can have our own jline
+
+                io.papermc.paper.PaperBootstrap.boot(options);
+            } catch (Throwable t) {
+                t.printStackTrace();
+>>>>>>> paper
             }
         }
-    }
-
-    private static List<String> asList(String... params) {
-        return Arrays.asList(params);
     }
 }
