@@ -95,6 +95,8 @@ public class WorldConfiguration extends ConfigurationPart {
 
         public AntiXray antiXray;
 
+        // TODO Silkard - Anti-Xray rewrites chunk packets inside vanilla's chunk sending, which C2ME and other
+        //  chunk mods also patch; it is not ported and these settings are read but have no effect
         public class AntiXray extends ConfigurationPart {
             public boolean enabled = false;
             public EngineMode engineMode = EngineMode.HIDE;
