@@ -97,6 +97,20 @@ public final class PaperBootstrap {
     }
 
     /**
+     * Registers the plugin providers (plugins folder and {@code --add-plugin} jars) with Paper's
+     * plugin system, as Paper's {@code Main} does right before vanilla bootstrap. Paper plugin
+     * bootstrappers then run from {@code Bootstrap.bootStrap}, and CraftServer loads the
+     * providers when it loads plugins.
+     */
+    public static void discoverPlugins(OptionSet options) {
+        try {
+            io.papermc.paper.plugin.PluginInitializerManager.load(options);
+        } catch (Exception e) {
+            throw new IllegalStateException("Could not initialize the plugin system", e);
+        }
+    }
+
+    /**
      * Sets up the server-wide configs and their commands. Runs inside
      * {@code DedicatedServer.initServer}, after {@code setPlayerList} and before plugins load,
      * which is where Spigot, Paper, Gale and Purpur initialize them upstream.

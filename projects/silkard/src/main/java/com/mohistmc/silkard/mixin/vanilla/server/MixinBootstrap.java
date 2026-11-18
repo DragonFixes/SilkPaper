@@ -17,6 +17,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Bootstrap.class)
 public class MixinBootstrap {
 
+    // Paper start - entrypoint for paper plugin bootstrappers, once, before vanilla registries are populated
+    @Inject(method = "bootStrap", at = @At(value = "FIELD", target = "Lnet/minecraft/server/Bootstrap;isBootstrapped:Z", opcode = org.objectweb.asm.Opcodes.PUTSTATIC, shift = At.Shift.AFTER))
+    private static void silkard$enterPaperBootstrappers(CallbackInfo ci) {
+        io.papermc.paper.plugin.entrypoint.LaunchEntryPointHandler.enterBootstrappers();
+    }
+    // Paper end
+
     // CraftBukkit start
     @Inject(method = "bootStrap", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/Bootstrap;wrapStreams()V", shift = At.Shift.AFTER))
     private static void silkard$legacyIds(CallbackInfo ci) {
