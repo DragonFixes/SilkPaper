@@ -94,4 +94,9 @@ public class CraftMusicInstrument extends MusicInstrument implements io.papermc.
         }
         return translatableContents.getKey();
     }
+
+    @Override
+    public org.bukkit.Sound getSoundEvent() {
+        return this.getSound();
+    }
 }

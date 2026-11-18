@@ -16,11 +16,11 @@ public class ServerShutdownThread extends TickThread {
     public void run() {
         try {
             // Paper start - try to shutdown on main
-            server.halt(false, false);
+            server.halt(false);
 
             // If the server hasn't finished starting up yet, give it as much time as it needs to start up and close on its own. This is
             // assuming that as long as the server thread is running, it isn't deadlocked and will eventually either successfully init or fail and stop running.
-            while (!server.hasStopped() && !server.hasStarted && server.getRunningThread().isAlive()) {
+            while (!server.hasStopped() && !server.isReady() && server.getRunningThread().isAlive()) {
                 Thread.sleep(100L);
             }
 
@@ -29,13 +29,13 @@ public class ServerShutdownThread extends TickThread {
                 Thread.sleep(100);
             }
             if (server.hasStopped()) {
-                while (!server.hasFullyShutdown) Thread.sleep(1000);
+                server.getRunningThread().join(60_000L); // bounded: the server thread may itself be the one blocked in System.exit
                 return;
             }
             // Looks stalled, close async
-            server.forceTicks = true;
+            server.silkard$forceTicks(true);
             this.server.close();
-            while (!server.hasFullyShutdown) Thread.sleep(1000);
+            server.getRunningThread().join(60_000L); // bounded: the server thread may itself be the one blocked in System.exit
         } catch (InterruptedException e) {
             e.printStackTrace();
             // Paper end

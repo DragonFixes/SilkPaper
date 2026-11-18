@@ -26,7 +26,7 @@ public class ConsoleCommandCompleter implements Completer {
     // Paper start - Change method signature for JLine update
     @Override
     public void complete(LineReader reader, ParsedLine line, List<Candidate> candidates) {
-        final CraftServer server = this.server.server;
+        final CraftServer server = this.server.silkard$server();
         final String buffer = "/" + line.line();
         // Async Tab Complete
         final com.destroystokyo.paper.event.server.AsyncTabCompleteEvent event =
@@ -48,7 +48,7 @@ public class ConsoleCommandCompleter implements Completer {
                         return syncEvent.callEvent() ? syncEvent.getCompletions() : com.google.common.collect.ImmutableList.of();
                     }
                 };
-                server.getServer().processQueue.add(syncCompletions);
+                server.getServer().silkard_processQueue().add(syncCompletions);
                 try {
                     final List<String> legacyCompletions = syncCompletions.get();
                     completions.removeIf(it -> !legacyCompletions.contains(it.suggestion())); // remove any suggestions that were removed

@@ -45,6 +45,11 @@ public final class NullCommandSender implements CommandSender {
     }
 
     @Override
+    public net.kyori.adventure.text.Component name() {
+        return net.kyori.adventure.text.Component.empty();
+    }
+
+    @Override
     public boolean isPermissionSet(String name) {
         return false;
     }

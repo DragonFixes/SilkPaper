@@ -100,6 +100,12 @@ import org.slf4j.Logger;
 @SuppressWarnings("deprecation")
 public final class CraftMagicNumbers implements UnsafeValues {
 
+    @Override
+    @Deprecated
+    public com.google.common.collect.Multimap<org.bukkit.attribute.Attribute, org.bukkit.attribute.AttributeModifier> getDefaultAttributeModifiers(Material material, org.bukkit.inventory.EquipmentSlot slot) {
+        return material.getDefaultAttributeModifiers(slot);
+    }
+
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public static final CraftMagicNumbers INSTANCE = new CraftMagicNumbers();
@@ -257,7 +263,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
         net.minecraft.world.item.ItemStack stack = CraftItemStack.unwrap(item); // mutation is expected as old behavior
         try {
             StringReader reader = new StringReader(item.getType().key().asString() + components);
-            stack.applyComponents(new ItemParser(Commands.createValidationContext(BukkitUtils.getDefaultRegistryAccess())).parse(reader).components());
+            stack.applyComponents(new ItemParser(net.minecraft.commands.Commands.createValidationContext(BukkitUtils.getDefaultRegistryAccess())).parse(reader).components());
             if (reader.canRead()) {
                 throw new IllegalArgumentException("Trailing input found when parsing components: " + reader.getRemaining());
             }
@@ -359,7 +365,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
             deserializedAdvancements.add(entry.advancement().toBukkit());
         }
 
-        com.mohistmc.silkard.bukkit.BukkitUtils.getServer().getPlayerList().reloadAdvancementData();
+        com.mohistmc.silkard.bukkit.BukkitUtils.getServer().getPlayerList().reloadResources();
         return deserializedAdvancements;
     }
 
@@ -512,13 +518,8 @@ public final class CraftMagicNumbers implements UnsafeValues {
         net.minecraft.core.RegistryAccess registryAccess = CraftRegistry.getMinecraftRegistry();
         com.mojang.serialization.DynamicOps<com.google.gson.JsonElement> ops = registryAccess.createSerializationContext(com.mojang.serialization.JsonOps.INSTANCE);
         com.google.gson.JsonObject item;
-        // Serialize as SNBT to preserve exact NBT types; vanilla codecs already can handle such deserialization.
-        net.minecraft.world.item.component.CustomData.SERIALIZE_CUSTOM_AS_SNBT.set(true);
-        try {
-            item = net.minecraft.world.item.ItemStack.CODEC.encodeStart(ops, CraftItemStack.unwrap(itemStack)).getOrThrow().getAsJsonObject();
-        } finally {
-            net.minecraft.world.item.component.CustomData.SERIALIZE_CUSTOM_AS_SNBT.set(false);
-        }
+        // TODO Silkard - CustomData has no SNBT switch, so custom data goes through the vanilla codec and may not keep exact NBT number types
+        item = net.minecraft.world.item.ItemStack.CODEC.encodeStart(ops, CraftItemStack.unwrap(itemStack)).getOrThrow().getAsJsonObject();
         item.addProperty(SharedConstants.DATA_VERSION_TAG, this.getDataVersion());
         return item;
     }
@@ -579,13 +580,13 @@ public final class CraftMagicNumbers implements UnsafeValues {
         )) {
             final TagValueOutput output = TagValueOutput.createWithContext(problemReporter, nmsEntity.registryAccess());
             if (serializePassengers) {
-                if (!nmsEntity.saveAsPassenger(output, true, includeNonSaveable, forceSerialization)) {
+                if (!nmsEntity.saveAsPassenger(output, true)) { // TODO Silkard - includeNonSaveable and forceSerialization are not supported
                     throw new IllegalArgumentException("Couldn't serialize entity");
                 }
             } else {
                 List<net.minecraft.world.entity.Entity> pass = new ArrayList<>(nmsEntity.getPassengers());
                 nmsEntity.passengers = com.google.common.collect.ImmutableList.of();
-                boolean serialized = nmsEntity.saveAsPassenger(output, true, includeNonSaveable, forceSerialization);
+                boolean serialized = nmsEntity.saveAsPassenger(output, true);
                 nmsEntity.passengers = com.google.common.collect.ImmutableList.copyOf(pass);
                 if (!serialized) {
                     throw new IllegalArgumentException("Couldn't serialize entity");

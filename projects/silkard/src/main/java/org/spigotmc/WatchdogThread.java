@@ -90,12 +90,6 @@ public class WatchdogThread extends ca.spottedleaf.moonrise.common.util.TickThre
                     logger.log(Level.SEVERE, "Be sure to include ALL relevant console errors and Minecraft crash reports");
                     logger.log(Level.SEVERE, "Leaf version: " + Bukkit.getServer().getVersion()); // Gale - branding changes // Leaf - Rebrand
 
-                    if (net.minecraft.world.level.Level.lastPhysicsProblem != null) {
-                        logger.log(Level.SEVERE, "------------------------------");
-                        logger.log(Level.SEVERE, "During the run of the server, a physics stackoverflow was suppressed");
-                        logger.log(Level.SEVERE, "near " + net.minecraft.world.level.Level.lastPhysicsProblem);
-                    }
-
                     // Paper start - Warn in watchdog if an excessive velocity was ever set
                     if (CraftServer.excessiveVelEx != null) {
                         logger.log(Level.SEVERE, "------------------------------");
@@ -157,13 +151,12 @@ public class WatchdogThread extends ca.spottedleaf.moonrise.common.util.TickThre
 
                 if (isLongTimeout) {
                     if (!server.hasStopped()) {
-                        server.forceTicks = true;
+                        server.silkard$forceTicks(true);
                         if (this.restart) {
                             RestartCommand.addShutdownHook(SpigotConfig.restartScript);
                         }
                         // try one last chance to safe shutdown on main in case it 'comes back'
-                        server.abnormalExit = true;
-                        server.halt(false, this.restart);
+                                                server.halt(false);
                         try {
                             Thread.sleep(1000);
                         } catch (InterruptedException e) {
