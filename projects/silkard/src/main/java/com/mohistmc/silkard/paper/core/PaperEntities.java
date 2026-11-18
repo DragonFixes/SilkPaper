@@ -129,4 +129,43 @@ public final class PaperEntities {
     public static net.minecraft.world.phys.HitResult.Type clipDirect(net.minecraft.world.level.Level level, net.minecraft.world.phys.Vec3 start, net.minecraft.world.phys.Vec3 end, Entity entity) {
         return level.clip(new net.minecraft.world.level.ClipContext(start, end, net.minecraft.world.level.ClipContext.Block.COLLIDER, net.minecraft.world.level.ClipContext.Fluid.NONE, entity)).getType();
     }
+
+    /** An experience orb carrying Paper's origin data, which vanilla's constructors cannot take. */
+    public static net.minecraft.world.entity.ExperienceOrb experienceOrb(net.minecraft.world.level.Level level, double x, double y, double z, int value,
+                                                                     org.bukkit.entity.ExperienceOrb.SpawnReason reason,
+                                                                     @org.jspecify.annotations.Nullable Entity triggerEntity,
+                                                                     @org.jspecify.annotations.Nullable Entity sourceEntity) {
+        net.minecraft.world.entity.ExperienceOrb orb = new net.minecraft.world.entity.ExperienceOrb(level, x, y, z, value);
+        orb.paper$setOrbSpawnReason(reason);
+        orb.paper$setTriggerEntityId(triggerEntity == null ? null : triggerEntity.getUUID());
+        orb.paper$setSourceEntityId(sourceEntity == null ? null : sourceEntity.getUUID());
+        return orb;
+    }
+
+    /**
+     * Makes the witch start drinking {@code potion} the way its own AI does: the potion goes to the
+     * main hand, the drink timer starts, the sound plays and the drinking slowdown applies. An empty
+     * stack stops drinking.
+     */
+    public static void setWitchDrinkingPotion(net.minecraft.world.entity.monster.Witch witch, net.minecraft.world.item.ItemStack potion) {
+        witch.setItemSlot(net.minecraft.world.entity.EquipmentSlot.MAINHAND, potion);
+        net.minecraft.world.entity.ai.attributes.AttributeInstance speed = witch.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);
+        if (potion.isEmpty()) {
+            witch.setUsingItem(false);
+            witch.usingTime = 0;
+            if (speed != null) {
+                speed.removeModifier(net.minecraft.world.entity.monster.Witch.SPEED_MODIFIER_DRINKING_ID);
+            }
+            return;
+        }
+        witch.usingTime = witch.getMainHandItem().getUseDuration(witch);
+        witch.setUsingItem(true);
+        if (!witch.isSilent()) {
+            witch.level().playSound(null, witch.getX(), witch.getY(), witch.getZ(), net.minecraft.sounds.SoundEvents.WITCH_DRINK, witch.getSoundSource(), 1.0F, 0.8F + witch.getRandom().nextFloat() * 0.4F);
+        }
+        if (speed != null) {
+            speed.removeModifier(net.minecraft.world.entity.monster.Witch.SPEED_MODIFIER_DRINKING_ID);
+            speed.addTransientModifier(net.minecraft.world.entity.monster.Witch.SPEED_MODIFIER_DRINKING);
+        }
+    }
 }

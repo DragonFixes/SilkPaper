@@ -55,6 +55,6 @@ public class CraftAttributeMap implements Attributable {
     @Override
     public void registerAttribute(Attribute attribute) {
         Preconditions.checkArgument(attribute != null, "attribute");
-        this.handle.registerAttribute(CraftAttribute.bukkitToMinecraftHolder(attribute));
+        com.mohistmc.silkard.paper.core.PaperItemData.registerAttribute(this.handle, CraftAttribute.bukkitToMinecraftHolder(attribute));
     }
 }

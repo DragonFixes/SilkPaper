@@ -228,12 +228,12 @@ public class CraftArmorStand extends CraftLivingEntity implements ArmorStand {
 
     @Override
     public boolean canMove() {
-        return this.getHandle().canMove;
+        return this.getHandle().paper$canMove();
     }
 
     @Override
     public void setCanMove(boolean move) {
-        this.getHandle().canMove = move;
+        this.getHandle().paper$setCanMove(move);
     }
 
     @Override
@@ -361,12 +361,11 @@ public class CraftArmorStand extends CraftLivingEntity implements ArmorStand {
 
     @Override
     public boolean canTick() {
-        return this.getHandle().canTick;
+        return this.getHandle().paper$canTick();
     }
 
     @Override
     public void setCanTick(final boolean tick) {
-        this.getHandle().canTick = tick;
-        this.getHandle().canTickSetByAPI = true;
+        this.getHandle().paper$setCanTick(tick);
     }
 }

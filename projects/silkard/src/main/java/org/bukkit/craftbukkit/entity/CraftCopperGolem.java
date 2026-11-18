@@ -72,12 +72,12 @@ public class CraftCopperGolem extends CraftGolem implements CopperGolem, PaperSh
     @Override
     @org.jetbrains.annotations.Nullable
     public java.util.UUID getSummoner() {
-        return getHandle().getSummoner();
+        return getHandle().paper$summoner();
     }
 
     @Override
     public void setSummoner(@org.jetbrains.annotations.Nullable java.util.UUID summoner) {
-        getHandle().setSummoner(summoner);
+        getHandle().paper$setSummoner(summoner);
     }
     // Purpur end - Summoner API
 

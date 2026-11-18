@@ -8,7 +8,6 @@ import com.google.common.io.BaseEncoding;
 import com.mojang.authlib.GameProfile;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.logging.LogUtils;
-import io.papermc.paper.FeatureHooks;
 import io.papermc.paper.connection.PlayerGameConnection;
 import io.papermc.paper.connection.PluginMessageBridgeImpl;
 import io.papermc.paper.datacomponent.DataComponentTypes;
@@ -229,7 +228,7 @@ import org.jspecify.annotations.Nullable;
 
 @DelegateDeserialization(CraftOfflinePlayer.class)
 public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessageBridgeImpl {
-    private static final org.slf4j.Logger LOGGER = LogUtils.getClassLogger();
+    private static final org.slf4j.Logger LOGGER = LogUtils.getLogger();
     private static final PointersSupplier<Player> POINTERS_SUPPLIER = PointersSupplier.<Player>builder()
         .parent(CraftEntity.POINTERS_SUPPLIER)
         .resolving(Identity.NAME, Player::getName)
@@ -345,40 +344,40 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     public @Nullable InetSocketAddress getHAProxyAddress() {
         if (this.getHandle().connection == null) return null;
 
-        return this.getHandle().connection.connection.haProxyAddress instanceof final InetSocketAddress inetSocketAddress ? inetSocketAddress : null;
+        return this.getHandle().connection.connection.paper$haProxyAddress() instanceof final InetSocketAddress inetSocketAddress ? inetSocketAddress : null;
     }
     // Paper end - Add API to get player's proxy address
     @Override
     public boolean isTransferred() {
-        return this.getHandle().connection.playerGameConnection.isTransferred();
+        return this.getHandle().connection.paper$playerGameConnection().isTransferred();
     }
 
     @Override
     public CompletableFuture<byte @Nullable []> retrieveCookie(final NamespacedKey key) {
-        return this.getHandle().connection.playerGameConnection.retrieveCookie(key);
+        return this.getHandle().connection.paper$playerGameConnection().retrieveCookie(key);
     }
 
     @Override
     public void storeCookie(NamespacedKey key, byte[] value) {
-        this.getHandle().connection.playerGameConnection.storeCookie(key, value);
+        this.getHandle().connection.paper$playerGameConnection().storeCookie(key, value);
     }
 
     @Override
     public void transfer(String host, int port) {
-        this.getHandle().connection.playerGameConnection.transfer(host, port);
+        this.getHandle().connection.paper$playerGameConnection().transfer(host, port);
     }
 
     // Paper start - Implement NetworkClient
     @Override
     public int getProtocolVersion() {
         if (this.getHandle().connection == null) return -1;
-        return this.getHandle().connection.connection.protocolVersion;
+        return this.getHandle().connection.connection.paper$protocolVersion();
     }
 
     @Override
     public InetSocketAddress getVirtualHost() {
         if (this.getHandle().connection == null) return null;
-        return this.getHandle().connection.connection.virtualHost;
+        return this.getHandle().connection.connection.paper$virtualHost();
     }
     // Paper end
 
@@ -556,7 +555,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
 
     @Override
     public void setDisplayName(final String name) {
-        this.getHandle().adventure$displayName = name != null ? net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection().deserialize(name) : net.kyori.adventure.text.Component.text(this.getName()); // Paper
+        this.getHandle().paper$adventureDisplayName(name != null ? net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection().deserialize(name) : net.kyori.adventure.text.Component.text(this.getName())); // Paper
         this.getHandle().silkard$displayName(name == null ? this.getName() : name);
     }
 
@@ -670,7 +669,8 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     @Override
     public void kickPlayer(String message) {
         org.spigotmc.AsyncCatcher.catchOp("player kick"); // Spigot
-        this.getHandle().connection.disconnect(CraftChatMessage.fromStringOrEmpty(message, true), org.bukkit.event.player.PlayerKickEvent.Cause.PLUGIN); // Paper - kick event cause
+        // TODO Silkard - Silkard's kick handling fires PlayerKickEvent without Paper's kick cause
+        this.getHandle().connection.disconnect(CraftChatMessage.fromStringOrEmpty(message, true));
     }
 
     @Override
@@ -678,7 +678,8 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
         org.spigotmc.AsyncCatcher.catchOp("player kick");
         final ServerGamePacketListenerImpl connection = this.getHandle().connection;
         if (connection != null) {
-            connection.disconnect(message == null ? net.kyori.adventure.text.Component.empty() : message, cause);
+            // TODO Silkard - Silkard's kick handling fires PlayerKickEvent without Paper's kick cause
+            connection.disconnect(io.papermc.paper.adventure.PaperAdventure.asVanillaNullToEmpty(message));
         }
     }
 
@@ -710,7 +711,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     public void sendOpLevel(byte level) {
         Preconditions.checkArgument(level >= PermissionLevel.ALL.id() && level <= PermissionLevel.OWNERS.id(), "Level must be within [%s, %s]", PermissionLevel.ALL.id(), PermissionLevel.OWNERS.id());
 
-        this.server.getServer().getPlayerList().sendPlayerPermissionLevel(this.getHandle(), LevelBasedPermissionSet.forLevel(PermissionLevel.byId(level)), false);
+        this.server.getServer().getPlayerList().sendPlayerPermissionLevel(this.getHandle(), LevelBasedPermissionSet.forLevel(PermissionLevel.byId(level)));
     }
 
     @Override
@@ -759,7 +760,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
 
         // Paper start - Improve chat handling
         if (ServerGamePacketListenerImpl.isChatMessageIllegal(msg)) {
-            this.getHandle().connection.disconnect(Component.translatable("multiplayer.disconnect.illegal_characters"), org.bukkit.event.player.PlayerKickEvent.Cause.ILLEGAL_CHARACTERS); // Paper - kick event causes
+            this.getHandle().connection.disconnect(Component.translatable("multiplayer.disconnect.illegal_characters"));
         } else {
             if (msg.startsWith("/")) {
                 this.getHandle().connection.handleCommand(msg);
@@ -957,7 +958,12 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
             SectionPos sectionPos = entry.getKey();
             it.unimi.dsi.fastutil.shorts.Short2ObjectMap<net.minecraft.world.level.block.state.BlockState> blockData = entry.getValue();
 
-            net.minecraft.network.protocol.game.ClientboundSectionBlocksUpdatePacket packet = new net.minecraft.network.protocol.game.ClientboundSectionBlocksUpdatePacket(sectionPos, blockData);
+            short[] positions = blockData.keySet().toShortArray();
+            net.minecraft.world.level.block.state.BlockState[] states = new net.minecraft.world.level.block.state.BlockState[positions.length];
+            for (int i = 0; i < positions.length; i++) {
+                states[i] = blockData.get(positions[i]);
+            }
+            net.minecraft.network.protocol.game.ClientboundSectionBlocksUpdatePacket packet = com.mohistmc.silkard.paper.core.PaperPlayers.sectionBlocksUpdate(sectionPos, positions, states);
             this.getHandle().connection.send(packet);
         }
     }
@@ -988,9 +994,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
         // Construct the packets using the data allocated above and send then to the players
         for (Map.Entry<SectionPos, ChunkSectionChanges> entry : changes.entrySet()) {
             ChunkSectionChanges chunkChanges = entry.getValue();
-            // Silkard - vanilla has no states-array constructor; the states travel as the packet's Bukkit extra
-            ClientboundSectionBlocksUpdatePacket packet = new ClientboundSectionBlocksUpdatePacket(entry.getKey(), chunkChanges.positions(), null);
-            packet.putbukkitExtra(chunkChanges.blockData().toArray(net.minecraft.world.level.block.state.BlockState[]::new));
+            ClientboundSectionBlocksUpdatePacket packet = com.mohistmc.silkard.paper.core.PaperPlayers.sectionBlocksUpdate(entry.getKey(), chunkChanges.positions().toShortArray(), chunkChanges.blockData().toArray(net.minecraft.world.level.block.state.BlockState[]::new));
             this.getHandle().connection.send(packet);
         }
     }
@@ -1005,19 +1009,19 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     // Purpur start - Purpur client support
     @Override
     public boolean usesPurpurClient() {
-        return getHandle().connection.purpurClient;
+        return false; // TODO Silkard - Purpur client detection (purpur:client payload) is not ported
     }
     // Purpur end - Purpur client support
 
     // Purpur start - AFK API
     @Override
     public boolean isAfk() {
-        return getHandle().isAfk();
+        return getHandle().paper$afk();
     }
 
     @Override
     public void setAfk(boolean setAfk) {
-        getHandle().setAfk(setAfk);
+        getHandle().paper$setAfk(setAfk);
     }
 
     @Override
@@ -1396,19 +1400,14 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     // Slice start
     @Override
     public void teleportWithoutRespawn(Location location) {
-        ServerPlayer serverPlayer = getHandle();
-        serverPlayer.smoothWorldTeleport = true;
+        // TODO Silkard - Slice's smooth world teleport (no respawn screen between worlds) is not ported; this is a plain teleport
         teleport(location);
-        serverPlayer.smoothWorldTeleport = false;
     }
 
     @Override
     public boolean teleportWithoutRespawnOptionally(Location location) {
-        ServerPlayer serverPlayer = getHandle();
-        serverPlayer.smoothWorldTeleport = true;
-        boolean teleportResult = teleport(location);
-        serverPlayer.smoothWorldTeleport = false;
-        return teleportResult;
+        // TODO Silkard - Slice's smooth world teleport (no respawn screen between worlds) is not ported; this is a plain teleport
+        return teleport(location);
     }
     // Slice end
 
@@ -1496,7 +1495,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     @Override
     public void setRespawnLocation(Location location, boolean override) {
         if (location == null) {
-            this.getHandle().setRespawnPosition(null, false, PlayerSetSpawnEvent.Cause.PLUGIN);
+            this.getHandle().setRespawnPosition(null, false, org.bukkit.event.player.PlayerSpawnChangeEvent.Cause.PLUGIN);
         } else {
             this.getHandle().setRespawnPosition(
                 new ServerPlayer.RespawnConfig(
@@ -1509,7 +1508,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
                     override
                 ),
                 false,
-                PlayerSetSpawnEvent.Cause.PLUGIN
+                org.bukkit.event.player.PlayerSpawnChangeEvent.Cause.PLUGIN
             );
         }
     }
@@ -1656,7 +1655,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
 
     @Override
     public long getPlayerTime() {
-        return this.getHandle().getPlayerTime();
+        return this.getHandle().getPlayerTime(this.getHandle().level().getDefaultClockTime());
     }
 
     @Override
@@ -1676,7 +1675,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
 
     @Override
     public WeatherType getPlayerWeather() {
-        return this.getHandle().weatherType;
+        return this.getHandle().getPlayerWeather();
     }
 
     @Override
@@ -1772,7 +1771,8 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
         Preconditions.checkArgument(mode != null, "GameMode cannot be null");
         if (this.getHandle().connection == null) return;
 
-        this.getHandle().setGameMode(GameType.byId(mode.getValue()), org.bukkit.event.player.PlayerGameModeChangeEvent.Cause.PLUGIN, null); // Paper - Expand PlayerGameModeChangeEvent
+        // TODO Silkard - Silkard's game mode change event carries no Paper cause or cancel message
+        this.getHandle().setGameMode(GameType.byId(mode.getValue()));
     }
 
     @Override
@@ -1801,7 +1801,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
                 return amount;
             }
             orb.setValue(amount);
-            orb.spawnReason = org.bukkit.entity.ExperienceOrb.SpawnReason.CUSTOM;
+            orb.paper$setOrbSpawnReason(org.bukkit.entity.ExperienceOrb.SpawnReason.CUSTOM);
             orb.setPosRaw(handle.getX(), handle.getY(), handle.getZ());
 
             final int toRepairFromXpAmount = net.minecraft.world.item.enchantment.EnchantmentHelper.modifyDurabilityToRepairFromXp(
@@ -2074,7 +2074,10 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
                 original = otherPlayer.getUUID();
                 otherPlayer.setUUID(uuidOverride);
             }
-            this.getHandle().connection.send(ClientboundPlayerInfoUpdatePacket.createPlayerInitializing(List.of(otherPlayer), this.getHandle())); // Paper - Add Listing API for Player
+            this.getHandle().connection.send(ClientboundPlayerInfoUpdatePacket.createPlayerInitializing(List.of(otherPlayer)));
+            if (this.unlistedEntities.contains(otherPlayer.getUUID())) {
+                this.getHandle().connection.send(com.mohistmc.silkard.paper.core.PaperPlayers.updateListed(otherPlayer.getUUID(), false));
+            }
             if (original != null) otherPlayer.setUUID(original); // Paper - uuid override
         }
 
@@ -2143,9 +2146,9 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
         ServerLevel level = handle.level();
         connection.send(new net.minecraft.network.protocol.game.ClientboundRespawnPacket(handle.createCommonSpawnInfo(level), net.minecraft.network.protocol.game.ClientboundRespawnPacket.KEEP_ALL_DATA));
         handle.onUpdateAbilities();
-        connection.internalTeleport(net.minecraft.world.entity.PositionMoveRotation.of(this.getHandle()), java.util.Collections.emptySet());
+        connection.teleport(this.getLocation());
         net.minecraft.server.players.PlayerList playerList = this.server.getServer().getPlayerList();
-        playerList.sendPlayerPermissionLevel(handle, false);
+        playerList.sendPlayerPermissionLevel(handle);
         playerList.sendLevelInfo(handle, level);
         playerList.sendAllPlayerInfo(handle);
 
@@ -2198,7 +2201,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
         if (!this.canSee(other)) return false;
 
         if (unlistedEntities.add(other.getUniqueId())) {
-            this.getHandle().connection.send(ClientboundPlayerInfoUpdatePacket.updateListed(other.getUniqueId(), false));
+            this.getHandle().connection.send(com.mohistmc.silkard.paper.core.PaperPlayers.updateListed(other.getUniqueId(), false));
             return true;
         } else {
             return false;
@@ -2212,7 +2215,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
         if (!this.canSee(other)) throw new IllegalStateException("Player cannot see other player");
 
         if (this.unlistedEntities.remove(other.getUniqueId())) {
-            this.getHandle().connection.send(ClientboundPlayerInfoUpdatePacket.updateListed(other.getUniqueId(), true));
+            this.getHandle().connection.send(com.mohistmc.silkard.paper.core.PaperPlayers.updateListed(other.getUniqueId(), true));
             return true;
         } else {
             return false;
@@ -2256,7 +2259,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     // Paper start - getLastPlayed replacement API
     @Override
     public long getLastLogin() {
-        return this.getHandle().loginTime;
+        return this.getHandle().paper$loginTime();
     }
 
     @Override
@@ -2296,7 +2299,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
 
         // Paper start - persist for use in offline save data
         ValueOutput paper = output.child("Paper");
-        paper.putLong("LastLogin", handle.loginTime);
+        paper.putLong("LastLogin", handle.paper$loginTime());
         paper.putLong("LastSeen", System.currentTimeMillis());
         // Paper end
     }
@@ -2338,9 +2341,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     }
 
     private void sendCustomPayload(Identifier id, byte[] message) {
-        // TODO Silkard - vanilla DiscardedPayload carries no data, so raw plugin messages are not sent
-        //ClientboundCustomPayloadPacket packet = new ClientboundCustomPayloadPacket(new DiscardedPayload(id, message));
-        //this.getHandle().connection.send(packet);
+        this.getHandle().connection.send(com.mohistmc.silkard.paper.core.PluginMessagePayload.packet(id, message));
     }
 
     @Override
@@ -2410,7 +2411,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
             final net.kyori.adventure.resource.ResourcePackInfo pack = iter.next();
             packs.add(new ClientboundResourcePackPushPacket(pack.id(), pack.uri().toASCIIString(), pack.hash(), request.required(), iter.hasNext() ? Optional.empty() : Optional.ofNullable(prompt)));
             if (request.callback() != net.kyori.adventure.resource.ResourcePackCallback.noOp()) {
-                this.getHandle().connection.packCallbacks.put(pack.id(), request.callback()); // just override if there is a previously existing callback
+                this.getHandle().connection.connection.paper$packCallbacks().put(pack.id(), request.callback()); // just override if there is a previously existing callback
             }
         }
         this.sendBundle(packs);
@@ -2437,6 +2438,21 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     }
 
     @Override
+    public void showDialog(final NamespacedKey dialog) {
+        Preconditions.checkArgument(dialog != null, "Dialog cannot be null");
+        net.minecraft.resources.ResourceKey<net.minecraft.server.dialog.Dialog> key = net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.DIALOG, CraftNamespacedKey.toMinecraft(dialog));
+        net.minecraft.core.Holder<net.minecraft.server.dialog.Dialog> holder = this.getHandle().registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.DIALOG).get(key)
+            .orElseThrow(() -> new IllegalArgumentException("Dialog does not exist on server: " + dialog));
+        if (this.getHandle().connection == null) return;
+        this.getHandle().openDialog(holder);
+    }
+
+    @Override
+    public void clearDialog() {
+        this.closeDialog();
+    }
+
+    @Override
     public void closeDialog() {
         if (this.getHandle().connection == null) return;
         this.getHandle().connection.send(ClientboundClearDialogPacket.INSTANCE);
@@ -2446,7 +2462,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     @Override
     public org.bukkit.event.player.PlayerResourcePackStatusEvent.Status getResourcePackStatus() {
         if (this.getHandle().connection == null) throw new UnsupportedOperationException("Too early to call this method at this stage");
-        return this.getHandle().connection.connection.resourcePackStatus;
+        return this.getHandle().connection.connection.paper$resourcePackStatus();
     }
     // Paper end - more resource pack API
 
@@ -2476,7 +2492,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     public Set<String> channels() {
         if (this.getHandle().connection == null) return new HashSet<>();
 
-        return this.getHandle().connection.pluginMessagerChannels;
+        return this.getHandle().connection.connection.paper$pluginMessagerChannels();
     }
 
     @Override
@@ -2500,7 +2516,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
                 }
             }
 
-            this.sendCustomPayload(ServerGamePacketListenerImpl.CUSTOM_REGISTER, stream.toByteArray());
+            this.sendCustomPayload(Identifier.withDefaultNamespace("register"), stream.toByteArray());
         }
     }
 
@@ -2573,12 +2589,12 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     // Paper start - flying fall damage
     @Override
     public void setFlyingFallDamage(@NonNull TriState flyingFallDamage) {
-        getHandle().flyingFallDamage = flyingFallDamage;
+        getHandle().paper$setFlyingFallDamage(flyingFallDamage);
     }
 
     @Override
     public @NonNull TriState hasFlyingFallDamage() {
-        return getHandle().flyingFallDamage;
+        return getHandle().paper$flyingFallDamage();
     }
     // Paper end - flying fall damage
 
@@ -2749,11 +2765,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
         FoodData foodData = this.getHandle().getFoodData();
         // Paper start - cancellable death event
         ClientboundSetHealthPacket packet = new ClientboundSetHealthPacket(this.getScaledHealth(), foodData.getFoodLevel(), foodData.getSaturationLevel());
-        if (this.getHandle().queueHealthUpdatePacket) {
-            this.getHandle().queuedHealthUpdatePacket = packet;
-        } else {
-            this.getHandle().connection.send(packet);
-        }
+        this.getHandle().connection.send(packet);
         // Paper end
     }
 
@@ -2856,7 +2868,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     // Paper start
     @Override
     public java.util.Locale locale() {
-        return getHandle().adventure$locale;
+        return net.kyori.adventure.translation.Translator.parseLocale(getHandle().silkard$locale());
     }
     // Paper end
 
@@ -2876,12 +2888,12 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
 
     // Paper start
     public void setAffectsSpawning(boolean affects) {
-        this.getHandle().affectsSpawning = affects;
+        this.getHandle().silkard$setAffectsSpawning(affects);
     }
 
     @Override
     public boolean getAffectsSpawning() {
-        return this.getHandle().affectsSpawning;
+        return this.getHandle().silkard$affectsSpawning();
     }
     // Paper end
 
@@ -2919,12 +2931,12 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     // Paper start
     @Override
     public net.kyori.adventure.text.Component displayName() {
-        return this.getHandle().adventure$displayName;
+        return this.getHandle().paper$adventureDisplayName();
     }
 
     @Override
     public void displayName(final net.kyori.adventure.text.Component displayName) {
-        this.getHandle().adventure$displayName = displayName != null ? displayName : net.kyori.adventure.text.Component.text(this.getName());
+        this.getHandle().paper$adventureDisplayName(displayName != null ? displayName : net.kyori.adventure.text.Component.text(this.getName()));
         this.getHandle().silkard$displayName(null);
     }
 
@@ -2958,10 +2970,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     public void sendMessage(net.kyori.adventure.chat.SignedMessage signedMessage, net.kyori.adventure.chat.ChatType.Bound boundChatType) {
         if (getHandle().connection == null) return;
 
-        if (signedMessage instanceof PlayerChatMessage.AdventureView view) {
-            this.getHandle().sendChatMessage(net.minecraft.network.chat.OutgoingChatMessage.create(view.playerChatMessage()), this.getHandle().isTextFilteringEnabled(), this.toHandle(boundChatType));
-            return;
-        }
+        // TODO Silkard - PlayerChatMessage has no Adventure view on Fabric, so signed chat reaches viewers as unsigned content
         net.kyori.adventure.text.Component message = signedMessage.unsignedContent() == null ? net.kyori.adventure.text.Component.text(signedMessage.message()) : signedMessage.unsignedContent();
         if (signedMessage.isSystem()) {
             this.sendMessage(message, boundChatType);
@@ -2982,7 +2991,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     @Override
     public void sendMessage(final net.kyori.adventure.text.Component message) {
         if (getHandle().connection == null) return;
-        this.getHandle().connection.send(new net.minecraft.network.protocol.game.ClientboundSystemChatPacket(message, false));
+        this.getHandle().connection.send(new net.minecraft.network.protocol.game.ClientboundSystemChatPacket(io.papermc.paper.adventure.PaperAdventure.asVanilla(message), false));
     }
 
     @Override
@@ -3182,13 +3191,13 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
 
         @Override
         public InetSocketAddress getRawAddress() {
-            return (InetSocketAddress) CraftPlayer.this.getHandle().connection.getRawAddress();
+            return (InetSocketAddress) CraftPlayer.this.getHandle().connection.connection.getRawAddress();
         }
 
         @Override
         public void respawn() {
             if (CraftPlayer.this.getHealth() <= 0 && CraftPlayer.this.isOnline()) {
-                CraftPlayer.this.server.getServer().getPlayerList().respawn(CraftPlayer.this.getHandle(), false, Entity.RemovalReason.KILLED, org.bukkit.event.player.PlayerRespawnEvent.RespawnReason.PLUGIN);
+                CraftPlayer.this.server.getServer().getPlayerList().silkard$respawnWithReason(CraftPlayer.this.getHandle(), false, Entity.RemovalReason.KILLED, org.bukkit.event.player.PlayerRespawnEvent.RespawnReason.PLUGIN);
             }
         }
 
@@ -3243,7 +3252,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
         public void sendMessage(net.md_5.bungee.api.ChatMessageType position, UUID sender, BaseComponent... components) {
             if (CraftPlayer.this.getHandle().connection == null) return;
 
-            CraftPlayer.this.getHandle().connection.send(new net.minecraft.network.protocol.game.ClientboundSystemChatPacket(components, position == net.md_5.bungee.api.ChatMessageType.ACTION_BAR));
+            CraftPlayer.this.getHandle().connection.send(new net.minecraft.network.protocol.game.ClientboundSystemChatPacket(CraftChatMessage.bungeeToVanilla(components), position == net.md_5.bungee.api.ChatMessageType.ACTION_BAR));
         }
 
         // Paper start
@@ -3259,7 +3268,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
         if (this.getHandle().connection == null) {
             return null;
         }
-        return this.getHandle().connection.clientBrand;
+        return this.getHandle().connection.connection.paper$clientBrand();
     }
 
     // Paper start
@@ -3320,19 +3329,22 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     @Override
     public Set<java.lang.Long> getSentChunkKeys() {
         org.spigotmc.AsyncCatcher.catchOp("accessing sent chunks");
-        return FeatureHooks.getSentChunkKeys(this.getHandle());
+        return com.mohistmc.silkard.paper.core.PaperPlayers.getSentChunkKeys(this.getHandle());
     }
 
     @Override
     public Set<org.bukkit.Chunk> getSentChunks() {
         org.spigotmc.AsyncCatcher.catchOp("accessing sent chunks");
-        return FeatureHooks.getSentChunks(this.getHandle());
+        final Set<org.bukkit.Chunk> chunks = new HashSet<>();
+        final org.bukkit.World world = this.getWorld();
+        this.getHandle().getChunkTrackingView().forEach(pos -> chunks.add(world.getChunkAt(pos.x(), pos.z())));
+        return java.util.Collections.unmodifiableSet(chunks);
     }
 
     @Override
     public boolean isChunkSent(final long chunkKey) {
         org.spigotmc.AsyncCatcher.catchOp("accessing sent chunks");
-        return FeatureHooks.isChunkSent(this.getHandle(), chunkKey);
+        return this.getHandle().getChunkTrackingView().contains(net.minecraft.world.level.ChunkPos.unpack(chunkKey));
     }
     // Paper end
 
@@ -3348,7 +3360,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
 
     @Override
     public void setViewDistance(final int viewDistance) {
-        FeatureHooks.setViewDistance(this.getHandle(), viewDistance); // Paper - chunk system
+        throw new UnsupportedOperationException("Per-player view distance is not supported"); // TODO Silkard - needs the Moonrise chunk system
     }
 
     @Override
@@ -3358,7 +3370,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
 
     @Override
     public void setSimulationDistance(final int simulationDistance) {
-        FeatureHooks.setSimulationDistance(this.getHandle(), simulationDistance); // Paper - chunk system
+        throw new UnsupportedOperationException("Per-player simulation distance is not supported"); // TODO Silkard - needs the Moonrise chunk system
     }
 
     @Override
@@ -3368,7 +3380,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
 
     @Override
     public void setSendViewDistance(final int viewDistance) {
-        FeatureHooks.setSendViewDistance(this.getHandle(), viewDistance); // Paper - chunk system
+        throw new UnsupportedOperationException("Per-player send view distance is not supported"); // TODO Silkard - needs the Moonrise chunk system
     }
 
     // Paper start - entity effect API
@@ -3441,13 +3453,13 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
 
     @Override
     public PlayerGameConnection getConnection() {
-        return this.getHandle().connection.playerGameConnection;
+        return this.getHandle().connection.paper$playerGameConnection();
     }
 
     @Override
     public org.bukkit.entity.Entity releaseLeftShoulderEntity() {
         if (!getHandle().getShoulderEntityLeft().isEmpty()) {
-            Entity entity = getHandle().releaseLeftShoulderEntity();
+            Entity entity = com.mohistmc.silkard.paper.core.PaperPlayers.releaseShoulderEntity(getHandle(), true);
             if (entity != null) {
                 return entity.getBukkitEntity();
             }
@@ -3459,7 +3471,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     @Override
     public org.bukkit.entity.Entity releaseRightShoulderEntity() {
         if (!getHandle().getShoulderEntityRight().isEmpty()) {
-            Entity entity = getHandle().releaseRightShoulderEntity();
+            Entity entity = com.mohistmc.silkard.paper.core.PaperPlayers.releaseShoulderEntity(getHandle(), false);
             if (entity != null) {
                 return entity.getBukkitEntity();
             }
@@ -3528,7 +3540,7 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
 
     @Override
     public void unsetFixedPose() {
-        this.getHandle().fixedPose = false;
+        this.getHandle().paper$setFixedPose(false);
         this.getHandle().updatePlayerPose();
     }
 

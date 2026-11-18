@@ -27,6 +27,11 @@ public abstract class CraftAbstractLocationInventoryViewBuilder<V extends Invent
     }
 
     @Override
+    public LocationInventoryViewBuilder<V> title(final String title) {
+        return (LocationInventoryViewBuilder<V>) super.title(title);
+    }
+
+    @Override
     public LocationInventoryViewBuilder<V> copy() {
         throw new UnsupportedOperationException("copy is not implemented on CraftAbstractLocationInventoryViewBuilder");
     }

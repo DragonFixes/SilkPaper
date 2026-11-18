@@ -100,7 +100,7 @@ public class CraftZombie extends CraftMonster implements Zombie {
 
     @Override
     public boolean shouldBurnInDay() {
-        return this.getHandle().isSunSensitive();
+        return super.shouldBurnInDay();
     }
 
     @Override
@@ -115,7 +115,7 @@ public class CraftZombie extends CraftMonster implements Zombie {
 
     @Override
     public void setShouldBurnInDay(boolean shouldBurnInDay) {
-        this.getHandle().setShouldBurnInDay(shouldBurnInDay);
+        super.setShouldBurnInDay(shouldBurnInDay);
     }
 
     @Override

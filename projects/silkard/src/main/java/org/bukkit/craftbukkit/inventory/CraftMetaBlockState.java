@@ -104,7 +104,7 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
     private void updateBlockState(final DataComponentPatch patch) {
         // Paper end
         getOrEmpty(patch, CraftMetaBlockState.BLOCK_ENTITY_TAG).ifPresent((entityData) -> {
-            this.blockEntityTag = entityData.copyTagWithBlockEntityId();
+            this.blockEntityTag = com.mohistmc.silkard.paper.core.PaperItemData.copyTagWithBlockEntityId(entityData);
         });
 
         if (!patch.isEmpty()) {
@@ -151,7 +151,7 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
             try (final ProblemReporter.ScopedCollector problemReporter = new ProblemReporter.ScopedCollector(
                 () -> "blockEntityTag", LOGGER
             )) {
-                final TagValueOutput output = TagValueOutput.createWrappingWithContext(problemReporter, CraftRegistry.getMinecraftRegistry(), blockEntityTag);
+                final TagValueOutput output = com.mohistmc.silkard.paper.core.PaperItemData.createWrappingWithContext(problemReporter, CraftRegistry.getMinecraftRegistry(), blockEntityTag);
                 if (blockEntityTag.isEmpty()) {
                     BlockEntity.addEntityType(output, java.util.Objects.requireNonNull(CraftBlockStates.getBlockEntityType(this.materialForBlockEntityType())));
                 }
@@ -177,12 +177,12 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
                     () -> "CraftMetaBlockState#apply", LOGGER
                 )) {
                     BlockEntity.addEntityType(
-                        TagValueOutput.createWrappingWithContext(problemReporter, CraftRegistry.getMinecraftRegistry(), nbt),
+                        com.mohistmc.silkard.paper.core.PaperItemData.createWrappingWithContext(problemReporter, CraftRegistry.getMinecraftRegistry(), nbt),
                         java.util.Objects.requireNonNull(CraftBlockStates.getBlockEntityType(this.materialForBlockEntityType()))
                     );
                 }
             }
-            tag.put(CraftMetaBlockState.BLOCK_ENTITY_TAG, TypedEntityData.decodeBlockEntity(nbt));
+            tag.put(CraftMetaBlockState.BLOCK_ENTITY_TAG, com.mohistmc.silkard.paper.core.PaperItemData.decodeBlockEntity(nbt));
         }
 
         for (final TypedDataComponent<?> component : this.components) {
@@ -304,7 +304,7 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
         final net.minecraft.world.level.block.state.BlockState nmsBlockState = ((org.bukkit.craftbukkit.block.data.CraftBlockData) this.getBlockData(stateMaterial)).getState();
         final net.minecraft.world.level.block.entity.BlockEntity blockEntity = java.util.Objects.requireNonNull(type.create(pos, nmsBlockState));
         if (!this.blockEntityTag.isEmpty()) {
-            TypedEntityData.decodeBlockEntity(this.blockEntityTag).loadInto(blockEntity, CraftRegistry.getMinecraftRegistry());
+            com.mohistmc.silkard.paper.core.PaperItemData.decodeBlockEntity(this.blockEntityTag).loadInto(blockEntity, CraftRegistry.getMinecraftRegistry());
         }
         final PatchedDataComponentMap patchedMap = new PatchedDataComponentMap(nmsBlockState.getBlock().asItem().components());
         patchedMap.setAll(this.components);
@@ -353,7 +353,7 @@ public class CraftMetaBlockState extends CraftMetaItem implements BlockStateMeta
         final net.minecraft.core.component.DataComponentMap map = craftBlockState.collectComponents();
         patchedMap.setAll(map);
         if (!data.isEmpty()) {
-            patchedMap.set(BLOCK_ENTITY_TAG.TYPE, TypedEntityData.decodeBlockEntity(data));
+            patchedMap.set(BLOCK_ENTITY_TAG.TYPE, com.mohistmc.silkard.paper.core.PaperItemData.decodeBlockEntity(data));
         }
         final DataComponentPatch patch = patchedMap.asPatch();
         this.updateFromPatch(patch, null);

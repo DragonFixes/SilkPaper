@@ -32,6 +32,6 @@ public class CraftGhast extends CraftMob implements Ghast, CraftEnemy {
     @Override
     public void setExplosionPower(int explosionPower) {
         com.google.common.base.Preconditions.checkArgument(explosionPower >= 0 && explosionPower <= 127, "The explosion power has to be between 0 and 127");
-        this.getHandle().setExplosionPower(explosionPower);
+        this.getHandle().explosionPower = explosionPower;
     }
 }

@@ -22,18 +22,18 @@ public class CraftTrident extends CraftAbstractArrow implements Trident {
 
     @Override
     public void setGlint(boolean glint) {
-        this.getHandle().setFoil(glint);
+        this.getHandle().getEntityData().set(net.minecraft.world.entity.projectile.arrow.ThrownTrident.ID_FOIL, glint);
     }
 
     @Override
     public int getLoyaltyLevel() {
-        return this.getHandle().getLoyalty();
+        return this.getHandle().getEntityData().get(net.minecraft.world.entity.projectile.arrow.ThrownTrident.ID_LOYALTY);
     }
 
     @Override
     public void setLoyaltyLevel(int loyaltyLevel) {
         com.google.common.base.Preconditions.checkArgument(loyaltyLevel >= 0 && loyaltyLevel <= 127, "The loyalty level has to be between 0 and 127");
-        this.getHandle().setLoyalty((byte) loyaltyLevel);
+        this.getHandle().getEntityData().set(net.minecraft.world.entity.projectile.arrow.ThrownTrident.ID_LOYALTY, (byte) loyaltyLevel);
     }
 
     @Override

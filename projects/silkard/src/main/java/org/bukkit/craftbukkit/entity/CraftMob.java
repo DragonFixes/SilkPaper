@@ -42,12 +42,12 @@ public abstract class CraftMob extends CraftLivingEntity implements Mob, io.pape
     @Override
     public void setDespawnInPeacefulOverride(final TriState state) {
         Preconditions.checkArgument(state != null, "TriState cannot be null");
-        this.getHandle().despawnInPeacefulOverride = state;
+        this.getHandle().paper$setDespawnInPeacefulOverride(state);
     }
 
     @Override
     public TriState getDespawnInPeacefulOverride() {
-        return this.getHandle().despawnInPeacefulOverride;
+        return this.getHandle().paper$despawnInPeacefulOverride();
     }
 
     @Override
@@ -61,15 +61,15 @@ public abstract class CraftMob extends CraftLivingEntity implements Mob, io.pape
 
         net.minecraft.world.entity.Mob entity = this.getHandle();
         if (target == null) {
-            entity.setTarget(null, null);
+            entity.setTarget(null, null, false);
         } else if (target instanceof CraftLivingEntity) {
-            entity.setTarget(((CraftLivingEntity) target).getHandle(), null);
+            entity.setTarget(((CraftLivingEntity) target).getHandle(), null, false);
         }
     }
 
     @Override
     public LivingEntity getTarget() {
-        return Optionull.map(this.getHandle().getTarget(), net.minecraft.world.entity.LivingEntity::getBukkitEntity);
+        return Optionull.map(this.getHandle().getTarget(), target -> (LivingEntity) target.getBukkitEntity());
     }
 
     @Override

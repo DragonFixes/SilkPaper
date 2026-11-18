@@ -56,7 +56,7 @@ public class CraftEnderman extends CraftMonster implements org.bukkit.entity.End
 
     @Override
     public void setScreaming(boolean screaming) {
-        this.getHandle().setCreepy(screaming);
+        this.getHandle().getEntityData().set(net.minecraft.world.entity.monster.Enderman.DATA_CREEPY, screaming);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class CraftEnderman extends CraftMonster implements org.bukkit.entity.End
 
     @Override
     public void setHasBeenStaredAt(boolean hasBeenStaredAt) {
-        this.getHandle().setHasBeenStaredAt(hasBeenStaredAt);
+        this.getHandle().getEntityData().set(net.minecraft.world.entity.monster.Enderman.DATA_STARED_AT, hasBeenStaredAt);
     }
 
     @Override

@@ -22,11 +22,11 @@ public abstract class CraftAbstractSkeleton extends CraftMonster implements Abst
 
     @Override
     public boolean shouldBurnInDay() {
-        return getHandle().shouldBurnInDay();
+        return super.shouldBurnInDay();
     }
 
     @Override
     public void setShouldBurnInDay(boolean shouldBurnInDay) {
-        getHandle().setShouldBurnInDay(shouldBurnInDay);
+        super.setShouldBurnInDay(shouldBurnInDay);
     }
 }

@@ -27,22 +27,22 @@ public class CraftWanderingTrader extends CraftAbstractVillager implements Wande
 
     @Override
     public void setCanDrinkPotion(boolean bool) {
-        getHandle().canDrinkPotion = bool;
+        getHandle().paper$setCanDrinkPotion(bool);
     }
 
     @Override
     public boolean canDrinkPotion() {
-        return getHandle().canDrinkPotion;
+        return getHandle().paper$canDrinkPotion();
     }
 
     @Override
     public void setCanDrinkMilk(boolean bool) {
-        getHandle().canDrinkMilk = bool;
+        getHandle().paper$setCanDrinkMilk(bool);
     }
 
     @Override
     public boolean canDrinkMilk() {
-        return getHandle().canDrinkMilk;
+        return getHandle().paper$canDrinkMilk();
     }
 
     @Override
