@@ -75,7 +75,7 @@ public final class MSPTCommand extends PermissionedLeafSubcommand {
 
     private void displayCompactStats(CommandSender sender, MinecraftServer server) {
         // Get server stats (only 5s data with avg/min/max)
-        List<Component> serverTimes = eval(server.tickTimes5s);
+        List<Component> serverTimes = eval(server.paper$tickTimes5s());
 
         // Display server stats in compact form
         sender.sendMessage(Component.text()
@@ -86,7 +86,7 @@ public final class MSPTCommand extends PermissionedLeafSubcommand {
 
         // Display world stats in compact form
         for (net.minecraft.server.level.ServerLevel serverLevel : server.getAllLevels()) {
-            List<Component> worldTimes = eval(serverLevel.tickTimes5s.getTimes());
+            List<Component> worldTimes = eval(serverLevel.paper$tickTimes5s().getTimes());
 
             sender.sendMessage(Component.text()
                 .content(serverLevel.getWorld().getName() + ": ")
@@ -98,9 +98,9 @@ public final class MSPTCommand extends PermissionedLeafSubcommand {
 
     private void displayServerMSPT(CommandSender sender, MinecraftServer server) {
         List<Component> times = new ArrayList<>();
-        times.addAll(eval(server.tickTimes5s));
-        times.addAll(eval(server.tickTimes10s));
-        times.addAll(eval(server.tickTimes1m));
+        times.addAll(eval(server.paper$tickTimes5s()));
+        times.addAll(eval(server.paper$tickTimes10s()));
+        times.addAll(eval(server.paper$tickTimes1m()));
 
         sender.sendMessage(Component.text()
             .content("Server tick times ")
@@ -142,9 +142,9 @@ public final class MSPTCommand extends PermissionedLeafSubcommand {
 
         for (net.minecraft.server.level.ServerLevel serverLevel : server.getAllLevels()) {
             List<Component> worldTimes = new ArrayList<>();
-            worldTimes.addAll(eval(serverLevel.tickTimes5s.getTimes()));
-            worldTimes.addAll(eval(serverLevel.tickTimes10s.getTimes()));
-            worldTimes.addAll(eval(serverLevel.tickTimes1m.getTimes()));
+            worldTimes.addAll(eval(serverLevel.paper$tickTimes5s().getTimes()));
+            worldTimes.addAll(eval(serverLevel.paper$tickTimes10s().getTimes()));
+            worldTimes.addAll(eval(serverLevel.paper$tickTimes1m().getTimes()));
 
             // World name header
             sender.sendMessage(Component.text()

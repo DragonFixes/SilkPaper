@@ -26,7 +26,7 @@ public class UptimeCommand {
 
         data.format = PurpurConfig.uptimeFormat;
         data.hide = true;
-        data.millis = System.currentTimeMillis() - MinecraftServer.startTimeMillis;
+        data.millis = System.currentTimeMillis() - java.lang.management.ManagementFactory.getRuntimeMXBean().getStartTime();
 
         process(data, "<days>", PurpurConfig.uptimeDay, PurpurConfig.uptimeDays, TimeUnit.DAYS, TimeUnit.MILLISECONDS::toDays);
         process(data, "<hours>", PurpurConfig.uptimeHour, PurpurConfig.uptimeHours, TimeUnit.HOURS, TimeUnit.MILLISECONDS::toHours);
