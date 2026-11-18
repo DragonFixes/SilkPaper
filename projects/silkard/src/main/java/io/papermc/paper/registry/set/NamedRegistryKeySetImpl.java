@@ -45,7 +45,8 @@ public record NamedRegistryKeySetImpl<T extends Keyed, M>( // TODO remove Keyed
 
     @Override
     public boolean contains(final TypedKey<T> valueKey) {
-        return this.namedSet.contains(valueKey);
+        final net.minecraft.resources.ResourceKey<M> key = PaperRegistries.toNms(valueKey);
+        return this.namedSet.stream().anyMatch(holder -> holder.is(key));
     }
 
     @Override

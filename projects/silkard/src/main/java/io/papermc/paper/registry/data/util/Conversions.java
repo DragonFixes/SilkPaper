@@ -95,8 +95,11 @@ public class Conversions {
         final RegistryEntryMeta.Buildable<M, A, B> buildableMeta
     ) {
         final ResourceKey<? extends Registry<M>> resourceRegistryKey = PaperRegistries.registryToNms(registryKey);
-        final HolderLookup.RegistryLookup<M> lookupForBuilders = this.lookup.lookupForValueCopyViaBuilders().lookupOrThrow(resourceRegistryKey);
-        return new PaperRegistryBuilderFactory<>(resourceRegistryKey, this, buildableMeta.builderFiller(), lookupForBuilders::getValueForCopying);
+        // Paper patches a value-copy lookup into RegistryOps; existing values are read from the bound holders instead.
+        return new PaperRegistryBuilderFactory<>(resourceRegistryKey, this, buildableMeta.builderFiller(), key -> this.lookup.lookup(resourceRegistryKey)
+            .flatMap(info -> info.getter().get(key))
+            .filter(Holder::isBound)
+            .map(Holder::value));
     }
 
 }

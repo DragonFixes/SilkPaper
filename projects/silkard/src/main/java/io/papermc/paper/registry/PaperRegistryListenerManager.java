@@ -61,7 +61,7 @@ public class PaperRegistryListenerManager {
      * For {@link Registry#register(Registry, ResourceKey, Object)}
      */
     public <M> M registerWithListeners(final Registry<M> registry, final ResourceKey<M> key, final M nms) {
-        return this.registerWithListeners(registry, key, nms, RegistrationInfo.BUILT_IN, PaperRegistryListenerManager::registerWithInstance, BuiltInRegistries.STATIC_ACCESS_CONVERSIONS);
+        return this.registerWithListeners(registry, key, nms, RegistrationInfo.BUILT_IN, PaperRegistryListenerManager::registerWithInstance, Conversions.global());
     }
 
     /**
@@ -75,7 +75,7 @@ public class PaperRegistryListenerManager {
      * For {@link Registry#registerForHolder(Registry, ResourceKey, Object)}
      */
     public <M> Holder.Reference<M> registerForHolderWithListeners(final Registry<M> registry, final ResourceKey<M> key, final M nms) {
-        return this.registerWithListeners(registry, key, nms, RegistrationInfo.BUILT_IN, WritableRegistry::register, BuiltInRegistries.STATIC_ACCESS_CONVERSIONS);
+        return this.registerWithListeners(registry, key, nms, RegistrationInfo.BUILT_IN, WritableRegistry::register, Conversions.global());
     }
 
     public <M> void registerWithListeners(
@@ -135,9 +135,8 @@ public class PaperRegistryListenerManager {
         @SuppressWarnings("PatternValidation") final TypedKey<T> typedKey = TypedKey.create(entry.apiKey(), Key.key(beingAdded.getNamespace(), beingAdded.getPath()));
         final RegistryEntryAddEventImpl<T, B> event = entry.createEntryAddEvent(typedKey, builder, conversions);
         LifecycleEventRunner.INSTANCE.callEvent(this.valueAddEventTypes.getEventType(entry.apiKey()), event);
-        if (oldNms != null) {
-            ((MappedRegistry<M>) registry).clearIntrusiveHolder(oldNms);
-        }
+        // TODO Silkard - Paper clears the replaced value's intrusive holder through a MappedRegistry patch; Fabric's
+        //  registry sync owns MappedRegistry, so built-in registrations are not routed through these listeners
         final M newNms = event.builder().build();
         if (oldNms != null && !newNms.equals(oldNms)) {
             registrationInfo = new RegistrationInfo(Optional.empty(), Lifecycle.experimental());
