@@ -99,54 +99,9 @@ public class CraftBlock implements Block {
     }
 
     private <T> T executeBufferedRead(ServerLevel level, org.dreeam.leaf.async.world.ReadOperationType type, Object[] params, T defaultValue, String methodName) {
-        if (level == null) { // Should not happen if called correctly after needsBuffering
-            org.bukkit.Bukkit.getLogger().log(java.util.logging.Level.SEVERE, "PWT: executeBufferedRead called with null ServerLevel for " + methodName);
-            return defaultValue;
-        }
-
-        // Deadlock prevention - start
-        if (Thread.currentThread() instanceof ca.spottedleaf.moonrise.common.util.TickThread.ServerLevelTickThread) {
-            try {
-                org.dreeam.leaf.async.world.WorldReadRequest request = new org.dreeam.leaf.async.world.WorldReadRequest(type, params, null);
-                Object result = level.executeReadRequest(request);
-                return (T) result;
-            } catch (Exception e) {
-                return defaultValue;
-            }
-        }
-        // Deadlock prevention - end
-
-        java.util.concurrent.CompletableFuture<Object> future = new java.util.concurrent.CompletableFuture<>();
-
-        // Shutdown handling for async reads - start
-        if (level.isShuttingDown()) {
-            future.completeExceptionally(new IllegalStateException("World " + level.getWorld().getName() + " is shutting down. Cannot queue new buffered read: " + type));
-        } else {
-            org.dreeam.leaf.async.world.WorldReadRequest request = new org.dreeam.leaf.async.world.WorldReadRequest(type, params, future);
-            level.asyncReadRequestQueue.offer(request); // Assumes queue exists on ServerLevel
-        }
-        // Shutdown handling for async reads - end
-
-        try {
-            Object result = future.join(); // Block until tick thread completes it
-            if (result == null) {
-                org.bukkit.Bukkit.getLogger().log(java.util.logging.Level.WARNING, "PWT: Buffered async read returned null for " + methodName + " - returning default.");
-                return defaultValue;
-            }
-            return (T) result;
-        } catch (java.util.concurrent.CompletionException e) {
-            // Shutdown handling for async reads - start
-            if (e.getCause() instanceof IllegalStateException && e.getCause().getMessage() != null && e.getCause().getMessage().contains("shutting down")) {
-                org.bukkit.Bukkit.getLogger().log(java.util.logging.Level.WARNING, "PWT: Async block read for " + methodName + " cancelled due to world shutdown: " + e.getCause().getMessage());
-            } else {
-                org.bukkit.Bukkit.getLogger().log(java.util.logging.Level.SEVERE, "PWT: Async block read failed for " + methodName + " on tick thread.", e.getCause() != null ? e.getCause() : e);
-            }
-            return defaultValue; // Return default or rethrow if appropriate for your error handling strategy
-            // Shutdown handling for async reads - end
-        } catch (Exception e) {
-            org.bukkit.Bukkit.getLogger().log(java.util.logging.Level.SEVERE, "PWT: Unexpected error during async block read for " + methodName, e);
-            return defaultValue;
-        }
+        // Reads are only buffered under parallel world ticking, which Silkard does not run.
+        // TODO(silkard-paper): port Leaf's buffered world reads if parallel world ticking is ported.
+        return defaultValue;
     }
     // Leaf end - SparklyPaper - parallel world ticking
 
@@ -1105,223 +1060,84 @@ public class CraftBlock implements Block {
     }
 
     private boolean pwt$breakNaturally(ItemStack item, boolean triggerEffect, boolean dropExperience, boolean forceEffect) {
-        if (org.dreeam.leaf.config.modules.async.SparklyPaperParallelWorldTicking.enabled) {
-            // Order matters here, need to drop before setting to air so skulls can get their data
-            // (already done in simpler overload, but check again for safety)
-            ServerLevel level = getServerLevel();
-            if (level != null) {
-                ca.spottedleaf.moonrise.common.util.TickThread.ensureTickThread(level, position, "PWT: Cannot modify world asynchronously (breakNaturally item...)");
-            } else {
-                org.bukkit.Bukkit.getLogger().log(java.util.logging.Level.WARNING, "PWT: Attempted breakNaturally(item...) on non-ServerLevel - safety not guaranteed.");
-            }
+        // Order matters here, need to drop before setting to air so skulls can get their data
+        BlockState state = this.getBlockState();
+        net.minecraft.world.level.block.Block block = state.getBlock();
+        net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
+        boolean result = false;
 
-            // Get BlockState state safely
-
-            BlockState state = this.getBlockState();
-            net.minecraft.world.level.block.Block block = state.getBlock();
-            net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-            boolean droppedItems = false;
-
-            // Experience dropping requires ServerLevel
-            ServerLevel serverLevelForDrops = getServerLevel(); // Re-get ServerLevel specifically for drop logic
-
-            if (serverLevelForDrops != null) { // Only attempt drops/XP if we have a ServerLevel
-                // Check if block should drop items
-                if (!state.isAir() && (item == null || !state.requiresCorrectToolForDrops() || nmsItem.isCorrectToolForDrops(state))) {
-                    // Drop items using ServerLevel
-                    net.minecraft.world.level.block.Block.dropResources(state, serverLevelForDrops, this.position, this.level.getBlockEntity(this.position), null, nmsItem, false);
-
-                    // Drop experience using ServerLevel
-                    if (dropExperience) {
-                        int xp = block.getExpDrop(state, serverLevelForDrops, this.position, nmsItem, true);
-                        if (xp > 0) { // Only pop if there's XP to drop
-                            block.popExperience(serverLevelForDrops, this.position, xp);
-
-                        }
-                    }
-                    droppedItems = true;
-                }
-            } else {
-                // Log if we couldn't drop XP because it wasn't a ServerLevel
-                if (dropExperience && !state.isAir()) { // Only warn if XP was requested and block wasn't air
-                    org.bukkit.Bukkit.getLogger().log(java.util.logging.Level.WARNING, "PWT: Cannot drop experience for breakNaturally: Not a ServerLevel.");
-                }
-                // Still trigger effects if requested and possible with LevelAccessor
-                if (triggerEffect && !state.isAir()) {
-                    int eventId = (state.getBlock() instanceof net.minecraft.world.level.block.BaseFireBlock)
-                        ? LevelEvent.SOUND_EXTINGUISH_FIRE
-                        : LevelEvent.PARTICLES_DESTROY_BLOCK;
-                    int eventData = (eventId == LevelEvent.PARTICLES_DESTROY_BLOCK)
-                        ? net.minecraft.world.level.block.Block.getId(state) : 0;
-                    this.level.levelEvent(eventId, this.position, eventData);
-                }
-            }
-
-            // Trigger effect using LevelAccessor (safe)
-            if ((droppedItems && triggerEffect) || (forceEffect && !state.isAir())) {
-                int eventId = (block instanceof net.minecraft.world.level.block.BaseFireBlock)
-                    ? LevelEvent.SOUND_EXTINGUISH_FIRE
-                    : LevelEvent.PARTICLES_DESTROY_BLOCK;
-                int eventData = (eventId == LevelEvent.PARTICLES_DESTROY_BLOCK)
-                    ? net.minecraft.world.level.block.Block.getId(state) : 0;
-                this.level.levelEvent(eventId, this.position, eventData);
-            }
-
-            // Remove the block using LevelAccessor (safe)
-            boolean destroyed = this.level.removeBlock(this.position, false);
-            if (destroyed) {
-                // Call destroy hook using LevelAccessor (safe)
-                block.destroy(this.level, this.position, state);
-            }
-            // Special case handling - requires Level, check again
-            if (droppedItems && this.level instanceof net.minecraft.world.level.Level nmsLevelForSpecialCases) {
-                if (block instanceof net.minecraft.world.level.block.IceBlock iceBlock) {
-                    iceBlock.afterDestroy(nmsLevelForSpecialCases, this.position, nmsItem);
-                } else if (block instanceof net.minecraft.world.level.block.TurtleEggBlock turtleEggBlock) {
-                    turtleEggBlock.decreaseEggs(nmsLevelForSpecialCases, this.position, state);
-                }
-            } else if (droppedItems) { // Log if special cases couldn't run
-                org.bukkit.Bukkit.getLogger().log(java.util.logging.Level.WARNING, "PWT: Cannot perform post-break special actions: Not a Level.");
-            }
-            // Return true if the block was successfully destroyed AND items were dropped (or would have dropped if tool was right)
-            return destroyed && droppedItems;
-        } else {
-            // Order matters here, need to drop before setting to air so skulls can get their data
-            BlockState state = this.getBlockState();
-            net.minecraft.world.level.block.Block block = state.getBlock();
-            net.minecraft.world.item.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
-            boolean result = false;
-
-            // Modelled off Player#hasCorrectToolForDrops
-            if (!state.isAir() && (item == null || !state.requiresCorrectToolForDrops() || nmsItem.isCorrectToolForDrops(state))) {
-                net.minecraft.world.level.block.Block.dropResources(state, this.level.getMinecraftWorld(), this.position, this.level.getBlockEntity(this.position), null, nmsItem, false);
-                if (dropExperience)
-                    block.popExperience(this.level.getMinecraftWorld(), this.position, block.getExpDrop(state, this.level.getMinecraftWorld(), this.position, nmsItem, true));
-                result = true;
-            }
-
-            if ((result && triggerEffect) || (forceEffect && !state.isAir())) {
-                if (block instanceof net.minecraft.world.level.block.BaseFireBlock) {
-                    this.level.levelEvent(LevelEvent.SOUND_EXTINGUISH_FIRE, this.position, 0);
-                } else {
-                    this.level.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, this.position, net.minecraft.world.level.block.Block.getId(state));
-                }
-            }
-
-            boolean destroyed = this.level.removeBlock(this.position, false);
-            if (destroyed) {
-                block.destroy(this.level, this.position, state);
-            }
-            if (result) {
-                // special cases
-                if (block instanceof net.minecraft.world.level.block.IceBlock iceBlock) {
-                    iceBlock.afterDestroy(this.level.getMinecraftWorld(), this.position, nmsItem);
-                } else if (block instanceof net.minecraft.world.level.block.TurtleEggBlock turtleEggBlock) {
-                    turtleEggBlock.decreaseEggs(this.level.getMinecraftWorld(), this.position, state);
-                }
-            }
-            return destroyed && result;
+        // Modelled off Player#hasCorrectToolForDrops
+        if (!state.isAir() && (item == null || !state.requiresCorrectToolForDrops() || nmsItem.isCorrectToolForDrops(state))) {
+            com.mohistmc.silkard.paper.server.PaperBlocks.dropResources(state, this.level.getMinecraftWorld(), this.position, this.level.getBlockEntity(this.position), null, nmsItem, false);
+            if (dropExperience)
+                block.popExperience(this.level.getMinecraftWorld(), this.position, block.getExpDrop(state, this.level.getMinecraftWorld(), this.position, nmsItem, true));
+            result = true;
         }
+
+        if ((result && triggerEffect) || (forceEffect && !state.isAir())) {
+            if (block instanceof net.minecraft.world.level.block.BaseFireBlock) {
+                this.level.levelEvent(LevelEvent.SOUND_EXTINGUISH_FIRE, this.position, 0);
+            } else {
+                this.level.levelEvent(LevelEvent.PARTICLES_DESTROY_BLOCK, this.position, net.minecraft.world.level.block.Block.getId(state));
+            }
+        }
+
+        boolean destroyed = this.level.removeBlock(this.position, false);
+        if (destroyed) {
+            block.destroy(this.level, this.position, state);
+        }
+        if (result) {
+            // special cases
+            if (block instanceof net.minecraft.world.level.block.IceBlock) {
+                com.mohistmc.silkard.paper.server.PaperBlocks.iceAfterDestroy(this.level.getMinecraftWorld(), this.position, nmsItem);
+            } else if (block instanceof net.minecraft.world.level.block.TurtleEggBlock turtleEggBlock) {
+                turtleEggBlock.decreaseEggs(this.level.getMinecraftWorld(), this.position, state);
+            }
+        }
+        return destroyed && result;
     }
 
     private boolean pwt$applyBoneMeal(Direction direction) {
-        if (org.dreeam.leaf.config.modules.async.SparklyPaperParallelWorldTicking.enabled) {
-            ServerLevel level = getServerLevel();
-            if (level != null) {
-                ca.spottedleaf.moonrise.common.util.TickThread.ensureTickThread(level, position, "PWT: Cannot modify world asynchronously (applyBoneMeal)");
-            } else {
-                org.bukkit.Bukkit.getLogger().log(java.util.logging.Level.WARNING, "PWT: Attempted applyBoneMeal on non-ServerLevel - safety not guaranteed.");
-                return false; // Cannot bonemeal without ServerLevel
-            }
+        // Parallel world ticking is not available on Silkard, so bone meal always runs on the level's tick thread.
+        BlockFertilizeEvent event = null;
+        ServerLevel world = this.getCraftWorld().getHandle();
+        UseOnContext context = new UseOnContext(world, null, InteractionHand.MAIN_HAND, Items.BONE_MEAL.getDefaultInstance(), new BlockHitResult(Vec3.ZERO, direction, this.getPosition(), false));
 
-            // Original logic requires ServerLevel (level is guaranteed non-null here)
-            BlockFertilizeEvent event = null;
-            UseOnContext context = new UseOnContext(level, null, InteractionHand.MAIN_HAND, Items.BONE_MEAL.getDefaultInstance(), new BlockHitResult(Vec3.ZERO, direction, this.getPosition(), false));
-
-            // SPIGOT-6895: Call StructureGrowEvent and BlockFertilizeEvent
-            List<org.bukkit.craftbukkit.block.CraftBlockState> capturedBlockStates;
-            level.captureTreeGeneration = true;
-            TreeType treeType;
-            InteractionResult result;
-            try {
-                result = BoneMealItem.applyBonemeal(context);
-            } finally {
-                level.captureTreeGeneration = false;
-
-                // Need Bukkit BlockState list for events
-                capturedBlockStates = new ArrayList<>(level.capturedBlockStates.values());
-                level.capturedBlockStates.clear();
-
-                treeType = SaplingBlock.getTreeTypeRT(); // Use thread-local getter
-                SaplingBlock.setTreeTypeRT(null); // Use thread-local setter
-            }
-
-            if (!capturedBlockStates.isEmpty()) {
-                StructureGrowEvent structureEvent = null;
-
-                if (treeType != null) {
-                    structureEvent = new StructureGrowEvent(this.getLocation(), treeType, true, null, (List<org.bukkit.block.BlockState>) (List<? extends org.bukkit.block.BlockState>) capturedBlockStates);
-                    Bukkit.getPluginManager().callEvent(structureEvent);
-                }
-
-                event = new BlockFertilizeEvent(CraftBlock.at(level, this.getPosition()), null, (List<org.bukkit.block.BlockState>) (List<? extends org.bukkit.block.BlockState>) capturedBlockStates);
-                event.setCancelled(structureEvent != null && structureEvent.isCancelled());
-                Bukkit.getPluginManager().callEvent(event);
-
-                if (!event.isCancelled()) {
-                    for (CraftBlockState snapshot : capturedBlockStates) {
-                        snapshot.place(snapshot.getFlags());
-                        level.checkCapturedTreeStateForObserverNotify(this.position, snapshot);
-                    }
-                }
-            }
-
-            // Return true only if bonemeal succeeded AND the event wasn't cancelled
-            return result instanceof InteractionResult.Success && (event == null || !event.isCancelled());
-        } else {
-            BlockFertilizeEvent event = null;
-            ServerLevel world = this.getCraftWorld().getHandle();
-            UseOnContext context = new UseOnContext(world, null, InteractionHand.MAIN_HAND, Items.BONE_MEAL.getDefaultInstance(), new BlockHitResult(Vec3.ZERO, direction, this.getPosition(), false));
-
-            // SPIGOT-6895: Call StructureGrowEvent and BlockFertilizeEvent
-            List<org.bukkit.craftbukkit.block.CraftBlockState> capturedBlockStates;
-            world.captureTreeGeneration = true;
-            TreeType treeType;
-            InteractionResult result;
-            try {
-                result = BoneMealItem.applyBonemeal(context);
-            } finally {
-                world.captureTreeGeneration = false;
-
-                capturedBlockStates = new ArrayList<>(world.capturedBlockStates.values());
-                world.capturedBlockStates.clear();
-
-                treeType = SaplingBlock.treeType;
-                SaplingBlock.treeType = null;
-            }
-
-            if (!capturedBlockStates.isEmpty()) {
-                StructureGrowEvent structureEvent = null;
-
-                if (treeType != null) {
-                    structureEvent = new StructureGrowEvent(this.getLocation(), treeType, true, null, (List<org.bukkit.block.BlockState>) (List<? extends org.bukkit.block.BlockState>) capturedBlockStates);
-                    Bukkit.getPluginManager().callEvent(structureEvent);
-                }
-
-                event = new BlockFertilizeEvent(CraftBlock.at(world, this.getPosition()), null, (List<org.bukkit.block.BlockState>) (List<? extends org.bukkit.block.BlockState>) capturedBlockStates);
-                event.setCancelled(structureEvent != null && structureEvent.isCancelled());
-                Bukkit.getPluginManager().callEvent(event);
-
-                if (!event.isCancelled()) {
-                    for (CraftBlockState snapshot : capturedBlockStates) {
-                        snapshot.place(snapshot.getFlags());
-                        world.checkCapturedTreeStateForObserverNotify(this.position, snapshot);
-                    }
-                }
-            }
-
-            return result instanceof InteractionResult.Success && (event == null || !event.isCancelled());
+        // SPIGOT-6895: Call StructureGrowEvent and BlockFertilizeEvent
+        List<org.bukkit.block.BlockState> capturedBlockStates;
+        TreeType treeType;
+        InteractionResult result;
+        world.silkard$captureTreeGeneration(true);
+        try {
+            result = com.mohistmc.silkard.bukkit.BukkitUtils.applyBonemeal(context);
+        } finally {
+            world.silkard$captureTreeGeneration(false);
+            capturedBlockStates = new ArrayList<>(world.silkard$capturedBlockStates().values());
+            world.silkard$capturedBlockStates().clear();
+            treeType = com.mohistmc.silkard.bukkit.BukkitUtils.treeType;
+            com.mohistmc.silkard.bukkit.BukkitUtils.setTreeType(null);
         }
+
+        if (!capturedBlockStates.isEmpty()) {
+            StructureGrowEvent structureEvent = null;
+
+            if (treeType != null) {
+                structureEvent = new StructureGrowEvent(this.getLocation(), treeType, true, null, capturedBlockStates);
+                Bukkit.getPluginManager().callEvent(structureEvent);
+            }
+
+            event = new BlockFertilizeEvent(CraftBlock.at(world, this.getPosition()), null, capturedBlockStates);
+            event.setCancelled(structureEvent != null && structureEvent.isCancelled());
+            Bukkit.getPluginManager().callEvent(event);
+
+            if (!event.isCancelled()) {
+                for (org.bukkit.block.BlockState snapshot : capturedBlockStates) {
+                    snapshot.update(true);
+                }
+            }
+        }
+
+        return result instanceof InteractionResult.Success && (event == null || !event.isCancelled());
     }
 
     private Collection<ItemStack> pwt$getDrops(ItemStack item, Entity entity) {

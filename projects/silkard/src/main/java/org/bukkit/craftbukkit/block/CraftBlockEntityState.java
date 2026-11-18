@@ -155,7 +155,7 @@ public abstract class CraftBlockEntityState<T extends BlockEntity> extends Craft
         try (final ProblemReporter.ScopedCollector problemReporter = new ProblemReporter.ScopedCollector(
             () -> "CraftBlockEntityState@" + getPosition().toShortString(), LOGGER
         )) {
-            final TagValueOutput output = TagValueOutput.createWrappingWithContext(
+            final TagValueOutput output = com.mohistmc.silkard.paper.server.PaperValueIO.createWrappingWithContext(
                 problemReporter,
                 this.getRegistryAccess(),
                 this.snapshot.saveCustomOnly(this.getRegistryAccess())

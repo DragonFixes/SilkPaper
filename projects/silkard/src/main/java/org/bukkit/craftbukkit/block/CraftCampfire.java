@@ -67,13 +67,13 @@ public class CraftCampfire extends CraftBlockEntityState<CampfireBlockEntity> im
 
     @Override
     public void stopCooking() {
-        for (int i = 0; i < this.getSnapshot().stopCooking.length; ++i)
+        for (int i = 0; i < this.getSnapshot().silkard$stopCooking().length; ++i)
             this.stopCooking(i);
     }
 
     @Override
     public void startCooking() {
-        for (int i = 0; i < this.getSnapshot().stopCooking.length; ++i)
+        for (int i = 0; i < this.getSnapshot().silkard$stopCooking().length; ++i)
             this.startCooking(i);
     }
 
@@ -81,7 +81,7 @@ public class CraftCampfire extends CraftBlockEntityState<CampfireBlockEntity> im
     public boolean stopCooking(int index) {
         requireRange(index, "index", 0, 3);
         boolean previous = this.isCookingDisabled(index);
-        this.getSnapshot().stopCooking[index] = true;
+        this.getSnapshot().silkard$stopCooking()[index] = true;
         return previous;
     }
 
@@ -89,13 +89,13 @@ public class CraftCampfire extends CraftBlockEntityState<CampfireBlockEntity> im
     public boolean startCooking(int index) {
         requireRange(index, "index", 0, 3);
         boolean previous = this.isCookingDisabled(index);
-        this.getSnapshot().stopCooking[index] = false;
+        this.getSnapshot().silkard$stopCooking()[index] = false;
         return previous;
     }
 
     @Override
     public boolean isCookingDisabled(int index) {
         requireRange(index, "index", 0, 3);
-        return this.getSnapshot().stopCooking[index];
+        return this.getSnapshot().silkard$stopCooking()[index];
     }
 }

@@ -93,7 +93,7 @@ public abstract class CraftFurnace<T extends AbstractFurnaceBlockEntity> extends
 
     @Override
     public double getCookSpeedMultiplier() {
-        return this.getSnapshot().cookSpeedMultiplier;
+        return this.getSnapshot().silkard$cookSpeedMultiplier();
     }
 
     @Override
@@ -101,8 +101,8 @@ public abstract class CraftFurnace<T extends AbstractFurnaceBlockEntity> extends
         com.google.common.base.Preconditions.checkArgument(multiplier >= 0, "Furnace speed multiplier cannot be negative");
         com.google.common.base.Preconditions.checkArgument(multiplier <= 200, "Furnace speed multiplier cannot more than 200");
         T snapshot = this.getSnapshot();
-        snapshot.cookSpeedMultiplier = multiplier;
-        snapshot.cookingTotalTime = AbstractFurnaceBlockEntity.getTotalCookTime(this.isPlaced() ? this.world.getHandle() : null, snapshot); // Update the snapshot's current total cook time to scale with the newly set multiplier
+        snapshot.silkard$setCookSpeedMultiplier(multiplier);
+        snapshot.cookingTotalTime = com.mohistmc.silkard.paper.server.PaperFurnaces.getTotalCookTime(this.isPlaced() ? this.world.getHandle() : null, snapshot); // Update the snapshot's current total cook time to scale with the newly set multiplier
     }
 
     @Override
@@ -118,7 +118,7 @@ public abstract class CraftFurnace<T extends AbstractFurnaceBlockEntity> extends
     @Override
     public void setRecipeUsedCount(org.bukkit.inventory.CookingRecipe<?> furnaceRecipe, int count) {
         final var location = CraftNamespacedKey.toResourceKey(net.minecraft.core.registries.Registries.RECIPE, furnaceRecipe.getKey());
-        java.util.Optional<net.minecraft.world.item.crafting.RecipeHolder<?>> nmsRecipe = (this.isPlaced() ? this.world.getHandle().recipeAccess() : net.minecraft.server.MinecraftServer.getServer().getRecipeManager()).byKey(location);
+        java.util.Optional<net.minecraft.world.item.crafting.RecipeHolder<?>> nmsRecipe = (this.isPlaced() ? this.world.getHandle().recipeAccess() : com.mohistmc.silkard.bukkit.BukkitUtils.getServer().getRecipeManager()).byKey(location);
         com.google.common.base.Preconditions.checkArgument(nmsRecipe.isPresent() && nmsRecipe.get().value() instanceof net.minecraft.world.item.crafting.AbstractCookingRecipe, furnaceRecipe.getKey() + " is not recognized as a valid and registered furnace recipe");
         if (count > 0) {
             this.getSnapshot().recipesUsed.put(location, count);

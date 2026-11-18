@@ -72,7 +72,7 @@ public class CraftTrialSpawnerConfiguration implements TrialSpawnerConfiguration
             () -> "TrialSpawnerConfiguration@" + snapshot.getBlockPos().toShortString(), LOGGER
         )) {
             Optional<net.minecraft.world.entity.EntityType<?>> type = net.minecraft.world.entity.EntityType.by(
-                TagValueInput.createGlobal(
+                com.mohistmc.silkard.paper.server.PaperValueIO.createGlobal(
                     problemReporter,
                     this.spawnPotentialsDefinition.unwrap().getFirst().value().getEntityToSpawn()
                 )
@@ -309,7 +309,7 @@ public class CraftTrialSpawnerConfiguration implements TrialSpawnerConfiguration
 
     @Override
     public void setRequiredPlayerRange(int requiredPlayerRange) {
-        this.snapshot.getTrialSpawner().config = this.snapshot.getTrialSpawner().config.overrideRequiredPlayerRange(requiredPlayerRange);
+        this.snapshot.getTrialSpawner().config = com.mohistmc.silkard.paper.server.PaperBlocks.overrideRequiredPlayerRange(this.snapshot.getTrialSpawner().config, requiredPlayerRange);
     }
 
     private TrialSpawnerStateData getTrialData() {

@@ -70,8 +70,8 @@ public class CraftChest extends CraftLootable<ChestBlockEntity> implements Chest
             BlockState block = this.getBlockEntity().getBlockState();
             int openCount = this.getBlockEntity().openersCounter.getOpenerCount();
 
-            this.getBlockEntity().openersCounter.onOpenAPI(level, this.getPosition(), block);
-            this.getBlockEntity().openersCounter.openerCountChangedAPI(level, this.getPosition(), block, openCount, openCount + 1);
+            this.getBlockEntity().openersCounter.onAPIOpen(level, this.getPosition(), block);
+            this.getBlockEntity().openersCounter.openerAPICountChanged(level, this.getPosition(), block, openCount, openCount + 1);
         }
         this.getBlockEntity().openersCounter.silkard_opened(true);
     }
@@ -83,8 +83,8 @@ public class CraftChest extends CraftLootable<ChestBlockEntity> implements Chest
             BlockState block = this.getBlockEntity().getBlockState();
             int openCount = this.getBlockEntity().openersCounter.getOpenerCount();
 
-            this.getBlockEntity().openersCounter.onCloseAPI(level, this.getPosition(), block);
-            this.getBlockEntity().openersCounter.openerCountChangedAPI(level, this.getPosition(), block, openCount, 0);
+            this.getBlockEntity().openersCounter.onAPIClose(level, this.getPosition(), block);
+            this.getBlockEntity().openersCounter.openerAPICountChanged(level, this.getPosition(), block, openCount, 0);
         }
         this.getBlockEntity().openersCounter.silkard_opened(false);
     }
@@ -110,7 +110,7 @@ public class CraftChest extends CraftLootable<ChestBlockEntity> implements Chest
         }
         Direction direction = ChestBlock.getConnectedDirection(this.block);
         BlockPos neighborPos = this.getPosition().relative(direction);
-        BlockState neighborState = level.getBlockStateIfLoaded(neighborPos);
+        BlockState neighborState = level.hasChunkAt(neighborPos) ? level.getBlockState(neighborPos) : null;
         return neighborState != null
             && neighborState.is(this.block.getBlock())
             && ChestBlock.getBlockType(neighborState) != DoubleBlockCombiner.BlockType.SINGLE

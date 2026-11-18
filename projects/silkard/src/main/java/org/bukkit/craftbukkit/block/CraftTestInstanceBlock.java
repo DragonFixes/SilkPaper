@@ -5,7 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.TestInstanceBlock;
 
-public class CraftTestInstanceBlock extends CraftBlockEntityState<TestInstanceBlockEntity> implements TestInstanceBlock {
+public class CraftTestInstanceBlock extends CraftBlockEntityState<TestInstanceBlockEntity> implements TestInstanceBlock, org.bukkit.block.TestInstance { // Silkard - also backs the Spigot TestInstance API
 
     public CraftTestInstanceBlock(World world, TestInstanceBlockEntity blockEntity, boolean useSnapshot) {
         super(world, blockEntity, useSnapshot);

@@ -236,15 +236,22 @@ public class CraftBlockState implements BlockState {
 
     // used to revert a block placement due to an event being cancelled for example
     public boolean revertPlace(boolean ignorePoi) {
-        int extraFlags = ignorePoi ? net.minecraft.world.level.block.Block.UPDATE_SKIP_POI : 0;
-        return this.place(
-            net.minecraft.world.level.block.Block.UPDATE_CLIENTS |
+        final int flags = net.minecraft.world.level.block.Block.UPDATE_CLIENTS |
             net.minecraft.world.level.block.Block.UPDATE_KNOWN_SHAPE |
             net.minecraft.world.level.block.Block.UPDATE_SUPPRESS_DROPS |
             net.minecraft.world.level.block.Block.UPDATE_SKIP_ON_PLACE |
-            net.minecraft.world.level.block.Block.UPDATE_SKIP_BLOCK_ENTITY_SIDEEFFECTS |
-            extraFlags
-        );
+            net.minecraft.world.level.block.Block.UPDATE_SKIP_BLOCK_ENTITY_SIDEEFFECTS;
+        // Vanilla has no "skip POI" update flag; the level's prevent-POI switch suppresses the update instead.
+        if (!ignorePoi || !(this.getWorldHandle() instanceof net.minecraft.world.level.Level level)) {
+            return this.place(flags);
+        }
+        final boolean previous = level.silkard$preventPoiUpdated();
+        level.silkard$setPreventPoiUpdated(true);
+        try {
+            return this.place(flags);
+        } finally {
+            level.silkard$setPreventPoiUpdated(previous);
+        }
     }
 
     @Override

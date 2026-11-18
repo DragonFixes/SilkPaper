@@ -108,6 +108,18 @@ public class CraftVault extends CraftBlockEntityState<VaultBlockEntity> implemen
         this.getSnapshot().setConfig(new VaultConfig(config.lootTable(), config.activationRange(), config.deactivationRange(), config.keyItem(), Optional.ofNullable(CraftLootTable.bukkitToMinecraft(lootTable))));
     }
 
+    // Silkard start - Spigot API names for the displayed loot table
+    @Override
+    public LootTable getDisplayLootTable() {
+        return this.getDisplayedLootTable();
+    }
+
+    @Override
+    public void setDisplayLootTable(final @Nullable LootTable table) {
+        this.setDisplayedLootTable(table);
+    }
+    // Silkard end
+
     @Override
     public long getNextStateUpdateTime() {
         return this.getSnapshot().serverData.stateUpdatingResumesAt();
@@ -126,13 +138,13 @@ public class CraftVault extends CraftBlockEntityState<VaultBlockEntity> implemen
     @Override
     public boolean addRewardedPlayer(final UUID playerUUID) {
         Preconditions.checkArgument(playerUUID != null, "playerUUID must not be null");
-        return this.getSnapshot().serverData.addToRewardedPlayers(playerUUID);
+        return com.mohistmc.silkard.paper.server.PaperBlocks.addRewardedPlayer(this.getSnapshot().serverData, playerUUID);
     }
 
     @Override
     public boolean removeRewardedPlayer(final UUID playerUUID) {
         Preconditions.checkArgument(playerUUID != null, "playerUUID must not be null");
-        return this.getSnapshot().serverData.removeFromRewardedPlayers(playerUUID);
+        return com.mohistmc.silkard.paper.server.PaperBlocks.removeRewardedPlayer(this.getSnapshot().serverData, playerUUID);
     }
 
     @Override

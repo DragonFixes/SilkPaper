@@ -60,7 +60,7 @@ public class CraftTrialSpawner extends CraftBlockEntityState<TrialSpawnerBlockEn
 
     @Override
     public void setCooldownLength(int ticks) {
-        this.getSnapshot().getTrialSpawner().config = this.getSnapshot().getTrialSpawner().config.overrideTargetCooldownLength(ticks);
+        this.getSnapshot().getTrialSpawner().config = com.mohistmc.silkard.paper.server.PaperBlocks.overrideTargetCooldownLength(this.getSnapshot().getTrialSpawner().config, ticks);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class CraftTrialSpawner extends CraftBlockEntityState<TrialSpawnerBlockEn
 
     @Override
     public void setRequiredPlayerRange(int requiredPlayerRange) {
-        this.getSnapshot().getTrialSpawner().config = this.getSnapshot().getTrialSpawner().config.overrideRequiredPlayerRange(requiredPlayerRange);
+        this.getSnapshot().getTrialSpawner().config = com.mohistmc.silkard.paper.server.PaperBlocks.overrideRequiredPlayerRange(this.getSnapshot().getTrialSpawner().config, requiredPlayerRange);
     }
 
     @Override
@@ -176,7 +176,7 @@ public class CraftTrialSpawner extends CraftBlockEntityState<TrialSpawnerBlockEn
     protected void applyTo(TrialSpawnerBlockEntity blockEntity) {
         super.applyTo(blockEntity);
 
-        blockEntity.getTrialSpawner().config = blockEntity.getTrialSpawner().config.overrideConfigs(
+        blockEntity.getTrialSpawner().config = com.mohistmc.silkard.paper.server.PaperBlocks.overrideConfigs(blockEntity.getTrialSpawner().config, 
             Holder.direct(this.normalConfig.toMinecraft()),
             Holder.direct(this.ominousConfig.toMinecraft())
         );

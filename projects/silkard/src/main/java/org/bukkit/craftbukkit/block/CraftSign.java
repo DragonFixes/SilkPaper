@@ -152,7 +152,7 @@ public class CraftSign<T extends SignBlockEntity> extends CraftBlockEntityState<
     @Override
     public Side getInteractableSideFor(final double x, final double z) {
         this.requirePlaced();
-        return CraftSignSide.fromVanilla(this.getSnapshot().getSlotPlayerIsFacing(x, z));
+        return CraftSignSide.fromVanilla(com.mohistmc.silkard.paper.server.PaperBlocks.getSignSlotFacing(this.getSnapshot(), x, z));
     }
 
     @Override

@@ -38,7 +38,7 @@ public class SpigotCommand extends Command {
         MinecraftServer console = com.mohistmc.silkard.bukkit.BukkitUtils.getServer();
         org.spigotmc.SpigotConfig.init((File) console.silkard_options().valueOf("spigot-settings"));
         for (ServerLevel world : console.getAllLevels()) {
-            world.spigotConfig.init();
+            world.spigotConfig().init();
         }
         console.silkard$server().reloadCount++;
 

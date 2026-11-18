@@ -774,3 +774,52 @@ transitive-inject-interface net/minecraft/world/level/gamerules/GameRules com/mo
 transitive-extend-enum net/minecraft/world/level/Level$ExplosionInteraction STANDARD
 transitive-inject-interface	net/minecraft/server/dedicated/DedicatedServer	com/mohistmc/silkard/injected/server/ContextDedicatedServer
 transitive-inject-interface	net/minecraft/server/dedicated/DedicatedServerProperties	com/mohistmc/silkard/injected/server/dedicated/ContextDedicatedServerProperties
+# Silkard paper-server start - members Paper's CraftBukkit (server/world/block/event area) reaches directly
+transitive-inject-interface	net/minecraft/world/level/block/state/BlockBehaviour$BlockStateBase	com/mohistmc/silkard/injected/paper/server/PaperBlockStateBase
+accessible field net/minecraft/world/level/block/state/BlockBehaviour hasCollision Z
+accessible method net/minecraft/world/level/block/entity/BlockEntity saveId (Lnet/minecraft/world/level/storage/ValueOutput;)V
+accessible method net/minecraft/world/level/block/TurtleEggBlock decreaseEggs (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)V
+accessible field net/minecraft/world/level/block/entity/BannerBlockEntity name Lnet/minecraft/network/chat/Component;
+accessible field net/minecraft/world/level/block/entity/BrewingStandBlockEntity totalBrewTime I
+accessible field net/minecraft/world/level/block/entity/BlockEntityType validBlocks Ljava/util/Set;
+accessible method net/minecraft/world/level/block/entity/CreakingHeartBlockEntity clearCreakingInfo ()V
+accessible method net/minecraft/world/level/block/entity/CreakingHeartBlockEntity getCreakingProtector ()Ljava/util/Optional;
+accessible method net/minecraft/world/level/block/entity/CreakingHeartBlockEntity spawnProtector (Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/level/block/entity/CreakingHeartBlockEntity;)Lnet/minecraft/world/entity/monster/creaking/Creaking;
+accessible method net/minecraft/world/level/block/entity/CreakingHeartBlockEntity spreadResin (Lnet/minecraft/server/level/ServerLevel;)Ljava/util/Optional;
+accessible method net/minecraft/world/level/BaseSpawner setNextSpawnData (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/SpawnData;)V
+accessible method net/minecraft/world/level/BaseSpawner isNearPlayer (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)Z
+accessible method net/minecraft/world/level/BaseSpawner delay (Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)V
+accessible field net/minecraft/world/level/block/entity/SignBlockEntity allowOpFeatures Z
+accessible field net/minecraft/world/level/block/entity/HopperBlockEntity cooldownTime I
+accessible method net/minecraft/world/level/block/entity/HopperBlockEntity setCooldown (I)V
+accessible field net/minecraft/world/level/block/entity/SkullBlockEntity customName Lnet/minecraft/network/chat/Component;
+accessible field net/minecraft/world/level/block/entity/trialspawner/TrialSpawnerStateData cooldownEndsAt J
+accessible field net/minecraft/world/level/block/entity/trialspawner/TrialSpawnerStateData nextMobSpawnsAt J
+accessible field net/minecraft/world/level/block/entity/vault/VaultBlockEntity serverData Lnet/minecraft/world/level/block/entity/vault/VaultServerData;
+accessible method net/minecraft/world/level/block/entity/vault/VaultServerData getRewardedPlayers ()Ljava/util/Set;
+accessible method net/minecraft/world/level/block/entity/vault/VaultServerData stateUpdatingResumesAt ()J
+accessible method net/minecraft/world/level/block/entity/vault/VaultServerData pauseStateUpdatingUntil (J)V
+accessible method net/minecraft/world/level/block/entity/vault/VaultSharedData getConnectedPlayers ()Ljava/util/Set;
+accessible method net/minecraft/world/level/block/state/StateHolder createValue (Lnet/minecraft/world/level/block/state/properties/Property;Ljava/lang/Comparable;)Lnet/minecraft/world/level/block/state/properties/Property$Value;
+accessible class net/minecraft/world/level/block/entity/BeehiveBlockEntity$BeeData
+accessible field net/minecraft/world/level/block/entity/BeehiveBlockEntity stored Ljava/util/List;
+accessible field net/minecraft/world/entity/ExperienceOrb count I
+accessible method net/minecraft/world/entity/LivingEntity playSecondaryHurtSound (Lnet/minecraft/world/damagesource/DamageSource;)V
+accessible method net/minecraft/world/entity/LivingEntity getSoundVolume ()F
+accessible field net/minecraft/world/level/dimension/end/EnderDragonFight GATEWAY_COUNT I
+accessible field net/minecraft/world/level/dimension/end/EnderDragonFight gateways Ljava/util/List;
+accessible field net/minecraft/world/level/dimension/end/EnderDragonFight respawnCrystals Ljava/util/List;
+accessible method net/minecraft/world/level/dimension/end/EnderDragonFight spawnNewGateway (Lnet/minecraft/core/BlockPos;)V
+accessible method net/minecraft/world/level/dimension/end/EnderDragonFight respawnDragon (Ljava/util/List;)V
+accessible method net/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplateManager tryLoad (Lnet/minecraft/resources/Identifier;)Ljava/util/Optional;
+accessible method net/minecraft/world/level/storage/TagValueOutput <init> (Lnet/minecraft/util/ProblemReporter;Lcom/mojang/serialization/DynamicOps;Lnet/minecraft/nbt/CompoundTag;)V
+transitive-inject-interface	net/minecraft/world/level/block/entity/BeaconBlockEntity	com/mohistmc/silkard/injected/paper/server/PaperBeaconBlockEntity
+transitive-inject-interface	net/minecraft/world/level/block/entity/BeehiveBlockEntity	com/mohistmc/silkard/injected/paper/server/PaperBeehiveBlockEntity
+accessible field net/minecraft/world/level/block/entity/BeehiveBlockEntity$BeeData occupant Lnet/minecraft/world/level/block/entity/BeehiveBlockEntity$Occupant;
+transitive-inject-interface	net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity	com/mohistmc/silkard/injected/paper/server/PaperAbstractFurnaceBlockEntity
+accessible method net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity getTotalCookTime (Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity;)I
+transitive-inject-interface	net/minecraft/world/level/block/entity/CampfireBlockEntity	com/mohistmc/silkard/injected/paper/server/PaperCampfireBlockEntity
+transitive-inject-interface	net/minecraft/world/level/block/entity/SculkSensorBlockEntity	com/mohistmc/silkard/injected/paper/server/PaperSculkSensorBlockEntity
+accessible field net/minecraft/world/level/block/entity/vault/VaultServerData rewardedPlayers Ljava/util/Set;
+accessible method net/minecraft/world/level/block/entity/vault/VaultServerData markChanged ()V
+# Silkard paper-server end
