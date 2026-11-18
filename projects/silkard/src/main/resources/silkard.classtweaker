@@ -1111,7 +1111,6 @@ transitive-inject-interface	net/minecraft/server/level/ServerLevel	com/mohistmc/
 # Silkard paper-server wave 3 - vanilla members Paper's CraftServer, CraftWorld and CraftEventFactory reach
 accessible class	net/minecraft/server/players/CachedUserNameToIdResolver$GameProfileInfo
 accessible field	net/minecraft/server/players/CachedUserNameToIdResolver	profilesByName	Ljava/util/Map;
-accessible method	net/minecraft/server/level/ChunkMap	readChunk	(Lnet/minecraft/world/level/ChunkPos;)Ljava/util/concurrent/CompletableFuture;
 accessible method	net/minecraft/server/level/ServerLevel	sendParticles	(Lnet/minecraft/server/level/ServerPlayer;ZDDDLnet/minecraft/network/protocol/Packet;)Z
 accessible method	net/minecraft/server/MinecraftServer	updateEffectiveRespawnData	()V
 accessible method	net/minecraft/world/level/block/DispenserBlock	getDispenseMethod	(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/core/dispenser/DispenseItemBehavior;

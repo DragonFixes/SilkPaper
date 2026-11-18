@@ -158,7 +158,8 @@ public final class FeatureHooks {
         if (loaded != null) {
             return CompletableFuture.completedFuture(loaded);
         }
-        return level.getChunkSource().chunkMap.readChunk(new ChunkPos(chunkX, chunkZ))
+        // the stored tag, before any DataFixer upgrade, so outdated chunks are recognised
+        return level.getChunkSource().chunkMap.read(new ChunkPos(chunkX, chunkZ))
             .thenApply((Optional<CompoundTag> tag) -> classifyChunkGenerationState(tag.orElse(null), chunkX, chunkZ));
     }
 
