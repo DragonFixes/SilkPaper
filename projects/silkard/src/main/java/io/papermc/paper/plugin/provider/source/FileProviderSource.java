@@ -26,7 +26,7 @@ import org.slf4j.Logger;
  */
 public class FileProviderSource implements ProviderSource<Path, Path> {
 
-    private static final Logger LOGGER = LogUtils.getClassLogger();
+    private static final Logger LOGGER = LogUtils.getLogger();
     private final Function<Path, String> contextChecker;
 
     public FileProviderSource(Function<Path, String> contextChecker) {

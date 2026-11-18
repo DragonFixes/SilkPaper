@@ -18,7 +18,7 @@ public class V31_AllowNetherPropertiesToConfig implements ConfigurationTransform
 
     @Override
     public void apply(final ConfigurationNode root) throws ConfigurateException {
-        final DedicatedServer server = ((DedicatedServer) MinecraftServer.getServer());
+        final DedicatedServer server = ((DedicatedServer) com.mohistmc.silkard.paper.PaperBootstrap.server());
         final String raw = server.settings.getProperties().properties.getProperty("allow-nether");
         if (raw != null) {
             final ConfigurationNode node = root.node("misc", "enable-nether");

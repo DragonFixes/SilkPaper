@@ -21,7 +21,7 @@ import java.util.logging.Level;
 
 public final class FoliaAsyncScheduler implements AsyncScheduler {
 
-    public static final Logger LOGGER = LogUtils.getClassLogger(); // Leaf - Virtual thread support for folia async scheduler - private -> pubic
+    public static final Logger LOGGER = LogUtils.getLogger(); // Leaf - Virtual thread support for folia async scheduler - private -> pubic
 
     private final Executor executors = org.dreeam.leaf.async.ExecutorFactory.buildFoliaAsyncSchedulerExecutor(); // Leaf - Virtual thread support for folia async scheduler
 

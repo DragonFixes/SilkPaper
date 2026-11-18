@@ -68,7 +68,7 @@ public record PaperResolvableProfile(
 
     @Override
     public CompletableFuture<PlayerProfile> resolve() {
-        return this.impl.resolveProfile(MinecraftServer.getServer().services().profileResolver())
+        return this.impl.resolveProfile(com.mohistmc.silkard.paper.PaperBootstrap.server().services().profileResolver())
             .thenApply(CraftPlayerProfile::asBukkitCopy);
     }
 

@@ -91,7 +91,7 @@ import static io.leangen.geantyref.GenericTypeReflector.erase;
 @SuppressWarnings("Convert2Diamond")
 public class PaperConfigurations extends Configurations<GlobalConfiguration, WorldConfiguration> {
 
-    private static final Logger LOGGER = LogUtils.getClassLogger();
+    private static final Logger LOGGER = LogUtils.getLogger();
     static final String GLOBAL_CONFIG_FILE_NAME = "paper-global.yml";
     static final String WORLD_DEFAULTS_CONFIG_FILE_NAME = "paper-world-defaults.yml";
     static final String WORLD_CONFIG_FILE_NAME = "paper-world.yml";
@@ -265,7 +265,7 @@ public class PaperConfigurations extends Configurations<GlobalConfiguration, Wor
                     .register(DespawnRange.class, DespawnRange.SERIALIZER)
                     .register(StringRepresentableSerializer::isValidFor, new StringRepresentableSerializer())
                     .register(EngineMode.SERIALIZER)
-                    .register(FallbackValueSerializer.create(contextMap.require(SPIGOT_WORLD_CONFIG_CONTEXT_KEY).get(), MinecraftServer::getServer))
+                    .register(FallbackValueSerializer.create(contextMap.require(SPIGOT_WORLD_CONFIG_CONTEXT_KEY).get(), com.mohistmc.silkard.paper.PaperBootstrap::server))
                     .register(new RegistryValueSerializer<>(new TypeToken<EntityType<?>>() {}, access, Registries.ENTITY_TYPE, true))
                     .register(new RegistryValueSerializer<>(Item.class, access, Registries.ITEM, true))
                     .register(new RegistryValueSerializer<>(Block.class, access, Registries.BLOCK, true))

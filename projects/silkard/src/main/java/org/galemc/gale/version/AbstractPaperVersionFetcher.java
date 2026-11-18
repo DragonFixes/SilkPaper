@@ -51,7 +51,7 @@ import static net.kyori.adventure.text.format.TextColor.color;
 @NullMarked
 public abstract class AbstractPaperVersionFetcher implements VersionFetcher {
 
-    protected static final Logger LOGGER = LogUtils.getClassLogger();
+    protected static final Logger LOGGER = LogUtils.getLogger();
     protected static final ComponentLogger COMPONENT_LOGGER = ComponentLogger.logger(LogManager.getRootLogger().getName());
     protected static final int DISTANCE_ERROR = -1;
     protected static final int DISTANCE_UNKNOWN = -2;

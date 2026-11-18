@@ -34,6 +34,6 @@ public class AutosavePeriod extends FallbackValue.Int {
     }
 
     public static AutosavePeriod def() {
-        return new AutosavePeriod(FallbackValue.MINECRAFT_SERVER.singleton(MinecraftServer::getServer));
+        return new AutosavePeriod(FallbackValue.MINECRAFT_SERVER.singleton(com.mohistmc.silkard.paper.PaperBootstrap::server));
     }
 }

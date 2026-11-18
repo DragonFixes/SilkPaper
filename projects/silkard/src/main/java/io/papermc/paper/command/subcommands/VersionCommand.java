@@ -12,7 +12,7 @@ import org.checkerframework.framework.qual.DefaultQualifier;
 public final class VersionCommand implements PaperSubcommand {
     @Override
     public boolean execute(final CommandSender sender, final String subCommand, final String[] args) {
-        final @Nullable Command redirect = MinecraftServer.getServer().server.getCommandMap().getCommand("version");
+        final @Nullable Command redirect = com.mohistmc.silkard.paper.PaperBootstrap.server().server.getCommandMap().getCommand("version");
         if (redirect != null) {
             redirect.execute(sender, "paper", me.titaniumtown.ArrayConstants.emptyStringArray); // Gale - JettPack - reduce array allocations
         }

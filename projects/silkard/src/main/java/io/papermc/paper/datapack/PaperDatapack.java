@@ -28,7 +28,7 @@ public class PaperDatapack extends PaperDiscoveredDatapack implements Datapack {
 
     @Override
     public void setEnabled(final boolean enabled) {
-        final MinecraftServer server = MinecraftServer.getServer();
+        final MinecraftServer server = com.mohistmc.silkard.paper.PaperBootstrap.server();
         final List<Pack> enabledPacks = new ArrayList<>(server.getPackRepository().getSelectedPacks());
         final Pack packToChange = server.getPackRepository().getPack(this.getName());
         if (packToChange == null) {

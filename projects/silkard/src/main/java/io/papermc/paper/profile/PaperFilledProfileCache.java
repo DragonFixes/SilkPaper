@@ -28,7 +28,7 @@ import org.slf4j.Logger;
  */
 @NullMarked
 public final class PaperFilledProfileCache {
-    private static final Logger LOGGER = LogUtils.getClassLogger();
+    private static final Logger LOGGER = LogUtils.getLogger();
 
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     private final Map<String, GameProfile> byName = new HashMap<>();
@@ -107,7 +107,7 @@ public final class PaperFilledProfileCache {
     }
 
     private boolean tryCancelCleanup() {
-        final MinecraftServer server = MinecraftServer.getServer();
+        final MinecraftServer server = com.mohistmc.silkard.paper.PaperBootstrap.server();
         if (server != null && (!server.isRunning() || server.hasStopped())) {
             this.cleanupExecutor.shutdown();
             return true;

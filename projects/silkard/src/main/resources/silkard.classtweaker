@@ -774,3 +774,52 @@ transitive-inject-interface net/minecraft/world/level/gamerules/GameRules com/mo
 transitive-extend-enum net/minecraft/world/level/Level$ExplosionInteraction STANDARD
 transitive-inject-interface	net/minecraft/server/dedicated/DedicatedServer	com/mohistmc/silkard/injected/server/ContextDedicatedServer
 transitive-inject-interface	net/minecraft/server/dedicated/DedicatedServerProperties	com/mohistmc/silkard/injected/server/dedicated/ContextDedicatedServerProperties
+
+
+# Paper/Purpur/Leaf server code (io.papermc, com.destroystokyo, org.purpurmc, org.galemc, org.dreeam)
+accessible class net/minecraft/resources/RegistryOps$HolderLookupAdapter
+accessible class net/minecraft/server/packs/repository/FolderRepositorySource$FolderPackDetector
+accessible class net/minecraft/world/item/component/ResolvableProfile$Partial
+accessible field net/minecraft/commands/arguments/blocks/BlockInput tag Lnet/minecraft/nbt/CompoundTag;
+accessible field net/minecraft/commands/arguments/DimensionArgument ERROR_INVALID_VALUE Lcom/mojang/brigadier/exceptions/DynamicCommandExceptionType;
+accessible field net/minecraft/network/chat/contents/TranslatableContents PRIMITIVE_ARG_CODEC Lcom/mojang/serialization/Codec;
+accessible field net/minecraft/server/network/ServerCommonPacketListenerImpl connection Lnet/minecraft/network/Connection;
+accessible field net/minecraft/server/network/ServerConfigurationPacketListenerImpl clientInformation Lnet/minecraft/server/level/ClientInformation;
+accessible field net/minecraft/server/network/ServerConfigurationPacketListenerImpl currentTask Lnet/minecraft/server/network/ConfigurationTask;
+accessible field net/minecraft/server/network/ServerLoginPacketListenerImpl authenticatedProfile Lcom/mojang/authlib/GameProfile;
+accessible field net/minecraft/server/network/ServerLoginPacketListenerImpl requestedUsername Ljava/lang/String;
+accessible field net/minecraft/server/network/ServerLoginPacketListenerImpl transferred Z
+accessible field net/minecraft/tags/TagEntry id Lnet/minecraft/resources/Identifier;
+accessible field net/minecraft/tags/TagEntry required Z
+accessible field net/minecraft/util/filefix/FileFixerUpper FILE_FIXER_INTRODUCTION_VERSION I
+accessible field net/minecraft/util/Util LOGGER Lorg/slf4j/Logger;
+accessible field net/minecraft/world/damagesource/CombatTracker entries Ljava/util/List;
+accessible field net/minecraft/world/damagesource/CombatTracker inCombat Z
+accessible field net/minecraft/world/damagesource/CombatTracker lastDamageTime I
+accessible field net/minecraft/world/damagesource/CombatTracker mob Lnet/minecraft/world/entity/LivingEntity;
+accessible field net/minecraft/world/damagesource/CombatTracker takingDamage Z
+accessible field net/minecraft/world/entity/ai/navigation/PathNavigation pathFinder Lnet/minecraft/world/level/pathfinder/PathFinder;
+accessible field net/minecraft/world/entity/animal/fish/AbstractSchoolingFish leader Lnet/minecraft/world/entity/animal/fish/AbstractSchoolingFish;
+accessible field net/minecraft/world/entity/animal/fish/AbstractSchoolingFish schoolSize I
+accessible field net/minecraft/world/entity/decoration/Mannequin ALL_LAYERS B
+accessible field net/minecraft/world/entity/EntityType dimensions Lnet/minecraft/world/entity/EntityDimensions;
+accessible field net/minecraft/world/entity/monster/illager/Vindicator DOOR_BREAKING_PREDICATE Ljava/util/function/Predicate;
+accessible field net/minecraft/world/entity/monster/Shulker MAX_SCALE F
+accessible field net/minecraft/world/entity/monster/zombie/Zombie DOOR_BREAKING_PREDICATE Ljava/util/function/Predicate;
+accessible field net/minecraft/world/item/AdventureModePredicate predicates Ljava/util/List;
+accessible field net/minecraft/world/item/component/ItemContainerContents items Ljava/util/List;
+accessible field net/minecraft/world/item/crafting/RecipeMap byKey Ljava/util/Map;
+accessible field net/minecraft/world/level/block/FrogspawnBlock MAX_TADPOLES_SPAWN I
+accessible field net/minecraft/world/level/block/FrogspawnBlock MIN_TADPOLES_SPAWN I
+accessible field net/minecraft/world/level/block/state/BlockBehaviour explosionResistance F
+accessible field net/minecraft/world/level/levelgen/material/MaterialRuleContext context Lnet/minecraft/world/level/levelgen/WorldGenerationContext;
+accessible field net/minecraft/world/level/NaturalSpawner SPAWNING_CATEGORIES [Lnet/minecraft/world/entity/MobCategory;
+accessible field net/minecraft/world/level/pathfinder/Path nodes Ljava/util/List;
+accessible field net/minecraft/world/level/pathfinder/PathFinder nodeEvaluator Lnet/minecraft/world/level/pathfinder/NodeEvaluator;
+accessible field net/minecraft/world/level/storage/loot/entries/TagEntry tag Lnet/minecraft/core/HolderSet;
+accessible method net/minecraft/advancements/Advancement decorateName (Lnet/minecraft/advancements/DisplayInfo;)Lnet/minecraft/network/chat/Component;
+accessible method net/minecraft/server/network/ServerConfigurationPacketListenerImpl finishCurrentTask (Lnet/minecraft/server/network/ConfigurationTask$Type;)V
+accessible method net/minecraft/server/players/PlayerList verifyChatTrusted (Lnet/minecraft/network/chat/PlayerChatMessage;)Z
+accessible method net/minecraft/world/damagesource/CombatTracker getMostSignificantFall ()Lnet/minecraft/world/damagesource/CombatEntry;
+accessible method net/minecraft/world/entity/ai/attributes/AttributeSupplier getAttributeInstance (Lnet/minecraft/core/Holder;)Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;
+accessible method net/minecraft/world/item/component/ResolvableProfile unpack ()Lcom/mojang/datafixers/util/Either;
