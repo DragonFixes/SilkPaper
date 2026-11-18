@@ -12,10 +12,8 @@ public class PaperCustomGoal<T extends Mob> extends net.minecraft.world.entity.a
     public PaperCustomGoal(Goal<T> handle) {
         this.handle = handle;
 
+        // A goal without flags stands for Paper's UNKNOWN_BEHAVIOR type.
         this.setFlags(MobGoalHelper.paperToVanilla(handle.getTypes()));
-        if (this.getFlags().size() == 0) {
-            this.addFlag(Flag.UNKNOWN_BEHAVIOR);
-        }
     }
 
     @Override

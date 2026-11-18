@@ -39,7 +39,7 @@ public abstract class MixinRaid implements ContextRaid {
     @Shadow public abstract boolean isLoss();
 
     private transient Raider silkard$waveLeader;
-    private transient List<Raider> silkard$waveRaiders;
+    private transient Set<Raider> silkard$waveRaiders;
     private transient boolean silkard$finishFired;
 
     @Override
@@ -60,7 +60,7 @@ public abstract class MixinRaid implements ContextRaid {
     @Inject(method = "spawnGroup", at = @At("HEAD"))
     private void silkard$resetWave(ServerLevel level, BlockPos pos, CallbackInfo ci) {
         this.silkard$waveLeader = null;
-        this.silkard$waveRaiders = new ArrayList<>();
+        this.silkard$waveRaiders = new java.util.LinkedHashSet<>();
     }
 
     @Redirect(method = "spawnGroup", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/raid/Raid;setLeader(ILnet/minecraft/world/entity/raid/Raider;)V"))

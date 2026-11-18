@@ -32,6 +32,9 @@ import org.checkerframework.framework.qual.DefaultQualifier;
 
 @DefaultQualifier(NonNull.class)
 public final class MobcapsCommand implements PaperSubcommand {
+    // Vanilla's NaturalSpawner.MAGIC_NUMBER: chunks in the 17x17 area a spawn limit is defined for.
+    private static final int SPAWN_AREA_CHUNKS = 17 * 17;
+
     static final Map<MobCategory, TextColor> MOB_CATEGORY_COLORS = ImmutableMap.<MobCategory, TextColor>builder()
         .put(MobCategory.MONSTER, NamedTextColor.RED)
         .put(MobCategory.CREATURE, NamedTextColor.GREEN)
@@ -135,7 +138,8 @@ public final class MobcapsCommand implements PaperSubcommand {
                         return state.getMobCategoryCounts().getOrDefault(category, 0);
                     }
                 },
-                category -> NaturalSpawner.globalLimitForCategory(level, category, chunks)
+                // Paper's NaturalSpawner.globalLimitForCategory: the world's spawn limit scaled to the spawnable chunks.
+                category -> level.getWorld().getSpawnLimitUnsafe(org.bukkit.craftbukkit.util.CraftSpawnCategory.toBukkit(category)) * chunks / SPAWN_AREA_CHUNKS
             ));
         }
     }
@@ -164,16 +168,8 @@ public final class MobcapsCommand implements PaperSubcommand {
         final ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
         final ServerLevel level = serverPlayer.level();
 
-        if (!level.paperConfig().entities.spawning.perPlayerMobSpawns) {
-            sender.sendMessage(Component.text("Use '/paper mobcaps' for worlds where per-player mob spawning is disabled.", NamedTextColor.RED));
-            return;
-        }
-
-        sender.sendMessage(Component.join(JoinConfiguration.noSeparators(), Component.text("Mobcaps for player: "), Component.text(player.getName(), NamedTextColor.GREEN)));
-        sender.sendMessage(createMobcapsComponent(
-            category -> level.getChunkSource().chunkMap.getMobCountNear(serverPlayer, category),
-            category -> level.getWorld().getSpawnLimitUnsafe(org.bukkit.craftbukkit.util.CraftSpawnCategory.toBukkit(category))
-        ));
+        // TODO Silkard - per-player mob spawning is not ported (it replaces vanilla's spawner), so there are no per-player counts
+        sender.sendMessage(Component.text("Per-player mob spawning is not available on this server; use '/paper mobcaps'.", NamedTextColor.RED));
     }
 
     private static Component createMobcapsComponent(final ToIntFunction<MobCategory> countGetter, final ToIntFunction<MobCategory> limitGetter) {

@@ -158,7 +158,7 @@ public class TickThread extends Thread {
             sb.append(serverLevelTickThread.currentTickingServerLevel != null ? serverLevelTickThread.currentTickingServerLevel.getWorld().getName() : "null");
         }
         sb.append("; Is iterating over levels? ");
-        sb.append(minecraftServer.isIteratingOverLevels);
+        sb.append(minecraftServer.paper$isIteratingOverLevels());
         sb.append("; Are we going to hard throw? ");
         sb.append(HARD_THROW);
         return sb.toString();

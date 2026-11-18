@@ -71,7 +71,7 @@ public class MixinServerConfigurationPacketListenerImpl {
     @Unique
     private ServerLinks silkard$sendServerLinks(ServerLinks serverLinks, ServerPlayer player) {
         CraftServerLinks wrapper = new CraftServerLinks(serverLinks);
-        PlayerLinksSendEvent event = new PlayerLinksSendEvent(player.getBukkitEntity(), wrapper);
+        PlayerLinksSendEvent event = new PlayerLinksSendEvent(((ServerConfigurationPacketListenerImpl) (Object) this).paper$paperConnection(), wrapper);
         player.getBukkitEntity().getServer().getPluginManager().callEvent(event);
         return wrapper.getServerLinks();
     }

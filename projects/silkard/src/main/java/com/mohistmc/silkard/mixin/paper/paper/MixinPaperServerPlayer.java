@@ -13,7 +13,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * Purpur's per-player boss bar toggles (saved with the player) and Paper's Adventure display name.
+ * Purpur's per-player boss bar toggles (saved with the player), Paper's Adventure display name and the
+ * saved last known name used for rename detection.
  */
 @Mixin(ServerPlayer.class)
 public abstract class MixinPaperServerPlayer implements PaperServerPlayerAccess {
@@ -22,12 +23,15 @@ public abstract class MixinPaperServerPlayer implements PaperServerPlayerAccess 
     @Unique private boolean paper$compassBar;
     @Unique private boolean paper$ramBar;
     @Unique private @Nullable Component paper$adventureDisplayName;
+    @Unique private @Nullable String paper$lastKnownName;
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
     private void paper$readBars(final ValueInput input, final CallbackInfo ci) {
         this.paper$tpsBar = input.getBooleanOr("Purpur.TPSBar", false);
         this.paper$compassBar = input.getBooleanOr("Purpur.CompassBar", false);
         this.paper$ramBar = input.getBooleanOr("Purpur.RamBar", false);
+        // CraftPlayer saves the profile name under bukkit.lastKnownName.
+        this.paper$lastKnownName = input.child("bukkit").flatMap(bukkit -> bukkit.getString("lastKnownName")).orElse(null);
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
@@ -65,6 +69,11 @@ public abstract class MixinPaperServerPlayer implements PaperServerPlayerAccess 
     @Override
     public void ramBar(final boolean ramBar) {
         this.paper$ramBar = ramBar;
+    }
+
+    @Override
+    public @Nullable String paper$lastKnownName() {
+        return this.paper$lastKnownName;
     }
 
     @Override

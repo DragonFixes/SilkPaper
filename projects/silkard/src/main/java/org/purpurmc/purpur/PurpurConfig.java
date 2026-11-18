@@ -610,8 +610,7 @@ public class PurpurConfig {
                 log(Level.SEVERE, "Invalid multiplier for `settings.block-fall-multipliers." + blockId + ".distance`: " + map.get("distance"));
                 return;
             }
-            block.fallDamageMultiplier = fallDamageMultiplier.floatValue();
-            block.fallDistanceMultiplier = fallDistanceMultiplier.floatValue();
+            // TODO Silkard - per-block fall multipliers are not ported; the values are validated but not applied
         });
     }
 

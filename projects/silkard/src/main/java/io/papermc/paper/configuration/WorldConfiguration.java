@@ -3,7 +3,7 @@ package io.papermc.paper.configuration;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import com.mojang.logging.LogUtils;
-import io.papermc.paper.FeatureHooks;
+import com.mohistmc.silkard.paper.server.FeatureHooks;
 import io.papermc.paper.configuration.legacy.MaxEntityCollisionsInitializer;
 import io.papermc.paper.configuration.legacy.RequiresSpigotInitialization;
 import io.papermc.paper.configuration.mapping.MergeMap;
@@ -95,6 +95,8 @@ public class WorldConfiguration extends ConfigurationPart {
 
         public AntiXray antiXray;
 
+        // TODO Silkard - Anti-Xray rewrites chunk packets inside vanilla's chunk sending, which C2ME and other
+        //  chunk mods also patch; it is not ported and these settings are read but have no effect
         public class AntiXray extends ConfigurationPart {
             public boolean enabled = false;
             public EngineMode engineMode = EngineMode.HIDE;
@@ -373,7 +375,7 @@ public class WorldConfiguration extends ConfigurationPart {
                 } else if (entity instanceof HangingEntity || entity instanceof ItemEntity || entity instanceof ExperienceOrb) {
                     return misc.or(def);
                 }
-                switch (entity.activationType) {
+                switch (io.papermc.paper.entity.activation.ActivationType.activationTypeFor(entity)) {
                     case ANIMAL, WATER, VILLAGER -> {
                         return animal.or(def);
                     }

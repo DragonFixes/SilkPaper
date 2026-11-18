@@ -36,7 +36,7 @@ public class MixinGossipContainer$EntityGossips implements ContextGossipContaine
             Object2IntMap.Entry<GossipType> entry = iterator.next();
             int i = entry.getIntValue() - entry.getKey().decayPerDay;
             // CraftBukkit start - fire event
-            VillagerReputationChangeEvent event = CraftEventFactory.callVillagerReputationChangeEvent(villager, uuid, org.bukkit.entity.Villager.ReputationEvent.DECAY, CraftReputationType.minecraftToBukkit(entry.getKey()), entry.getIntValue(), i, entry.getKey().max);
+            VillagerReputationChangeEvent event = com.mohistmc.silkard.paper.paper.VillagerReputationEvents.call(villager, uuid, org.bukkit.entity.Villager.ReputationEvent.DECAY, CraftReputationType.minecraftToBukkit(entry.getKey()), entry.getIntValue(), i, entry.getKey().max);
             if (event.isCancelled()) {
                 continue;
             }

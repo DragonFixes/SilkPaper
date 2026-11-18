@@ -58,6 +58,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ServerGamePacketListenerImpl.class)
 public class MixinServerGamePacketListenerImpl implements ContextServerGamePacketListenerImpl {
 
+    // Vanilla's game listener replaces handleCustomPayload with an empty body, so the shared plugin
+    // message handling of ServerCommonPacketListenerImpl is called from here.
+    @Inject(method = "handleCustomPayload", at = @At("HEAD"))
+    private void silkard$pluginPayload(net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket packet, CallbackInfo ci) {
+        ((ContextServerCommonPacketListenerImpl) (Object) this).silkard$handlePluginPayload(packet);
+    }
+
+
     @Shadow
     @Final
     private static Logger LOGGER;

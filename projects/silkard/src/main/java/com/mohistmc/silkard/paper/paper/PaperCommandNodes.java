@@ -63,6 +63,10 @@ public final class PaperCommandNodes {
 
     /** Removes the child named {@code name} from {@code node}. */
     public static void removeCommand(final CommandNode<?> node, final String name) {
+        if (node instanceof final io.papermc.paper.command.brigadier.ApiMirrorRootNode mirror) {
+            mirror.removeCommand(name);
+            return;
+        }
         map(CHILDREN, node).remove(name);
         map(LITERALS, node).remove(name);
         map(ARGUMENTS, node).remove(name);
@@ -70,6 +74,10 @@ public final class PaperCommandNodes {
 
     /** Removes every child of {@code node}. */
     public static void clearAll(final CommandNode<?> node) {
+        if (node instanceof final io.papermc.paper.command.brigadier.ApiMirrorRootNode mirror) {
+            mirror.clearAll();
+            return;
+        }
         map(CHILDREN, node).clear();
         map(LITERALS, node).clear();
         map(ARGUMENTS, node).clear();

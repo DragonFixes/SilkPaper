@@ -71,9 +71,7 @@ public class DynamicActivationofBrain extends ConfigModule {
 
     @Override
     public void onPostLoaded() {
-        for (EntityType<?> entityType : BuiltInRegistries.ENTITY_TYPE) {
-            entityType.dabEnabled = true; // reset all, before setting the ones to true
-        }
+        // TODO Silkard - dynamic activation of brain is not ported; the blacklist is only validated
 
         final String DEFAULT_PREFIX = Identifier.DEFAULT_NAMESPACE + Identifier.NAMESPACE_SEPARATOR;
 
@@ -83,8 +81,8 @@ public class DynamicActivationofBrain extends ConfigModule {
             String lowerName = name.toLowerCase(Locale.ROOT);
             String typeId = lowerName.startsWith(DEFAULT_PREFIX) ? lowerName : DEFAULT_PREFIX + lowerName;
 
-            EntityType.byString(typeId).ifPresentOrElse(entityType ->
-                    entityType.dabEnabled = false,
+            BuiltInRegistries.ENTITY_TYPE.getOptional(Identifier.tryParse(typeId)).ifPresentOrElse(entityType -> {
+                },
                 () -> LeafConfig.LOGGER.warn("Skip unknown entity {}, in {}", name, basePath() + ".blacklisted-entities")
             );
         }

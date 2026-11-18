@@ -42,7 +42,8 @@ public class PaperDatapack extends PaperDiscoveredDatapack implements Datapack {
         } else {
             enabledPacks.remove(packToChange);
         }
-        server.reloadResources(enabledPacks.stream().map(Pack::getId).toList(), ServerResourcesReloadedEvent.Cause.PLUGIN);
+        // TODO Silkard - vanilla's reload takes no cause, so ServerResourcesReloadedEvent does not report PLUGIN here
+        server.reloadResources(enabledPacks.stream().map(Pack::getId).toList());
     }
 
     @Override

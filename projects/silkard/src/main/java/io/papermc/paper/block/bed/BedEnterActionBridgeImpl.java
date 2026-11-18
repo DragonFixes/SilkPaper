@@ -23,7 +23,7 @@ public class BedEnterActionBridgeImpl implements BedEnterActionBridge {
 
     @Override
     public BedEnterProblem createExplosionProblem() {
-        return new BedEnterProblemImpl(Player.BedSleepingProblem.EXPLOSION);
+        return new BedEnterProblemImpl(com.mohistmc.silkard.paper.server.PaperServerHooks.BED_EXPLOSION);
     }
 
     @Override

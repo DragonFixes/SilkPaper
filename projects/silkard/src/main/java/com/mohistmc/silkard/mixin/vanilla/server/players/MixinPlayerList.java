@@ -258,7 +258,6 @@ public abstract class MixinPlayerList implements ContextPlayerList {
         SocketAddress address = connection.getRemoteAddress();
 
         ServerPlayer entity = new ServerPlayer(this.server, this.server.getLevel(Level.OVERWORLD), gameprofile, ClientInformation.createDefault());
-        ((ContextServerPlayer) entity).silkard$transferCookieConnection((CraftPlayer.TransferCookieConnection) (Object) serverloginpacketlistenerimpl);
         org.bukkit.entity.Player player = entity.getBukkitEntity();
         PlayerLoginEvent event = new PlayerLoginEvent(player, ((com.mohistmc.silkard.injected.network.ContextConnection) connection).silkard$hostname(), ((java.net.InetSocketAddress) address).getAddress());
 
@@ -356,7 +355,7 @@ public abstract class MixinPlayerList implements ContextPlayerList {
         net.minecraft.server.players.UserNameToIdResolver usernametoidresolver = this.server.services().nameToIdCache();
         String s = usernametoidresolver.get(nameAndId.id()).map(NameAndId::name).orElse(nameAndId.name());
         // CraftBukkit start - better rename detection
-        String lastKnownName = player.getBukkitEntity().getLastKnownName();
+        String lastKnownName = player.paper$lastKnownName();
         if (lastKnownName != null) {
             s = lastKnownName;
         }
@@ -491,7 +490,7 @@ public abstract class MixinPlayerList implements ContextPlayerList {
         String leaveMessage = ((ContextServerPlayer) player).silkard$kickLeaveMessage();
         PlayerQuitEvent playerQuitEvent = new PlayerQuitEvent(player.getBukkitEntity(), leaveMessage != null ? leaveMessage : "\u00A7e" + player.getScoreboardName() + " left the game");
         this.getCraftServer().getPluginManager().callEvent(playerQuitEvent);
-        player.getBukkitEntity().disconnect(playerQuitEvent.getQuitMessage());
+        player.getBukkitEntity().disconnect();
 
         player.doTick(); // SPIGOT-924
         // CraftBukkit end

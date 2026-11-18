@@ -62,7 +62,6 @@ public abstract class MixinServerPlayer extends Player implements ContextServerP
     private CraftEntity silkard$serverBukkitEntity;
 
     // CraftBukkit start
-    public CraftPlayer.TransferCookieConnection transferCookieConnection;
     public String displayName;
     public Component listName;
     public int listOrder = 0;
@@ -121,16 +120,6 @@ public abstract class MixinServerPlayer extends Player implements ContextServerP
     public int nextContainerCounterInt() {
         nextContainerCounter();
         return containerCounter;
-    }
-
-    @Override
-    public void silkard$transferCookieConnection(CraftPlayer.TransferCookieConnection transferCookieConnection) {
-        this.transferCookieConnection = transferCookieConnection;
-    }
-
-    @Override
-    public CraftPlayer.TransferCookieConnection silkard$transferCookieConnection() {
-        return this.transferCookieConnection;
     }
 
     @Override

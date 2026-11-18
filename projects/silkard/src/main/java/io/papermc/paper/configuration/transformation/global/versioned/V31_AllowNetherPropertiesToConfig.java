@@ -26,7 +26,7 @@ public class V31_AllowNetherPropertiesToConfig implements ConfigurationTransform
             server.settings.update((config) -> {
                 final Properties newProps = new Properties(config.properties);
                 newProps.remove("allow-nether");
-                return config.reload(server.registryAccess(), newProps, server.silkard_options());
+                return config.reload(server.registryAccess(), newProps);
             });
         }
     }

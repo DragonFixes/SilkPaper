@@ -13,7 +13,7 @@ public interface PaperLootableBlockInventory extends LootableBlockInventory, Pap
     /* PaperLootableInventory */
     @Override
     default PaperLootableInventoryData lootableDataForAPI() {
-        return Objects.requireNonNull(this.getRandomizableContainer().lootableData(), "Can only manage loot tables on tile entities with lootableData");
+        return Objects.requireNonNull(com.mohistmc.silkard.paper.paper.PaperLootables.lootableData(this.getRandomizableContainer()), "Can only manage loot tables on tile entities with lootableData");
     }
 
     /* LootableBlockInventory */

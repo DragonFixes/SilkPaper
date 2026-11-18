@@ -1,7 +1,7 @@
 package io.papermc.paper.command.subcommands;
 
 import com.google.common.collect.Maps;
-import io.papermc.paper.FeatureHooks;
+import com.mohistmc.silkard.paper.server.FeatureHooks;
 import io.papermc.paper.command.CommandUtil;
 import io.papermc.paper.command.PaperSubcommand;
 import io.papermc.paper.util.MCUtil;

@@ -32,7 +32,6 @@ public final class BossBarImplementationImpl implements BossBar.Listener, BossBa
                 PaperAdventure.asVanilla(this.bar.color()),
                 PaperAdventure.asVanilla(this.bar.overlay())
             );
-            this.vanilla.adventure = this.bar;
             this.bar.addListener(this);
         }
         this.vanilla.addPlayer(player.getHandle());

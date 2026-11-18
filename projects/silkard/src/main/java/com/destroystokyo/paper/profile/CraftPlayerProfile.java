@@ -45,6 +45,8 @@ public class CraftPlayerProfile implements PlayerProfile, SharedPlayerProfile {
     private boolean emptyUUID;
     private GameProfile profile;
     private final PropertySet properties = new PropertySet();
+    // Spigot's skin patch API (kept by Silkard); Paper exposes skin patches through ResolvableProfile instead.
+    private org.bukkit.craftbukkit.profile.CraftPlayerSkinPatch skinPatch = new org.bukkit.craftbukkit.profile.CraftPlayerSkinPatch();
 
     public CraftPlayerProfile(CraftPlayer player) {
         this(player.getHandle().getGameProfile());
@@ -256,11 +258,11 @@ public class CraftPlayerProfile implements PlayerProfile, SharedPlayerProfile {
         if (this.getId() == null) {
             GameProfile profile;
             if (onlineMode) {
-                profile = server.services().paper().filledProfileCache().getIfCached(name);
+                profile = com.mohistmc.silkard.paper.paper.PaperServices.filledProfileCache().getIfCached(name);
                 if (profile == null && lookupUUID) {
                     NameAndId nameAndId = server.services().nameToIdCache().get(name).orElse(null);
                     if (nameAndId != null) {
-                        profile = nameAndId.toUncompletedGameProfile();
+                        profile = new GameProfile(nameAndId.id(), nameAndId.name());
                     }
                 }
             } else {
@@ -278,11 +280,11 @@ public class CraftPlayerProfile implements PlayerProfile, SharedPlayerProfile {
         }
 
         if ((profile.name().isEmpty() || !hasTextures()) && this.getId() != null) {
-            GameProfile profile = server.services().paper().filledProfileCache().getIfCached(this.profile.id());
+            GameProfile profile = com.mohistmc.silkard.paper.paper.PaperServices.filledProfileCache().getIfCached(this.profile.id());
             if (profile == null) {
                 final Optional<NameAndId> nameAndId = server.services().nameToIdCache().get(this.profile.id());
                 if (nameAndId.isPresent()) {
-                    profile = nameAndId.get().toUncompletedGameProfile();
+                    profile = new GameProfile(nameAndId.get().id(), nameAndId.get().name());
                 }
             }
             if (profile != null) {
@@ -319,7 +321,7 @@ public class CraftPlayerProfile implements PlayerProfile, SharedPlayerProfile {
             }
             if (this.isComplete()) {
                 GameProfile copy = new GameProfile(this.profile.id(), this.profile.name(), new PropertyMap(this.profile.properties())); // Guard mutating profiles in the cache
-                server.services().paper().filledProfileCache().add(copy);
+                com.mohistmc.silkard.paper.paper.PaperServices.filledProfileCache().add(copy);
             }
         }
         return this.isComplete() && (!onlineMode || !textures || hasTextures());
@@ -349,7 +351,7 @@ public class CraftPlayerProfile implements PlayerProfile, SharedPlayerProfile {
     // Leaf start - Configurable vanilla username check
     private static GameProfile createAuthLibProfile(UUID uniqueId, String name, boolean useCustomValidation) {
         Preconditions.checkArgument(name == null || name.length() <= 16, "Name cannot be longer than 16 characters");
-        Preconditions.checkArgument(name == null || (useCustomValidation ? StringUtil.isReasonablePlayerName(name) : StringUtil.isValidPlayerName(name)), "The name of the profile contains invalid characters: %s", name);
+        Preconditions.checkArgument(name == null || (useCustomValidation ? com.mohistmc.silkard.paper.paper.PaperServices.isReasonablePlayerName(name) : StringUtil.isValidPlayerName(name)), "The name of the profile contains invalid characters: %s", name);
         return new GameProfile(
             uniqueId != null ? uniqueId : Util.NIL_UUID,
             name != null ? name : "",
@@ -384,6 +386,16 @@ public class CraftPlayerProfile implements PlayerProfile, SharedPlayerProfile {
     public static GameProfile asAuthlibCopy(PlayerProfile profile) {
         CraftPlayerProfile craft = ((CraftPlayerProfile) profile);
         return craft.getGameProfile();
+    }
+
+    @Override
+    public org.bukkit.profile.PlayerSkinPatch getSkinPatch() {
+        return this.skinPatch;
+    }
+
+    @Override
+    public void setSkinPatch(@Nullable final org.bukkit.profile.PlayerSkinPatch patch) {
+        this.skinPatch = patch == null ? new org.bukkit.craftbukkit.profile.CraftPlayerSkinPatch() : new org.bukkit.craftbukkit.profile.CraftPlayerSkinPatch(patch);
     }
 
     public static ResolvableProfile asResolvableProfileCopy(PlayerProfile profile) {

@@ -9,6 +9,12 @@ import org.bukkit.craftbukkit.entity.CraftPlayer;
 
 public interface ContextServerCommonPacketListenerImpl {
 
+    /** Dispatches a plugin message (an unknown custom payload) to Bukkit's messenger. */
+    default void silkard$handlePluginPayload(net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket packet) {
+        throw new ContextStateException("Not implemented");
+    }
+
+
     default void disconnect(String s) {
         throw new ContextStateException("Not implemented");
     }

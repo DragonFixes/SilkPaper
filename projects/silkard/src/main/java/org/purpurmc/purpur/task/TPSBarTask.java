@@ -177,7 +177,7 @@ public class TPSBarTask extends BossBarTask {
 
     // SparklyPaper start - track world's MSPT
     private double calculateWorldMSPT(final net.minecraft.server.level.ServerLevel level) {
-        long[] times = level.tickTimes5s.getTimes();
+        long[] times = level.paper$tickTimes5s().getTimes();
         long total = 0L;
         int count = 0;
 

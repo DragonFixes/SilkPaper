@@ -206,4 +206,20 @@ public final class FeatureHooks {
         }
         return ChunkGenerationState.PARTIAL;
     }
+
+    public static void registerPaperCommands(final java.util.Map<java.util.Set<String>, io.papermc.paper.command.PaperSubcommand> commands) {
+        // Moonrise adds its chunk debug subcommands here; the vanilla chunk system has none.
+    }
+
+    public static void flushAsyncAppenders() {
+        // TODO Silkard - Paper flushes its async log appenders here; Silkard's logging setup has none to flush
+    }
+
+    public static void setPlayerChunkUnloadDelay(final long ticks) {
+        // TODO Silkard - delay-chunk-unloads-by needs Moonrise's player chunk loader; the setting is read but unused
+    }
+
+    public static Iterable<net.minecraft.world.entity.Entity> getAllEntities(final ServerLevel level) {
+        return level.getAllEntities();
+    }
 }

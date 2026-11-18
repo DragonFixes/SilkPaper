@@ -43,9 +43,9 @@ public class PaperMSPTCommand {
         MinecraftServer server = com.mohistmc.silkard.paper.PaperBootstrap.server();
 
         List<Component> times = new ArrayList<>();
-        times.addAll(eval(server.tickTimes5s));
-        times.addAll(eval(server.tickTimes10s));
-        times.addAll(eval(server.tickTimes1m));
+        times.addAll(eval(server.paper$tickTimes5s()));
+        times.addAll(eval(server.paper$tickTimes10s()));
+        times.addAll(eval(server.paper$tickTimes1m()));
 
         sender.sendMessage(text().content("Server tick times ").color(GOLD)
             .append(text().color(YELLOW)

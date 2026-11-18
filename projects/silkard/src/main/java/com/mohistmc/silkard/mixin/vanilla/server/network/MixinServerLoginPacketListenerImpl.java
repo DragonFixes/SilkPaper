@@ -11,9 +11,7 @@ import com.mojang.authlib.GameProfile;
 import java.net.SocketAddress;
 import java.util.UUID;
 import net.minecraft.network.Connection;
-import net.minecraft.network.ConnectionProtocol;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.PacketUtils;
 import net.minecraft.network.protocol.cookie.ServerboundCookieResponsePacket;
 import net.minecraft.server.MinecraftServer;
@@ -24,7 +22,6 @@ import net.minecraft.server.network.ServerLoginPacketListenerImpl;
 import net.minecraft.server.players.NameAndId;
 import net.minecraft.server.players.PlayerList;
 import org.bukkit.craftbukkit.CraftServer;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.craftbukkit.util.Waitable;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerPreLoginEvent;
@@ -38,7 +35,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerLoginPacketListenerImpl.class)
-public class MixinServerLoginPacketListenerImpl implements ContextServerLoginPacketListenerImpl, CraftPlayer.TransferCookieConnection {
+public class MixinServerLoginPacketListenerImpl implements ContextServerLoginPacketListenerImpl {
 
     // @formatter:off
     @Shadow @Final private MinecraftServer server;
@@ -58,26 +55,6 @@ public class MixinServerLoginPacketListenerImpl implements ContextServerLoginPac
     @Override
     public Connection silkard$connection() {
         return this.connection;
-    }
-
-    @Override
-    public boolean isTransferred() {
-        return this.transferred;
-    }
-
-    @Override
-    public ConnectionProtocol getProtocol() {
-        return ConnectionProtocol.LOGIN;
-    }
-
-    @Override
-    public void sendPacket(Packet<?> packet) {
-        this.connection.send(packet);
-    }
-
-    @Override
-    public void kickPlayer(Component reason) {
-        ((ServerLoginPacketListenerImpl) (Object) this).disconnect(reason);
     }
 
     @Override
@@ -102,7 +79,10 @@ public class MixinServerLoginPacketListenerImpl implements ContextServerLoginPac
         UUID uniqueId = gameprofile.id();
         final CraftServer server = ((ContextMinecraftServer) this.server).silkard$server();
 
-        AsyncPlayerPreLoginEvent asyncEvent = new AsyncPlayerPreLoginEvent(playerName, address, uniqueId, this.transferred);
+        // Paper's full constructor carries the login connection, so plugins can read cookies or transfer at pre-login.
+        String hostname = ((com.mohistmc.silkard.injected.network.ContextConnection) this.connection).silkard$hostname();
+        AsyncPlayerPreLoginEvent asyncEvent = new AsyncPlayerPreLoginEvent(playerName, address, this.connection.getRemoteAddress(), uniqueId, this.transferred,
+            com.destroystokyo.paper.profile.CraftPlayerProfile.asBukkitCopy(gameprofile), hostname == null ? "" : hostname, ((ServerLoginPacketListenerImpl) (Object) this).paper$loginConnection());
         server.getPluginManager().callEvent(asyncEvent);
 
         if (PlayerPreLoginEvent.getHandlerList().getRegisteredListeners().length != 0) {
@@ -181,7 +161,7 @@ public class MixinServerLoginPacketListenerImpl implements ContextServerLoginPac
     @Inject(method = "handleCookieResponse", at = @At("HEAD"), cancellable = true)
     private void silkard$cookieResponse(ServerboundCookieResponsePacket packet, CallbackInfo ci) {
         PacketUtils.ensureRunningOnSameThread(packet, (ServerLoginPacketListenerImpl) (Object) this, this.server.packetProcessor());
-        if (this.silkard$player != null && this.silkard$player.getBukkitEntity().handleCookieResponse(packet)) {
+        if (((ServerLoginPacketListenerImpl) (Object) this).paper$loginConnection().handleCookieResponse(packet)) {
             ci.cancel();
         }
     }

@@ -36,7 +36,11 @@ public final class PaperPlayerPostEffects implements PlayerPostEffects {
             Preconditions.checkArgument(effect != null, "effects cannot be null");
             Preconditions.checkArgument(ids.add(PaperAdventure.asVanilla(effect)), "effects cannot be duplicate [%s]", effect);
         }
-        return this.getHandle().setPostEffects(ids);
+        // Paper adds a bulk setter to ServerPlayer; the same result comes from clearing and adding each effect.
+        final List<Identifier> before = List.copyOf(this.getHandle().getPostEffects());
+        this.getHandle().clearPostEffects();
+        ids.forEach(this.getHandle()::addPostEffect);
+        return !before.equals(this.getHandle().getPostEffects());
     }
 
     @Override

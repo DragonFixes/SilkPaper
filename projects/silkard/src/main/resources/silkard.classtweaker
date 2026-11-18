@@ -1108,6 +1108,18 @@ transitive-inject-interface	net/minecraft/network/Connection	com/mohistmc/silkar
 transitive-inject-interface	net/minecraft/server/network/ServerLoginPacketListenerImpl	com/mohistmc/silkard/injected/paper/paper/PaperLoginListenerAccess
 transitive-inject-interface	net/minecraft/server/MinecraftServer	com/mohistmc/silkard/injected/paper/paper/PaperMinecraftServerAccess
 transitive-inject-interface	net/minecraft/server/level/ServerLevel	com/mohistmc/silkard/injected/paper/paper/PaperServerLevelAccess
+# Silkard paper-paper wave 3 - Paper connection, command, mob goal and Silkard compat access
+transitive-inject-interface	net/minecraft/server/network/ServerCommonPacketListenerImpl	com/mohistmc/silkard/injected/paper/paper/PaperCommonListenerAccess
+transitive-inject-interface	net/minecraft/server/network/ServerConfigurationPacketListenerImpl	com/mohistmc/silkard/injected/paper/paper/PaperConfigurationListenerAccess
+accessible class net/minecraft/world/level/block/entity/SculkSensorBlockEntity$VibrationUser
+accessible class net/minecraft/world/level/BaseCommandBlock$CloseableCommandBlockSource
+transitive-inject-interface	net/minecraft/world/entity/ai/goal/Goal	com/mohistmc/silkard/injected/paper/paper/PaperGoalAccess
+accessible field net/minecraft/world/damagesource/CombatTracker combatStartTime I
+accessible field net/minecraft/world/damagesource/CombatTracker combatEndTime I
+transitive-inject-interface	net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity	com/mohistmc/silkard/injected/paper/paper/PaperLootableHolderAccess
+transitive-inject-interface	net/minecraft/world/entity/vehicle/minecart/AbstractMinecartContainer	com/mohistmc/silkard/injected/paper/paper/PaperLootableHolderAccess
+transitive-inject-interface	net/minecraft/world/entity/vehicle/boat/AbstractChestBoat	com/mohistmc/silkard/injected/paper/paper/PaperLootableHolderAccess
+accessible method net/minecraft/server/dedicated/DedicatedServerProperties reload (Lnet/minecraft/core/RegistryAccess;Ljava/util/Properties;)Lnet/minecraft/server/dedicated/DedicatedServerProperties;
 # Silkard paper-server wave 3 - vanilla members Paper's CraftServer, CraftWorld and CraftEventFactory reach
 accessible class	net/minecraft/server/players/CachedUserNameToIdResolver$GameProfileInfo
 accessible field	net/minecraft/server/players/CachedUserNameToIdResolver	profilesByName	Ljava/util/Map;
