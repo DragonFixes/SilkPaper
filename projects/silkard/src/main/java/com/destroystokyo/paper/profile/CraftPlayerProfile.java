@@ -45,6 +45,8 @@ public class CraftPlayerProfile implements PlayerProfile, SharedPlayerProfile {
     private boolean emptyUUID;
     private GameProfile profile;
     private final PropertySet properties = new PropertySet();
+    // Spigot's skin patch API (kept by Silkard); Paper exposes skin patches through ResolvableProfile instead.
+    private org.bukkit.craftbukkit.profile.CraftPlayerSkinPatch skinPatch = new org.bukkit.craftbukkit.profile.CraftPlayerSkinPatch();
 
     public CraftPlayerProfile(CraftPlayer player) {
         this(player.getHandle().getGameProfile());
@@ -384,6 +386,16 @@ public class CraftPlayerProfile implements PlayerProfile, SharedPlayerProfile {
     public static GameProfile asAuthlibCopy(PlayerProfile profile) {
         CraftPlayerProfile craft = ((CraftPlayerProfile) profile);
         return craft.getGameProfile();
+    }
+
+    @Override
+    public org.bukkit.profile.PlayerSkinPatch getSkinPatch() {
+        return this.skinPatch;
+    }
+
+    @Override
+    public void setSkinPatch(@Nullable final org.bukkit.profile.PlayerSkinPatch patch) {
+        this.skinPatch = patch == null ? new org.bukkit.craftbukkit.profile.CraftPlayerSkinPatch() : new org.bukkit.craftbukkit.profile.CraftPlayerSkinPatch(patch);
     }
 
     public static ResolvableProfile asResolvableProfileCopy(PlayerProfile profile) {
