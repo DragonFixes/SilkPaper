@@ -460,7 +460,7 @@ public abstract class MixinEntity implements ContextEntity {
     }
 
     @Overwrite
-    protected void setRot(float yRot, float xRot) {
+    public void setRot(float yRot, float xRot) {
         if (Float.isNaN(yRot)) {
             yRot = 0;
         }
