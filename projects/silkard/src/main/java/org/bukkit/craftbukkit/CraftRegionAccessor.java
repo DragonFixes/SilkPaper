@@ -168,34 +168,28 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
 
         ResourceKey<Feature> gen = CraftTreeType.toFeature(treeType, this.isNormalWorld());
         Holder<Feature> holder = access.registryAccess().lookupOrThrow(Registries.FEATURE).get(gen).orElse(null);
-<<<<<<< silkard
-        return (holder != null) ? holder.value().place(access, chunkGenerator, random, pos) : false;
+        return holder != null && holder.value().place(access, chunkGenerator, random, pos);
     }
 
+    // Routes through the three-argument overload so modded entity types, which have no Bukkit
+    // entity class, can be spawned too.
     @Override
     public Entity spawnEntity(Location location, EntityType entityType) {
-        return spawnEntity(location, entityType, false);
-=======
-        return holder != null && holder.value().place(access, chunkGenerator, random, pos);
->>>>>>> paper
+        return this.spawnEntity(location, entityType, false);
     }
 
     @Override
     public Entity spawnEntity(Location loc, EntityType type, boolean randomizeData) {
-<<<<<<< silkard
         net.minecraft.world.entity.Entity modded = type.create(loc);
         if (modded != null) {
-            net.minecraft.server.level.ServerLevel level = getHandle().getMinecraftWorld();
+            net.minecraft.server.level.ServerLevel level = this.getHandle().getMinecraftWorld();
             if (!org.bukkit.craftbukkit.event.CraftEventFactory.doEntityAddEventCalling(level, modded, CreatureSpawnEvent.SpawnReason.CUSTOM)) {
                 return null;
             }
             level.addFreshEntity(modded);
             return modded.getBukkitEntity();
         }
-        return spawn(loc, type.getEntityClass(), null, CreatureSpawnEvent.SpawnReason.CUSTOM, randomizeData);
-=======
         return this.spawn(loc, type.getEntityClass(), null, CreatureSpawnEvent.SpawnReason.CUSTOM, randomizeData);
->>>>>>> paper
     }
 
     @Override
@@ -285,13 +279,8 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
     public <T extends Entity> T createEntity(Location location, Class<T> clazz) throws IllegalArgumentException {
         net.minecraft.world.entity.Entity entity = this.createEntity(location, clazz, true);
 
-<<<<<<< silkard
-        if (!isNormalWorld()) {
-            entity.silkard_generation(true);
-=======
         if (!this.isNormalWorld()) {
-            entity.generation = true;
->>>>>>> paper
+            entity.silkard_generation(true);
         }
 
         return (T) entity.getBukkitEntity();
@@ -343,13 +332,8 @@ public abstract class CraftRegionAccessor implements RegionAccessor {
             ((Mob) entity).finalizeSpawn(this.getHandle(), this.getHandle().getCurrentDifficultyAt(entity.blockPosition()), EntitySpawnReason.COMMAND, (SpawnGroupData) null);
         }
 
-<<<<<<< silkard
-        if (!isNormalWorld()) {
-            entity.silkard_generation(true);
-=======
         if (!this.isNormalWorld()) {
-            entity.generation = true;
->>>>>>> paper
+            entity.silkard_generation(true);
         }
 
         if (function != null) {

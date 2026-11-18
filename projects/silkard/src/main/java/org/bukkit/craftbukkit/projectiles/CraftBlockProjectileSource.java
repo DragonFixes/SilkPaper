@@ -5,14 +5,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Position;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.server.level.ServerLevel;
-<<<<<<< silkard
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.projectile.hurtingprojectile.AbstractHurtingProjectile;
-=======
->>>>>>> paper
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ProjectileItem;
@@ -97,42 +89,8 @@ public class CraftBlockProjectileSource implements BlockProjectileSource {
 
         Position position = dispenseConfig.positionFunction().getDispensePosition(source, direction);
         net.minecraft.world.entity.projectile.Projectile launch = projectileItem.asProjectile(level, position, itemstack, direction);
-<<<<<<< silkard
-
-        if (Fireball.class.isAssignableFrom(projectile)) {
-            AbstractHurtingProjectile customFireball = null;
-            if (WitherSkull.class.isAssignableFrom(projectile)) {
-                launch = customFireball = EntityTypes.WITHER_SKULL.create(level, EntitySpawnReason.TRIGGERED);
-            } else if (DragonFireball.class.isAssignableFrom(projectile)) {
-                launch = EntityTypes.DRAGON_FIREBALL.create(level, EntitySpawnReason.TRIGGERED);
-            } else if (BreezeWindCharge.class.isAssignableFrom(projectile)) {
-                launch = customFireball = EntityTypes.BREEZE_WIND_CHARGE.create(level, EntitySpawnReason.TRIGGERED);
-            } else if (LargeFireball.class.isAssignableFrom(projectile)) {
-                launch = customFireball = EntityTypes.FIREBALL.create(level, EntitySpawnReason.TRIGGERED);
-            }
-
-            if (customFireball != null) {
-                customFireball.setPos(position.x(), position.y(), position.z());
-
-                // Values from ItemFireball
-                RandomSource randomsource = level.getRandom();
-                double d0 = randomsource.triangle((double) direction.getStepX(), 0.11485000000000001D);
-                double d1 = randomsource.triangle((double) direction.getStepY(), 0.11485000000000001D);
-                double d2 = randomsource.triangle((double) direction.getStepZ(), 0.11485000000000001D);
-                Vec3 vec3 = new Vec3(d0, d1, d2);
-                customFireball.assignDirectionalMovement(vec3, 0.1D);
-            }
-        }
-
-        if (launch instanceof net.minecraft.world.entity.projectile.arrow.AbstractArrow arrow) {
-            arrow.pickup = net.minecraft.world.entity.projectile.arrow.AbstractArrow.Pickup.ALLOWED;
-        }
         launch.silkard_projectileSource(this);
-        projectileItem.shoot(launch, (double) direction.getStepX(), (double) direction.getStepY(), (double) direction.getStepZ(), dispenseConfig.power(), dispenseConfig.uncertainty());
-=======
-        launch.projectileSource = this;
         projectileItem.shoot(launch, direction.getStepX(), direction.getStepY(), direction.getStepZ(), dispenseConfig.power(), dispenseConfig.uncertainty());
->>>>>>> paper
 
         if (velocity != null) {
             launch.getBukkitEntity().setVelocity(velocity);

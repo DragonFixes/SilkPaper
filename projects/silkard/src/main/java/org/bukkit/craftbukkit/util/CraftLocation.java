@@ -69,7 +69,7 @@ public final class CraftLocation {
     }
 
     public static @Nullable Location fromGlobalPos(net.minecraft.core.GlobalPos globalPos) {
-        ServerLevel level = MinecraftServer.getServer().getLevel(globalPos.dimension());
+        ServerLevel level = com.mohistmc.silkard.bukkit.BukkitUtils.getServer().getLevel(globalPos.dimension());
         return level != null ? CraftLocation.toBukkit(globalPos.pos(), level) : null;
     }
 

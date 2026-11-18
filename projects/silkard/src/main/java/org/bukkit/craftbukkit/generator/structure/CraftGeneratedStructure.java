@@ -46,10 +46,6 @@ public class CraftGeneratedStructure implements GeneratedStructure {
 
     @Override
     public PersistentDataContainer getPersistentDataContainer() {
-<<<<<<< silkard
         return handle.silkard_persistentDataContainer();
-=======
-        return this.handle.persistentDataContainer;
->>>>>>> paper
     }
 }

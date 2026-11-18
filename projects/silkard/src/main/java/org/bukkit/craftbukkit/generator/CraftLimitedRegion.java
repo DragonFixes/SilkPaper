@@ -97,11 +97,7 @@ public class CraftLimitedRegion extends CraftRegionAccessor implements LimitedRe
                 for (CompoundTag compound : chunk.getEntities()) {
                     EntityType.loadEntityRecursive(compound, access.getMinecraftWorld(), new EntitySpawnRequest(EntitySpawnReason.LOAD, false), (entity) -> {
                         if (this.region.contains(entity.getX(), entity.getY(), entity.getZ())) {
-<<<<<<< silkard
                             entity.silkard_generation(true);
-=======
-                            entity.generation = true;
->>>>>>> paper
                             this.entities.add(entity);
                         } else {
                             this.outsideEntities.add(entity);

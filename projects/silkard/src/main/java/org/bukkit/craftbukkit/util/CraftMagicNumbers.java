@@ -7,11 +7,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
-<<<<<<< silkard
 import com.google.gson.JsonParser;
 import com.mohistmc.silkard.bukkit.BukkitUtils;
-=======
->>>>>>> paper
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.logging.LogUtils;
@@ -137,17 +134,12 @@ public final class CraftMagicNumbers implements UnsafeValues {
     }
 
     // ========================================================================
-<<<<<<< silkard
+    // Silkard - plain HashMaps: Material gains constants at runtime for modded items/blocks, which an
+    // EnumMap sized at class init cannot hold, and Silkard's registry hooks add the mod entries here.
     public static final Map<Block, Material> BLOCK_MATERIAL = new HashMap<>();
     public static final Map<Item, Material> ITEM_MATERIAL = new HashMap<>();
     public static final Map<Material, Item> MATERIAL_ITEM = new HashMap<>();
     public static final Map<Material, Block> MATERIAL_BLOCK = new HashMap<>();
-=======
-    private static final Map<Block, Material> BLOCK_MATERIAL = new IdentityHashMap<>();
-    private static final Map<Item, Material> ITEM_MATERIAL = new IdentityHashMap<>();
-    private static final Map<Material, Item> MATERIAL_ITEM = new EnumMap<>(Material.class);
-    private static final Map<Material, Block> MATERIAL_BLOCK = new EnumMap<>(Material.class);
->>>>>>> paper
 
     static {
         for (Block block : BuiltInRegistries.BLOCK) {
@@ -264,15 +256,11 @@ public final class CraftMagicNumbers implements UnsafeValues {
 
         net.minecraft.world.item.ItemStack stack = CraftItemStack.unwrap(item); // mutation is expected as old behavior
         try {
-<<<<<<< silkard
-            nmsStack.applyComponents(new ItemParser(Commands.createValidationContext(BukkitUtils.getDefaultRegistryAccess())).parse(new StringReader(arguments)).components());
-=======
             StringReader reader = new StringReader(item.getType().key().asString() + components);
-            stack.applyComponents(new ItemParser(CraftRegistry.getMinecraftRegistry()).parse(reader).components());
+            stack.applyComponents(new ItemParser(Commands.createValidationContext(BukkitUtils.getDefaultRegistryAccess())).parse(reader).components());
             if (reader.canRead()) {
                 throw new IllegalArgumentException("Trailing input found when parsing components: " + reader.getRemaining());
             }
->>>>>>> paper
         } catch (CommandSyntaxException ex) {
             throw new IllegalArgumentException("Could not parse components: " + components, ex);
         }
@@ -286,15 +274,10 @@ public final class CraftMagicNumbers implements UnsafeValues {
         return Holder.PROVIDER;
     }
 
-<<<<<<< silkard
-    private static File getBukkitDataPackFolder() {
-        return new File(BukkitUtils.getServer().getWorldPath(LevelResource.DATAPACK_DIR).toFile(), "bukkit");
-=======
     @Override
     public @Nullable Advancement loadAdvancement(final Key key, final String advancement, final boolean persist) {
         final List<Advancement> advancements = this.loadAdvancements(Map.of(key, advancement), persist, true);
         return advancements.isEmpty() ? null : advancements.getFirst();
->>>>>>> paper
     }
 
     @Override
@@ -302,20 +285,12 @@ public final class CraftMagicNumbers implements UnsafeValues {
         return this.loadAdvancements(advancements, persist, false);
     }
 
-<<<<<<< silkard
-        JsonElement jsonelement = JsonParser.parseString(advancement);
-        net.minecraft.advancements.Advancement nms = net.minecraft.advancements.Advancement.CODEC.parse(JsonOps.INSTANCE, jsonelement).getOrThrow(JsonParseException::new);
-        if (nms != null) {
-            BukkitUtils.getServer().getAdvancements().advancements.put(identifier, new AdvancementHolder(identifier, nms));
-            Advancement bukkit = Bukkit.getAdvancement(key);
-=======
     private List<Advancement> loadAdvancements(final Map<Key, String> advancements, final boolean persist, final boolean lenient) {
-        final ServerAdvancementManager manager = MinecraftServer.getServer().getAdvancements();
+        final ServerAdvancementManager manager = BukkitUtils.getServer().getAdvancements();
         for (final Key key : advancements.keySet()) {
             final Identifier id = PaperAdventure.asVanilla(key);
             Preconditions.checkArgument(manager.get(id) == null, "Advancement %s already exists" , id);
         }
->>>>>>> paper
 
         record AdvancementEntry(AdvancementHolder advancement, JsonElement element) {
             private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -369,14 +344,10 @@ public final class CraftMagicNumbers implements UnsafeValues {
             shouldSave = DynamicBuiltinPacks.BUKKIT.createIfNeeded(DynamicBuiltinPack.LevelPathAccess.SERVER);
         }
 
-<<<<<<< silkard
-                BukkitUtils.getServer().getPlayerList().reloadResources();
-=======
         final List<Advancement> deserializedAdvancements = new ArrayList<>(advancements.size());
         for (final AdvancementEntry entry : newEntries) {
             if (shouldSave) {
                 final Path file = getAddedAdvancements().json(entry.id());
->>>>>>> paper
 
                 try {
                     Files.createDirectories(file.getParent());
@@ -388,7 +359,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
             deserializedAdvancements.add(entry.advancement().toBukkit());
         }
 
-        MinecraftServer.getServer().getPlayerList().reloadAdvancementData();
+        com.mohistmc.silkard.bukkit.BukkitUtils.getServer().getPlayerList().reloadAdvancementData();
         return deserializedAdvancements;
     }
 
@@ -402,15 +373,9 @@ public final class CraftMagicNumbers implements UnsafeValues {
     }
 
     @Override
-<<<<<<< silkard
-    public void checkSupported(PluginDescriptionFile pdf) throws InvalidPluginException {
-        ApiVersion toCheck = ApiVersion.getOrCreateVersion(pdf.getAPIVersion());
-        ApiVersion minimumVersion = BukkitUtils.getServer().silkard$server().minimumAPI;
-=======
     public void checkSupported(PluginDescriptionFile descriptionFile) throws InvalidPluginException {
         ApiVersion toCheck = ApiVersion.getOrCreateVersion(descriptionFile.getAPIVersion());
-        ApiVersion minimumVersion = MinecraftServer.getServer().server.minimumAPI;
->>>>>>> paper
+        ApiVersion minimumVersion = BukkitUtils.getServer().silkard$server().minimumAPI;
 
         if (toCheck.isNewerThan(ApiVersion.CURRENT)) {
             // Newer than supported
@@ -455,7 +420,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
     public boolean isSupportedApiVersion(String apiVersion) {
         if (apiVersion == null) return false;
         final ApiVersion toCheck = ApiVersion.getOrCreateVersion(apiVersion);
-        final ApiVersion minimumVersion = MinecraftServer.getServer().server.minimumAPI;
+        final ApiVersion minimumVersion = com.mohistmc.silkard.bukkit.BukkitUtils.getServer().silkard$server().minimumAPI;
 
         return !toCheck.isNewerThan(ApiVersion.CURRENT) && !toCheck.isOlderThan(minimumVersion);
     }
@@ -564,7 +529,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
 
         final int dataVersion = data.get(SharedConstants.DATA_VERSION_TAG).getAsInt();
         final int currentVersion = this.getDataVersion();
-        data = (com.google.gson.JsonObject) MinecraftServer.getServer().getFixerUpper().update(References.ITEM_STACK, new Dynamic<>(com.mojang.serialization.JsonOps.INSTANCE, data), dataVersion, currentVersion).getValue();
+        data = (com.google.gson.JsonObject) com.mohistmc.silkard.bukkit.BukkitUtils.getServer().getFixerUpper().update(References.ITEM_STACK, new Dynamic<>(com.mojang.serialization.JsonOps.INSTANCE, data), dataVersion, currentVersion).getValue();
         com.mojang.serialization.DynamicOps<com.google.gson.JsonElement> ops = CraftRegistry.getMinecraftRegistry().createSerializationContext(com.mojang.serialization.JsonOps.INSTANCE);
         return CraftItemStack.asBukkitMirror(net.minecraft.world.item.ItemStack.CODEC.parse(ops, data).getOrThrow(IllegalArgumentException::new));
     }
@@ -638,7 +603,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
         CompoundTag tag = MCUtil.deserializeTagFromBytes(data);
         int dataVersion = NbtUtils.getDataVersion(tag, 0);
         Preconditions.checkArgument(dataVersion <= Bukkit.getUnsafe().getDataVersion(), "Newer version! Server downgrades are not supported!");
-        tag = PlatformHooks.get().convertNBT(References.ENTITY, MinecraftServer.getServer().getFixerUpper(), tag, dataVersion, this.getDataVersion()); // Paper - possibly use dataconverter
+        tag = PlatformHooks.get().convertNBT(References.ENTITY, com.mohistmc.silkard.bukkit.BukkitUtils.getServer().getFixerUpper(), tag, dataVersion, this.getDataVersion()); // Paper - possibly use dataconverter
         if (!preservePassengers) {
             tag.remove(Entity.TAG_PASSENGERS);
         }
@@ -682,7 +647,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
 
     @Override
     public String getMainLevelName() {
-        return ((net.minecraft.server.dedicated.DedicatedServer) net.minecraft.server.MinecraftServer.getServer()).getProperties().levelName;
+        return ((net.minecraft.server.dedicated.DedicatedServer) com.mohistmc.silkard.bukkit.BukkitUtils.getServer()).getProperties().levelName;
     }
 
     @Override
