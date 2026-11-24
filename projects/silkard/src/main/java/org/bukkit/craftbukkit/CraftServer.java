@@ -643,6 +643,7 @@ public final class CraftServer implements Server {
             CraftDefaultPermissions.registerCorePermissions();
             if (!io.papermc.paper.configuration.GlobalConfiguration.get().misc.loadPermissionsYmlBeforePlugins) this.loadCustomPermissions(); // Paper
             this.syncCommands();
+            com.mohistmc.silkard.gametest.SilkGameTests.start(this.console); // SilkPaper - gameplay tests (inert unless -Dsilkpaper.gametest)
         }
     }
 
