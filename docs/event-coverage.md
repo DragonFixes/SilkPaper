@@ -26,7 +26,12 @@ Use one `rg` pass per scan; a loop of one search per name takes minutes.
 PlayerDeathEvent, EntityDeathEvent, InventoryOpenEvent and InventoryCloseEvent for vanilla
 containers, PlayerDropItemEvent, PlayerLevelChangeEvent, EntityBreakDoorEvent, TradeSelectEvent,
 PlayerBedEnterEvent, PlayerBedFailEnterEvent, PlayerBedLeaveEvent, PlayerInteractEntityEvent /
-PlayerInteractAtEntityEvent, PlayerUseUnknownEntityEvent.
+PlayerInteractAtEntityEvent, PlayerUseUnknownEntityEvent, PlayerInputEvent, PlayerToggleSneakEvent,
+PlayerToggleSprintEvent, PlayerToggleFlightEvent, PlayerItemHeldEvent, PlayerSwapHandItemsEvent,
+PlayerArmSwingEvent, PlayerInteractEvent for left clicks on air, InventoryCreativeEvent.
+
+These are boot-tested with `-MixinAudit` only (the injections apply); none has been checked
+in game yet.
 
 ## Missing, by plugin impact
 
@@ -34,11 +39,7 @@ PlayerInteractAtEntityEvent, PlayerUseUnknownEntityEvent.
 
 | Event | Leaf call site |
 |---|---|
-| PlayerToggleSneakEvent, PlayerToggleSprintEvent, PlayerToggleFlightEvent | ServerGamePacketListenerImpl |
-| PlayerItemHeldEvent, PlayerSwapHandItemsEvent | ServerGamePacketListenerImpl |
-| PlayerAnimationEvent / PlayerArmSwingEvent | ServerGamePacketListenerImpl |
-| InventoryCreativeEvent | ServerGamePacketListenerImpl |
-| PlayerInputEvent, PlayerJumpEvent | ServerGamePacketListenerImpl |
+| PlayerJumpEvent | ServerGamePacketListenerImpl (handleMovePlayer) |
 | PlayerItemConsumeEvent, EntityResurrectEvent | LivingEntity |
 | VehicleEnterEvent, VehicleExitEvent, VehicleBlockCollisionEvent | Entity |
 | PlayerAdvancementDoneEvent | PlayerAdvancements |
