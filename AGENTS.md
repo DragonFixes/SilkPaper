@@ -85,6 +85,7 @@ scripts\run-server.bat -ServerDir C:\Servers\test -Gui
 scripts\boot-test.bat                                  # default commands: version, tps, ram, uptime
 scripts\boot-test.bat -Fresh                           # newly generated world and configs
 scripts\boot-test.bat -Commands "plugins,mspt" -CommandDelaySeconds 5
+scripts\boot-test.bat -MixinAudit                      # also apply every mixin, not only startup classes
 
 scripts\sync-upstream.bat                              # fetch, update mirror, report drift
 scripts\sync-upstream.bat -Merge upstream/26.3         # merge Silkard into the current branch
@@ -103,7 +104,10 @@ at runtime (missing vanilla hooks, missing jar-in-jar libraries). After any serv
 
 1. `scripts\build-deploy.bat`
 2. `scripts\boot-test.bat` (add `-Fresh` when world generation or configs are involved, and pass
-   the commands the change touches with `-Commands`)
+   the commands the change touches with `-Commands`). After adding or changing mixins, add
+   `-MixinAudit`. A mixin is only applied when its target class loads, and a plain boot never
+   loads many classes (pistons, AI behaviours, most items). The audit loads every target and logs
+   `Mixin audit: <class> failed: ...` for each injection that no longer matches.
 
 `boot-test` uses a server folder with no plugins, so it does not catch plugin-compatibility
 breakage. For that, `test-servers\drakgg\smp` is a good test folder: a copy of a real SMP with

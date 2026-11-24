@@ -256,6 +256,11 @@ public abstract class MixinDedicatedServer extends MinecraftServer implements Co
         ((org.bukkit.craftbukkit.scheduler.CraftScheduler) org.bukkit.Bukkit.getScheduler()).mainThreadHeartbeat();
         // Paper end
         silkard$LOGGER.info("Done ({})! For help, type \"help\"", time);
+        // Test hook for scripts\boot-test -MixinAudit: loading every target class applies every
+        // mixin, so injections into classes a plain startup never loads are checked too.
+        if (Boolean.getBoolean("silkpaper.mixinAudit")) {
+            com.mohistmc.silkard.util.MixinAudit.run();
+        }
         if (properties.announcePlayerAchievements != null) {
             this.getGameRules().set(net.minecraft.world.level.gamerules.GameRules.SHOW_ADVANCEMENT_MESSAGES, properties.announcePlayerAchievements, this.self()); // CraftBukkit - per-world via overworld rules
         }

@@ -1,6 +1,6 @@
 @echo off
 setlocal
-rem Usage: boot-test.bat [-Commands <cmd1>,<cmd2>] [-CommandDelaySeconds <n>] [-ServerDir <path>] [-Fresh] [-Memory <size>] [-TimeoutSeconds <n>] [-StallPolls <n>] [-Java <java exe>]
+rem Usage: boot-test.bat [-Commands <cmd1>,<cmd2>] [-CommandDelaySeconds <n>] [-ServerDir <path>] [-Fresh] [-Memory <size>] [-TimeoutSeconds <n>] [-StallPolls <n>] [-MixinAudit] [-Java <java exe>]
 rem Boots the deployed jar, runs console commands after startup, stops it, reports ERROR lines and crashes.
 rem All arguments are forwarded unchanged to boot-test.ps1; see Get-Help .\scripts\boot-test.ps1 -Full.
 

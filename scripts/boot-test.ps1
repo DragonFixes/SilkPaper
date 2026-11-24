@@ -46,12 +46,21 @@
     How many 15-second checks in a row with no new log output count as a
     stall. Default 2 (30 seconds). Keep it above CommandDelaySeconds / 15.
 
+.PARAMETER MixinAudit
+    Pass -Dsilkpaper.mixinAudit=true, so after "Done" the server force-loads
+    every mixin target class. A mixin whose injection no longer matches then
+    fails the test even when its class does not load during a normal startup.
+
 .PARAMETER Java
     Java executable to use. Default "java" from PATH.
 
 .EXAMPLE
     PS> .\scripts\boot-test.ps1
     Boots, runs the default commands, stops and reports.
+
+.EXAMPLE
+    PS> .\scripts\boot-test.ps1 -MixinAudit
+    Also checks every mixin, not only those on classes loaded at startup.
 
 .EXAMPLE
     PS> .\scripts\boot-test.ps1 -Fresh
@@ -72,6 +81,7 @@ param(
     [int]$TimeoutSeconds = 300,
     [ValidateRange(1, 100)]
     [int]$StallPolls = 2,
+    [switch]$MixinAudit,
     [string]$Java = 'java'
 )
 
@@ -118,7 +128,8 @@ try {
     # console input pipe, so commands can be typed once the server is up.
     $psi = New-Object System.Diagnostics.ProcessStartInfo
     $psi.FileName = 'cmd.exe'
-    $psi.Arguments = "/d /s /c `"`"$javaExe`" -Xms$Memory -Xmx$Memory -jar `"$($jar.FullName)`" --nogui > `"$log`" 2> `"$log.err`"`""
+    $auditArg = if ($MixinAudit) { ' -Dsilkpaper.mixinAudit=true' } else { '' }
+    $psi.Arguments = "/d /s /c `"`"$javaExe`" -Xms$Memory -Xmx$Memory$auditArg -jar `"$($jar.FullName)`" --nogui > `"$log`" 2> `"$log.err`"`""
     $psi.WorkingDirectory = $ServerDir
     $psi.UseShellExecute = $false
     $psi.RedirectStandardInput = $true
