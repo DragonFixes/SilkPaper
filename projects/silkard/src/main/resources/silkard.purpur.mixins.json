@@ -5,6 +5,8 @@
   "plugin": "com.mohistmc.silkard.SilkardMixinPlugin",
   "mixinPriority": 1100,
   "mixins": [
+    "world.inventory.MixinPurpurGrindstoneMenu",
+    "world.inventory.MixinPurpurGrindstoneResultSlot",
     "world.damagesource.MixinPurpurCombatRules",
     "world.effect.MixinPurpurMobEffects$Hunger",
     "world.effect.MixinPurpurMobEffects$Poison",

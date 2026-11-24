@@ -29,4 +29,12 @@ public final class PurpurHooks {
         Level level = level(getter);
         return level == null ? null : level.purpurConfig();
     }
+
+    /**
+     * Purpur - Config for grindstones: whether a grindstone keeps this enchantment. Purpur's
+     * configured list stands in for vanilla's curse tag.
+     */
+    public static boolean grindstoneKeeps(net.minecraft.core.Holder<net.minecraft.world.item.enchantment.Enchantment> enchantment) {
+        return org.purpurmc.purpur.PurpurConfig.grindstoneIgnoredEnchants.contains(enchantment.value());
+    }
 }
