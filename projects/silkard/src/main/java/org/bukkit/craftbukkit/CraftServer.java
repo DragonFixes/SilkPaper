@@ -404,6 +404,7 @@ public final class CraftServer implements Server {
         this.playerList = (DedicatedPlayerList) playerList;
         this.playerView = MCUtil.transformUnmodifiable(playerList.getPlayers(), ServerPlayer::getBukkitEntity);
         this.serverVersion = Versioning.getGitHash();
+
         this.structureManager = new CraftStructureManager(console.getStructureTemplateManager(), console.registryAccess());
         this.serverTickManager = new CraftServerTickManager(console.tickRateManager());
         this.serverLinks = new CraftServerLinks(console);
@@ -437,6 +438,19 @@ public final class CraftServer implements Server {
         console.registryAccess().registries().forEach(entry ->
                 io.papermc.paper.registry.PaperRegistryAccess.instance().registerRegistry(entry.value()));
         CraftRegistry.setMinecraftRegistry(console.registryAccess());
+        // Paper locks reference holder creation once each registry is loaded (BuiltInRegistries
+        // and ResourceManagerRegistryLoadTask patches). Until a registry is locked, a lookup of a
+        // missing key returns a dummy entry instead of null, so Material#asItemType() for
+        // block-only materials (and #asBlockType() for item-only ones) would return a type that
+        // throws on use. Loading org.bukkit.Registry first creates every CraftRegistry, and
+        // locking initializes the API constant classes (ItemType, BlockType, ...) before locking.
+        try {
+            Class.forName(org.bukkit.Registry.class.getName());
+        } catch (final ClassNotFoundException ex) {
+            throw new IllegalStateException(ex);
+        }
+        console.registryAccess().registries().forEach(entry ->
+                io.papermc.paper.registry.PaperRegistryAccess.instance().lockReferenceHolders((net.minecraft.resources.ResourceKey) entry.key()));
 
         if (!Main.useConsole) {
             this.getLogger().info("Console input is disabled due to --noconsole command argument");
