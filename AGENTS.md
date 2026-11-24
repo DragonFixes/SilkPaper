@@ -31,6 +31,8 @@ as a mixin.
 | `projects/silkard/src/paper-api/java/` | Vendored Paper + Purpur + Leaf API (do not edit directly) |
 | `patches/paper-api/` | SilkPaper's changes to the vendored API, re-applied by `sync-leaf-api` |
 | `paper-api-upstream.properties` | Leaf and Paper commits the API was synced from |
+| `projects/silkard/src/main/java/com/mohistmc/silkard/gametest/` | In-server gameplay tests and their runner (see `gametests/README.md`) |
+| `gametests/` | Test datapack (`test_instance` and structures) for the gameplay tests |
 | `scripts/` | Helper scripts (see below) |
 | `deploy/` | Built jar and test servers from the scripts (git-ignored) |
 
@@ -69,6 +71,7 @@ arguments. Run them from any directory; paths resolve from the repository root.
 | `build-deploy` | Deletes `deploy\*.jar`, runs `gradlew jar`, copies `build\libs\*-server.jar` into `deploy\` |
 | `run-server` | Runs the newest jar in `deploy\` in a server folder (default `deploy\server`) |
 | `boot-test` | Boots the deployed jar in `deploy\boot-test`, types console commands after startup, stops, and fails on ERROR lines, exceptions, crash reports or a stall |
+| `game-test` | Runs the gameplay tests in `gametests\packs` on the deployed jar in `deploy\game-test` (flat world), and fails if a required test fails |
 | `sync-upstream` | Fetches `upstream` and `origin`, fast-forwards the `26.3` mirror, reports drift, optionally merges a ref (never pushes) |
 | `sync-leaf-api` | Re-vendors the Paper/Purpur/Leaf API from a Leaf checkout and re-applies `patches\paper-api` |
 | `clean` | `gradlew clean`; `-Deploy` also deletes the deployed jars |
@@ -92,6 +95,10 @@ scripts\boot-test.bat -MixinAudit                      # also apply every mixin,
                                                        # kill mobs; each "Test passed. Count: 1" means drops survived
 .\scripts\boot-test.ps1 -Commands (Get-Content scripts\ride-smoke.txt) -CommandDelaySeconds 5
                                                        # mount/dismount a minecart and pop a totem; every line should say "Test passed"
+
+scripts\game-test.bat                                  # every gameplay test
+scripts\game-test.bat -Tests "silkpaper:poi_*"         # one group (a single selector)
+scripts\game-test.bat -Tests "silkpaper:hopper*" -KeepWorld
 
 scripts\sync-upstream.bat                              # fetch, update mirror, report drift
 scripts\sync-upstream.bat -Merge upstream/26.3         # merge Silkard into the current branch
@@ -119,6 +126,11 @@ at runtime (missing vanilla hooks, missing jar-in-jar libraries). After any serv
    water, observers, coral, crops, a piston and more, then waits 20 seconds with random ticks
    sped up, so hooks on those paths run. Add a line for each block or item a change touches. In
    `-Commands`, a comma separates commands, so a block state takes one property per line.
+3. `scripts\game-test.bat` when the change touches gameplay (entities, AI, blocks, selectors,
+   tracking, players joining and leaving). The tests run vanilla's GameTest framework inside the
+   server, with fake players joining through the real login path; see `gametests/README.md` for
+   adding one. They have caught mixins that applied cleanly but broke behaviour (water cauldrons
+   that never extinguished, plugin ally rules that were ignored, players removed twice on kick).
 
 `boot-test` uses a server folder with no plugins, so it does not catch plugin-compatibility
 breakage. For that, `test-servers\drakgg\smp` is a good test folder: a copy of a real SMP with

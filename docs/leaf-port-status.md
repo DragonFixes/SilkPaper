@@ -221,7 +221,7 @@ patches rewrite earlier ones.
 | `0182-Raytrace-AntiXray-SDK-integration` | missing | |
 | `0183-Optimize-ContextMap.create` | missing | |
 | `0184-Use-direct-iteration-on-Sensing.tick` | missing | |
-| `0185-Optimise-non-flush-packet-sending` | missing | |
+| `0185-Optimise-non-flush-packet-sending` | missing | when porting, take FastPaper's fix `7df47e2`: embedded and local channels have no `SingleThreadEventLoop`, so keep the event loop null for them and send normally |
 | `0186-Null-handling-on-MultifaceSpreader` | missing | |
 | `0187-Optimize-ThreadedTicketLevelPropagator` | missing | |
 | `0188-Optimise-MobEffectUtil-getDigSpeedAmplification` | missing | |
@@ -265,7 +265,7 @@ patches rewrite earlier ones.
 | `0226-Skip-BlockPhysicsEvent-if-no-listeners` | missing | |
 | `0227-Lithium-equipment-tracking` | missing | |
 | `0228-Add-io_uring-support` | missing | |
-| `0229-Paper-PR-Optimise-temptation-lookups` | missing | |
+| `0229-Paper-PR-Optimise-temptation-lookups` | missing | with parallel world/entity ticking the shared lookup races; FastPaper's fix `38e3fc4` computes the bit set per lookup index |
 | `0230-Paper-PR-Optimise-temptation-lookups-changes` | missing | |
 | `0231-Paper-PR-Fix-cancelled-rooted-dirt-drops-being-duped` | missing | |
 | `0232-Lithium-combined-heightmap-update` | missing | |
@@ -283,7 +283,7 @@ patches rewrite earlier ones.
 | `0244-optimize-isStateClimbable` | missing | |
 | `0245-optimize-getOnPos` | missing | |
 | `0246-optimize-collision-shape` | missing | |
-| `0247-cache-collision-list` | missing | |
+| `0247-cache-collision-list` | missing | the level-wide list is shared between ticking threads; FastPaper's fix `74e5d58` gives each thread its own (`EntityCollisionCache`) |
 | `0248-fast-bit-radix-sort` | missing | |
 | `0249-optimize-tickEffects` | missing | |
 | `0250-Pluto-Expose-Direction-Plane-s-faces` | missing | |
@@ -404,7 +404,7 @@ patches rewrite earlier ones.
 | `0048-Async-playerdata-saving` | missing | |
 | `0049-Optimise-player-movement-checks` | missing | |
 | `0050-optimise-ReferenceList` | missing | |
-| `0051-cache-getBiome` | missing | |
+| `0051-cache-getBiome` | missing | the cache pairs a position with another's biome when entities tick in parallel; FastPaper's fix `38e3fc4` bypasses it then |
 | `0052-Dump-pwt-thread` | missing | |
 | `0053-Paw-optimization` | missing | |
 | `0054-optimize-despawn` | missing | |
