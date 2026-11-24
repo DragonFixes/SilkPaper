@@ -20,11 +20,10 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 /**
- * CraftBukkit/Paper - beds that explode on use (outside the Overworld) no longer explode before the
- * player tries to sleep: the player reports the explosion as a sleeping problem, so
- * PlayerBedEnterEvent and PlayerBedFailEnterEvent can stop it. An occupied bed still explodes
- * first. Every failed sleep fires PlayerBedFailEnterEvent, whose message and explosion flag
- * replace vanilla's.
+ * CraftBukkit/Paper - an empty bed that is destroyed on use (outside the Overworld) reports the
+ * explosion as a sleeping problem, so PlayerBedEnterEvent and PlayerBedFailEnterEvent can stop it;
+ * an occupied bed explodes immediately. Every failed sleep fires PlayerBedFailEnterEvent, whose
+ * message and explosion flag replace vanilla's.
  */
 @Mixin(AbstractBedBlock.class)
 public abstract class MixinAbstractBedBlockEvents {
