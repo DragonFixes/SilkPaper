@@ -1,0 +1,11 @@
+forceload add 0 0
+fill 0 100 0 15 100 15 minecraft:stone
+minecraft:kill @e[type=minecraft:item]
+summon minecraft:zombie 5 101 5 {Tags:["droptest"],PersistenceRequired:1b,equipment:{mainhand:{id:"minecraft:diamond",count:1}},drop_chances:{mainhand:2.0f}}
+summon minecraft:pig 7 101 7 {Tags:["droptest"]}
+summon minecraft:armor_stand 9 101 9 {Tags:["droptest"]}
+minecraft:kill @e[tag=droptest]
+wait 3
+execute if entity @e[type=minecraft:item,nbt={Item:{id:"minecraft:diamond"}}]
+execute if entity @e[type=minecraft:item,nbt={Item:{id:"minecraft:porkchop"}}]
+execute if entity @e[type=minecraft:item,nbt={Item:{id:"minecraft:armor_stand"}}]

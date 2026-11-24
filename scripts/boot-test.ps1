@@ -23,7 +23,8 @@
 
 .PARAMETER Commands
     Console commands to run after startup, before "stop". Commas also separate
-    commands, so -Commands 'tps,ram' works through the .bat launcher.
+    commands when a single string is given, so -Commands 'tps,ram' works through the .bat
+    launcher; an array, such as (Get-Content file), keeps commas inside each command.
     "wait <seconds>" is not sent to the server: it pauses before the next
     command, so placed blocks and entities get ticks before "stop".
     Default: version, tps, ram, uptime.
@@ -124,7 +125,9 @@ try {
     Remove-Item -LiteralPath $log, "$log.err" -Force -ErrorAction SilentlyContinue
 
     # Through the .bat launcher (-File), "-Commands a,b" arrives as one string, so commas separate commands.
-    $commandList = @($Commands | ForEach-Object { $_ -split ',' } | ForEach-Object { $_.Trim() } | Where-Object { $_ })
+    # A single string (as the .bat passes it) is split on commas; an array keeps each command whole,
+    # so commands with commas, such as NBT, can be passed as an array or from a file.
+    $commandList = @(if (@($Commands).Count -eq 1) { $Commands[0] -split ',' } else { $Commands }) | ForEach-Object { $_.Trim() } | Where-Object { $_ }
 
     # cmd.exe sends java's output straight to the log files while this script keeps the
     # console input pipe, so commands can be typed once the server is up.
