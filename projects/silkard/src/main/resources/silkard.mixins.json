@@ -231,6 +231,7 @@
     "vanilla.world.entity.MixinItemBasedSteering",
     "vanilla.world.entity.MixinLightningBolt",
     "vanilla.world.entity.MixinLivingEntity",
+    "vanilla.world.entity.MixinLivingEntityItemEvents",
     "vanilla.world.entity.MixinMob",
     "vanilla.world.entity.MixinNeutralMob",
     "vanilla.world.entity.MixinTamableAnimal",
