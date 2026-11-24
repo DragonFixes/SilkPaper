@@ -110,7 +110,7 @@ public abstract class MixinMinecraftServer extends net.minecraft.util.thread.Ree
     private static final org.slf4j.Logger silkard$LOGGER = org.slf4j.LoggerFactory.getLogger(MixinMinecraftServer.class);
 
     // CraftBukkit start
-    public WorldLoader.DataLoadContext worldLoader;
+    public WorldLoader.DataLoadContext worldLoaderContext; // Paper name: plugins compiled against Paper read this field directly
     public org.bukkit.craftbukkit.CraftServer server;
     public OptionSet options;
     public org.bukkit.command.ConsoleCommandSender console;
@@ -125,7 +125,10 @@ public abstract class MixinMinecraftServer extends net.minecraft.util.thread.Ree
     public Terminal terminal() {
         return this.terminal;
     }
-    private static int currentTick = (int) (System.currentTimeMillis() / 50);
+    // Public static at runtime like Paper's MinecraftServer.currentTick, which plugins (FAWE) read
+    // directly; Mixin only accepts private static fields in the mixin source.
+    @TransformAccess(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC)
+    private static int currentTick =(int) (System.currentTimeMillis() / 50);
 
     @Override
     public int silkard$currentTick() {
@@ -167,10 +170,10 @@ public abstract class MixinMinecraftServer extends net.minecraft.util.thread.Ree
 
     @Override
     public WorldLoader.DataLoadContext silkard_worldLoader() {
-        if (this.worldLoader == null) {
-            this.worldLoader = MainHook.worldLoader(); // CraftBukkit - from Main capture
+        if (this.worldLoaderContext == null) {
+            this.worldLoaderContext = MainHook.worldLoader(); // CraftBukkit - from Main capture
         }
-        return worldLoader;
+        return worldLoaderContext;
     }
 
     @Override
@@ -688,7 +691,7 @@ public abstract class MixinMinecraftServer extends net.minecraft.util.thread.Ree
             org.bukkit.generator.BiomeProvider biomeProvider = this.server.getBiomeProvider(name);
 
             LevelDataAndDimensions.WorldDataAndGenSettings dataAndSettings;
-            WorldLoader.DataLoadContext dataloadcontext = this.worldLoader;
+            WorldLoader.DataLoadContext dataloadcontext = this.worldLoaderContext;
             net.minecraft.core.Registry<LevelStem> registry = dataloadcontext.datapackDimensions().lookupOrThrow(Registries.LEVEL_STEM);
             // world_gen_settings.dat is written only after createLevels, so it is absent on first start
             if (dynamic != null && java.nio.file.Files.exists(WorldGenSettings.TYPE.id().withSuffix(".dat").resolveAgainst(worldSession.getLevelPath(net.minecraft.world.level.storage.LevelResource.DATA)))) {
@@ -1076,7 +1079,7 @@ public abstract class MixinMinecraftServer extends net.minecraft.util.thread.Ree
         BukkitUtils.setServer((MinecraftServer) (Object) this); // Paper - MinecraftServer.getServer()
         // CraftBukkit start
         this.options = MainHook.options(); // CraftBukkit - from Main capture
-        this.worldLoader = MainHook.worldLoader(); // CraftBukkit - from Main capture
+        this.worldLoaderContext = MainHook.worldLoader(); // CraftBukkit - from Main capture
         if (worldStem != null) {
             this.vanillaCommandDispatcher = worldStem.dataPackResources().getCommands(); // CraftBukkit
             com.mohistmc.silkard.commands.SilkardCommands.registerVanilla(this.vanillaCommandDispatcher.getDispatcher());
