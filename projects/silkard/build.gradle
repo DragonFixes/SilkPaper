@@ -81,6 +81,7 @@ dependencies {
 	include(implementation("net.kyori:adventure-text-serializer-legacy"))
 	include(implementation("net.kyori:adventure-text-serializer-plain"))
 	include(implementation("net.kyori:adventure-text-serializer-ansi"))
+    include(implementation("net.kyori:ansi:1.1.1")) // runtime dependency of adventure-text-serializer-ansi
 	include(implementation("net.kyori:adventure-text-logger-slf4j"))
 	include(implementation("net.kyori:examination-api:1.3.0"))
 	include(implementation("net.kyori:examination-string:1.3.0"))
