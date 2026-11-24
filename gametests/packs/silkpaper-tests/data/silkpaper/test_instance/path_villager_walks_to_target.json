@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "function": "silkpaper:path_villager_walks_to_target",
+  "environment": "silkpaper:default",
+  "structure": "silkpaper:arena",
+  "max_ticks": 800,
+  "setup_ticks": 0,
+  "required": true
+}

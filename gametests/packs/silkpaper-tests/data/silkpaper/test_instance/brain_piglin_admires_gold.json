@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "function": "silkpaper:brain_piglin_admires_gold",
+  "environment": "silkpaper:day",
+  "structure": "silkpaper:platform",
+  "max_ticks": 600,
+  "setup_ticks": 0,
+  "required": true
+}

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "function": "silkpaper:selector_tag_matrix",
+  "environment": "silkpaper:default",
+  "structure": "silkpaper:platform",
+  "max_ticks": 100,
+  "setup_ticks": 0,
+  "required": true
+}

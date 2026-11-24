@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "function": "silkpaper:inside_water_cauldron_drains",
+  "environment": "silkpaper:default",
+  "structure": "silkpaper:platform",
+  "max_ticks": 100,
+  "setup_ticks": 0,
+  "required": true
+}

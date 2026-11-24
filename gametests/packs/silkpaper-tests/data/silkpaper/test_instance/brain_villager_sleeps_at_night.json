@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "function": "silkpaper:brain_villager_sleeps_at_night",
+  "environment": "silkpaper:default",
+  "structure": "silkpaper:platform",
+  "max_ticks": 1200,
+  "setup_ticks": 0,
+  "required": true
+}

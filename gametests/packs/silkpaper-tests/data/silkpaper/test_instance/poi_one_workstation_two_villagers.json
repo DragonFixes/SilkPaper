@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "function": "silkpaper:poi_one_workstation_two_villagers",
+  "environment": "silkpaper:day",
+  "structure": "silkpaper:platform",
+  "max_ticks": 1200,
+  "setup_ticks": 0,
+  "required": true
+}

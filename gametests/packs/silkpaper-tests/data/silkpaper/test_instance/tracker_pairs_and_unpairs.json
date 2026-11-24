@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "function": "silkpaper:tracker_pairs_and_unpairs",
+  "environment": "silkpaper:day",
+  "structure": "silkpaper:platform",
+  "max_ticks": 200,
+  "setup_ticks": 0,
+  "required": true
+}

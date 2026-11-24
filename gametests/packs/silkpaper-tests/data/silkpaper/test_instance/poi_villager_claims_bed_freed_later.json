@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "function": "silkpaper:poi_villager_claims_bed_freed_later",
+  "environment": "silkpaper:day",
+  "structure": "silkpaper:platform",
+  "max_ticks": 1500,
+  "setup_ticks": 0,
+  "required": true
+}

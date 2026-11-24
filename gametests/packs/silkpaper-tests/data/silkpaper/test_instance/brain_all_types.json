@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "function": "silkpaper:brain_all_types",
+  "environment": "silkpaper:day",
+  "structure": "silkpaper:platform",
+  "max_ticks": 400,
+  "setup_ticks": 0,
+  "required": true
+}

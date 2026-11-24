@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "function": "silkpaper:sort_sensor_memory_nearest_first",
+  "environment": "silkpaper:default",
+  "structure": "silkpaper:platform",
+  "max_ticks": 200,
+  "setup_ticks": 0,
+  "required": true
+}

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "function": "silkpaper:los_zombie_targets_visible_villager",
+  "environment": "silkpaper:default",
+  "structure": "silkpaper:platform",
+  "max_ticks": 400,
+  "setup_ticks": 0,
+  "required": true
+}

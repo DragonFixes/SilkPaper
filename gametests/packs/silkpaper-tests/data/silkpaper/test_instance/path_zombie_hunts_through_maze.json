@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "function": "silkpaper:path_zombie_hunts_through_maze",
+  "environment": "silkpaper:default",
+  "structure": "silkpaper:arena",
+  "max_ticks": 600,
+  "setup_ticks": 0,
+  "required": true
+}

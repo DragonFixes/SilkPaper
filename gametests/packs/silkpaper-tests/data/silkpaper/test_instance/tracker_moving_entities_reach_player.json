@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "function": "silkpaper:tracker_moving_entities_reach_player",
+  "environment": "silkpaper:day",
+  "structure": "silkpaper:platform",
+  "max_ticks": 100,
+  "setup_ticks": 0,
+  "required": true
+}
