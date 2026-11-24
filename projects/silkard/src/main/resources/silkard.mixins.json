@@ -33,6 +33,7 @@
     "vanilla.network.MixinPacketProcessor$ListenerAndPacket",
     "vanilla.network.protocol.common.custom.MixinDiscardedPayload",
     "vanilla.network.protocol.common.MixinServerboundCustomPayloadPacket",
+    "vanilla.network.protocol.game.MixinClientboundPlayerInfoUpdatePacket",
     "vanilla.network.protocol.game.MixinClientboundSectionBlocksUpdatePacket",
     "vanilla.network.syncher.MixinSynchedEntityData",
     "vanilla.server.bossevents.MixinCustomBossEvent",
