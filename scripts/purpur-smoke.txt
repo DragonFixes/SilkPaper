@@ -1,0 +1,33 @@
+forceload add 0 0
+gamerule minecraft:random_tick_speed 1000
+fill 0 100 0 15 100 15 minecraft:stone
+setblock 1 101 1 minecraft:lava
+setblock 3 101 3 minecraft:water
+setblock 4 101 3 minecraft:sponge
+setblock 5 101 5 minecraft:blue_ice
+setblock 5 102 5 minecraft:snow
+setblock 7 101 7 minecraft:observer[facing=east]
+setblock 8 101 7 minecraft:observer[facing=west]
+setblock 9 101 9 minecraft:tube_coral_block
+setblock 9 101 10 minecraft:tube_coral
+setblock 10 101 10 minecraft:moss_block
+setblock 10 102 10 minecraft:azalea
+setblock 11 101 11 minecraft:copper_block
+setblock 12 101 12 minecraft:sand
+setblock 12 102 12 minecraft:turtle_egg
+setblock 13 101 13 minecraft:farmland
+setblock 13 102 13 minecraft:wheat
+setblock 4 102 4 minecraft:oak_leaves[distance=7]
+setblock 6 100 6 minecraft:sand
+setblock 6 101 6 minecraft:cactus
+setblock 0 101 14 minecraft:piston[facing=east]
+setblock 1 101 14 minecraft:stone
+setblock 0 102 14 minecraft:redstone_block
+setblock 14 101 2 minecraft:pointed_dripstone[vertical_direction=down]
+setblock 14 100 1 minecraft:cauldron
+setblock 2 101 12 minecraft:weeping_vines
+setblock 2 101 13 minecraft:composter
+setblock 15 101 15 minecraft:campfire
+summon minecraft:frog 3 102 4
+wait 20
+tps

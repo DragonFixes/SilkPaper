@@ -22,3 +22,6 @@ tools/
 # Tests
 test-logs/
 test-servers/
+
+# Test inputs kept beside the scripts
+!scripts/*.txt
