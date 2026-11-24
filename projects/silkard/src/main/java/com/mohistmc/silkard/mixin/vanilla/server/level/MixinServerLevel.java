@@ -612,4 +612,23 @@ public abstract class MixinServerLevel implements ContextServerLevel {
         return ((ServerLevel) (Object) this).addFreshEntity(entity);
     }
     // CraftBukkit end
+
+    // Paper start - Call missing map initialize event and set id
+    // A map read from disk has no id of its own; it gets one, and its MapInitializeEvent, the
+    // first time it is looked up.
+    @Inject(method = "getMapData", at = @At("RETURN"))
+    private void silkard$initMapData(net.minecraft.world.level.saveddata.maps.MapId id, CallbackInfoReturnable<net.minecraft.world.level.saveddata.maps.MapItemSavedData> cir) {
+        net.minecraft.world.level.saveddata.maps.MapItemSavedData mapData = cir.getReturnValue();
+        if (mapData != null && mapData.silkard_id() == null) {
+            mapData.silkard_id(id);
+            new org.bukkit.event.server.MapInitializeEvent(mapData.silkard_mapView()).callEvent();
+        }
+    }
+
+    @Inject(method = "setMapData", at = @At("HEAD"))
+    private void silkard$setMapDataId(net.minecraft.world.level.saveddata.maps.MapId id, net.minecraft.world.level.saveddata.maps.MapItemSavedData data, CallbackInfo ci) {
+        data.silkard_id(id);
+        new org.bukkit.event.server.MapInitializeEvent(data.silkard_mapView()).callEvent();
+    }
+    // Paper end - Call missing map initialize event and set id
 }
