@@ -24,7 +24,7 @@ public class MixinTridentItem {
     // CraftBukkit start
     @Redirect(method = "releaseUsing", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/Projectile;spawnProjectileFromRotation(Lnet/minecraft/world/entity/projectile/Projectile$ProjectileFactory;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/LivingEntity;FFF)Lnet/minecraft/world/entity/projectile/Projectile;"))
     private Projectile silkard$spawnTrident(Projectile.ProjectileFactory<ThrownTrident> factory, ServerLevel level, ItemStack stack, net.minecraft.world.entity.LivingEntity owner, float x, float y, float z) {
-        Projectile projectile = Projectile.spawnProjectileFromRotation(factory, level, stack, owner, x, y, z);
+        Projectile projectile = Projectile.spawnProjectileFromRotation(factory, level, stack, owner, x, y, (float) level.purpurConfig().tridentProjectileOffset); // Purpur - Projectile offset config
         if (projectile.isRemoved() && owner instanceof ServerPlayer serverPlayer) {
             serverPlayer.getBukkitEntity().updateInventory();
         }
@@ -34,6 +34,18 @@ public class MixinTridentItem {
     @Redirect(method = "releaseUsing", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;push(DDD)V"))
     private void silkard$callPlayerRiptideEvent(Player entity, double x, double y, double z, @Local(argsOnly = true) ItemStack stack) {
         CraftEventFactory.callPlayerRiptideEvent(entity, stack, (float) x, (float) y, (float) z);
+        // Purpur start - Implement elytra settings: each trident boost damages the glider being used
+        int elytraDamage = entity.level().purpurConfig().elytraDamagePerTridentBoost;
+        if (elytraDamage > 0) {
+            java.util.List<net.minecraft.world.entity.EquipmentSlot> slots = net.minecraft.world.entity.EquipmentSlot.VALUES.stream()
+                .filter(slot -> net.minecraft.world.entity.LivingEntity.canGlideUsing(entity.getItemBySlot(slot), slot)).toList();
+            if (!slots.isEmpty()) {
+                net.minecraft.world.entity.EquipmentSlot slot = net.minecraft.util.Util.getRandom(slots, entity.getRandom());
+                ItemStack glideItem = entity.getItemBySlot(slot);
+                if (glideItem.has(net.minecraft.core.component.DataComponents.GLIDER)) glideItem.hurtAndBreak(elytraDamage, entity, slot);
+            }
+        }
+        // Purpur end - Implement elytra settings
         entity.push(x, y, z);
     }
     // CraftBukkit end
