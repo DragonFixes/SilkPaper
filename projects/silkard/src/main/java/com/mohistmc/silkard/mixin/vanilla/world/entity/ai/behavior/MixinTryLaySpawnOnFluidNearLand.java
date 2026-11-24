@@ -22,7 +22,7 @@ public class MixinTryLaySpawnOnFluidNearLand {
     // CraftBukkit start - EntityChangeBlockEvent
     // 注: CB 取消时同时跳过音效; redirect 语义下仅跳过方块放置
     @Redirect(method = "lambda$create$2", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z"))
-    private static boolean silkard$laySpawnChangeBlock(ServerLevel level, BlockPos spawnPos, BlockState newState, @Local(argsOnly = true) LivingEntity body, @Local(argsOnly = true, ordinal = 2) MemoryAccessor pregnant) {
+    private static boolean silkard$laySpawnChangeBlock(ServerLevel level, BlockPos spawnPos, BlockState newState, @Local(argsOnly = true) LivingEntity body, @Local(argsOnly = true) MemoryAccessor pregnant) {
         if (!CraftEventFactory.callEntityChangeBlockEvent(body, spawnPos, newState)) {
             pregnant.erase();
             return false;
