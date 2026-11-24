@@ -1,17 +1,24 @@
 package com.mohistmc.silkard.mixin.vanilla.world.entity.player;
 
 import com.mohistmc.silkard.injected.world.entity.player.ContextInventory;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import net.minecraft.core.NonNullList;
+import net.minecraft.world.entity.EntityEquipment;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.entity.CraftHumanEntity;
 import org.bukkit.entity.HumanEntity;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
 /**
  * @author Mgazul
@@ -23,7 +30,17 @@ public abstract class MixinInventory implements ContextInventory {
     // @formatter:off
     @Shadow public Player player;
     @Shadow public NonNullList<ItemStack> items;
+    @Shadow @Final public EntityEquipment equipment;
     // @formatter:on
+
+    // Equipment slots ordered by their inventory slot index (armor, then offhand, body, saddle).
+    // `items` only holds the 36 storage slots; everything after them lives in `equipment`.
+    @Unique
+    private static final EquipmentSlot[] silkard$EQUIPMENT_SLOTS_SORTED_BY_INDEX = Inventory.EQUIPMENT_SLOT_MAPPING.int2ObjectEntrySet()
+        .stream()
+        .sorted(Comparator.comparingInt(Int2ObjectMap.Entry::getIntKey))
+        .map(Map.Entry::getValue)
+        .toArray(EquipmentSlot[]::new);
 
     // CraftBukkit start - add fields and methods
     public List<HumanEntity> transaction = new java.util.ArrayList<>();
@@ -31,19 +48,23 @@ public abstract class MixinInventory implements ContextInventory {
 
     @Override
     public List<ItemStack> getContents() {
-        List<ItemStack> combined = new ArrayList<>(Inventory.SLOT_OFFHAND + 1);
-        for (int i = 0; i <= Inventory.SLOT_OFFHAND; i++) {
-            combined.add(this.items.get(i));
+        List<ItemStack> combined = new ArrayList<>(this.items.size() + silkard$EQUIPMENT_SLOTS_SORTED_BY_INDEX.length);
+        combined.addAll(this.items);
+        for (EquipmentSlot slot : silkard$EQUIPMENT_SLOTS_SORTED_BY_INDEX) {
+            combined.add(this.equipment.get(slot)); // empty stacks included so indexes match inventory slots
         }
         return combined;
     }
 
+    @Override
     public List<ItemStack> getArmorContents() {
-        List<ItemStack> combined = new ArrayList<>(Inventory.SLOT_OFFHAND - Inventory.INVENTORY_SIZE);
-        for (int i = Inventory.INVENTORY_SIZE; i < Inventory.SLOT_OFFHAND; i++) {
-            combined.add(this.items.get(i));
+        List<ItemStack> armor = new ArrayList<>(4);
+        for (EquipmentSlot slot : silkard$EQUIPMENT_SLOTS_SORTED_BY_INDEX) {
+            if (slot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR) {
+                armor.add(this.equipment.get(slot));
+            }
         }
-        return combined;
+        return armor;
     }
 
     @Override
