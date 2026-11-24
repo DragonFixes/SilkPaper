@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.InsideBlockEffectApplier;
+import net.minecraft.world.entity.InsideBlockEffectType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
@@ -16,7 +17,6 @@ import org.bukkit.event.block.CauldronLevelChangeEvent;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -31,9 +31,6 @@ public abstract class MixinLayeredCauldronBlock {
     @Shadow
     @Final
     private Biome.Precipitation precipitationType;
-
-    @Unique
-    private boolean silkard$extinguish;
 
     @WrapOperation(method = "handlePrecipitation", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z"))
     private boolean silkard$handlePrecipitation(Level level, BlockPos pos, BlockState newState, Operation<Boolean> original) {
@@ -64,17 +61,12 @@ public abstract class MixinLayeredCauldronBlock {
         ci.cancel();
     }
 
-    @Inject(method = "entityInside", at = @At("HEAD"))
-    private void silkard$resetExtinguish(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean serverSide, CallbackInfo ci) {
-        this.silkard$extinguish = false;
-    }
-
-    // EXTINGUISH is applied only when the cauldron level change was not cancelled
+    // Paper - Call CauldronLevelChangeEvent: the extinguish is applied in the callback below, only when the
+    // level change was not cancelled. runBefore defers that callback until after entityInside returns, so the
+    // direct apply here would always run first.
     @Inject(method = "entityInside", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/InsideBlockEffectApplier;apply(Lnet/minecraft/world/entity/InsideBlockEffectType;)V"), cancellable = true)
     private void silkard$applyExtinguish(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean serverSide, CallbackInfo ci) {
-        if (!this.silkard$extinguish) {
-            ci.cancel();
-        }
+        ci.cancel();
     }
 
     @Inject(method = "lambda$entityInside$0", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/LayeredCauldronBlock;handleEntityOnFireInside(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)V"), cancellable = true)
@@ -82,7 +74,13 @@ public abstract class MixinLayeredCauldronBlock {
         BlockState target = this.precipitationType == Biome.Precipitation.SNOW
                 ? (BlockState) Blocks.WATER_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL, (Integer) state.getValue(LayeredCauldronBlock.LEVEL))
                 : state;
-        this.silkard$extinguish = BukkitUtils.lowerCauldronFillLevel(target, level, pos, entity, CauldronLevelChangeEvent.ChangeReason.EXTINGUISH);
         ci.cancel();
+        // Paper - Fixes MC-248588: mobs only use up the water when mob griefing is on
+        if (!(entity instanceof net.minecraft.world.entity.player.Player) && !serverLevel.getGameRules().get(net.minecraft.world.level.gamerules.GameRules.MOB_GRIEFING)) {
+            return;
+        }
+        if (BukkitUtils.lowerCauldronFillLevel(target, level, pos, entity, CauldronLevelChangeEvent.ChangeReason.EXTINGUISH)) {
+            InsideBlockEffectType.EXTINGUISH.effect().accept(entity);
+        }
     }
 }
