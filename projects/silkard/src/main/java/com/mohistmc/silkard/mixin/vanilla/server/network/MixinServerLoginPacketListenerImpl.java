@@ -7,10 +7,18 @@ import com.mohistmc.silkard.injected.server.ContextMinecraftServer;
 import com.mohistmc.silkard.injected.server.network.ContextServerCommonPacketListenerImpl;
 import com.mohistmc.silkard.injected.server.network.ContextServerLoginPacketListenerImpl;
 import com.mohistmc.silkard.injected.server.players.ContextPlayerList;
+import com.destroystokyo.paper.proxy.VelocityProxy;
 import com.mojang.authlib.GameProfile;
+import io.papermc.paper.configuration.GlobalConfiguration;
+import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
+import net.fabricmc.fabric.impl.networking.payload.FriendlyByteBufLoginQueryResponse;
 import net.minecraft.network.Connection;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.login.ClientboundCustomQueryPacket;
+import net.minecraft.network.protocol.login.ServerboundCustomQueryAnswerPacket;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.PacketUtils;
 import net.minecraft.network.protocol.cookie.ServerboundCookieResponsePacket;
@@ -41,7 +49,11 @@ public class MixinServerLoginPacketListenerImpl implements ContextServerLoginPac
     @Shadow @Final private MinecraftServer server;
     @Shadow @Final private Connection connection;
     @Shadow private boolean transferred;
+    @Shadow private void startClientVerification(GameProfile profile) {}
     // @formatter:on
+
+    @Unique
+    private volatile int silkard$velocityLoginMessageId = -1;
 
     @Unique
     private ServerPlayer silkard$player;
@@ -74,6 +86,12 @@ public class MixinServerLoginPacketListenerImpl implements ContextServerLoginPac
 
     @Override
     public void callPlayerPreLoginEvents(GameProfile gameprofile) throws Exception {
+        // Paper - Velocity forwarding: a player who reached pre-login without answering the
+        // proxy's player-info query connected directly, bypassing the proxy.
+        if (this.silkard$velocityLoginMessageId == -1 && GlobalConfiguration.get().proxies.velocity.enabled) {
+            disconnect("This server requires you to connect with Velocity.");
+            return;
+        }
         String playerName = gameprofile.name();
         java.net.InetAddress address = ((java.net.InetSocketAddress) this.connection.getRemoteAddress()).getAddress();
         UUID uniqueId = gameprofile.id();
@@ -122,6 +140,13 @@ public class MixinServerLoginPacketListenerImpl implements ContextServerLoginPac
     @WrapOperation(method = "handleHello",
         at = @At(value = "INVOKE", ordinal = 1, target = "Lnet/minecraft/server/network/ServerLoginPacketListenerImpl;startClientVerification(Lcom/mojang/authlib/GameProfile;)V"))
     private void silkard$offlineLogin(ServerLoginPacketListenerImpl self, GameProfile gameprofile, Operation<Void> original) {
+        // Paper - Velocity forwarding: ask the proxy for the real profile and address; login
+        // continues in silkard$velocityQueryAnswer once it replies.
+        if (GlobalConfiguration.get().proxies.velocity.enabled) {
+            this.silkard$velocityLoginMessageId = ThreadLocalRandom.current().nextInt();
+            this.connection.send(new ClientboundCustomQueryPacket(this.silkard$velocityLoginMessageId, new VelocityProxy.PlayerInfoQueryPayload()));
+            return;
+        }
         Thread thread = new Thread("User Authenticator") {
 
             @Override
@@ -137,6 +162,59 @@ public class MixinServerLoginPacketListenerImpl implements ContextServerLoginPac
             }
         };
 
+        thread.start();
+    }
+
+    // Paper - Velocity forwarding: the proxy's answer carries the player's address and profile.
+    // Fabric API reads every query answer into a FriendlyByteBufLoginQueryResponse and may skip its
+    // bytes before this runs, so the buffer is read from its start.
+    @Inject(method = "handleCustomQueryPacket", at = @At("HEAD"), cancellable = true)
+    private void silkard$velocityQueryAnswer(ServerboundCustomQueryAnswerPacket packet, CallbackInfo ci) {
+        if (!GlobalConfiguration.get().proxies.velocity.enabled || this.silkard$velocityLoginMessageId == -1
+            || packet.transactionId() != this.silkard$velocityLoginMessageId) {
+            return;
+        }
+        ci.cancel();
+        if (!(packet.payload() instanceof FriendlyByteBufLoginQueryResponse(FriendlyByteBuf data)) || data == null) {
+            disconnect("This server requires you to connect with Velocity.");
+            return;
+        }
+
+        FriendlyByteBuf buf = data;
+        buf.readerIndex(0);
+        if (!VelocityProxy.checkIntegrity(buf)) {
+            disconnect("Unable to verify player details");
+            return;
+        }
+
+        int version = buf.readVarInt();
+        if (version > VelocityProxy.MAX_SUPPORTED_FORWARDING_VERSION) {
+            disconnect("Unsupported Velocity forwarding version " + version + ", this server supports up to " + VelocityProxy.MAX_SUPPORTED_FORWARDING_VERSION);
+            return;
+        }
+
+        int port = this.connection.getRemoteAddress() instanceof InetSocketAddress socket ? socket.getPort() : 0;
+        this.connection.address = new InetSocketAddress(VelocityProxy.readAddress(buf), port);
+        GameProfile profile = VelocityProxy.createProfile(buf);
+        ((ServerLoginPacketListenerImpl) (Object) this).authenticatedProfile = profile;
+
+        Thread thread = new Thread("User Authenticator") {
+            @Override
+            public void run() {
+                try {
+                    callPlayerPreLoginEvents(profile);
+                    silkard$preLoginDone = true;
+                    if (!connection.isConnected()) {
+                        return;
+                    }
+                    MinecraftServer.LOGGER.info("UUID of player {} is {}", profile.name(), profile.id());
+                    startClientVerification(profile);
+                } catch (Exception ex) {
+                    disconnect("Failed to verify username!");
+                    MinecraftServer.LOGGER.warn("Exception verifying {}", profile.name(), ex);
+                }
+            }
+        };
         thread.start();
     }
 

@@ -37,6 +37,21 @@ public class VelocityProxy {
     public static final byte MAX_SUPPORTED_FORWARDING_VERSION = MODERN_LAZY_SESSION;
     public static final Identifier PLAYER_INFO_CHANNEL = Identifier.fromNamespaceAndPath("velocity", "player_info");
 
+    /**
+     * The login query asking the proxy for the player's forwarded info; its body is the highest
+     * forwarding version this server understands.
+     */
+    public record PlayerInfoQueryPayload(Identifier id, byte maxVersion) implements net.minecraft.network.protocol.login.custom.CustomQueryPayload {
+        public PlayerInfoQueryPayload() {
+            this(PLAYER_INFO_CHANNEL, MAX_SUPPORTED_FORWARDING_VERSION);
+        }
+
+        @Override
+        public void write(final FriendlyByteBuf buf) {
+            buf.writeByte(this.maxVersion);
+        }
+    }
+
     public static boolean checkIntegrity(final FriendlyByteBuf buf) {
         final byte[] signature = new byte[32];
         buf.readBytes(signature);
