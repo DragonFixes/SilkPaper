@@ -21,7 +21,7 @@ together with the Purpur, Gale and Leaf layers, so plugins written for Paper and
 next to Fabric mods.
 
 SilkPaper is not Silkard, Paper, Purpur or Leaf, and is not supported by their teams. Report
-SilkPaper problems in [this repository's issues](https://github.com/DragonFixes/SilkardPerformanceFork/issues).
+SilkPaper problems in [this repository's issues](https://github.com/DragonFixes/SilkPaper/issues).
 
 > [!WARNING]
 > SilkPaper is in active development. The Paper port boots and runs, but several Paper and

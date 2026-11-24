@@ -86,7 +86,7 @@ public class WatchdogThread extends ca.spottedleaf.moonrise.common.util.TickThre
                     logger.log(Level.SEVERE, "\t *Especially* if it looks like HTTP or MySQL operations are occurring");
                     logger.log(Level.SEVERE, "If you see a world save or edit, then it means you did far more than your server can handle at once");
                     logger.log(Level.SEVERE, "\t If this is the case, consider increasing timeout-time in spigot.yml but note that this will replace the crash with LARGE lag spikes");
-                    logger.log(Level.SEVERE, "If you are unsure or think this is a SilkPaper bug, please report this to https://github.com/DragonFixes/SilkardPerformanceFork/issues - do not report SilkPaper problems to Paper or Leaf"); // Gale - branding changes // Leaf - Rebrand
+                    logger.log(Level.SEVERE, "If you are unsure or think this is a SilkPaper bug, please report this to https://github.com/DragonFixes/SilkPaper/issues - do not report SilkPaper problems to Paper or Leaf"); // Gale - branding changes // Leaf - Rebrand
                     logger.log(Level.SEVERE, "Be sure to include ALL relevant console errors and Minecraft crash reports");
                     logger.log(Level.SEVERE, "SilkPaper version: " + Bukkit.getServer().getVersion()); // Gale - branding changes // Leaf - Rebrand
 
@@ -107,7 +107,7 @@ public class WatchdogThread extends ca.spottedleaf.moonrise.common.util.TickThre
                     We do not want people to report thread issues to Paper,
                     but we do want people to report thread issues to Gale.
                     */
-                    logger.log(Level.SEVERE, "--- DO NOT REPORT THIS TO PAPER OR LEAF - If you think this is a SilkPaper bug, please report it at https://github.com/DragonFixes/SilkardPerformanceFork/issues - THIS IS NOT A PAPER BUG OR CRASH - " + Bukkit.getServer().getVersion() + " ---"); // Leaf - Rebrand
+                    logger.log(Level.SEVERE, "--- DO NOT REPORT THIS TO PAPER OR LEAF - If you think this is a SilkPaper bug, please report it at https://github.com/DragonFixes/SilkPaper/issues - THIS IS NOT A PAPER BUG OR CRASH - " + Bukkit.getServer().getVersion() + " ---"); // Leaf - Rebrand
                     // Gale end - branding changes
                     logger.log(Level.SEVERE, "The server has not responded for " + (currentTime - lastTick) / 1000 + " seconds! Creating thread dump");
                 }
@@ -143,7 +143,7 @@ public class WatchdogThread extends ca.spottedleaf.moonrise.common.util.TickThre
                     We do not want people to report thread issues to Paper,
                     but we do want people to report thread issues to Gale.
                     */
-                    logger.log(Level.SEVERE, "--- DO NOT REPORT THIS TO PAPER OR LEAF - If you think this is a SilkPaper bug, please report it at https://github.com/DragonFixes/SilkardPerformanceFork/issues - THIS IS NOT A PAPER BUG OR CRASH ---"); // Leaf - Rebrand
+                    logger.log(Level.SEVERE, "--- DO NOT REPORT THIS TO PAPER OR LEAF - If you think this is a SilkPaper bug, please report it at https://github.com/DragonFixes/SilkPaper/issues - THIS IS NOT A PAPER BUG OR CRASH ---"); // Leaf - Rebrand
                     // Gale end - branding changes
                 }
 

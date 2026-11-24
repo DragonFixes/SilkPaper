@@ -40,7 +40,7 @@ as a mixin.
 |---|---|
 | `develop` | Active SilkPaper development and the main branch. Work and commit here. |
 | `26.3` | Mirror of `upstream/26.3` (MohistMC/Silkard). Only fast-forward it; never commit to it. |
-| remote `origin` | `git@github.com:DragonFixes/SilkardPerformanceFork.git` |
+| remote `origin` | `git@github.com:DragonFixes/SilkPaper.git` |
 | remote `upstream` | `https://github.com/MohistMC/Silkard.git` |
 
 Never push to `upstream`. Push to `origin` only when the user asks.
