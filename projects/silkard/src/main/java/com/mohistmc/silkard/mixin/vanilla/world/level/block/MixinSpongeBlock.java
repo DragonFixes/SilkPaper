@@ -37,7 +37,7 @@ public class MixinSpongeBlock {
     @Overwrite
     private boolean removeWaterBreadthFirstSearch(Level level, BlockPos startPos) {
         BlockStateListPopulator blockList = new BlockStateListPopulator(level);
-        BlockPos.breadthFirstTraversal(startPos, 6, 65, (pos, consumer) -> {
+        BlockPos.breadthFirstTraversal(startPos, level.purpurConfig().spongeAbsorptionRadius, level.purpurConfig().spongeAbsorptionArea, (pos, consumer) -> { // Purpur - Configurable sponge absorption
             for (Direction direction : ALL_DIRECTIONS) {
                 consumer.accept(pos.relative(direction));
             }
@@ -47,13 +47,15 @@ public class MixinSpongeBlock {
             } else {
                 BlockState state = blockList.getBlockState(pos);
                 FluidState fluidState = blockList.getFluidState(pos);
-                if (!fluidState.is(FluidTags.WATER)) {
+                if (!fluidState.is(FluidTags.WATER) && (!level.purpurConfig().spongeAbsorbsLava || !fluidState.is(FluidTags.LAVA)) && (!level.purpurConfig().spongeAbsorbsWaterFromMud || !state.is(Blocks.MUD))) { // Purpur - Option for sponges to work on lava and mud
                     return BlockPos.TraversalNodeStatus.SKIP;
                 } else if (state.getBlock() instanceof BucketPickup bucketPickup && !bucketPickup.pickupBlock((LivingEntity) null, blockList, pos, state).isEmpty()) {
                     return BlockPos.TraversalNodeStatus.ACCEPT;
                 } else {
                     if (state.getBlock() instanceof LiquidBlock) {
                         blockList.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+                    } else if (state.is(Blocks.MUD)) { // Purpur - Option for sponges to work on lava and mud
+                        blockList.setBlock(pos, Blocks.CLAY.defaultBlockState(), 3);
                     } else {
                         if (!state.is(Blocks.KELP) && !state.is(Blocks.KELP_PLANT) && !state.is(Blocks.SEAGRASS) && !state.is(Blocks.TALL_SEAGRASS)) {
                             return BlockPos.TraversalNodeStatus.SKIP;
