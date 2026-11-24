@@ -82,6 +82,14 @@ public class MixinLevelStorageSource implements ContextLevelStorageSource {
         cir.setReturnValue(LevelDataAndDimensions.create(worldData, worldGenSettings, dimensions));
     }
 
+    // Paper - pass dimension: reads the dimension's own data/ folder. Plugins built against Paper call this overload.
+    @io.izzel.arclight.mixin.TransformAccess(org.objectweb.asm.Opcodes.ACC_PUBLIC | org.objectweb.asm.Opcodes.ACC_STATIC)
+    private static <T extends net.minecraft.world.level.saveddata.SavedData> com.mojang.serialization.DataResult<T> readExistingSavedData(
+        LevelStorageSource.LevelStorageAccess access, ResourceKey<net.minecraft.world.level.Level> dimension,
+        HolderLookup.Provider registryAccess, net.minecraft.world.level.saveddata.SavedDataType<T> savedDataType) {
+        return com.mohistmc.silkard.paper.world.PaperWorldStorage.readExistingSavedData(access, dimension, registryAccess, savedDataType);
+    }
+
     // CraftBukkit start - add BukkitValues PDC to the loaded world data
     @Redirect(method = "getLevelDataAndDimensions", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/storage/PrimaryLevelData;parse(Lcom/mojang/serialization/Dynamic;Lnet/minecraft/world/level/LevelSettings;Lnet/minecraft/world/level/storage/PrimaryLevelData$SpecialWorldProperty;Lcom/mojang/serialization/Lifecycle;)Lnet/minecraft/world/level/storage/PrimaryLevelData;"))
     private static PrimaryLevelData silkard$bukkitValues(Dynamic<?> dynamic, LevelSettings settings, PrimaryLevelData.SpecialWorldProperty specialWorldProperty, com.mojang.serialization.Lifecycle lifecycle) {

@@ -29,6 +29,16 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(ServerChunkCache.class)
 public abstract class MixinServerChunkCache implements ContextServerChunkCache {
 
+    // Paper - initialize SavedDataStorage earlier: a level built through Paper's ServerLevel
+    // constructor already opened the dimension's data storage (holding its level overrides,
+    // metadata and PDC); a second instance on the same folder would overwrite them on save.
+    @Redirect(method = "<init>", at = @At(value = "NEW", target = "(Ljava/nio/file/Path;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/core/HolderLookup$Provider;)Lnet/minecraft/world/level/storage/SavedDataStorage;"))
+    private net.minecraft.world.level.storage.SavedDataStorage silkard$paperSavedDataStorage(java.nio.file.Path dataFolder, com.mojang.datafixers.DataFixer fixerUpper,
+                                                                                             net.minecraft.core.HolderLookup.Provider registries, ServerLevel level) {
+        com.mohistmc.silkard.paper.world.PaperLevelInit init = com.mohistmc.silkard.paper.world.PaperLevelInit.current(level.dimension());
+        return init != null ? init.savedDataStorage() : new net.minecraft.world.level.storage.SavedDataStorage(dataFolder, fixerUpper, registries);
+    }
+
     // CraftBukkit start - properly implement isChunkLoaded
     @org.spongepowered.asm.mixin.Shadow
     @org.spongepowered.asm.mixin.Final

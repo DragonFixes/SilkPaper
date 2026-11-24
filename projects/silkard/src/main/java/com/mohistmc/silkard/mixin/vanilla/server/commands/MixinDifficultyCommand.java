@@ -32,7 +32,12 @@ public class MixinDifficultyCommand {
             throw ERROR_ALREADY_SAME_DIFFICULTY.create(difficulty.getDisplayName());
         }
 
-        ((com.mohistmc.silkard.injected.server.level.ContextServerLevel) worldserver).silkard$serverLevelDataCB().setDifficulty(difficulty); // CraftBukkit - per-world data
+        // CraftBukkit - per-world data
+        if (worldserver.serverLevelData instanceof io.papermc.paper.world.saveddata.PaperLevelOverrides overrides) {
+            overrides.setDifficulty(difficulty);
+        } else {
+            ((com.mohistmc.silkard.injected.server.level.ContextServerLevel) worldserver).silkard$serverLevelDataCB().setDifficulty(difficulty);
+        }
         source.sendSuccess(() -> net.minecraft.network.chat.Component.translatable("commands.difficulty.success", difficulty.getDisplayName()), true);
         return 0;
     }

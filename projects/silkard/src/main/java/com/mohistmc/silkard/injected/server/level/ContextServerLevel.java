@@ -40,6 +40,11 @@ public interface ContextServerLevel extends ContextLevel {
         throw new ContextStateException("Not implemented");
     }
 
+    /** The world's Bukkit name when it was loaded the Paper way (a dimension of the main save), else null. */
+    default @org.jspecify.annotations.Nullable String silkard$bukkitName() {
+        throw new ContextStateException("Not implemented");
+    }
+
     default UUID silkard$uuid() {
         throw new ContextStateException("Not implemented");
     }

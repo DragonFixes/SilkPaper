@@ -618,6 +618,7 @@
     "vanilla.world.level.storage.loot.predicates.MixinExplosionCondition",
     "vanilla.world.level.storage.MixinDerivedLevelData",
     "vanilla.world.level.storage.MixinLevelStorageSource",
+    "vanilla.world.level.storage.MixinSavedDataStorage",
     "vanilla.world.level.storage.MixinLevelStorageSource$LevelStorageAccess",
     "vanilla.world.level.storage.MixinPlayerDataStorage",
     "vanilla.world.level.storage.MixinPrimaryLevelData",

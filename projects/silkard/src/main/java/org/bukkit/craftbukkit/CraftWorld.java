@@ -839,7 +839,8 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
     @Override
     public String getName() {
-        return this.world.serverLevelData.getLevelName();
+        String bukkitName = this.world.silkard$bukkitName();
+        return bukkitName != null ? bukkitName : this.world.serverLevelData.getLevelName();
     }
 
     @Override
@@ -1230,7 +1231,12 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
     @Override
     public void setDifficulty(Difficulty difficulty) {
-        this.getHandle().silkard$serverLevelDataCB().setDifficulty(net.minecraft.world.Difficulty.byId(difficulty.getValue()));
+        net.minecraft.world.Difficulty nmsDifficulty = net.minecraft.world.Difficulty.byId(difficulty.getValue());
+        if (this.getHandle().serverLevelData instanceof io.papermc.paper.world.saveddata.PaperLevelOverrides overrides) {
+            overrides.setDifficulty(nmsDifficulty);
+        } else {
+            this.getHandle().silkard$serverLevelDataCB().setDifficulty(nmsDifficulty);
+        }
     }
 
     @Override
@@ -1556,7 +1562,11 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
     @Override
     public void setHardcore(boolean hardcore) {
-        this.world.silkard$serverLevelDataCB().settings.difficultySettings().hardcore = hardcore;
+        if (this.world.serverLevelData instanceof io.papermc.paper.world.saveddata.PaperLevelOverrides overrides) {
+            overrides.setHardcore(hardcore);
+        } else {
+            this.world.silkard$serverLevelDataCB().settings.difficultySettings().hardcore = hardcore;
+        }
     }
 
     @Override

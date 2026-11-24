@@ -127,6 +127,21 @@ public interface ContextMinecraftServer {
         throw new ContextStateException("Not implemented");
     }
 
+    // Paper's world loading API (PaperWorldLoader, CraftServer.createWorld, and plugins such as Worlds)
+    default void initWorld(ServerLevel level, org.bukkit.@org.jspecify.annotations.Nullable WorldCreator worldCreator) {
+        throw new ContextStateException("Not implemented");
+    }
+
+    default void prepareLevel(ServerLevel level) {
+        throw new ContextStateException("Not implemented");
+    }
+
+    default void createLevel(net.minecraft.world.level.dimension.LevelStem levelStem,
+                             io.papermc.paper.world.PaperWorldLoader.WorldLoadingInfoAndData loading,
+                             net.minecraft.world.level.storage.LevelDataAndDimensions.WorldDataAndGenSettings worldDataAndGenSettings) {
+        throw new ContextStateException("Not implemented");
+    }
+
     default void addLevel(ServerLevel level) {
         throw new ContextStateException("Not implemented");
     }

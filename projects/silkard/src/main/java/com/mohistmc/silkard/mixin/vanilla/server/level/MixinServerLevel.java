@@ -55,6 +55,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
+import io.izzel.arclight.mixin.CreateConstructor;
+import io.izzel.arclight.mixin.ShadowConstructor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -156,6 +158,9 @@ public abstract class MixinServerLevel implements ContextServerLevel {
 
     @Override
     public ResourceKey<LevelStem> getTypeKey() {
+        if (this.silkard$typeKey != null) {
+            return this.silkard$typeKey;
+        }
         return storageSource.silkard$getTypeKey();
     }
 
@@ -221,6 +226,64 @@ public abstract class MixinServerLevel implements ContextServerLevel {
         this.environment = env;
     }
     // CraftBukkit end
+
+    // Paper start - rework world loading process
+    // Every dimension shares the server's storage access, so the level stem, Bukkit name and UUID
+    // are kept per level rather than derived from the storage access.
+    @Unique private ResourceKey<LevelStem> silkard$typeKey;
+    @Unique private String silkard$bukkitName;
+
+    @ShadowConstructor
+    public void silkard$constructor(MinecraftServer server, java.util.concurrent.Executor executor, LevelStorageSource.LevelStorageAccess levelStorage,
+                                    ServerLevelData levelData, ResourceKey<net.minecraft.world.level.Level> dimension, LevelStem levelStem,
+                                    boolean isDebug, long biomeZoomSeed, List<net.minecraft.world.level.CustomSpawner> customSpawners, boolean tickTime) {
+        throw new AbstractMethodError();
+    }
+
+    /**
+     * Paper's constructor, which plugins compiled against Paper (Worlds) call directly. The level's
+     * data is its {@code paper:level_overrides} saved data, stored with Paper's metadata (UUID) and
+     * PDC in the dimension's own {@code data/} folder.
+     */
+    @CreateConstructor
+    public void silkard$constructor(MinecraftServer server, java.util.concurrent.Executor executor, LevelStorageSource.LevelStorageAccess levelStorage,
+                                    WorldGenSettings worldGenSettings, ResourceKey<net.minecraft.world.level.Level> dimension, LevelStem levelStem,
+                                    boolean isDebug, long biomeZoomSeed, List<net.minecraft.world.level.CustomSpawner> customSpawners, boolean tickTime,
+                                    ResourceKey<LevelStem> typeKey, org.bukkit.World.Environment env,
+                                    org.bukkit.generator.ChunkGenerator gen, org.bukkit.generator.BiomeProvider biomeProvider,
+                                    SavedDataStorage savedDataStorage, io.papermc.paper.world.PaperWorldLoader.LoadedWorldData loadedWorldData) {
+        final io.papermc.paper.world.saveddata.PaperLevelOverrides levelOverrides = loadedWorldData.levelOverrides();
+        savedDataStorage.set(io.papermc.paper.world.saveddata.PaperLevelOverrides.TYPE, levelOverrides);
+        savedDataStorage.set(io.papermc.paper.world.saveddata.PaperWorldMetadata.TYPE, new io.papermc.paper.world.saveddata.PaperWorldMetadata(loadedWorldData.uuid()));
+        savedDataStorage.set(io.papermc.paper.world.saveddata.PaperWorldPDC.TYPE, loadedWorldData.pdc() == null ? io.papermc.paper.world.saveddata.PaperWorldPDC.TYPE.constructor().get() : loadedWorldData.pdc());
+        com.mohistmc.silkard.paper.world.PaperLevelInit.begin(new com.mohistmc.silkard.paper.world.PaperLevelInit(
+            dimension, worldGenSettings, typeKey, env, gen, biomeProvider, savedDataStorage, loadedWorldData));
+        this.silkard$constructor(server, executor, levelStorage, levelOverrides, dimension, levelStem, isDebug, biomeZoomSeed, customSpawners, tickTime);
+        com.mohistmc.silkard.paper.world.PaperLevelInit.end();
+        this.worldGenSettings = worldGenSettings;
+        this.storageSource = levelStorage;
+        this.silkard$typeKey = typeKey;
+        this.silkard$bukkitName = loadedWorldData.bukkitName();
+        this.uuid = loadedWorldData.uuid();
+        this.environment = env;
+        this.generator = gen;
+        this.biomeProvider = biomeProvider;
+        this.savedDataStorage = savedDataStorage;
+    }
+
+    // Vanilla reads the server's (overworld's) settings; a Paper-style level has its own seed and structures setting.
+    @Redirect(method = "<init>(Lnet/minecraft/server/MinecraftServer;Ljava/util/concurrent/Executor;Lnet/minecraft/world/level/storage/LevelStorageSource$LevelStorageAccess;Lnet/minecraft/world/level/storage/ServerLevelData;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/world/level/dimension/LevelStem;ZJLjava/util/List;Z)V",
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;getWorldGenSettings()Lnet/minecraft/world/level/levelgen/WorldGenSettings;"))
+    private WorldGenSettings silkard$levelWorldGenSettings(MinecraftServer server) {
+        com.mohistmc.silkard.paper.world.PaperLevelInit init = com.mohistmc.silkard.paper.world.PaperLevelInit.current(((ServerLevel) (Object) this).dimension());
+        return init != null ? init.worldGenSettings() : server.getWorldGenSettings();
+    }
+
+    @Override
+    public @org.jspecify.annotations.Nullable String silkard$bukkitName() {
+        return this.silkard$bukkitName;
+    }
+    // Paper end - rework world loading process
 
     @Override
     public void silkard_tickEntityManager() {
@@ -327,8 +390,12 @@ public abstract class MixinServerLevel implements ContextServerLevel {
     private void silkard$worldSave(ProgressListener progressListener, boolean flush, boolean noSave, CallbackInfo ci) {
         if (!noSave) {
             Bukkit.getPluginManager().callEvent(new WorldSaveEvent(((ServerLevel) (Object) this).getWorld()));
-            com.mojang.authlib.GameProfile gameprofile = ((ServerLevel) (Object) this).getServer().getSingleplayerProfile();
-            this.storageSource.saveDataTag((net.minecraft.world.level.storage.WorldData) this.serverLevelData, gameprofile == null ? null : gameprofile.id());
+            // A dimension of the main save keeps its own data as paper:level_overrides saved data
+            // (written by the data storage below); the save's level.dat is written by the server.
+            if (this.serverLevelData instanceof net.minecraft.world.level.storage.WorldData worldData) {
+                com.mojang.authlib.GameProfile gameprofile = ((ServerLevel) (Object) this).getServer().getSingleplayerProfile();
+                this.storageSource.saveDataTag(worldData, gameprofile == null ? null : gameprofile.id());
+            }
             if (flush) {
                 this.getDataStorage().saveAndJoin();
             } else {
@@ -395,7 +462,8 @@ public abstract class MixinServerLevel implements ContextServerLevel {
 
     @Override
     public net.minecraft.world.level.storage.PrimaryLevelData silkard$serverLevelDataCB() {
-        return (net.minecraft.world.level.storage.PrimaryLevelData) this.serverLevelData;
+        // A dimension of the main save has its own paper:level_overrides; the rest of its data is the save's.
+        return this.serverLevelData instanceof net.minecraft.world.level.storage.PrimaryLevelData data ? data : (net.minecraft.world.level.storage.PrimaryLevelData) this.getServer().getWorldData();
     }
 
     /**
@@ -413,7 +481,7 @@ public abstract class MixinServerLevel implements ContextServerLevel {
      */
     @Overwrite
     public LevelData.RespawnData getRespawnData() {
-        return ((net.minecraft.world.level.storage.PrimaryLevelData) this.serverLevelData).getRespawnData();
+        return this.serverLevelData.getRespawnData();
     }
 
     /**
@@ -422,7 +490,10 @@ public abstract class MixinServerLevel implements ContextServerLevel {
      */
     @Overwrite
     public boolean isFlat() {
-        return ((net.minecraft.world.level.storage.PrimaryLevelData) this.serverLevelData).isFlatWorld();
+        if (!(this.serverLevelData instanceof net.minecraft.world.level.storage.PrimaryLevelData data)) {
+            return this.getWorldGenSettings().dimensions().get(this.getTypeKey()).map(levelStem -> levelStem.generator() instanceof net.minecraft.world.level.levelgen.FlatLevelSource).orElse(false); // Paper
+        }
+        return data.isFlatWorld();
     }
 
     /**
