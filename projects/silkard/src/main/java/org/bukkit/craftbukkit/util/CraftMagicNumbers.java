@@ -483,6 +483,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
 
     @Override
     public byte[] processClass(PluginDescriptionFile pdf, String path, byte[] clazz) {
+        clazz = com.mohistmc.silkard.paper.PluginBytecodeRemapper.remap(clazz); // SilkPaper - Paper member types
         // Paper start
         if (DISABLE_OLD_API_SUPPORT) {
             return clazz;

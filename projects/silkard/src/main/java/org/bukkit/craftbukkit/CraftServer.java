@@ -1122,15 +1122,14 @@ public final class CraftServer implements Server {
         String name = creator.name();
         ChunkGenerator generator = creator.generator();
         BiomeProvider biomeProvider = creator.biomeProvider();
-        File folder = new File(getWorldContainer(), name);
-        World world = getWorld(name);
 
-        if (world != null) {
-            return world;
-        }
-
-        if (folder.exists()) {
-            Preconditions.checkArgument(folder.isDirectory(), "File (%s) exists and isn't a folder", name);
+        World world = this.getWorld(name);
+        World worldByKey = this.getWorld(creator.key());
+        if (world != null || worldByKey != null) {
+            if (world == worldByKey) {
+                return world;
+            }
+            throw new IllegalArgumentException("Cannot create a world with key " + creator.key() + " and name " + name + " one (or both) already match a world that exists");
         }
 
         if (generator == null) {
@@ -1141,150 +1140,110 @@ public final class CraftServer implements Server {
             biomeProvider = getBiomeProvider(name);
         }
 
-        ResourceKey<LevelStem> actualDimension;
-        switch (creator.environment()) {
-            case NORMAL:
-                actualDimension = LevelStem.OVERWORLD;
-                break;
-            case NETHER:
-                actualDimension = LevelStem.NETHER;
-                break;
-            case THE_END:
-                actualDimension = LevelStem.END;
-                break;
-            default:
-                throw new IllegalArgumentException("Illegal dimension (" + creator.environment() + ")");
-        }
+        ResourceKey<LevelStem> actualDimension = switch (creator.environment()) {
+            case NORMAL -> LevelStem.OVERWORLD;
+            case NETHER -> LevelStem.NETHER;
+            case THE_END -> LevelStem.END;
+            default -> throw new IllegalArgumentException("Illegal dimension (" + creator.environment() + ")");
+        };
 
-        LevelStorageSource.LevelStorageAccess worldSession;
+        // Paper - rework world loading process: the world is a dimension of the main save,
+        // <level>/dimensions/<key namespace>/<key path>. A CraftBukkit-style <name>/ save is imported first.
+        RegistryAccess registryAccess = this.console.registryAccess();
+        final ResourceKey<net.minecraft.world.level.Level> dimensionKey = CraftNamespacedKey.toResourceKey(Registries.DIMENSION, creator.key());
+        net.minecraft.core.Registry<LevelStem> levelStemRegistry = registryAccess.lookupOrThrow(Registries.LEVEL_STEM);
+        if (levelStemRegistry.getValue(actualDimension) == null) {
+            throw new IllegalStateException("Missing configured level stem " + actualDimension);
+        }
         try {
-            worldSession = LevelStorageSource.createDefault(getWorldContainer().toPath()).validateAndCreateAccess(name, actualDimension);
-        } catch (IOException | ContentValidationException ex) {
-            throw new RuntimeException(ex);
+            io.papermc.paper.world.migration.WorldFolderMigration.migrateApiWorld(this.console.storageSource, registryAccess, name, actualDimension, dimensionKey);
+        } catch (IOException ex) {
+            throw new RuntimeException("Failed to migrate legacy world " + name, ex);
         }
+        io.papermc.paper.world.PaperWorldLoader.LoadedWorldData loadedWorldData = io.papermc.paper.world.PaperWorldLoader.loadWorldData(this.console, dimensionKey, name);
+        final PrimaryLevelData primaryLevelData = (PrimaryLevelData) this.console.getWorldData();
+        WorldGenSettings worldGenSettings = com.mohistmc.silkard.paper.world.PaperWorldStorage.readExistingSavedData(this.console.storageSource, dimensionKey, registryAccess, WorldGenSettings.TYPE)
+            .result()
+            .orElse(null);
+        RegistryAccess contextRegistryAccess = registryAccess;
+        if (worldGenSettings == null) {
+            WorldOptions worldOptions = new WorldOptions(creator.seed(), creator.generateStructures(), creator.bonusChest());
 
-        Dynamic<?> dynamic;
-        if (worldSession.hasWorldData()) {
-            Dynamic<?> dynamic1;
+            String flatGenSettings = creator.generatorSettings();
+            if (flatGenSettings.isEmpty()) {
+                flatGenSettings = net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings.CODEC.encodeStart(registryAccess.createSerializationContext(com.mojang.serialization.JsonOps.INSTANCE), net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings.getDefault(
+                    registryAccess.lookupOrThrow(Registries.BIOME),
+                    registryAccess.lookupOrThrow(Registries.STRUCTURE_SET),
+                    registryAccess.lookupOrThrow(Registries.PLACED_FEATURE)
+                )).getOrThrow().toString();
+            }
+            DedicatedServerProperties.WorldDimensionData properties = new DedicatedServerProperties.WorldDimensionData(GsonHelper.parse(flatGenSettings), creator.type().name().toLowerCase(Locale.ROOT));
+            WorldDimensions worldDimensions = properties.create(registryAccess);
 
-            try {
-                dynamic1 = worldSession.getUnfixedDataTagWithFallback();
-            } catch (NbtException | ReportedNbtException | IOException ioexception) {
-                MinecraftServer.LOGGER.error("Failed to load world data. World files may be corrupted. Shutting down.", ioexception);
-                return null;
+            WorldDimensions.Complete complete = worldDimensions.bake(levelStemRegistry);
+            if (complete.dimensions().getValue(actualDimension) == null) {
+                throw new IllegalStateException("Missing generated level stem " + actualDimension + " for world " + name);
             }
 
-            LevelSummary levelsummary = worldSession.fixAndGetSummaryFromTag(dynamic1);
-
-            if (levelsummary.requiresManualConversion()) {
-                MinecraftServer.LOGGER.info("This world must be opened in an older version (like 1.6.4) to be safely converted");
-                return null;
-            }
-
-            if (!levelsummary.isCompatible()) {
-                MinecraftServer.LOGGER.info("This world was created by an incompatible version.");
-                return null;
-            }
-
-            dynamic = DataFixers.getFileFixer().fix(worldSession, dynamic1, new UpgradeProgress());
-        } else {
-            dynamic = null;
+            worldGenSettings = new WorldGenSettings(worldOptions, worldDimensions);
+            contextRegistryAccess = complete.dimensionsRegistryAccess();
+            loadedWorldData.levelOverrides().setHardcore(creator.hardcore());
         }
+        final WorldGenSettings genSettings = worldGenSettings;
 
-        boolean hardcore = creator.hardcore();
-
-        LevelDataAndDimensions.WorldDataAndGenSettings dataAndSettings;
-        WorldLoader.DataLoadContext worldloader_dataloadcontext = console.silkard_worldLoader();
-        RegistryAccess.Frozen registryaccess_frozen = worldloader_dataloadcontext.datapackDimensions();
-        net.minecraft.core.Registry<LevelStem> registry = registryaccess_frozen.lookupOrThrow(Registries.LEVEL_STEM);
-        // world_gen_settings.dat is written only after createLevels, so it is absent on first start
-        if (dynamic != null && java.nio.file.Files.exists(WorldGenSettings.TYPE.id().withSuffix(".dat").resolveAgainst(worldSession.getLevelPath(LevelResource.DATA)))) {
-            LevelDataAndDimensions leveldataanddimensions = LevelStorageSource.getLevelDataAndDimensions(worldSession, dynamic, worldloader_dataloadcontext.dataConfiguration(), registry, worldloader_dataloadcontext.datapackWorldRegistries());
-
-            dataAndSettings = leveldataanddimensions.worldDataAndGenSettings();
-            registryaccess_frozen = leveldataanddimensions.dimensions().dimensionsRegistryAccess();
-        } else {
-            LevelSettings levelsettings;
-            WorldOptions worldoptions = new WorldOptions(creator.seed(), creator.generateStructures(), false);
-            WorldDimensions worlddimensions;
-
-            DedicatedServerProperties.WorldDimensionData properties = new DedicatedServerProperties.WorldDimensionData(GsonHelper.parse((creator.generatorSettings().isEmpty()) ? "{}" : creator.generatorSettings()), creator.type().name().toLowerCase(Locale.ROOT));
-
-            levelsettings = new LevelSettings(name, GameType.byId(getDefaultGameMode().getValue()), new LevelSettings.DifficultySettings(Difficulty.EASY, hardcore, false), false, worldloader_dataloadcontext.dataConfiguration());
-            worlddimensions = properties.create(worldloader_dataloadcontext.datapackWorldRegistries());
-
-            WorldDimensions.Complete worlddimensions_complete = worlddimensions.bake(registry);
-            Lifecycle lifecycle = worlddimensions_complete.lifecycle().add(worldloader_dataloadcontext.datapackWorldRegistries().allRegistriesLifecycle());
-
-            PrimaryLevelData primaryleveldata = new PrimaryLevelData(levelsettings, worlddimensions_complete.specialWorldProperty(), lifecycle);
-            dataAndSettings = new LevelDataAndDimensions.WorldDataAndGenSettings(primaryleveldata, new WorldGenSettings(worldoptions, worlddimensions));
-
-            registryaccess_frozen = worlddimensions_complete.dimensionsRegistryAccess();
-        }
-        registry = registryaccess_frozen.lookupOrThrow(Registries.LEVEL_STEM);
-        PrimaryLevelData serverleveldata = (PrimaryLevelData) dataAndSettings.data();
-        serverleveldata.silkard_customDimensions(registry);
-        serverleveldata.checkName(name);
-        serverleveldata.setModdedInfo(console.getServerModName(), console.getModdedStatus().shouldReportAsModified());
+        levelStemRegistry = contextRegistryAccess.lookupOrThrow(Registries.LEVEL_STEM);
 
         if (console.silkard_options().has("forceUpgrade")) {
-            net.minecraft.server.Main.forceUpgrade(worldSession, DataFixers.getDataFixer(), console.silkard_options().has("eraseCache"), () -> true, registryaccess_frozen, console.silkard_options().has("recreateRegionFiles"));
-        }
-        SavedDataStorage dimensiondatastorage = new SavedDataStorage(worldSession.getLevelPath(LevelResource.DATA), console.getFixerUpper(), console.registryAccess());
-
-        WorldOptions worldoptions = dataAndSettings.genSettings().options();
-        long j = BiomeManager.obfuscateSeed(creator.seed());
-        List<CustomSpawner> list = ImmutableList.of(new PhantomSpawner(), new PatrolSpawner(), new CatSpawner(), new VillageSiege(), new WanderingTraderSpawner(dimensiondatastorage));
-        LevelStem levelstem = registry.getValue(actualDimension);
-
-        ResourceKey<net.minecraft.world.level.Level> worldKey;
-        String levelName = this.getServer().getProperties().levelName;
-        if (name.equals(levelName + "_nether")) {
-            worldKey = net.minecraft.world.level.Level.NETHER;
-        } else if (name.equals(levelName + "_the_end")) {
-            worldKey = net.minecraft.world.level.Level.END;
-        } else {
-            worldKey = ResourceKey.create(Registries.DIMENSION, Identifier.withDefaultNamespace(name.toLowerCase(Locale.ROOT)));
+            net.minecraft.server.Main.forceUpgrade(this.console.storageSource, DataFixers.getDataFixer(), console.silkard_options().has("eraseCache"), () -> true, contextRegistryAccess, console.silkard_options().has("recreateRegionFiles"));
         }
 
-        WorldInfo worldInfo = new CraftWorldInfo(
-            serverleveldata.getLevelName(),
-            CraftNamespacedKey.fromMinecraft(worldKey.identifier()),
-            worldoptions.seed(),
-            serverleveldata.enabledFeatures(),
-            creator.environment(),
-            levelstem.type().value(),
-            levelstem.generator(),
-            this.console.registryAccess(),
-            org.bukkit.craftbukkit.util.WorldUUID.getUUID(worldSession.levelDirectory.path().toFile())
-        );
+        long biomeZoomSeed = BiomeManager.obfuscateSeed(genSettings.options().seed());
+        LevelStem levelStem = genSettings.dimensions().get(actualDimension).orElse(null);
+        if (levelStem == null) {
+            levelStem = levelStemRegistry.getValue(actualDimension);
+        }
+        if (levelStem == null) {
+            throw new IllegalStateException("Missing level stem for world " + name + " using key " + actualDimension);
+        }
+
+        WorldInfo worldInfo = new CraftWorldInfo(loadedWorldData.bukkitName(), CraftNamespacedKey.fromMinecraft(dimensionKey.identifier()), genSettings.options().seed(), primaryLevelData.enabledFeatures(), creator.environment(), levelStem.type().value(), levelStem.generator(), registryAccess, loadedWorldData.uuid());
         if (biomeProvider == null && generator != null) {
             biomeProvider = generator.getDefaultBiomeProvider(worldInfo);
         }
 
-        ServerLevel internal = (ServerLevel) new ServerLevel(console, console.executor, worldSession, serverleveldata, worldKey, levelstem,
-                //serverleveldata.isDebugWorld(), j, creator.environment() == Environment.NORMAL ? list : ImmutableList.of(), true, dimensiondatastorage, dataAndSettings.genSettings(), creator.environment(), generator, biomeProvider);
-                serverleveldata.isDebugWorld(), j, creator.environment() == Environment.NORMAL ? list : ImmutableList.of(), true);
+        final SavedDataStorage savedDataStorage = new SavedDataStorage(com.mohistmc.silkard.paper.world.PaperWorldStorage.dimensionDataPath(this.console.storageSource, dimensionKey), this.console.getFixerUpper(), registryAccess);
+        savedDataStorage.set(WorldGenSettings.TYPE, new WorldGenSettings(genSettings.options(), genSettings.dimensions()));
+        List<CustomSpawner> list = ImmutableList.of(new PhantomSpawner(), new PatrolSpawner(), new CatSpawner(), new VillageSiege(), new WanderingTraderSpawner(savedDataStorage));
 
-        ((com.mohistmc.silkard.injected.world.level.storage.ContextLevelStorageAccess) worldSession).silkard$setDimType(actualDimension);
-        ((com.mohistmc.silkard.injected.server.level.ContextServerLevel) internal).silkard$setStorageSource(worldSession);
-        ((com.mohistmc.silkard.injected.server.level.ContextServerLevel) internal).silkard$setEnvironment(creator.environment());
-        ((com.mohistmc.silkard.injected.server.level.ContextServerLevel) internal).silkard$setGenerator(generator, biomeProvider);
+        ServerLevel internal = com.mohistmc.silkard.paper.world.PaperLevels.create(
+            this.console,
+            net.minecraft.util.Util.backgroundExecutor(),
+            this.console.storageSource,
+            genSettings,
+            dimensionKey,
+            levelStem,
+            primaryLevelData.isDebugWorld(),
+            biomeZoomSeed,
+            creator.environment() == Environment.NORMAL ? list : ImmutableList.of(),
+            true,
+            actualDimension,
+            creator.environment(),
+            generator,
+            biomeProvider,
+            savedDataStorage,
+            loadedWorldData);
         addWorld(internal.getWorld());
 
         if (!(worlds.containsKey(name.toLowerCase(Locale.ROOT)))) {
             return null;
         }
 
-        console.initWorld(internal, serverleveldata, serverleveldata, worldoptions);
+        console.addLevel(internal);
+        console.initWorld(internal, creator);
 
         internal.setSpawnSettings(true);
-        console.addLevel(internal);
 
-        getServer().prepareLevels(internal);
-        internal.entityManager.tick(); // SPIGOT-6526: Load pending entities so they are available to the API
-
-        pluginManager.callEvent(new WorldLoadEvent(internal.getWorld()));
+        console.prepareLevel(internal);
         return internal.getWorld();
     }
 
@@ -1326,7 +1285,10 @@ public final class CraftServer implements Server {
 
             handle.getChunkSource().close(save);
             handle.entityManager.close(save); // SPIGOT-6722: close entityManager
-            handle.silkard_storageSource().close();
+            // Worlds loaded the Paper way share the server's storage access; only a world's own access is closed.
+            if (handle.silkard_storageSource() != this.console.storageSource) {
+                handle.silkard_storageSource().close();
+            }
         } catch (Exception ex) {
             this.getLogger().log(Level.SEVERE, null, ex);
         }
