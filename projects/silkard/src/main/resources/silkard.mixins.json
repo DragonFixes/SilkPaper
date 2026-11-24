@@ -598,6 +598,7 @@
     "vanilla.world.level.MixinExplosion",
     "vanilla.world.level.MixinServerExplosion",
     "vanilla.world.level.MixinLevel",
+    "vanilla.world.level.MixinTicketStorage",
     "vanilla.world.level.MixinLevelAccessor",
     "vanilla.world.level.MixinLevelWriter",
     "vanilla.world.level.MixinNaturalSpawner",

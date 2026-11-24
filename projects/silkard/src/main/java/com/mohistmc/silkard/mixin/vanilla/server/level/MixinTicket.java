@@ -23,6 +23,11 @@ public class MixinTicket implements ContextTicket {
     public void silkard_key(Object key) {
        this.key = key;
     }
+
+    @Override
+    public Object silkard_key() {
+        return this.key;
+    }
     // CraftBukkit end
 
     @Unique
