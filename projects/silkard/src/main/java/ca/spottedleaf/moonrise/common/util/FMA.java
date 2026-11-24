@@ -56,7 +56,7 @@ public final class FMA {
                 try {
                     for (final String line : new SystemInfo().getHardware().getProcessor().getFeatureFlags()) {
                         if (line.toLowerCase(Locale.ROOT).matches("(?s).*\\bfma\\b.*")) {
-                            LOGGER.info("FMA supported: " + true + " for Linux platform with feature flag: " + line);
+                            LOGGER.info("FMA supported: " + true + " for Linux platform with the fma CPU feature flag");
                             return true;
                         }
                     }
