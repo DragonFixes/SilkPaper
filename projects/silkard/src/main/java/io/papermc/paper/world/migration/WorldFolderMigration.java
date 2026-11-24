@@ -84,30 +84,18 @@ public final class WorldFolderMigration {
             return;
         }
 
-        LOGGER.warn("Type 'confirm' to continue with startup world migration, or 'cancel' to stop the server.");
-
-        try {
-            final java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(System.in));
-            while (true) {
-                final String line = reader.readLine();
-                if (line == null) {
-                    LOGGER.warn("World migration is still waiting for confirmation. Type 'confirm' to continue, or 'cancel' to stop the server.");
-                    continue;
-                }
-
-                switch (line.trim().toLowerCase(java.util.Locale.ROOT)) {
-                    case "confirm" -> {
-                        LOGGER.info("Continuing with startup world migration.");
-                        return;
-                    }
-                    case "cancel" -> throw new RuntimeException("World migration cancelled by console input.");
-                    default -> LOGGER.warn("Invalid migration response. Type 'confirm' to continue, or 'cancel' to stop the server.");
-                }
-            }
-        } catch (final IOException ex) {
-            throw new RuntimeException("Failed to read world migration confirmation from console", ex);
-        }
         // Leaf end - Forge-like startup world migration
+        // SilkPaper: Paper's timed delay instead of Leaf's typed confirmation. SilkPaper's console
+        // thread already reads System.in, so a second reader here misses most input and spins
+        // when stdin is closed (panels, services).
+        LOGGER.warn("Continuing in 30 seconds... (start with -Dpaper.disableMigrationDelay=true to skip this wait)");
+        try {
+            Thread.sleep(java.time.Duration.ofSeconds(30));
+        } catch (final InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Interrupted while waiting to start world migration", ex);
+        }
+        LOGGER.info("Continuing with startup world migration.");
     }
 
     private static MigrationMode classifyStartupMigration(final WorldMigrationContext context) {
