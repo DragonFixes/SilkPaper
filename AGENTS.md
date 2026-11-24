@@ -88,6 +88,8 @@ scripts\boot-test.bat -Commands "plugins,mspt" -CommandDelaySeconds 5
 scripts\boot-test.bat -MixinAudit                      # also apply every mixin, not only startup classes
 .\scripts\boot-test.ps1 -Commands (Get-Content scripts\purpur-smoke.txt) -CommandDelaySeconds 5
                                                        # place ticking blocks, wait 20 s, catch runtime throws
+.\scripts\boot-test.ps1 -Commands (Get-Content scripts\death-smoke.txt) -CommandDelaySeconds 5
+                                                       # kill mobs; each "Test passed. Count: 1" means drops survived
 
 scripts\sync-upstream.bat                              # fetch, update mirror, report drift
 scripts\sync-upstream.bat -Merge upstream/26.3         # merge Silkard into the current branch
