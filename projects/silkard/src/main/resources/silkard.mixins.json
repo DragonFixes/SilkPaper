@@ -83,6 +83,7 @@
     "vanilla.server.network.MixinServerConnectionListener",
     "vanilla.server.network.MixinServerConnectionListener$1",
     "vanilla.server.network.MixinServerGamePacketListenerCloseEvent",
+    "vanilla.server.network.MixinServerGamePacketListenerInteractEvents",
     "vanilla.server.network.MixinServerGamePacketListenerTradeSelect",
     "vanilla.server.network.MixinServerGamePacketListenerImpl",
     "vanilla.server.network.MixinServerHandshakePacketListenerImpl",
