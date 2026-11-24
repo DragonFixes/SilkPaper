@@ -1,15 +1,24 @@
-/build/
-/run/
-/.idea/
-/.gradle/
+build/
+run/
+.idea/
+.gradle/
 .jxscan/
-/tools/
-/.workbuddy/
+tools/
+.workbuddy/
 *.txt
-/.tmp-javap/
+.tmp-javap/
 
-# Claude Code agent worktrees
-.claude/worktrees/
+# AI
+.claude/
+.codex/
+.cursor/
 
 # Built server jar and local test server from scripts\build-deploy / run-server
 /deploy/
+
+# Logs
+**.log
+
+# Tests
+test-logs/
+test-servers/
