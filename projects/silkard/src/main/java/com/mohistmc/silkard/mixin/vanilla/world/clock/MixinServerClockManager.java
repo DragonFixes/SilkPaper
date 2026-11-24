@@ -58,10 +58,11 @@ public abstract class MixinServerClockManager implements ContextServerClockManag
         }
     }
 
-    // CraftBukkit - per-world game time
+    // CraftBukkit - per-world game time. The server-wide manager belongs to no level; vanilla code that
+    // still reaches it (game rule announcements, mods) reads the overworld's time.
     @Overwrite
     private long getGameTime() {
-        return this.silkard$level.getGameTime();
+        return this.silkard$level != null ? this.silkard$level.getGameTime() : this.server.overworld().getGameTime();
     }
 
     @Overwrite
