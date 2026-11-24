@@ -516,6 +516,11 @@ public abstract class MixinServerPlayer extends Player implements ContextServerP
         return (CraftPlayer) this.silkard$serverBukkitEntity;
     }
 
+    // getBukkitEntity() above caches in its own field, so the raw lookup must read that field too.
+    public CraftEntity getBukkitEntityRaw() {
+        return this.silkard$serverBukkitEntity;
+    }
+
     @Override
     public String silkard$displayName() {
 

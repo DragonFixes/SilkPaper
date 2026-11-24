@@ -107,6 +107,11 @@ public interface ContextEntity extends ContextEntityAccess {
         throw new ContextStateException("Not implemented");
     }
 
+    /** The cached Bukkit entity, or null when none was created yet; never creates one. */
+    default CraftEntity getBukkitEntityRaw() {
+        throw new ContextStateException("Not implemented");
+    }
+
     default int getDefaultMaxAirSupply() {
         return Entity.TOTAL_AIR_SUPPLY;
     }

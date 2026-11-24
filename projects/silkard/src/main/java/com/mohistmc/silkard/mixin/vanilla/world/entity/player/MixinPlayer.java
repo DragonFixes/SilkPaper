@@ -126,6 +126,11 @@ public abstract class MixinPlayer extends Avatar implements ContextPlayer {
         return (CraftHumanEntity) this.silkard$playerBukkitEntity;
     }
 
+    // getBukkitEntity() above caches in its own field, so the raw lookup must read that field too.
+    public CraftEntity getBukkitEntityRaw() {
+        return this.silkard$playerBukkitEntity;
+    }
+
     // CraftBukkit start - EntityExhaustionEvent
     @Overwrite
     public void causeFoodExhaustion(float amount) {

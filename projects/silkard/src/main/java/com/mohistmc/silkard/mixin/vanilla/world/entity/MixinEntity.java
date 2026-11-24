@@ -62,6 +62,11 @@ public abstract class MixinEntity implements ContextEntity {
         }
         return this.silkard$bukkitEntity;
     }
+
+    @Override
+    public CraftEntity getBukkitEntityRaw() {
+        return this.silkard$bukkitEntity;
+    }
     // CraftBukkit end
 
     // CraftBukkit start - EntityRemoveEvent

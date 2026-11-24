@@ -848,6 +848,31 @@ public abstract class MixinMinecraftServer extends net.minecraft.util.thread.Ree
             serverplayer.connection.suspendFlushing();
         });
         this.server.getScheduler().mainThreadHeartbeat(); // CraftBukkit
+        // Paper start - Folia scheduler API
+        this.server.getGlobalRegionScheduler().tick();
+        for (ServerPlayer player : this.getPlayerList().getPlayers()) {
+            if (!this.getPlayerList().getPlayers().contains(player)) {
+                continue; // a task above removed this player
+            }
+            final org.bukkit.craftbukkit.entity.CraftEntity bukkit = player.getBukkitEntityRaw();
+            if (bukkit != null) {
+                bukkit.taskScheduler.executeTick();
+            }
+        }
+        for (ServerLevel level : this.getAllLevels()) {
+            for (final net.minecraft.world.entity.Entity entity : com.mohistmc.silkard.paper.server.FeatureHooks.getAllEntities(level)) {
+                if (entity.isRemoved() || entity instanceof ServerPlayer) {
+                    continue;
+                }
+                final org.bukkit.craftbukkit.entity.CraftEntity bukkit = entity.getBukkitEntityRaw();
+                if (bukkit != null) {
+                    bukkit.taskScheduler.executeTick();
+                }
+            }
+        }
+        // Paper end - Folia scheduler API
+        io.papermc.paper.adventure.providers.ClickCallbackProviderImpl.ADVENTURE_CLICK_MANAGER.handleQueue(this.tickCount); // Paper
+        io.papermc.paper.adventure.providers.ClickCallbackProviderImpl.DIALOG_CLICK_MANAGER.handleQueue(this.tickCount); // Paper
         profilerfiller.push("commandFunctions");
         this.getFunctions().tick();
         profilerfiller.pop();
