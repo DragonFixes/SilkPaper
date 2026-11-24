@@ -264,6 +264,7 @@
     "vanilla.world.entity.monster.MixinSlime",
     "vanilla.world.entity.monster.MixinStrider",
     "vanilla.world.entity.monster.MixinVex",
+    "vanilla.world.entity.monster.MixinVex$VexCopyOwnerTargetGoal",
     "vanilla.world.entity.monster.MixinWitch",
     "vanilla.world.entity.monster.piglin.MixinAbstractPiglin",
     "vanilla.world.entity.monster.piglin.MixinPiglin",
