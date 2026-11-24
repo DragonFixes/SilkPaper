@@ -8,7 +8,12 @@ import com.mohistmc.silkard.injected.server.network.ContextServerCommonPacketLis
 import com.mohistmc.silkard.injected.server.network.ContextServerLoginPacketListenerImpl;
 import com.mohistmc.silkard.injected.server.players.ContextPlayerList;
 import com.destroystokyo.paper.proxy.VelocityProxy;
+import com.google.common.collect.ImmutableMultimap;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.mohistmc.silkard.injected.network.ContextConnection;
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+import com.mojang.authlib.properties.PropertyMap;
 import io.papermc.paper.configuration.GlobalConfiguration;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -135,6 +140,31 @@ public class MixinServerLoginPacketListenerImpl implements ContextServerLoginPac
         this.silkard$preLoginDone = true;
         callPlayerPreLoginEvents(gameprofile);
     }
+
+    // Spigot - BungeeCord IP forwarding: the offline profile takes the UUID and the skin
+    // properties the proxy forwarded in the handshake, keeping only well-formed property names.
+    @ModifyExpressionValue(method = "handleHello",
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/core/UUIDUtil;createOfflineProfile(Ljava/lang/String;)Lcom/mojang/authlib/GameProfile;"))
+    private GameProfile silkard$spoofedOfflineProfile(GameProfile original) {
+        ContextConnection context = (ContextConnection) this.connection;
+        UUID spoofedUUID = context.silkard$spoofedUUID();
+        Property[] spoofedProfile = context.silkard$spoofedProfile();
+        if (spoofedUUID == null && spoofedProfile == null) {
+            return original;
+        }
+        ImmutableMultimap.Builder<String, Property> props = ImmutableMultimap.builder();
+        if (spoofedProfile != null) {
+            for (Property property : spoofedProfile) {
+                if (property != null && property.name() != null && SILKARD$PROP_PATTERN.matcher(property.name()).matches()) {
+                    props.put(property.name(), property);
+                }
+            }
+        }
+        return new GameProfile(spoofedUUID != null ? spoofedUUID : original.id(), original.name(), new PropertyMap(props.build()));
+    }
+
+    @Unique
+    private static final java.util.regex.Pattern SILKARD$PROP_PATTERN = java.util.regex.Pattern.compile("\\w{0,16}");
 
     // CraftBukkit - offline mode: run the blocking pre-login events off the netty thread
     @WrapOperation(method = "handleHello",

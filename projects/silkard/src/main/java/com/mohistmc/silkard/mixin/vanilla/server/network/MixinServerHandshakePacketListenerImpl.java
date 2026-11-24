@@ -77,4 +77,74 @@ public class MixinServerHandshakePacketListenerImpl {
         }
     }
     // CraftBukkit end
+
+    @Unique
+    private static final com.google.gson.Gson silkard$gson = new com.google.gson.Gson();
+
+    @Unique
+    private static final java.util.regex.Pattern silkard$HOST_PATTERN = java.util.regex.Pattern.compile("[0-9a-f\\.:]{0,45}");
+
+    @Unique
+    private static final boolean silkard$BYPASS_HOSTCHECK = Boolean.getBoolean("Paper.bypassHostCheck");
+
+    /**
+     * Spigot BungeeCord IP forwarding and Paper's PlayerHandshakeEvent. A BungeeCord-style proxy
+     * appends {@code \0<player ip>\0<uuid>[\0<properties json>]} to the handshake host name; this
+     * reads it once the login listener is installed, before the client's hello arrives.
+     */
+    @Inject(method = "beginLogin", cancellable = true, at = @At(value = "INVOKE", shift = At.Shift.AFTER,
+        target = "Lnet/minecraft/network/Connection;setupInboundProtocol(Lnet/minecraft/network/ProtocolInfo;Lnet/minecraft/network/PacketListener;)V"))
+    private void silkard$proxyForwarding(ClientIntentionPacket packet, boolean transfer, CallbackInfo ci) {
+        ContextConnection context = (ContextConnection) (Object) this.connection;
+        java.net.SocketAddress socketAddress = this.connection.getRemoteAddress();
+        int port = socketAddress instanceof InetSocketAddress inet ? inet.getPort() : 0;
+        boolean proxyLogicEnabled = org.spigotmc.SpigotConfig.bungee;
+        String hostName = packet.hostName();
+
+        boolean handledByEvent = false;
+        if (com.destroystokyo.paper.event.player.PlayerHandshakeEvent.getHandlerList().getRegisteredListeners().length != 0) {
+            String hostnameOfRemote = socketAddress instanceof InetSocketAddress inet ? inet.getHostString() : InetAddress.getLoopbackAddress().getHostAddress();
+            com.destroystokyo.paper.event.player.PlayerHandshakeEvent event = new com.destroystokyo.paper.event.player.PlayerHandshakeEvent(hostName, hostnameOfRemote, !proxyLogicEnabled);
+            if (event.callEvent()) {
+                if (event.isFailed()) {
+                    silkard$refuse(io.papermc.paper.adventure.PaperAdventure.asVanilla(event.failMessage()), ci);
+                    return;
+                }
+                if (event.getServerHostname() != null) {
+                    hostName = event.getServerHostname();
+                    context.silkard$setHostName(hostName);
+                }
+                if (event.getSocketAddressHostname() != null) {
+                    this.connection.address = new InetSocketAddress(event.getSocketAddressHostname(), port);
+                }
+                context.silkard$setSpoofedUUID(event.getUniqueId());
+                context.silkard$setSpoofedProfile(silkard$gson.fromJson(event.getPropertiesJson(), com.mojang.authlib.properties.Property[].class));
+                handledByEvent = true;
+            }
+        }
+
+        String[] split = hostName.split("\0");
+        if (!handledByEvent && proxyLogicEnabled) {
+            if ((split.length == 3 || split.length == 4) && (silkard$BYPASS_HOSTCHECK || silkard$HOST_PATTERN.matcher(split[1]).matches())) {
+                context.silkard$setHostName(split[0]);
+                this.connection.address = new InetSocketAddress(split[1], port);
+                context.silkard$setSpoofedUUID(com.mojang.util.UndashedUuid.fromStringLenient(split[2]));
+            } else {
+                silkard$refuse(Component.literal("If you wish to use IP forwarding, please enable it in your BungeeCord config as well!"), ci);
+                return;
+            }
+            if (split.length == 4) {
+                context.silkard$setSpoofedProfile(silkard$gson.fromJson(split[3], com.mojang.authlib.properties.Property[].class));
+            }
+        } else if (!handledByEvent && (split.length == 3 || split.length == 4) && silkard$HOST_PATTERN.matcher(split[1]).matches()) {
+            silkard$refuse(Component.literal("Unknown data in login hostname, did you forget to enable BungeeCord in spigot.yml?"), ci);
+        }
+    }
+
+    @Unique
+    private void silkard$refuse(Component message, CallbackInfo ci) {
+        this.connection.send(new ClientboundLoginDisconnectPacket(message));
+        this.connection.disconnect(message);
+        ci.cancel();
+    }
 }

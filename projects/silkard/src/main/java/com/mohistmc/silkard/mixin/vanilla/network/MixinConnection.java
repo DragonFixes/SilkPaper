@@ -40,6 +40,33 @@ public abstract class MixinConnection implements ContextConnection {
         this.hostname = hostName;
     }
 
+    // Spigot - BungeeCord IP forwarding
+    @Unique
+    private volatile java.util.UUID silkard$spoofedUUID;
+
+    @Unique
+    private volatile com.mojang.authlib.properties.Property[] silkard$spoofedProfile;
+
+    @Override
+    public java.util.UUID silkard$spoofedUUID() {
+        return this.silkard$spoofedUUID;
+    }
+
+    @Override
+    public void silkard$setSpoofedUUID(java.util.UUID uuid) {
+        this.silkard$spoofedUUID = uuid;
+    }
+
+    @Override
+    public com.mojang.authlib.properties.Property[] silkard$spoofedProfile() {
+        return this.silkard$spoofedProfile;
+    }
+
+    @Override
+    public void silkard$setSpoofedProfile(com.mojang.authlib.properties.Property[] profile) {
+        this.silkard$spoofedProfile = profile;
+    }
+
     @Override
     public SocketAddress getRawAddress() {
         return getRemoteAddress();
