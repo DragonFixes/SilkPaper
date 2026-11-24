@@ -205,8 +205,7 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
         }
 
         final BedRule bedRule = bedBlock.getBedRule(level, pos);
-        // TODO Silkard - the injected startSleepInBed has no force flag, so force is not honoured yet
-        if (this.getHandle().startSleepInBed(bedBlock, state, bedRule, pos).left().isPresent()) {
+        if (this.getHandle().startSleepInBed(bedBlock, state, bedRule, pos, force).left().isPresent()) {
             return false;
         }
 

@@ -35,6 +35,11 @@ public interface ContextPlayer extends ContextLivingEntity {
         throw new ContextStateException("Not implemented");
     }
 
+    /** CraftBukkit - {@code force} skips the vanilla checks, though PlayerBedEnterEvent still fires. */
+    default Either<Player.BedSleepingProblem, Unit> startSleepInBed(net.minecraft.world.level.block.AbstractBedBlock bedBlock, net.minecraft.world.level.block.state.BlockState bedBlockState, net.minecraft.world.attribute.BedRule rule, BlockPos pos, boolean force) {
+        throw new ContextStateException("Not implemented");
+    }
+
     default void causeFoodExhaustion(float f, EntityExhaustionEvent.ExhaustionReason reason) {
         throw new ContextStateException("Not implemented");
     }
