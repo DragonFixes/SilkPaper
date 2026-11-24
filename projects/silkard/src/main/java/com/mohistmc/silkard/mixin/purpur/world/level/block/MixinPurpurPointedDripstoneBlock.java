@@ -12,12 +12,12 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 @Mixin(PointedDripstoneBlock.class)
 public abstract class MixinPurpurPointedDripstoneBlock {
 
-    @ModifyConstant(method = "maybeTransferFluid", constant = @Constant(floatValue = 0.17578125F))
+    @ModifyConstant(method = "maybeTransferFluid", constant = @Constant(floatValue = 0.17578125F), require = 2)
     private static float purpur$waterFillChance(float original, BlockState state, ServerLevel level, BlockPos pos, float randomValue) {
         return level.purpurConfig().cauldronDripstoneWaterFillChance;
     }
 
-    @ModifyConstant(method = "maybeTransferFluid", constant = @Constant(floatValue = 0.05859375F))
+    @ModifyConstant(method = "maybeTransferFluid", constant = @Constant(floatValue = 0.05859375F), require = 2)
     private static float purpur$lavaFillChance(float original, BlockState state, ServerLevel level, BlockPos pos, float randomValue) {
         return level.purpurConfig().cauldronDripstoneLavaFillChance;
     }

@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 @Mixin(FlowingFluid.class)
 public abstract class MixinPurpurFlowingFluid {
 
-    @ModifyConstant(method = "getNewLiquid", constant = @Constant(intValue = 2))
+    @ModifyConstant(method = "getNewLiquid", constant = @Constant(intValue = 2), allow = 1)
     private int purpur$requiredSources(int original, ServerLevel level, BlockPos pos, BlockState state) {
         Object self = this;
         if (self instanceof WaterFluid) return level.purpurConfig().waterInfiniteRequiredSources;

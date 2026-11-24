@@ -95,6 +95,28 @@ public final class PaperBootstrap {
     }
 
     /**
+     * Reads the Purpur settings vanilla bootstrap already depends on, as Purpur's {@code Main} does
+     * before {@code Bootstrap.bootStrap}: the enchantment level clamp decides the enchantment level
+     * codec, and the command flags decide which vanilla commands get registered. The full
+     * {@code purpur.yml} loads later, in {@link #initServer}.
+     */
+    public static void loadEarlyPurpurSettings(@Nullable OptionSet options) {
+        purpurConfigFile = optionFile(options, "purpur-settings", new File(PaperConfigurations.CONFIG_DIR, "purpur.yml"));
+        migrateRootPurpurConfig(purpurConfigFile);
+        if (!purpurConfigFile.isFile()) {
+            return;
+        }
+        try {
+            org.bukkit.configuration.file.YamlConfiguration purpur = PaperConfigurations.loadLegacyConfigFile(purpurConfigFile);
+            PurpurConfig.clampEnchantLevels = purpur.getBoolean("settings.enchantment.clamp-levels", true);
+            PurpurConfig.registerMinecraftDebugCommands = purpur.getBoolean("settings.register-minecraft-debug-commands");
+            PurpurConfig.registerMinecraftDisabledCommands = purpur.getBoolean("settings.register-minecraft-disabled-commands");
+        } catch (Exception e) {
+            LOGGER.warn("Could not read early Purpur settings from {}", purpurConfigFile, e);
+        }
+    }
+
+    /**
      * Registers the plugin providers (plugins folder and {@code --add-plugin} jars) with Paper's
      * plugin system, as Paper's {@code Main} does right before vanilla bootstrap. Paper plugin
      * bootstrappers then run from {@code Bootstrap.bootStrap}, and CraftServer loads the

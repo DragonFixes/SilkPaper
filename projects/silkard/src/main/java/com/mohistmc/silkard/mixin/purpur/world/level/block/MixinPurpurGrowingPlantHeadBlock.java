@@ -27,7 +27,7 @@ public abstract class MixinPurpurGrowingPlantHeadBlock {
         cir.setReturnValue(((GrowingPlantHeadBlock) (Object) this).defaultBlockState().setValue(GrowingPlantHeadBlock.AGE, max == 0 ? 0 : random.nextInt(max)));
     }
 
-    @ModifyConstant(method = {"isRandomlyTicking", "randomTick", "getMaxAgeState", "performBonemeal"}, constant = @Constant(intValue = 25))
+    @ModifyConstant(method = {"isRandomlyTicking", "randomTick", "getMaxAgeState", "performBonemeal"}, constant = @Constant(intValue = 25), require = 5, allow = 5)
     private int purpur$maxGrowthAge(int original) {
         return this.getMaxGrowthAge();
     }

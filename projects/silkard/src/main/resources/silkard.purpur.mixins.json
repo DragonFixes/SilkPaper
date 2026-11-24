@@ -5,6 +5,8 @@
   "plugin": "com.mohistmc.silkard.SilkardMixinPlugin",
   "mixinPriority": 1100,
   "mixins": [
+    "server.level.MixinPurpurServerPlayerGameMode",
+    "world.entity.ai.behavior.MixinPurpurInteractWithDoor",
     "world.item.MixinPurpurBoatItem",
     "world.item.MixinPurpurBowItem",
     "world.item.MixinPurpurBucketItem",
