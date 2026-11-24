@@ -73,6 +73,16 @@ public abstract class MixinPaperMinecraftServer implements PaperMinecraftServerA
         return this.paper$tickTimes1m;
     }
 
+    // Async callers (the TPS boss bar, plugins calling getAverageTickTime) read while the server
+    // thread appends ticks; TickData is not thread-safe on its own.
+    @Override
+    public TickData.MSPTData paper$msptData5s() {
+        final long interval = ((MinecraftServer) (Object) this).tickRateManager().nanosecondsPerTick();
+        synchronized (this.paper$statsLock) {
+            return this.paper$tickTimes5s.getMSPTData(null, interval);
+        }
+    }
+
     @Override
     public boolean paper$isIteratingOverLevels() {
         return this.paper$isIteratingOverLevels;

@@ -79,8 +79,14 @@ public class MinecraftInternalPlugin extends PluginBase {
 
     @Override
     public PluginLogger getLogger() {
-        throw new UnsupportedOperationException("Not supported.");
+        // The scheduler logs task exceptions through the owner's logger.
+        if (this.logger == null) {
+            this.logger = new PluginLogger(this);
+        }
+        return this.logger;
     }
+
+    private PluginLogger logger;
 
     @Override
     public PluginLoader getPluginLoader() {

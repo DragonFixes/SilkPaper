@@ -44,7 +44,7 @@ public final class PaperServerHooks {
     }
 
     public static TickData.@Nullable MSPTData msptData5s(final MinecraftServer server) {
-        return server.paper$tickTimes5s().getMSPTData(null, server.tickRateManager().nanosecondsPerTick());
+        return server.paper$msptData5s();
     }
 
     public static void allowPausing(final Plugin plugin, final boolean value) {

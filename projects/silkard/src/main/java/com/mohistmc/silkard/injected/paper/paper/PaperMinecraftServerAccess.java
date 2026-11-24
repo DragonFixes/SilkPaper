@@ -23,6 +23,11 @@ public interface PaperMinecraftServerAccess {
         throw new ContextStateException("Not implemented");
     }
 
+    /** MSPT statistics over the last 5 seconds, read under the lock the server thread writes with. */
+    default TickData.MSPTData paper$msptData5s() {
+        throw new ContextStateException("Not implemented");
+    }
+
     /** Whether the server is currently ticking its levels. */
     default boolean paper$isIteratingOverLevels() {
         throw new ContextStateException("Not implemented");
