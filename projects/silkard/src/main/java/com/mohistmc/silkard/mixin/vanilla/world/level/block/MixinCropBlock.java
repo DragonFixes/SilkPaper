@@ -32,7 +32,8 @@ public class MixinCropBlock {
     // CraftBukkit - EntityChangeBlockEvent when Ravager eats crops
     @Redirect(method = "entityInside", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;destroyBlock(Lnet/minecraft/core/BlockPos;ZLnet/minecraft/world/entity/Entity;)Z"))
     private boolean silkard$ravagerEat(ServerLevel level, BlockPos pos, boolean drop, Entity entity) {
-        if (CraftEventFactory.callEntityChangeBlockEvent(entity, pos, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), !level.getGameRules().get(net.minecraft.world.level.gamerules.GameRules.MOB_GRIEFING))) {
+        if (!level.purpurConfig().ravagerGriefableBlocks.contains(level.getBlockState(pos).getBlock())) return false; // Purpur - Configurable ravager griefable blocks list
+        if (CraftEventFactory.callEntityChangeBlockEvent(entity, pos, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), !level.getGameRules().get(net.minecraft.world.level.gamerules.GameRules.MOB_GRIEFING, level.purpurConfig().ravagerMobGriefingOverride))) { // Purpur - Add mobGriefing override to everything affected
             return level.destroyBlock(pos, drop, entity);
         }
         return false;
