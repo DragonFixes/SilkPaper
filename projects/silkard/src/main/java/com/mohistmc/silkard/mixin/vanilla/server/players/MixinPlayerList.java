@@ -519,7 +519,8 @@ public abstract class MixinPlayerList implements ContextPlayerList {
         // CraftBukkit - return value ignored (vanilla signature kept)
 
         serverlevel.removePlayerImmediately(player, Entity.RemovalReason.UNLOADED_WITH_PLAYER);
-        player.getBukkitEntity().taskScheduler.retire(); // Paper - Folia schedulers        player.getAdvancements().clearTriggers();
+        player.getBukkitEntity().taskScheduler.retire(); // Paper - Folia schedulers
+        player.getAdvancements().clearTriggers();
         this.players.remove(player);
         this.server.getCustomBossEvents().onPlayerDisconnect(player);
         UUID uuid = player.getUUID();
