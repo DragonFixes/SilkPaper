@@ -105,6 +105,14 @@ at runtime (missing vanilla hooks, missing jar-in-jar libraries). After any serv
 2. `scripts\boot-test.bat` (add `-Fresh` when world generation or configs are involved, and pass
    the commands the change touches with `-Commands`)
 
+`boot-test` uses a server folder with no plugins, so it does not catch plugin-compatibility
+breakage. For that, `test-servers\drakgg\smp` is a good test folder: a copy of a real SMP with
+about 70 Paper plugins (FAWE, WorldGuard, mcMMO, LuckPerms, nightcore plugins, CMILib, Worlds and
+more). Copy the deployed jar in and run it there, for example
+`scripts\run-server.bat -ServerDir C:\Development\Java\ServerSoftware\SilkPaper\test-servers\drakgg\smp`,
+then check its `logs\latest.log` for plugin errors. `test-servers\` and `test-logs\` (logs the user
+shares from servers) are git-ignored; never commit them.
+
 `boot-test` checks the log every 15 seconds. On a stall it saves a `jstack` dump to
 `deploy\boot-test-threads-<time>.txt` before killing the server; read it to see where the server
 is blocked. A shutdown stall after "Saving chunks for level ... the_end" or "Saving worlds" has been
