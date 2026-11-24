@@ -5,8 +5,13 @@
   "plugin": "com.mohistmc.silkard.SilkardMixinPlugin",
   "mixinPriority": 1100,
   "mixins": [
+    "world.level.block.MixinPurpurAzaleaBlock",
+    "world.level.block.MixinPurpurBaseCoralPlantTypeBlock",
+    "world.level.block.MixinPurpurBedBlock",
+    "world.level.block.MixinPurpurBigDripleafBlock",
     "world.level.block.MixinPurpurBlock",
     "world.level.block.MixinPurpurBubbleColumnBlock",
+    "world.level.block.MixinPurpurCampfireBlock",
     "world.level.block.MixinPurpurCactusBlock",
     "world.level.block.MixinPurpurLiquidBlock",
     "world.level.block.MixinPurpurNetherWartBlock",
