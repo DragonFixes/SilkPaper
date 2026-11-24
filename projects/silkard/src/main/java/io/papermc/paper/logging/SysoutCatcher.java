@@ -81,8 +81,9 @@ public final class SysoutCatcher {
                 );
             } catch (final IllegalArgumentException | IllegalStateException e) {
                 // If anything happens, the calling class doesn't exist, there is no JavaPlugin that "owns" the calling class, etc
-                // Just print out normally, with some added information
-                Bukkit.getLogger().log(this.level, String.format("%s[%s] %s", this.prefix, clazz.getName(), line));
+                // Just print out normally, tagged with the calling class. The log level already tells
+                // stdout from stderr, so the stream prefix is left out.
+                Bukkit.getLogger().log(this.level, String.format("[%s] %s", clazz.getSimpleName(), line));
             }
         }
     }
