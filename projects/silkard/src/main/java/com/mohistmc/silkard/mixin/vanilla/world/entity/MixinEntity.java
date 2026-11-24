@@ -26,6 +26,7 @@ public abstract class MixinEntity implements ContextEntity {
 
     // @formatter:off
     @Shadow private float yRot;
+    @Shadow private float xRot;
     @Shadow private Level level;
     @Shadow @Final public abstract double getX();
     @Shadow @Final public abstract double getZ();
@@ -552,6 +553,17 @@ public abstract class MixinEntity implements ContextEntity {
         }
     }
     // CraftBukkit end
+
+    // CraftBukkit - Checking for NaN pitch/yaw and resetting to zero, so a broken rotation is never saved
+    @Inject(method = "saveWithoutId(Lnet/minecraft/world/level/storage/ValueOutput;)V", at = @At("HEAD"))
+    private void craftbukkit$resetNaNRotation(net.minecraft.world.level.storage.ValueOutput output, org.spongepowered.asm.mixin.injection.callback.CallbackInfo ci) {
+        if (Float.isNaN(this.yRot)) {
+            this.yRot = 0;
+        }
+        if (Float.isNaN(this.xRot)) {
+            this.xRot = 0;
+        }
+    }
 
     // Paper - Allies API: rules a plugin added through org.bukkit.entity.Entity#addAdditionalAlliedRule
     @Inject(method = "considersEntityAsAlly", at = @At("RETURN"), cancellable = true)
