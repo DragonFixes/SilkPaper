@@ -22,7 +22,8 @@ patches rewrite earlier ones.
 | Block: stonecutter damage, silk touch spawners, ender chest rows, block fall multipliers, block-entity lore, placer | missing | need Purpur damage sources, spawner item data, player ender chest fields |
 | Item options | partial | done: projectile offsets (bow, crossbow, trident, egg, snowball, ender pearl, potion, wind charge), ender pearl cooldown, infinity without arrows, elytra damage per firework/trident boost, end crystal and minecart placement, name tag on armor stand, enchant level clamp (read before bootstrap, as Purpur), bucket water in the End. Missing: elytra per-second damage (`LivingEntity`, `ItemStack`), MC-3304 projectile looting, silk touch spawner items |
 | Features shared with entities | partial | block and item sides are done; the entity sides are missing: mob griefing override (about 40 mobs), multiple babies (about 25 animals), display names from item forms (`ArmorStand`, `ItemFrame`, `Painting`, `AbstractBoat`) |
-| Menu, player, food, effect, command and server options | missing | |
+| Menu, food and effect options | done | anvil (Anvil API events, unsafe enchants, colors, cumulative cost; one overwrite at priority 500 so other mods can still inject), grindstone (kept enchants, strip attributes/name, Paper BlockExpEvent, GrindstoneTakeResultEvent), enchanting table lapis, binding with weakness, poison/wither/regen/saturation/hunger amounts, starvation damage, armor limit, milk and bad omen. Burp delay and volume belong to the player batch |
+| Player, server, command and world options | missing | `ServerLevel`, `ServerPlayer`, `ServerGamePacketListenerImpl`, AFK, sleep, spawners, commands, ender chest rows |
 | AFK system | missing | |
 | Ridable and controllable mobs (`MoveControllerWASD`, per-mob `ridable`) | missing | ported last |
 
