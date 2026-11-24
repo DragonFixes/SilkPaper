@@ -32,6 +32,11 @@ public interface ContextServerLevel extends ContextLevel {
         throw new ContextStateException("Not implemented");
     }
 
+    /** This level's scheduled function queue, ticked against this level's own game time. */
+    default net.minecraft.world.level.timers.TimerQueue<net.minecraft.server.MinecraftServer> getScheduledEvents() {
+        throw new ContextStateException("Not implemented");
+    }
+
     default LevelStorageSource.LevelStorageAccess silkard_storageSource() {
         throw new ContextStateException("Not implemented");
     }

@@ -147,8 +147,9 @@ public abstract class MixinServerLevel implements ContextServerLevel {
         weatherdata.setThundering(thundering);
     }
 
+    @Override
     public TimerQueue<MinecraftServer> getScheduledEvents() {
-        return this.scheduledEvents;
+        return this.scheduledEvents != null ? this.scheduledEvents : ((ServerLevel) (Object) this).getServer().getScheduledEvents();
     }
     // Moved from MinecraftServer end
 
@@ -269,6 +270,20 @@ public abstract class MixinServerLevel implements ContextServerLevel {
         this.generator = gen;
         this.biomeProvider = biomeProvider;
         this.savedDataStorage = savedDataStorage;
+        // Paper - per-level scheduledEvents. The overworld's data folder is the main save's, which
+        // the server's own queue already reads scheduled_events.dat from, so the overworld shares
+        // that queue rather than loading a second copy of the same file.
+        this.scheduledEvents = dimension == net.minecraft.world.level.Level.OVERWORLD
+            ? server.getScheduledEvents()
+            : savedDataStorage.computeIfAbsent(TimerQueue.TYPE);
+    }
+
+    // Paper - per-level scheduledEvents: each level runs its own queue against its own clock. The
+    // server-wide queue holds trigger times from whichever level scheduled them, so a level whose
+    // clock runs ahead would find "1t" functions always due and re-run them forever in one tick.
+    @Redirect(method = "tickTime", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;getScheduledEvents()Lnet/minecraft/world/level/timers/TimerQueue;"))
+    private TimerQueue<MinecraftServer> silkard$levelScheduledEvents(MinecraftServer server) {
+        return this.getScheduledEvents();
     }
 
     // Vanilla reads the server's (overworld's) settings; a Paper-style level has its own seed and structures setting.
