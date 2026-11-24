@@ -26,6 +26,7 @@
     "vanilla.MixinCrashReport",
     "vanilla.network.chat.MixinComponent",
     "vanilla.network.chat.MixinFormattedText",
+    "vanilla.network.chat.MixinMutableComponent",
     "vanilla.network.chat.MixinTextColor",
     "vanilla.network.MixinConnection",
     "vanilla.network.MixinFriendlyByteBuf",
