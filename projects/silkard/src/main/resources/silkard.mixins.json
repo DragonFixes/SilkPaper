@@ -39,7 +39,6 @@
     "vanilla.server.commands.MixinDifficultyCommand",
     "vanilla.server.commands.MixinEffectCommands",
     "vanilla.server.commands.MixinGameRuleCommand",
-    "vanilla.server.commands.MixinGiveCommand",
     "vanilla.server.commands.MixinListPlayersCommand",
     "vanilla.server.commands.MixinLootCommand",
     "vanilla.server.commands.MixinPlaceCommand",
