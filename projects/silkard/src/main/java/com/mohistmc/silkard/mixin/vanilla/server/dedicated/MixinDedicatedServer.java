@@ -359,6 +359,14 @@ public abstract class MixinDedicatedServer extends MinecraftServer implements Co
         }
     }
 
+    // CraftBukkit/Paper - end the JVM once the server has fully stopped. Plugin and scheduler
+    // threads (Paper's async scheduler among them) are not daemons and would keep it alive.
+    @Inject(method = "onServerExit", at = @At("TAIL"))
+    private void silkard$exitJvm(CallbackInfo ci) {
+        org.bukkit.craftbukkit.util.ServerShutdownThread.serverThreadExiting = true;
+        System.exit(0);
+    }
+
     // CraftBukkit - code of conduct map must stay mutable
     @Inject(method = "readCodeOfConducts", at = @At("RETURN"), cancellable = true)
     private static void silkard$mutableCodeOfConducts(CallbackInfoReturnable<java.util.Map<String, String>> cir) {

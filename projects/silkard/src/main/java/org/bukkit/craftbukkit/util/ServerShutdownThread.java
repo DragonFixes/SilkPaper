@@ -5,6 +5,12 @@ import io.papermc.paper.log.LoggerShutdown;
 import net.minecraft.server.MinecraftServer;
 
 public class ServerShutdownThread extends TickThread {
+    /**
+     * Set by the server thread right before it calls System.exit at the end of a normal stop.
+     * That thread is then blocked in System.exit until this hook returns, so joining it would only stall.
+     */
+    public static volatile boolean serverThreadExiting;
+
     private final MinecraftServer server;
 
     public ServerShutdownThread(MinecraftServer server) {
@@ -15,6 +21,9 @@ public class ServerShutdownThread extends TickThread {
     @Override
     public void run() {
         try {
+            if (serverThreadExiting) {
+                return;
+            }
             // Paper start - try to shutdown on main
             server.halt(false);
 

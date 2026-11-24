@@ -461,6 +461,7 @@ public abstract class MixinPlayerList implements ContextPlayerList {
             serverlevel.addNewPlayer(player);
             this.server.getCustomBossEvents().onPlayerConnect(player);
         }
+        org.purpurmc.purpur.task.BossBarTask.addToAll(player); // Purpur - tps/ram/compass bars saved on the player
 
         serverlevel = player.level(); // CraftBukkit - update in case join event changed it
         // CraftBukkit end
@@ -482,6 +483,7 @@ public abstract class MixinPlayerList implements ContextPlayerList {
         ServerLevel serverlevel = player.level();
 
         player.awardStat(Stats.LEAVE_GAME);
+        org.purpurmc.purpur.task.BossBarTask.removeFromAll(player.getBukkitEntity()); // Purpur
 
         // CraftBukkit start - quitting must be before the final save, plugins may modify data (SPIGOT-5799, SPIGOT-6145)
         if (player.containerMenu != player.inventoryMenu) {

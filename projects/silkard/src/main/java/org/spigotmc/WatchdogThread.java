@@ -181,6 +181,10 @@ public class WatchdogThread extends ca.spottedleaf.moonrise.common.util.TickThre
 
     private static void dumpThread(ThreadInfo thread, Logger logger) {
         logger.log(Level.SEVERE, "------------------------------");
+        if (thread == null) { // ThreadMXBean returns null for a thread that has already terminated
+            logger.log(Level.SEVERE, "Thread has terminated; no dump available.");
+            return;
+        }
 
         logger.log(Level.SEVERE, "Current Thread: " + thread.getThreadName());
         logger.log(Level.SEVERE, "\tPID: " + thread.getThreadId()

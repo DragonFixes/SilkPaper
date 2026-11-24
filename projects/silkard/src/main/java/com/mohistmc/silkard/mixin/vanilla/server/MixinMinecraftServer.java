@@ -783,6 +783,10 @@ public abstract class MixinMinecraftServer extends net.minecraft.util.thread.Ree
         }
 
         this.server.enablePlugins(org.bukkit.plugin.PluginLoadOrder.POSTWORLD);
+        org.purpurmc.purpur.task.BossBarTask.startAll(); // Purpur - tps/ram/compass bar tasks
+        // Paper - start the watchdog once startup work is done, so world loading cannot trip it
+        org.spigotmc.WatchdogThread.doStart(org.spigotmc.SpigotConfig.timeoutTime, org.spigotmc.SpigotConfig.restartOnCrash);
+        org.spigotmc.WatchdogThread.hasStarted = true;
         this.server.getPluginManager().callEvent(new ServerLoadEvent(ServerLoadEvent.LoadType.STARTUP));
         ((com.mohistmc.silkard.injected.server.network.ContextServerConnectionListener) this.connection).acceptConnections(); // CraftBukkit
     }
@@ -819,6 +823,7 @@ public abstract class MixinMinecraftServer extends net.minecraft.util.thread.Ree
             silkard$hasStopped = true;
         }
         // CraftBukkit end
+        org.spigotmc.WatchdogThread.doStop(); // Spigot - the watchdog is not a daemon thread and would keep the JVM alive
         this.packetProcessor.close();
         if (this.metricsRecorder.isRecording()) {
             this.cancelRecordingMetrics();
@@ -827,6 +832,7 @@ public abstract class MixinMinecraftServer extends net.minecraft.util.thread.Ree
         silkard$LOGGER.info("Stopping server");
         // CraftBukkit start
         if (this.server != null) {
+            org.purpurmc.purpur.task.BossBarTask.stopAll(); // Purpur
             this.server.disablePlugins();
         }
         // CraftBukkit end
@@ -1007,6 +1013,13 @@ public abstract class MixinMinecraftServer extends net.minecraft.util.thread.Ree
         // CraftBukkit start
         return this.silkard$forceTicks || this.runningTask() || Util.getNanos() < (this.mayHaveDelayedTasks ? this.delayedTasksMaxNextTickTimeNanos : this.nextTickTimeNanos);
         // CraftBukkit end
+    }
+
+    // Paper - the server thread is a TickThread; TickThread.isTickThread(), AsyncCatcher and
+    // Bukkit.isPrimaryThread() recognise the main thread by that type.
+    @org.spongepowered.asm.mixin.injection.Redirect(method = "spin", at = @At(value = "NEW", target = "(Ljava/lang/Runnable;Ljava/lang/String;)Ljava/lang/Thread;"))
+    private static Thread silkard$createTickThread(Runnable run, String name) {
+        return new ca.spottedleaf.moonrise.common.util.TickThread(run, name);
     }
 
     // CraftBukkit - currentTick per tick + scheduler heartbeat on empty + autosavePeriod

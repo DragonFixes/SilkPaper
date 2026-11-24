@@ -81,4 +81,11 @@ public class MixinMain {
     private static void silkard$forceUpgrade(Logger logger, String message, @Local(argsOnly = true) LevelStorageSource.LevelStorageAccess storageSource) {
         logger.info("Forcing world upgrade! {}", storageSource.getLevelId());
     }
+
+    // CraftBukkit - shutdown is handled by ServerShutdownThread (registered in the MinecraftServer
+    // constructor). Vanilla's hook calls halt(true) and joins the server thread, which deadlocks
+    // when the server thread itself calls System.exit at the end of a normal stop.
+    @Redirect(method = "main", at = @At(value = "INVOKE", target = "Ljava/lang/Runtime;addShutdownHook(Ljava/lang/Thread;)V"))
+    private static void silkard$skipVanillaShutdownHook(Runtime runtime, Thread hook) {
+    }
 }

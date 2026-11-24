@@ -89,7 +89,8 @@ public class MinecraftInternalPlugin extends PluginBase {
 
     @Override
     public Server getServer() {
-        throw new UnsupportedOperationException("Not supported.");
+        // The scheduler's exception reporting goes through the task owner's server.
+        return org.bukkit.Bukkit.getServer();
     }
 
     @Override

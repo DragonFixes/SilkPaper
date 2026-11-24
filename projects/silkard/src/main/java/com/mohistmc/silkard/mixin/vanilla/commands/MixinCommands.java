@@ -64,6 +64,12 @@ public abstract class MixinCommands implements ContextCommands {
     @Final
     private static ClientboundCommandsPacket.NodeInspector<CommandSourceStack> COMMAND_NODE_INSPECTOR;
 
+    // Every Commands instance (startup and each datapack reload) carries the Silkard and Purpur commands.
+    @org.spongepowered.asm.mixin.injection.Inject(method = "<init>", at = @org.spongepowered.asm.mixin.injection.At("RETURN"))
+    private void silkard$registerExtraCommands(org.spongepowered.asm.mixin.injection.callback.CallbackInfo ci) {
+        com.mohistmc.silkard.commands.SilkardCommands.registerVanilla(this.dispatcher);
+    }
+
     // CraftBukkit start
     @Override
     public void dispatchServerCommand(CommandSourceStack sender, String command) {
