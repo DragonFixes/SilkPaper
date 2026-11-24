@@ -24,6 +24,8 @@
 .PARAMETER Commands
     Console commands to run after startup, before "stop". Commas also separate
     commands, so -Commands 'tps,ram' works through the .bat launcher.
+    "wait <seconds>" is not sent to the server: it pauses before the next
+    command, so placed blocks and entities get ticks before "stop".
     Default: version, tps, ram, uptime.
 
 .PARAMETER CommandDelaySeconds
@@ -154,6 +156,12 @@ try {
         }
         if ($doneAt -and -not $commandsSent -and ((Get-Date) - $doneAt).TotalSeconds -ge $CommandDelaySeconds) {
             foreach ($command in @($commandList) + 'stop') {
+                if ($command -match '^wait (\d+)$') {
+                    Write-Host "  (waiting $($Matches[1]) s)"
+                    $process.StandardInput.Flush()
+                    Start-Sleep -Seconds ([int]$Matches[1])
+                    continue
+                }
                 Write-Host "  > $command"
                 $process.StandardInput.WriteLine($command)
             }
