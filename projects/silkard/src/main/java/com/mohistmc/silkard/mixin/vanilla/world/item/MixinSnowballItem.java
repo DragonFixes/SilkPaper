@@ -46,7 +46,7 @@ public class MixinSnowballItem {
 
     @Redirect(method = "use", at = @At(value = "INVOKE", target = SPAWN))
     private Projectile silkard$spawn(Projectile.ProjectileFactory factory, ServerLevel level, ItemStack stack, LivingEntity source, float yOffset, float pow, float uncertainty) {
-        Projectile projectile = Projectile.spawnProjectileFromRotation(factory, level, stack, source, yOffset, pow, uncertainty);
+        Projectile projectile = Projectile.spawnProjectileFromRotation(factory, level, stack, source, yOffset, pow, (float) level.purpurConfig().snowballProjectileOffset); // Purpur - Projectile offset config
         this.silkard$alive = projectile.isAlive();
         return projectile;
     }

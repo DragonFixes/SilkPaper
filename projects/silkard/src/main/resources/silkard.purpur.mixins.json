@@ -5,6 +5,10 @@
   "plugin": "com.mohistmc.silkard.SilkardMixinPlugin",
   "mixinPriority": 1100,
   "mixins": [
+    "world.item.MixinPurpurEndCrystalItem",
+    "world.item.MixinPurpurMinecartItem",
+    "world.item.MixinPurpurNameTagItem",
+    "world.item.MixinPurpurProjectileItems",
     "world.level.block.MixinPurpurAnvilBlock",
     "world.level.block.MixinPurpurAzaleaBlock",
     "world.level.block.MixinPurpurFarmlandBlock",
