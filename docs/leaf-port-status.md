@@ -18,7 +18,7 @@ patches rewrite earlier ones.
 | `PurpurConfig` / `PurpurWorldConfig` classes | done | loaded by `PaperBootstrap` |
 | `/purpur` command | done | |
 | TPS, RAM, uptime boss bars | done | |
-| Plain per-world options (drops, breeding, blocks, items, menus, players) | missing | |
+| Plain per-world options (drops, breeding, blocks, items, menus, players) | partial | done: growing plant max age (kelp, cave, weeping, twisting vines), bonemealable sugar cane, snow on blue ice, sculk shrieker can_summon, powered rail range, powder snow griefing override, observer clocks, note block ignore above, magma sneaking damage, dragon egg teleport, doors require redstone, coral outside water, `GameRules.get(rule, override)`. Next: ChestBlock, ComposterBlock, NetherPortalBlock, RespawnAnchorBlock, CactusBlock, CauldronBlock, CropBlock, FrogspawnBlock, IceBlock (hunks read, not written). Purpur mixins go in `mixin/purpur` (`silkard.purpur.mixins.json`, priority 1100) |
 | AFK system | missing | |
 | Ridable and controllable mobs (`MoveControllerWASD`, per-mob `ridable`) | missing | ported last |
 
