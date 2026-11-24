@@ -12,6 +12,14 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface ContextGameRules {
 
+    /** Purpur - Add mobGriefing override to everything affected: a non-null override wins over the rule. */
+    default <T> boolean get(GameRule<T> rule, @Nullable Boolean gameRuleOverride) {
+        if (gameRuleOverride != null) {
+            return gameRuleOverride;
+        }
+        return (Boolean) ((GameRules) (Object) this).get(rule);
+    }
+
     default <T> void set(GameRule<T> gameRule, T value, @Nullable ServerLevel server) { // CraftBukkit - per-world
         throw new IllegalStateException("Not implemented");
     }

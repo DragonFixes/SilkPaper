@@ -26,7 +26,7 @@ public class MixinNoteBlock {
      */
     @Overwrite
     private void playNote(@Nullable Entity source, BlockState state, Level level, BlockPos pos) {
-        if (state.getValue(NoteBlock.INSTRUMENT).worksAboveNoteBlock() || level.getBlockState(pos.above()).isAir()) {
+        if (level.purpurConfig().noteBlockIgnoreAbove || state.getValue(NoteBlock.INSTRUMENT).worksAboveNoteBlock() || level.getBlockState(pos.above()).isAir()) { // Purpur - Config to allow Note Block sounds when blocked
             // CraftBukkit start
             NotePlayEvent event = CraftEventFactory.callNotePlayEvent(level, pos, state.getValue(NoteBlock.INSTRUMENT), state.getValue(NoteBlock.NOTE));
             if (event.isCancelled()) {

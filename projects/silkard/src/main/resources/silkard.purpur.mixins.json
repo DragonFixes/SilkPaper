@@ -1,0 +1,25 @@
+{
+  "required": true,
+  "package": "com.mohistmc.silkard.mixin.purpur",
+  "compatibilityLevel": "JAVA_25",
+  "plugin": "com.mohistmc.silkard.SilkardMixinPlugin",
+  "mixinPriority": 1100,
+  "mixins": [
+    "world.level.block.MixinPurpurCaveVinesBlock",
+    "world.level.block.MixinPurpurCoralBlock",
+    "world.level.block.MixinPurpurDoorBlock",
+    "world.level.block.MixinPurpurGrowingPlantHeadBlock",
+    "world.level.block.MixinPurpurKelpBlock",
+    "world.level.block.MixinPurpurMagmaBlock",
+    "world.level.block.MixinPurpurObserverBlock",
+    "world.level.block.MixinPurpurPoweredRailBlock",
+    "world.level.block.MixinPurpurSculkShriekerBlock",
+    "world.level.block.MixinPurpurSnowLayerBlock",
+    "world.level.block.MixinPurpurSugarCaneBlock",
+    "world.level.block.MixinPurpurTwistingVinesBlock",
+    "world.level.block.MixinPurpurWeepingVinesBlock"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

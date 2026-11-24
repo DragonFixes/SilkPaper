@@ -24,7 +24,8 @@
 		"silkard.mixins.json",
 		"silkard.paper.core.mixins.json",
 		"silkard.paper.server.mixins.json",
-		"silkard.paper.paper.mixins.json"
+		"silkard.paper.paper.mixins.json",
+		"silkard.purpur.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.19.5",

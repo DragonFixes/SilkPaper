@@ -23,7 +23,7 @@ public class MixinPowderSnowBlock {
     private static void lambda$entityInside$0(Level level, BlockPos pos, Entity entity) {
         if (level instanceof ServerLevel serverlevel && entity.isOnFire() && entity.mayInteract(serverlevel, pos)) {
             // CraftBukkit start
-            if (!CraftEventFactory.callEntityChangeBlockEvent(entity, pos, Blocks.AIR.defaultBlockState(), !((Boolean) serverlevel.getGameRules().get(GameRules.MOB_GRIEFING) || entity instanceof Player))) {
+            if (!CraftEventFactory.callEntityChangeBlockEvent(entity, pos, Blocks.AIR.defaultBlockState(), !(serverlevel.getGameRules().get(GameRules.MOB_GRIEFING, serverlevel.purpurConfig().powderSnowMobGriefingOverride) || entity instanceof Player))) {
                 return;
             }
             // CraftBukkit end

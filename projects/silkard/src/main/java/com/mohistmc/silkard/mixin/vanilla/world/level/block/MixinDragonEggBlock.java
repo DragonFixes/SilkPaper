@@ -22,6 +22,7 @@ public class MixinDragonEggBlock {
      */
     @Overwrite
     private void teleport(BlockState state, Level level, BlockPos pos) {
+        if (!level.purpurConfig().dragonEggTeleport) return; // Purpur - Option to disable dragon egg teleporting
         net.minecraft.util.RandomSource random = level.getRandom();
         net.minecraft.world.level.border.WorldBorder worldBorder = level.getWorldBorder();
 
