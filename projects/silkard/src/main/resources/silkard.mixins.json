@@ -65,6 +65,7 @@
     "vanilla.server.level.MixinServerLevel",
     "vanilla.server.level.MixinServerPlayer",
     "vanilla.server.level.MixinServerPlayerInventoryEvents",
+    "vanilla.server.level.MixinServerPlayerLevelChange",
     "vanilla.server.level.MixinServerPlayerGameMode",
     "vanilla.server.level.MixinTicket",
     "vanilla.server.level.MixinTicketType",
