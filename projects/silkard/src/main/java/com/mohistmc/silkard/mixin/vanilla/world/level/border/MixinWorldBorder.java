@@ -26,6 +26,21 @@ public abstract class MixinWorldBorder implements ContextWorldBorder {
     @Unique
     private AtomicBoolean applyInitialSettings_force = new AtomicBoolean(false);
 
+    // CraftBukkit - the level owning this border; set by MinecraftServer#initWorld, null before that
+    // and for borders not attached to a level.
+    @Unique
+    private net.minecraft.world.level.@org.jspecify.annotations.Nullable Level silkard$world;
+
+    @Override
+    public net.minecraft.world.level.@org.jspecify.annotations.Nullable Level silkard$world() {
+        return this.silkard$world;
+    }
+
+    @Override
+    public void silkard$setWorld(net.minecraft.world.level.Level world) {
+        this.silkard$world = world;
+    }
+
     @Inject(method = "applyInitialSettings(J)V", at = @At(value = "FIELD", target = "Lnet/minecraft/world/level/border/WorldBorder;initialized:Z", ordinal = 0, opcode = Opcodes.GETFIELD), cancellable = true)
     private void silkard_initialized(long gameTime, CallbackInfo ci) {
         if (applyInitialSettings_force.getAndSet(false)) {

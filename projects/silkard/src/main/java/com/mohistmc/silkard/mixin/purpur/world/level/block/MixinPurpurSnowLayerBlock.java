@@ -18,7 +18,7 @@ public abstract class MixinPurpurSnowLayerBlock {
     @Inject(method = "canSurvive", at = @At("HEAD"), cancellable = true)
     private void purpur$snowOnBlueIce(BlockState state, LevelReader level, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         if (!level.getBlockState(pos.below()).is(Blocks.BLUE_ICE)) return;
-        Level world = level.getWorldBorder().silkard$world();
+        Level world = com.mohistmc.silkard.purpur.PurpurHooks.level(level);
         if (world != null && !world.purpurConfig().snowOnBlueIce) {
             cir.setReturnValue(false);
         }

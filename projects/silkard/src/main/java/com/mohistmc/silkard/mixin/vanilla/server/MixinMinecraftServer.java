@@ -579,6 +579,7 @@ public abstract class MixinMinecraftServer extends net.minecraft.util.thread.Ree
     }
 
     private void silkard$initWorldBorder(ServerLevel serverlevel) {
+        serverlevel.getWorldBorder().silkard$setWorld(serverlevel); // CraftBukkit
         serverlevel.getWorldBorder().setAbsoluteMaxSize(this.getAbsoluteMaxWorldSize());
         this.getPlayerList().addWorldborderListener(serverlevel);
     }

@@ -15,7 +15,8 @@ public abstract class MixinPurpurChestBlock {
 
     @Inject(method = "isBlockedChestByBlock", at = @At("HEAD"), cancellable = true)
     private static void purpur$openWithBlockOnTop(BlockGetter level, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        if (level instanceof Level world && world.purpurConfig().chestOpenWithBlockOnTop) {
+        org.purpurmc.purpur.PurpurWorldConfig config = com.mohistmc.silkard.purpur.PurpurHooks.config(level);
+        if (config != null && config.chestOpenWithBlockOnTop) {
             cir.setReturnValue(false);
         }
     }

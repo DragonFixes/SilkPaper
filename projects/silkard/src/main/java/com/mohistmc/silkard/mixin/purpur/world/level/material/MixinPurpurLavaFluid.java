@@ -13,13 +13,13 @@ public abstract class MixinPurpurLavaFluid {
 
     @ModifyConstant(method = "getTickDelay", constant = @Constant(intValue = 10))
     private int purpur$lavaSpeedNether(int original, LevelReader level) {
-        Level world = level.getWorldBorder().silkard$world();
+        Level world = com.mohistmc.silkard.purpur.PurpurHooks.level(level);
         return world != null ? world.purpurConfig().lavaSpeedNether : original;
     }
 
     @ModifyConstant(method = "getTickDelay", constant = @Constant(intValue = 30))
     private int purpur$lavaSpeedNotNether(int original, LevelReader level) {
-        Level world = level.getWorldBorder().silkard$world();
+        Level world = com.mohistmc.silkard.purpur.PurpurHooks.level(level);
         return world != null ? world.purpurConfig().lavaSpeedNotNether : original;
     }
 }

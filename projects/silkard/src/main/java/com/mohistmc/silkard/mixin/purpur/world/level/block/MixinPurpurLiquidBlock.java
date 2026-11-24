@@ -12,14 +12,14 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(LiquidBlock.class)
 public abstract class MixinPurpurLiquidBlock {
 
-    @ModifyExpressionValue(method = {"onPlace", "neighborChanged"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/LiquidBlock;shouldSpreadLiquid(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z"))
+    @ModifyExpressionValue(method = {"onPlace", "neighborChanged"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/LiquidBlock;shouldSpreadLiquid(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z"), require = 2)
     private boolean purpur$tickFluids(boolean shouldSpread, @Local(argsOnly = true) Level level) {
         return shouldSpread && level.purpurConfig().tickFluids;
     }
 
     @ModifyExpressionValue(method = "updateShape", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/material/FluidState;isSource()Z", ordinal = 0))
     private boolean purpur$tickFluidsOnUpdate(boolean isSource, @Local(argsOnly = true) LevelReader level) {
-        Level world = level.getWorldBorder().silkard$world();
+        Level world = com.mohistmc.silkard.purpur.PurpurHooks.level(level);
         return isSource && (world == null || world.purpurConfig().tickFluids);
     }
 }

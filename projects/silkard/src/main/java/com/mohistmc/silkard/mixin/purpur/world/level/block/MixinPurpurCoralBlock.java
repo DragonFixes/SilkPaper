@@ -15,7 +15,8 @@ public abstract class MixinPurpurCoralBlock {
 
     @Inject(method = "scanForWater", at = @At("HEAD"), cancellable = true)
     private void purpur$coralDieOutsideWater(BlockGetter level, BlockPos blockPos, CallbackInfoReturnable<Boolean> cir) {
-        if (level instanceof LevelAccessor accessor && !accessor.getMinecraftWorld().purpurConfig().coralDieOutsideWater) {
+        org.purpurmc.purpur.PurpurWorldConfig config = com.mohistmc.silkard.purpur.PurpurHooks.config(level);
+        if (config != null && !config.coralDieOutsideWater) {
             cir.setReturnValue(true);
         }
     }

@@ -15,7 +15,7 @@ public abstract class MixinPurpurCampfireBlock {
     @Inject(method = "getStateForPlacement", at = @At("RETURN"), cancellable = true)
     private void purpur$litWhenPlaced(BlockPlaceContext context, CallbackInfoReturnable<BlockState> cir) {
         BlockState state = cir.getReturnValue();
-        if (state != null && state.getValue(CampfireBlock.LIT) && !context.getLevel().getMinecraftWorld().purpurConfig().campFireLitWhenPlaced) {
+        if (state != null && state.getValue(CampfireBlock.LIT) && !context.getLevel().purpurConfig().campFireLitWhenPlaced) {
             cir.setReturnValue(state.setValue(CampfireBlock.LIT, false));
         }
     }

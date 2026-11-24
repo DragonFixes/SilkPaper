@@ -20,7 +20,7 @@ public abstract class MixinPurpurObserverBlock {
     private boolean purpur$disableObserverClocks(ObserverBlock self, LevelReader level, ScheduledTickAccess ticks, BlockPos pos,
                                                   BlockState state, LevelReader level2, ScheduledTickAccess ticks2, BlockPos pos2,
                                                   Direction directionToNeighbour, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
-        Level world = level.getWorldBorder().silkard$world();
+        Level world = com.mohistmc.silkard.purpur.PurpurHooks.level(level);
         return !(world != null && world.purpurConfig().disableObserverClocks)
             || !(neighbourState.getBlock() instanceof ObserverBlock)
             || neighbourState.getValue(ObserverBlock.FACING).getOpposite() != directionToNeighbour;

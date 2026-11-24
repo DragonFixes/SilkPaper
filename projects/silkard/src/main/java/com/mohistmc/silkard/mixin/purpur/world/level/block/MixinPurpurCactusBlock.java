@@ -19,7 +19,7 @@ public abstract class MixinPurpurCactusBlock implements BonemealableBlock {
 
     @ModifyExpressionValue(method = "canSurvive", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;isSolid()Z"))
     private boolean purpur$breaksFromSolidNeighbors(boolean solid, BlockState state, LevelReader level, BlockPos pos) {
-        Level world = level.getWorldBorder().silkard$world();
+        Level world = com.mohistmc.silkard.purpur.PurpurHooks.level(level);
         return solid && (world == null || world.purpurConfig().cactusBreaksFromSolidNeighbors);
     }
 
