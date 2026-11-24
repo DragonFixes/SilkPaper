@@ -250,6 +250,11 @@ public abstract class MixinDedicatedServer extends MinecraftServer implements Co
         this.loadLevel();
         long elapsed = net.minecraft.util.Util.getNanos() - levelNanoTime;
         String time = String.format(Locale.ROOT, "%.3fs", elapsed / 1.0E9);
+        // Paper start - run the 1-tick-delayed tasks plugins schedule while enabling before "Done"
+        silkard$LOGGER.info("Running delayed init tasks");
+        new io.papermc.paper.threadedregions.RegionizedServerInitEvent().callEvent(); // Call Folia init event
+        ((org.bukkit.craftbukkit.scheduler.CraftScheduler) org.bukkit.Bukkit.getScheduler()).mainThreadHeartbeat();
+        // Paper end
         silkard$LOGGER.info("Done ({})! For help, type \"help\"", time);
         if (properties.announcePlayerAchievements != null) {
             this.getGameRules().set(net.minecraft.world.level.gamerules.GameRules.SHOW_ADVANCEMENT_MESSAGES, properties.announcePlayerAchievements, this.self()); // CraftBukkit - per-world via overworld rules
