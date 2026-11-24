@@ -26,10 +26,16 @@ public class MixinSleepStatus {
         throw new AssertionError();
     }
 
+    // Purpur - AFK API: AFK players can count as sleeping
+    @org.spongepowered.asm.mixin.Unique
+    private static boolean silkard$afkSleeping(ServerPlayer player) {
+        return player.level().purpurConfig().idleTimeoutCountAsSleeping && player.paper$afk();
+    }
+
     // CraftBukkit start
     @Overwrite
     public boolean areEnoughDeepSleeping(int sleepPercentageNeeded, List<ServerPlayer> players) {
-        int j = (int) players.stream().filter(eh -> eh.isSleepingLongEnough() || ((ContextPlayer) eh).silkard$fauxSleeping()).count();
+        int j = (int) players.stream().filter(eh -> eh.isSleepingLongEnough() || ((ContextPlayer) eh).silkard$fauxSleeping() || silkard$afkSleeping(eh)).count(); // Purpur - AFK API
         boolean anyDeepSleep = players.stream().anyMatch(ServerPlayer::isSleepingLongEnough);
 
         return anyDeepSleep && j >= this.sleepersNeeded(sleepPercentageNeeded);
@@ -46,7 +52,7 @@ public class MixinSleepStatus {
         for (ServerPlayer serverplayer : players) {
             if (!serverplayer.isSpectator()) {
                 ++this.activePlayers;
-                if (serverplayer.isSleeping() || ((ContextPlayer) serverplayer).silkard$fauxSleeping()) {
+                if (serverplayer.isSleeping() || ((ContextPlayer) serverplayer).silkard$fauxSleeping() || silkard$afkSleeping(serverplayer)) { // Purpur - AFK API
                     ++this.sleepingPlayers;
                 }
                 if (serverplayer.isSleeping()) {

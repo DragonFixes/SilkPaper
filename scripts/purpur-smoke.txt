@@ -32,6 +32,7 @@ setblock 15 101 13 minecraft:enchanting_table
 setblock 15 101 13 minecraft:air
 summon minecraft:frog 3 102 4
 summon minecraft:pig 5 102 3
+summon minecraft:zombie 8 102 8
 effect give @e[type=minecraft:frog] minecraft:poison 10
 effect give @e[type=minecraft:pig] minecraft:wither 10
 effect give @e[type=minecraft:frog] minecraft:regeneration 10
