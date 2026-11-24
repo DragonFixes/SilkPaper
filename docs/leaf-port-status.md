@@ -18,9 +18,11 @@ patches rewrite earlier ones.
 | `PurpurConfig` / `PurpurWorldConfig` classes | done | loaded by `PaperBootstrap` |
 | `/purpur` command | done | |
 | TPS, RAM, uptime boss bars | done | |
-| Block options | done | every `net/minecraft/world/level/block` and fluid file in Purpur 0001, except the rows below. Mixins in `mixin/purpur` (`silkard.purpur.mixins.json`, priority 1100). Deliberate differences: turtle-egg feather falling only adds protection (Purpur's version disables spawn protection when off); a turtle egg that fails to spawn a turtle still counts toward the offspring count, so a min offspring above 0 cannot loop forever |
+| Block options | done | every `net/minecraft/world/level/block` and fluid file in Purpur 0001, except the rows below. Mixins in `mixin/purpur` (`silkard.purpur.mixins.json`, priority 1100). Deliberate differences: turtle-egg feather falling only adds protection (Purpur's version disables spawn protection when off); a turtle egg that fails to spawn a turtle still counts toward the offspring count, so a min offspring above 0 cannot loop forever; placed hanging entities lose their name when display names are off (in Purpur the item's components set it back) |
 | Block: stonecutter damage, silk touch spawners, ender chest rows, block fall multipliers, block-entity lore, placer | missing | need Purpur damage sources, spawner item data, player ender chest fields |
-| Item, menu, player, food, effect, command and server options | missing | |
+| Item options | partial | done: projectile offsets (bow, crossbow, trident, egg, snowball, ender pearl, potion, wind charge), ender pearl cooldown, infinity without arrows, elytra damage per firework/trident boost, end crystal and minecart placement, name tag on armor stand, enchant level clamp (read before bootstrap, as Purpur), bucket water in the End. Missing: elytra per-second damage (`LivingEntity`, `ItemStack`), MC-3304 projectile looting, silk touch spawner items |
+| Features shared with entities | partial | block and item sides are done; the entity sides are missing: mob griefing override (about 40 mobs), multiple babies (about 25 animals), display names from item forms (`ArmorStand`, `ItemFrame`, `Painting`, `AbstractBoat`) |
+| Menu, player, food, effect, command and server options | missing | |
 | AFK system | missing | |
 | Ridable and controllable mobs (`MoveControllerWASD`, per-mob `ridable`) | missing | ported last |
 
