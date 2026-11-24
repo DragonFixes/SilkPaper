@@ -57,6 +57,9 @@ tasks.withType(JavaCompile).configureEach {
 
 jar {
     archiveClassifier = 'server'
+    // The launcher jar people run carries the SilkPaper name; the bundled inner jar keeps
+    // archives_base_name because SilkardGameProvider looks it up by that path.
+    archiveBaseName = 'silkpaper'
 
     dependsOn(':server:jar')
 
@@ -67,10 +70,10 @@ jar {
     manifest {
         attributes(
                 'Main-Class': 'com.mohistmc.launcher.silkard.SilkardLauncher',
-                'Specification-Title'   : 'Silkard',
+                'Specification-Title'   : 'SilkPaper',
                 'Specification-Vendor'  : 'MohistMC',
                 'Specification-Version' : 'development',
-                'Implementation-Title'  : 'Silkard',
+                'Implementation-Title'  : 'SilkPaper',
                 'Implementation-Version': project.version,
                 'Implementation-Vendor' : 'MohistMC'
         )

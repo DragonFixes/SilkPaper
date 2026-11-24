@@ -20,7 +20,7 @@ public class SilkardMod implements ModInitializer {
 		// Proceed with mild caution.
 		com.mohistmc.silkard.paper.core.PluginChannelBridge.register();
 
-		LOGGER.info("Hello Silkard world!");
+		LOGGER.info("Hello SilkPaper world!");
 
 		// Registries are complete only after every mod initializer has run.
 		net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents.SERVER_STARTING.register(server ->

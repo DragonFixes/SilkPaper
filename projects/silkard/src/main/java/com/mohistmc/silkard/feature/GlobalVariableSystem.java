@@ -251,7 +251,7 @@ public class GlobalVariableSystem {
             globalVariables.put("server_name", Bukkit.getServer().getName());
             globalVariables.put("server_version", Bukkit.getServer().getVersion());
         } catch (Exception ignored) {
-            globalVariables.put("server_name", "Silkard Server");
+            globalVariables.put("server_name", "SilkPaper Server");
             globalVariables.put("server_version", "Unknown");
         }
     }

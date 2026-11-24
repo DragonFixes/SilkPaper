@@ -31,7 +31,7 @@ public class InfoCommand extends Command {
 
     public InfoCommand(String name) {
         super(name);
-        this.description = "Silkard infos commands";
+        this.description = "SilkPaper info commands";
         this.usageMessage = "/infos [item|block|entity|cmd|item-component]";
         this.setPermission("silkard.command.infos");
     }

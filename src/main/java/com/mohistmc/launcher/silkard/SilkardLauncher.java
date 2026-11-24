@@ -30,7 +30,7 @@ public class SilkardLauncher {
                 """;
         System.out.printf("%n%s%n%s - %s, Java(%s) %s PID: %s%n",
                 logo,
-                "Welcome Silkard(Fabric + Spigot)",
+                "Welcome to SilkPaper (Fabric + Paper)",
                 getVersion(),
                 System.getProperty("java.class.version"),
                 System.getProperty("java.version"),
@@ -53,7 +53,7 @@ public class SilkardLauncher {
             handle.invoke((Object) args);
         } catch (Throwable e) {
             e.printStackTrace();
-            System.err.println("Fail to launch Silkard.");
+            System.err.println("Failed to launch SilkPaper.");
         }
     }
 

@@ -33,7 +33,7 @@ public class ShowsCommand extends Command {
 
     public ShowsCommand(String name) {
         super(name);
-        this.description = "Silkard shows commands";
+        this.description = "SilkPaper show commands";
         this.usageMessage = "/shows [sound|entitys|blockentitys]";
         this.setPermission("silkard.command.shows");
     }

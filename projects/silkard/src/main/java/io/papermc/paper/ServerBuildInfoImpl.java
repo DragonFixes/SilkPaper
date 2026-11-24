@@ -37,6 +37,9 @@ public record ServerBuildInfoImpl(
     private static final String BRAND_PURPUR_NAME = "Purpur";
     private static final String BRAND_LEAF_NAME = "Leaf";
     // Leaf end - Rebrand
+    // SilkPaper - default brand when the jar manifest names none; kept here, not in the vendored API
+    private static final Key BRAND_SILKPAPER_ID = Key.key("dragonfixes", "silkpaper");
+    private static final String BRAND_SILKPAPER_NAME = "SilkPaper";
 
     private static final String BUILD_DEV = "DEV";
 
@@ -48,9 +51,9 @@ public record ServerBuildInfoImpl(
         this(
             getManifestAttribute(manifest, ATTRIBUTE_BRAND_ID)
                 .map(Key::key)
-                .orElse(BRAND_LEAF_ID), // Gale - branding changes // Leaf - Rebrand
+                .orElse(BRAND_SILKPAPER_ID), // SilkPaper
             getManifestAttribute(manifest, ATTRIBUTE_BRAND_NAME)
-                .orElse(BRAND_LEAF_NAME), // Gale - branding changes // Leaf - Rebrand
+                .orElse(BRAND_SILKPAPER_NAME), // SilkPaper
             SharedConstants.getCurrentVersion().id(),
             SharedConstants.getCurrentVersion().name(),
             getManifestAttribute(manifest, ATTRIBUTE_BUILD_NUMBER)
@@ -72,7 +75,8 @@ public record ServerBuildInfoImpl(
             || brandId.equals(BRAND_PAPER_ID)
             || brandId.equals(BRAND_GALE_ID) // Gale - branding changes
             || brandId.equals(BRAND_PUFFERFISH_ID)
-            || brandId.equals(BRAND_PURPUR_ID);
+            || brandId.equals(BRAND_PURPUR_ID)
+            || brandId.equals(BRAND_LEAF_ID); // SilkPaper - built on Leaf
             // Leaf end - Rebrand
     }
 

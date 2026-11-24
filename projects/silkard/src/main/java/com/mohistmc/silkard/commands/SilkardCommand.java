@@ -46,7 +46,7 @@ public class SilkardCommand extends Command {
 
     public SilkardCommand(String name) {
         super(name);
-        this.description = "Silkard related commands";
+        this.description = "SilkPaper related commands";
         this.usageMessage = "/silkard [" + String.join("|", COMMAND_LIST) + "]";
         this.setPermission("silkard.command.silkard");
     }

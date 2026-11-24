@@ -29,7 +29,7 @@ public final class UnportedFeature {
      */
     public static boolean disable(String option, boolean configured) {
         if (configured && REPORTED.add(option)) {
-            LOGGER.warn("{} is enabled in the config but is not supported by Silkard yet; it stays disabled.", option);
+            LOGGER.warn("{} is enabled in the config but is not supported by SilkPaper yet; it stays disabled.", option);
         }
         return false;
     }

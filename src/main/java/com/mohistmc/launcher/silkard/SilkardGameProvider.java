@@ -61,7 +61,7 @@ public class SilkardGameProvider extends MinecraftGameProvider {
         }
 
         if (inputStream == null) {
-            throw new RuntimeException("Could not find Silkard server jar file: " + resourcePath +
+            throw new RuntimeException("Could not find SilkPaper server jar file: " + resourcePath +
                     ". Please ensure the resource file is properly packaged in the JAR.");
         }
 

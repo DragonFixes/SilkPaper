@@ -667,7 +667,7 @@ public final class CraftServer implements Server {
 
     @Override
     public String getName() {
-        return "Silkard";
+        return this.serverName;
     }
 
     @Override
