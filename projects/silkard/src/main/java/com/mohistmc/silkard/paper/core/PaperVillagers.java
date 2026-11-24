@@ -14,6 +14,13 @@ import net.minecraft.world.item.trading.MerchantOffers;
  */
 public final class PaperVillagers {
 
+    /**
+     * The PlayerTradeEvent of the villager trade being completed, set only while
+     * {@code Merchant.notifyTrade} runs for it, so the villager can skip the use count and
+     * experience a listener turned off. Trades only complete on the server thread.
+     */
+    public static io.papermc.paper.event.player.@org.jspecify.annotations.Nullable PlayerPurchaseEvent currentTrade;
+
     private PaperVillagers() {
     }
 
