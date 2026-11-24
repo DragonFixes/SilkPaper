@@ -18,7 +18,9 @@ patches rewrite earlier ones.
 | `PurpurConfig` / `PurpurWorldConfig` classes | done | loaded by `PaperBootstrap` |
 | `/purpur` command | done | |
 | TPS, RAM, uptime boss bars | done | |
-| Plain per-world options (drops, breeding, blocks, items, menus, players) | partial | done: growing plant max age (kelp, cave, weeping, twisting vines), bonemealable sugar cane, snow on blue ice, sculk shrieker can_summon, powered rail range, powder snow griefing override, observer clocks, note block ignore above, magma sneaking damage, dragon egg teleport, doors require redstone, coral outside water, `GameRules.get(rule, override)`. Next: ChestBlock, ComposterBlock, NetherPortalBlock, RespawnAnchorBlock, CactusBlock, CauldronBlock, CropBlock, FrogspawnBlock, IceBlock (hunks read, not written). Purpur mixins go in `mixin/purpur` (`silkard.purpur.mixins.json`, priority 1100) |
+| Block options | done | every `net/minecraft/world/level/block` and fluid file in Purpur 0001, except the rows below. Mixins in `mixin/purpur` (`silkard.purpur.mixins.json`, priority 1100). Deliberate differences: turtle-egg feather falling only adds protection (Purpur's version disables spawn protection when off); a turtle egg that fails to spawn a turtle still counts toward the offspring count, so a min offspring above 0 cannot loop forever |
+| Block: stonecutter damage, silk touch spawners, ender chest rows, block fall multipliers, block-entity lore, placer | missing | need Purpur damage sources, spawner item data, player ender chest fields |
+| Item, menu, player, food, effect, command and server options | missing | |
 | AFK system | missing | |
 | Ridable and controllable mobs (`MoveControllerWASD`, per-mob `ridable`) | missing | ported last |
 
