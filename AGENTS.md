@@ -71,7 +71,7 @@ arguments. Run them from any directory; paths resolve from the repository root.
 | `build-deploy` | Deletes `deploy\*.jar`, runs `gradlew jar`, copies `build\libs\*-server.jar` into `deploy\` |
 | `run-server` | Runs the newest jar in `deploy\` in a server folder (default `deploy\server`) |
 | `boot-test` | Boots the deployed jar in `deploy\boot-test`, types console commands after startup, stops, and fails on ERROR lines, exceptions, crash reports or a stall |
-| `game-test` | Runs the gameplay tests in `gametests\packs` on the deployed jar in `deploy\game-test` (flat world), and fails if a required test fails |
+| `game-test` | Runs the gameplay tests in `gametests\packs` on the deployed jar in `deploy\game-test` (flat world), and fails if a required test fails or the server logs an error |
 | `sync-upstream` | Fetches `upstream` and `origin`, fast-forwards the `26.3` mirror, reports drift, optionally merges a ref (never pushes) |
 | `sync-leaf-api` | Re-vendors the Paper/Purpur/Leaf API from a Leaf checkout and re-applies `patches\paper-api` |
 | `clean` | `gradlew clean`; `-Deploy` also deletes the deployed jars |

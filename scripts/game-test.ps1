@@ -16,8 +16,11 @@
     hung: a jstack thread dump is saved next to the test folder and the server
     is killed.
 
-    Passes (exit 0) when every required test passed. Prints each FAIL line and
-    exits 1 otherwise, or when the run did not finish. The full log stays in
+    Passes (exit 0) when every required test passed and the server wrote no
+    ERROR lines, no exceptions (Throwable class names, "Caused by:" or
+    "Unexpected exception") and no crash report: a test can pass while the code
+    it drives logs an error. Prints each FAIL and problem line and exits 1
+    otherwise, or when the run did not finish. The full log stays in
     <ServerDir>\game-test.log and the report in <ServerDir>\report.xml.
 
 .PARAMETER Tests
@@ -122,6 +125,8 @@ try {
         Copy-Item -LiteralPath $_.FullName -Destination $target -Recurse
     }
 
+    $crashDir = Join-Path $ServerDir 'crash-reports'
+    $crashesBefore = @(Get-ChildItem -Path $crashDir -File -ErrorAction SilentlyContinue).Count
     $log = Join-Path $ServerDir 'game-test.log'
     $report = Join-Path $ServerDir 'report.xml'
     $result = Join-Path $ServerDir 'result.txt'
@@ -176,11 +181,15 @@ try {
     $failLines = @(Select-String -Path $log -Pattern '\[SilkGameTests\] (FAIL|selector)' -ErrorAction SilentlyContinue | ForEach-Object { $_.Line })
     $summary = Select-String -Path $log -Pattern '\[SilkGameTests\] =====' -ErrorAction SilentlyContinue | Select-Object -Last 1
     $failedRequired = if (Test-Path $result) { [int](Get-Content $result -Raw).Trim() } else { $null }
+    # ERROR lines, plus exceptions that the server logs at WARN, as boot-test checks them.
+    $problems = @(Select-String -Path $log -Pattern '^\[[0-9:]+ ERROR\]|Unexpected exception|^\S*(Exception|Error)(:|$)|^Caused by:' -ErrorAction SilentlyContinue | ForEach-Object { $_.Line })
+    $newCrashes = @(Get-ChildItem -Path $crashDir -File -ErrorAction SilentlyContinue).Count - $crashesBefore
 
     Write-Host ''
-    Write-Host "Ended: $state   Passed: $($passLines.Count)   Failed: $($failLines.Count)"
+    Write-Host "Ended: $state   Passed: $($passLines.Count)   Failed: $($failLines.Count)   Problem lines: $($problems.Count)   New crash reports: $newCrashes"
     if ($summary) { Write-Host "  $($summary.Line)" }
     foreach ($line in $failLines) { Write-Host "  $line" -ForegroundColor Red }
+    foreach ($line in $problems | Select-Object -First 30) { Write-Host "  $line" -ForegroundColor Red }
     Write-Host "Log: $log"
     if (Test-Path $report) { Write-Host "Report: $report" }
 
@@ -190,6 +199,10 @@ try {
     }
     if ($failedRequired -gt 0) {
         Write-Host "$failedRequired required game test(s) failed." -ForegroundColor Red
+        exit 1
+    }
+    if ($problems.Count -gt 0 -or $newCrashes -gt 0) {
+        Write-Host 'The tests passed, but the server logged errors or crashed.' -ForegroundColor Red
         exit 1
     }
     Write-Host 'All required game tests passed.' -ForegroundColor Green

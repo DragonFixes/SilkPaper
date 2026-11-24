@@ -101,7 +101,7 @@ The jar is `deploy\silkpaper-<minecraft version>-<commit>-server.jar`. Put Fabri
 | `build-deploy` | Deletes `deploy\*.jar`, runs `gradlew jar`, copies the server jar into `deploy\` (`-Clean`, `-DryRun`) |
 | `run-server` | Runs the newest jar in `deploy\` in a server folder (`-Memory`, `-Gui`, `-ServerDir`, `-AcceptEula`, `-Java`) |
 | `boot-test` | Startup smoke test: boots, types console commands, stops, fails on errors, crashes or stalls (`-Fresh`, `-Commands`) |
-| `game-test` | Runs the in-server gameplay tests in `gametests\packs` on a flat world, fails if one fails (`-Tests`, `-KeepWorld`) |
+| `game-test` | Runs the in-server gameplay tests in `gametests\packs` on a flat world, fails if one fails or the server logs an error (`-Tests`, `-KeepWorld`) |
 | `sync-upstream` | Fetches MohistMC/Silkard, updates the `26.3` mirror branch, reports drift, optionally merges (`-Merge`, `-NoFetch`, `-DryRun`) |
 | `sync-leaf-api` | Re-vendors the Paper/Purpur/Leaf API from a Leaf checkout and re-applies `patches\paper-api` |
 | `clean` | `gradlew clean`; `-Deploy` also deletes the deployed jars |
