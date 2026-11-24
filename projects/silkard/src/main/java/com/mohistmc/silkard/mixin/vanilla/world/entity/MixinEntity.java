@@ -93,6 +93,33 @@ public abstract class MixinEntity implements ContextEntity {
     }
     // CraftBukkit end
 
+    // Paper start - Folia schedulers
+    @Shadow
+    private Entity.@org.jspecify.annotations.Nullable RemovalReason removalReason;
+
+    @Inject(method = "setRemoved(Lnet/minecraft/world/entity/Entity$RemovalReason;)V", at = @At("HEAD"))
+    private void paper$recordAlreadyRemoved(Entity.RemovalReason reason, org.spongepowered.asm.mixin.injection.callback.CallbackInfo ci,
+                                            @com.llamalad7.mixinextras.sugar.Share("alreadyRemoved") com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef alreadyRemoved) {
+        alreadyRemoved.set(this.removalReason != null);
+    }
+
+    // Players are removed from their level on every respawn and dimension change, so PlayerList
+    // retires their scheduler when they actually leave.
+    @Inject(method = "setRemoved(Lnet/minecraft/world/entity/Entity$RemovalReason;)V", at = @At("TAIL"))
+    private void paper$retireScheduler(Entity.RemovalReason reason, org.spongepowered.asm.mixin.injection.callback.CallbackInfo ci,
+                                       @com.llamalad7.mixinextras.sugar.Share("alreadyRemoved") com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef alreadyRemoved) {
+        if (!((Object) this instanceof net.minecraft.server.level.ServerPlayer) && reason != Entity.RemovalReason.CHANGED_DIMENSION && !alreadyRemoved.get()) {
+            this.retireScheduler();
+        }
+    }
+
+    @Unique
+    public final void retireScheduler() {
+        // The scheduler lives on the Bukkit entity, so it is created here if needed to be retired.
+        this.getBukkitEntity().taskScheduler.retire();
+    }
+    // Paper end - Folia schedulers
+
     // CraftBukkit - EntitySelector.pushableBy calls this; CB returns isPushable() here (the argument is intentionally ignored).
     @Override
     public boolean canCollideWithBukkit(Entity entity) {
