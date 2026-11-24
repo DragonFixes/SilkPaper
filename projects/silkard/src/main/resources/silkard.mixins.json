@@ -63,6 +63,7 @@
     "vanilla.server.level.MixinServerChunkCache",
     "vanilla.server.level.MixinServerEntity",
     "vanilla.server.level.MixinServerLevel",
+    "vanilla.server.level.MixinServerLevel$EntityCallbacks",
     "vanilla.server.level.MixinServerPlayer",
     "vanilla.server.level.MixinServerPlayerBedEvents",
     "vanilla.server.level.MixinServerPlayerInventoryEvents",
