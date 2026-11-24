@@ -52,12 +52,17 @@ PlayerInteractAtEntityEvent, PlayerUseUnknownEntityEvent.
 | PlayerAttemptPickupItemEvent, PlayerPickupExperienceEvent | ItemEntity, ExperienceOrb |
 | PlayerLaunchProjectileEvent, PlayerReadyArrowEvent, PlayerElytraBoostEvent | items, Player |
 | CreeperIgniteEvent, SlimeSplitEvent, EntityAirChangeEvent, EntityPortalExitEvent | mobs, Entity |
+| EntityMountEvent, EntityDismountEvent | Entity |
+| PlayerTradeEvent, PlayerPurchaseEvent (villagers; custom merchants already fire them) | AbstractVillager, WanderingTrader |
+| PlayerArmorChangeEvent | LivingEntity |
+| PlayerItemCooldownEvent | ItemCooldowns |
+| PrepareHopperTransferEvent, PlayerCustomClickEvent, ServerResourcesReloadedEvent | HopperBlockEntity, packet listener, MinecraftServer |
 
 ### Tier 2: Paper events used by protection, logging and anti-cheat plugins
 
 EntityAddToWorldEvent, EntityRemoveFromWorldEvent (ServerLevel); BlockDestroyEvent (Level);
-EntityMoveEvent, EntityJumpEvent, EntityEquipmentChangedEvent (LivingEntity); PlayerArmorChange
-is fired, but PlayerInventorySlotChangeEvent (ServerPlayer) is not; PlayerItemFrameChangeEvent;
+EntityMoveEvent, EntityJumpEvent, EntityEquipmentChangedEvent (LivingEntity); PlayerInventorySlotChangeEvent (ServerPlayer);
+ PlayerItemFrameChangeEvent;
 PlayerNameEntityEvent; PlayerFlowerPotManipulateEvent; PlayerInsertLecternBookEvent;
 PlayerLecternPageChangeEvent; PlayerShearBlockEvent; PlayerSignCommandPreprocessEvent;
 UncheckedSignChangeEvent; PlayerPickBlockEvent, PlayerPickEntityEvent; PlayerFailMoveEvent;
