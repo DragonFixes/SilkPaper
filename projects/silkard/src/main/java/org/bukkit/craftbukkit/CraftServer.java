@@ -430,6 +430,12 @@ public final class CraftServer implements Server {
         });
         // Purpur end - Language API
 
+        // Paper hands each registry to PaperRegistryAccess from vanilla source patches as the
+        // registry is created. Silkard has no such patches, so the server's loaded registries
+        // (the static layer included) are registered here, before CraftRegistry and
+        // org.bukkit.Registry initialize and look them up.
+        console.registryAccess().registries().forEach(entry ->
+                io.papermc.paper.registry.PaperRegistryAccess.instance().registerRegistry(entry.value()));
         CraftRegistry.setMinecraftRegistry(console.registryAccess());
 
         if (!Main.useConsole) {
