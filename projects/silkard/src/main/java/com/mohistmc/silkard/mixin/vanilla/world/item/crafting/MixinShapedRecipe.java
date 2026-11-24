@@ -82,7 +82,8 @@ public abstract class MixinShapedRecipe implements ContextShapedRecipe {
         char c = 'a';
         for (Optional<Ingredient> list : this.pattern.ingredients()) {
             RecipeChoice choice = CraftRecipe.toChoice(list);
-            if (choice != null) {
+            // Empty pattern slots map to RecipeChoice.empty(), which ShapedRecipe#setIngredient rejects.
+            if (choice != RecipeChoice.empty()) {
                 recipe.setIngredient(c, choice);
             }
 
