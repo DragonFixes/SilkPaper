@@ -553,6 +553,14 @@ public abstract class MixinEntity implements ContextEntity {
     }
     // CraftBukkit end
 
+    // Paper - Allies API: rules a plugin added through org.bukkit.entity.Entity#addAdditionalAlliedRule
+    @Inject(method = "considersEntityAsAlly", at = @At("RETURN"), cancellable = true)
+    private void paper$pluginAllyRules(Entity other, CallbackInfoReturnable<Boolean> cir) {
+        if (!cir.getReturnValueZ() && this.getBukkitEntity().considersEntityAsAlly0(other.getBukkitEntity())) {
+            cir.setReturnValue(true);
+        }
+    }
+
     @Shadow
     protected int remainingFireTicks;
 }
