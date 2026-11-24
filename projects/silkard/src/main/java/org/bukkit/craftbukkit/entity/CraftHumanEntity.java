@@ -611,9 +611,8 @@ public class CraftHumanEntity extends CraftLivingEntity implements HumanEntity {
 
     @Override
     public void closeInventory(org.bukkit.event.inventory.InventoryCloseEvent.Reason reason) {
-        // TODO(silkard-paper): the close event reports Silkard's default reason, not the requested one.
         if (this.getHandle() instanceof ServerPlayer serverPlayer) {
-            serverPlayer.closeContainer();
+            ((com.mohistmc.silkard.bukkit.InventoryCloseReasonHolder) serverPlayer).silkard$closeContainer(reason); // Paper - Inventory close reason
         } else {
             this.getHandle().containerMenu = this.getHandle().inventoryMenu;
         }

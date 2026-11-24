@@ -1459,7 +1459,8 @@ public class CraftEventFactory {
     public static com.mojang.datafixers.util.Pair<net.kyori.adventure.text.@Nullable Component, @Nullable AbstractContainerMenu> callInventoryOpenEventWithTitle(ServerPlayer player, AbstractContainerMenu container, boolean cancelled) {
         container.startOpen(); // delegate start open logic to before InventoryOpenEvent is fired
         if (player.containerMenu != player.inventoryMenu) { // fire INVENTORY_CLOSE if one already open
-            player.connection.handleContainerClose(new ServerboundContainerClosePacket(player.containerMenu.containerId)); // TODO Silkard - the close event reports the default reason, not OPEN_NEW
+            handleInventoryCloseEvent(player, org.bukkit.event.inventory.InventoryCloseEvent.Reason.OPEN_NEW); // Paper - Inventory close reason
+            player.doCloseContainer();
         }
 
         CraftServer server = player.level().getCraftServer();

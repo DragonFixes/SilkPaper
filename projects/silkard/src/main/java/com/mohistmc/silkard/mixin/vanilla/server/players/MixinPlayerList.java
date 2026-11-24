@@ -487,7 +487,7 @@ public abstract class MixinPlayerList implements ContextPlayerList {
 
         // CraftBukkit start - quitting must be before the final save, plugins may modify data (SPIGOT-5799, SPIGOT-6145)
         if (player.containerMenu != player.inventoryMenu) {
-            player.closeContainer();
+            ((com.mohistmc.silkard.bukkit.InventoryCloseReasonHolder) player).silkard$closeContainer(org.bukkit.event.inventory.InventoryCloseEvent.Reason.DISCONNECT); // Paper - Inventory close reason
         }
 
         String leaveMessage = ((ContextServerPlayer) player).silkard$kickLeaveMessage();
