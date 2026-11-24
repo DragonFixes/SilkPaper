@@ -1,0 +1,16 @@
+forceload add 0 0
+fill 0 100 0 15 100 15 minecraft:stone
+summon minecraft:minecart 5 101 5 {Tags:["ridecart"]}
+summon minecraft:zombie 6 101 6 {Tags:["rider"],PersistenceRequired:1b}
+ride @e[tag=rider,limit=1] mount @e[tag=ridecart,limit=1]
+execute as @e[tag=ridecart,limit=1] if data entity @s Passengers
+ride @e[tag=rider,limit=1] dismount
+execute as @e[tag=ridecart,limit=1] unless data entity @s Passengers
+summon minecraft:zombie 9 101 9 {Tags:["totemtest"],PersistenceRequired:1b,equipment:{mainhand:{id:"minecraft:totem_of_undying",count:1}}}
+damage @e[tag=totemtest,limit=1] 1000 minecraft:generic
+wait 2
+execute if entity @e[tag=totemtest]
+execute as @e[tag=totemtest,limit=1] unless items entity @s weapon.mainhand minecraft:totem_of_undying
+minecraft:kill @e[tag=rider]
+minecraft:kill @e[tag=ridecart]
+minecraft:kill @e[tag=totemtest]

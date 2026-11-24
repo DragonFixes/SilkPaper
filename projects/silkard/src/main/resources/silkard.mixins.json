@@ -219,6 +219,7 @@
     "vanilla.world.entity.MixinConversionType",
     "vanilla.world.entity.MixinConversionType$1",
     "vanilla.world.entity.MixinEntity",
+    "vanilla.world.entity.MixinEntityRidingEvents",
     "vanilla.world.entity.MixinLivingEntityDropEvent",
     "vanilla.world.entity.MixinEntityFluidInteraction",
     "vanilla.world.entity.MixinLeashable",
