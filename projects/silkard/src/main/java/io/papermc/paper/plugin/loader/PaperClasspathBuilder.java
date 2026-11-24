@@ -50,8 +50,8 @@ public class PaperClasspathBuilder implements PluginClasspathBuilder {
         }
 
         try {
-            final URLClassLoader libraryLoader = new URLClassLoader(urls, this.getClass().getClassLoader());
-            return new PaperPluginClassLoader(logger, source, jarFile, configuration, this.getClass().getClassLoader(), libraryLoader);
+            final URLClassLoader libraryLoader = new URLClassLoader(urls, com.mohistmc.silkard.paper.PluginParentClassLoader.get());
+            return new PaperPluginClassLoader(logger, source, jarFile, configuration, com.mohistmc.silkard.paper.PluginParentClassLoader.get(), libraryLoader);
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }

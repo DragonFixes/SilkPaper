@@ -101,6 +101,10 @@ public final class PaperBootstrap {
      * providers when it loads plugins.
      */
     public static void discoverPlugins(OptionSet options) {
+        // Spigot `libraries:` class loaders sit beside the plugin class loader and are asked
+        // for classes it cannot find, so they need the same filtered parent.
+        org.bukkit.plugin.java.LibraryLoader.LIBRARY_LOADER_FACTORY =
+            (urls, parent) -> new java.net.URLClassLoader(urls, PluginParentClassLoader.get());
         try {
             io.papermc.paper.plugin.PluginInitializerManager.load(options);
         } catch (Exception e) {

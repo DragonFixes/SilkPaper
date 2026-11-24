@@ -32,7 +32,7 @@ class PaperPluginProviderFactory implements PluginTypeFactory<PaperPluginParent,
 
         if (configuration.getLoader() != null) {
             try (
-                PaperSimplePluginClassLoader simplePluginClassLoader = new PaperSimplePluginClassLoader(source, file, configuration, this.getClass().getClassLoader())
+                PaperSimplePluginClassLoader simplePluginClassLoader = new PaperSimplePluginClassLoader(source, file, configuration, com.mohistmc.silkard.paper.PluginParentClassLoader.get())
             ) {
                 PluginLoader loader = ProviderUtil.loadClass(configuration.getLoader(), PluginLoader.class, simplePluginClassLoader);
                 loader.classloader(builder);

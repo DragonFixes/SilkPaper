@@ -44,7 +44,7 @@ class SpigotPluginProviderFactory implements PluginTypeFactory<SpigotPluginProvi
             ));
 
             try (
-                PaperSimplePluginClassLoader simplePluginClassLoader = new PaperSimplePluginClassLoader(source, file, configuration, this.getClass().getClassLoader())
+                PaperSimplePluginClassLoader simplePluginClassLoader = new PaperSimplePluginClassLoader(source, file, configuration, com.mohistmc.silkard.paper.PluginParentClassLoader.get())
             ) {
                 PluginLoader loader = ProviderUtil.loadClass(configuration.getPaperPluginLoader(), PluginLoader.class, simplePluginClassLoader);
                 loader.classloader(builder);

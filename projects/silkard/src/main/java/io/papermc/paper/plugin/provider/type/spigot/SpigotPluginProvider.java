@@ -122,7 +122,7 @@ public class SpigotPluginProvider implements PluginProvider<JavaPlugin>, Provide
 
             final PluginClassLoader loader;
             try {
-                loader = new PluginClassLoader(this.getClass().getClassLoader(), this.description, dataFolder, this.path.toFile(), LIBRARY_LOADER.createLoader(this.description, this.paperLibraryPaths), this.jarFile, this.dependencyContext); // Paper
+                loader = new PluginClassLoader(com.mohistmc.silkard.paper.PluginParentClassLoader.get(), this.description, dataFolder, this.path.toFile(), LIBRARY_LOADER.createLoader(this.description, this.paperLibraryPaths), this.jarFile, this.dependencyContext); // Paper
             } catch (InvalidPluginException ex) {
                 throw ex;
             } catch (Throwable ex) {
