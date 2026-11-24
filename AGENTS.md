@@ -107,8 +107,9 @@ at runtime (missing vanilla hooks, missing jar-in-jar libraries). After any serv
 
 `boot-test` checks the log every 15 seconds. On a stall it saves a `jstack` dump to
 `deploy\boot-test-threads-<time>.txt` before killing the server; read it to see where the server
-is blocked. A shutdown stall after "Saving chunks for level ... the_end" still happens
-occasionally (about 1 run in 5) and has not been diagnosed yet.
+is blocked. A shutdown stall after "Saving chunks for level ... the_end" or "Saving worlds" has been
+seen twice, both on freshly generated worlds stopped within a second of "Done"; it has not
+been reproduced with a dump yet.
 
 Jar-in-jar (`include(...)` in `projects/silkard/build.gradle`) is not transitive: a library's own
 runtime dependencies must be listed too, or classes are missing only at runtime.
