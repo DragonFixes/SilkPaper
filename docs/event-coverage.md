@@ -37,6 +37,12 @@ These are boot-tested with `-MixinAudit` only (the injections apply); none has b
 in game yet. Riding and totems also run in `scripts/ride-smoke.txt`; consume, armor and trade
 events need a real player.
 
+Events gated on `Entity.valid` (riding, swimming, villager trade acquisition and others) depend on
+the level marking entities valid while it tracks them; `Entity.isValid()` reads the same flag.
+
+`scripts/death-smoke.txt` is unreliable: `kill` prints no feedback, leaves old item entities in
+place and the armor stand drop check fails, on builds before and after the riding and item events.
+
 ## Missing, by plugin impact
 
 ### Tier 1: core Bukkit events most plugins use
