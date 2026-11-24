@@ -11,6 +11,7 @@
     "world.effect.MixinPurpurMobEffects$Wither",
     "world.item.consume_effects.MixinPurpurClearAllStatusEffectsConsumeEffect",
     "server.level.MixinPurpurServerPlayerGameMode",
+    "server.level.PurpurServerPlayerAccessor",
     "world.entity.ai.behavior.MixinPurpurInteractWithDoor",
     "world.item.MixinPurpurBoatItem",
     "world.item.MixinPurpurBowItem",
