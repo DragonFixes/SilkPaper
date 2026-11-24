@@ -576,4 +576,16 @@ public class MixinServerGamePacketListenerImpl implements ContextServerGamePacke
         }
     }
     // CraftBukkit end
+
+    // CraftBukkit - Rarely it would send a disconnect line twice. A kick handles the disconnect at once and
+    // again when the channel closes; only the first one removes the player and fires PlayerQuitEvent.
+    @Inject(method = "onDisconnect", at = @At("HEAD"), cancellable = true)
+    private void silkard$disconnectOnce(net.minecraft.network.DisconnectionDetails details, CallbackInfo ci) {
+        ContextServerCommonPacketListenerImpl self = (ContextServerCommonPacketListenerImpl) this;
+        if (self.silkard$processedDisconnect()) {
+            ci.cancel();
+            return;
+        }
+        self.silkard$setProcessedDisconnect(true);
+    }
 }
