@@ -85,6 +85,12 @@ public class MixinTurtleEggBlock {
                 level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(state));
 
                 for (int i = 0; i < state.getValue(TurtleEggBlock.EGGS); i++) {
+                    // Purpur start - Breedable mobs can have multiple babies
+                    int currentBabyCount = 0;
+                    while ((currentBabyCount < level.purpurConfig().turtleBreedingMinOffspring) ||
+                        ((level.purpurConfig().turtleBreedingChance > 0.0D && level.purpurConfig().turtleBreedingChance >= random.nextDouble()) &&
+                            currentBabyCount < level.purpurConfig().turtleBreedingMaxOffspring)) {
+                    // Purpur end - Breedable mobs can have multiple babies
                     level.levelEvent(2001, pos, net.minecraft.world.level.block.Block.getId(state));
                     Turtle turtle = EntityTypes.TURTLE.create(level, EntitySpawnReason.BREEDING);
                     if (turtle != null) {
@@ -92,6 +98,8 @@ public class MixinTurtleEggBlock {
                         turtle.setHomePos(pos);
                         turtle.snapTo(pos.getX() + 0.3 + i * 0.2, pos.getY(), pos.getZ() + 0.3, 0.0F, 0.0F);
                         ((ContextLevelWriter) level).addFreshEntity(turtle, CreatureSpawnEvent.SpawnReason.EGG); // CraftBukkit
+                    }
+                    currentBabyCount++; // Purpur - Breedable mobs can have multiple babies
                     }
                 }
             }

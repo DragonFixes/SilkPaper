@@ -38,39 +38,6 @@ public class MixinFarmlandBlock {
         return CraftEventFactory.callEntityChangeBlockEvent(sourceEntity, pos, state) && level.setBlockAndUpdate(pos, state);
     }
 
-    // CraftBukkit start - PlayerInteractEvent/EntityInteractEvent on trample
-    @Inject(method = "fallOn", at = @At("HEAD"), cancellable = true)
-    private void silkard$trampleEvents(Level level, BlockState state, BlockPos pos, Entity entity, double fallDistance, CallbackInfo ci) {
-        if (!(level instanceof ServerLevel serverLevel) || !(level.getRandom().nextFloat() < fallDistance - 0.5) || !(entity instanceof net.minecraft.world.entity.LivingEntity)) {
-            return;
-        }
 
-        boolean canTrample = entity instanceof net.minecraft.world.entity.player.Player player
-                ? !level.getServer().isUnderSpawnProtection(serverLevel, pos, player)
-                : serverLevel.getGameRules().get(net.minecraft.world.level.gamerules.GameRules.MOB_GRIEFING);
-        // CraftBukkit - Interact soil
-        org.bukkit.event.Cancellable cancellable;
-        if (entity instanceof net.minecraft.world.entity.player.Player player) {
-            cancellable = CraftEventFactory.callPlayerInteractEvent(player, org.bukkit.event.block.Action.PHYSICAL, pos, null, null, null);
-        } else {
-            EntityInteractEvent interactEvent = new EntityInteractEvent(entity.getBukkitEntity(), level.getWorld().getBlockAt(pos.getX(), pos.getY(), pos.getZ()));
-            level.getCraftServer().getPluginManager().callEvent(interactEvent);
-            cancellable = interactEvent;
-        }
-        if (cancellable.isCancelled()) {
-            ci.cancel();
-            return;
-        }
-        if (!CraftEventFactory.callEntityChangeBlockEvent(entity, pos, net.minecraft.world.level.block.Blocks.DIRT.defaultBlockState())) {
-            ci.cancel();
-            return;
-        }
-        // CraftBukkit end
-        if (canTrample && entity.getBbWidth() * entity.getBbWidth() * entity.getBbHeight() > 0.512F) {
-            ((FarmlandBlock) (Object) this).turnToBaseBlock(entity, state, level, pos);
-            // vanilla 的 turnToBaseBlock 已执行, 跳过 vanilla fallOn 剩余部分（仅 super 空实现）
-            ci.cancel();
-        }
-    }
     // CraftBukkit end
 }
