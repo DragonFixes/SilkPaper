@@ -23,13 +23,23 @@ public final class PurpurScripts {
      * @throws ScriptException if the expression fails, or no JavaScript engine is installed
      */
     public static synchronized Object evalWithDifficulty(final String expression, final int difficulty) throws ScriptException {
+        return eval("let difficulty = " + difficulty + "; " + expression);
+    }
+
+    /**
+     * Evaluates {@code script}, which binds its own variables with {@code let}, as Purpur's player
+     * death experience equation does.
+     *
+     * @throws ScriptException if the script fails, or no JavaScript engine is installed
+     */
+    public static synchronized Object eval(final String script) throws ScriptException {
         if (!engineLookedUp) {
             engineLookedUp = true;
             engine = new ScriptEngineManager().getEngineByName("js");
         }
         if (engine == null) {
-            throw new ScriptException("No JavaScript engine is installed to evaluate: " + expression);
+            throw new ScriptException("No JavaScript engine is installed to evaluate: " + script);
         }
-        return engine.eval("let difficulty = " + difficulty + "; " + expression);
+        return engine.eval(script);
     }
 }

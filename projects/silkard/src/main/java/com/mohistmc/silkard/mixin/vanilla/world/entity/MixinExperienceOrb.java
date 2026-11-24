@@ -139,7 +139,7 @@ public abstract class MixinExperienceOrb {
     // CraftBukkit start - xp cooldown and amount events
     @Inject(method = "playerTouch", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;take(Lnet/minecraft/world/entity/Entity;I)V"))
     private void silkard$xpCooldown(Player player, CallbackInfo ci) {
-        player.takeXpDelay = CraftEventFactory.callPlayerXpCooldownEvent((ServerPlayer) player, 2, PlayerExpCooldownChangeEvent.ChangeReason.PICKUP_ORB).getNewCooldown();
+        player.takeXpDelay = CraftEventFactory.callPlayerXpCooldownEvent((ServerPlayer) player, player.level().purpurConfig().playerExpPickupDelay, PlayerExpCooldownChangeEvent.ChangeReason.PICKUP_ORB) /* Purpur - Configurable player pickup exp delay */.getNewCooldown();
     }
 
     @Redirect(method = "playerTouch", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;giveExperiencePoints(I)V"))
