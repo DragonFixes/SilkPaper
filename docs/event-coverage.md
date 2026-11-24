@@ -28,10 +28,14 @@ containers, PlayerDropItemEvent, PlayerLevelChangeEvent, EntityBreakDoorEvent, T
 PlayerBedEnterEvent, PlayerBedFailEnterEvent, PlayerBedLeaveEvent, PlayerInteractEntityEvent /
 PlayerInteractAtEntityEvent, PlayerUseUnknownEntityEvent, PlayerInputEvent, PlayerToggleSneakEvent,
 PlayerToggleSprintEvent, PlayerToggleFlightEvent, PlayerItemHeldEvent, PlayerSwapHandItemsEvent,
-PlayerArmSwingEvent, PlayerInteractEvent for left clicks on air, InventoryCreativeEvent.
+PlayerArmSwingEvent, PlayerInteractEvent for left clicks on air, InventoryCreativeEvent,
+VehicleEnterEvent, VehicleExitEvent, EntityMountEvent, EntityDismountEvent, EntityResurrectEvent,
+PlayerItemConsumeEvent, PlayerArmorChangeEvent, EntityEquipmentChangedEvent, PlayerTradeEvent and
+PlayerPurchaseEvent (trades with plugin merchants also count their uses now).
 
 These are boot-tested with `-MixinAudit` only (the injections apply); none has been checked
-in game yet.
+in game yet. Riding and totems also run in `scripts/ride-smoke.txt`; consume, armor and trade
+events need a real player.
 
 ## Missing, by plugin impact
 
@@ -40,8 +44,7 @@ in game yet.
 | Event | Leaf call site |
 |---|---|
 | PlayerJumpEvent | ServerGamePacketListenerImpl (handleMovePlayer) |
-| PlayerItemConsumeEvent, EntityResurrectEvent | LivingEntity |
-| VehicleEnterEvent, VehicleExitEvent, VehicleBlockCollisionEvent | Entity |
+| VehicleBlockCollisionEvent | Entity |
 | PlayerAdvancementDoneEvent | PlayerAdvancements |
 | ServerTickStartEvent, ServerTickEndEvent | MinecraftServer |
 | PlayerSpawnLocationEvent, AsyncPlayerSpawnLocationEvent | PrepareSpawnTask |
@@ -53,16 +56,13 @@ in game yet.
 | PlayerAttemptPickupItemEvent, PlayerPickupExperienceEvent | ItemEntity, ExperienceOrb |
 | PlayerLaunchProjectileEvent, PlayerReadyArrowEvent, PlayerElytraBoostEvent | items, Player |
 | CreeperIgniteEvent, SlimeSplitEvent, EntityAirChangeEvent, EntityPortalExitEvent | mobs, Entity |
-| EntityMountEvent, EntityDismountEvent | Entity |
-| PlayerTradeEvent, PlayerPurchaseEvent (villagers; custom merchants already fire them) | AbstractVillager, WanderingTrader |
-| PlayerArmorChangeEvent | LivingEntity |
 | PlayerItemCooldownEvent | ItemCooldowns |
 | PrepareHopperTransferEvent, PlayerCustomClickEvent, ServerResourcesReloadedEvent | HopperBlockEntity, packet listener, MinecraftServer |
 
 ### Tier 2: Paper events used by protection, logging and anti-cheat plugins
 
 EntityAddToWorldEvent, EntityRemoveFromWorldEvent (ServerLevel); BlockDestroyEvent (Level);
-EntityMoveEvent, EntityJumpEvent, EntityEquipmentChangedEvent (LivingEntity); PlayerInventorySlotChangeEvent (ServerPlayer);
+EntityMoveEvent, EntityJumpEvent (LivingEntity); PlayerInventorySlotChangeEvent (ServerPlayer);
  PlayerItemFrameChangeEvent;
 PlayerNameEntityEvent; PlayerFlowerPotManipulateEvent; PlayerInsertLecternBookEvent;
 PlayerLecternPageChangeEvent; PlayerShearBlockEvent; PlayerSignCommandPreprocessEvent;
