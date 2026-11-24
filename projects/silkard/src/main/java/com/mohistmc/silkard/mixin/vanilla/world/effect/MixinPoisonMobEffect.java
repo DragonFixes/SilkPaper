@@ -13,6 +13,6 @@ public class MixinPoisonMobEffect {
 
     @Redirect(method = "applyEffectTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hurtServer(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/damagesource/DamageSource;F)Z"))
     private boolean silkard_hurtServer(LivingEntity mob, ServerLevel level, DamageSource source, float amount) {
-        return mob.hurtServer(level, mob.damageSources().poison(), amount);
+        return mob.hurtServer(level, mob.damageSources().poison(), mob.level().purpurConfig().entityPoisonDegenerationAmount); // Purpur - Config MobEffect by world
     }
 }

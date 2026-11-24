@@ -24,7 +24,7 @@ public class MixinSaturationMobEffect {
         int oldFoodLevel = foodData.foodLevel;
         FoodLevelChangeEvent event = CraftEventFactory.callFoodLevelChangeEvent(player, amount + oldFoodLevel);
         if (!event.isCancelled()) {
-            foodData.eat(event.getFoodLevel() - oldFoodLevel, saturation);
+            foodData.eat(event.getFoodLevel() - oldFoodLevel, mob.level().purpurConfig().humanSaturationRegenAmount); // Purpur - Config MobEffect by world
         }
         ((CraftPlayer) player.getBukkitEntity()).sendHealthUpdate();
     }

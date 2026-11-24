@@ -5,6 +5,11 @@
   "plugin": "com.mohistmc.silkard.SilkardMixinPlugin",
   "mixinPriority": 1100,
   "mixins": [
+    "world.damagesource.MixinPurpurCombatRules",
+    "world.effect.MixinPurpurMobEffects$Hunger",
+    "world.effect.MixinPurpurMobEffects$Poison",
+    "world.effect.MixinPurpurMobEffects$Wither",
+    "world.item.consume_effects.MixinPurpurClearAllStatusEffectsConsumeEffect",
     "server.level.MixinPurpurServerPlayerGameMode",
     "world.entity.ai.behavior.MixinPurpurInteractWithDoor",
     "world.item.MixinPurpurBoatItem",

@@ -118,7 +118,7 @@ public class MixinFoodData implements ContextFoodData {
             ++this.tickTimer;
             if (this.tickTimer >= this.starvationRate) {
                 if (player.getHealth() > 10.0F || difficulty == Difficulty.HARD || player.getHealth() > 1.0F && difficulty == Difficulty.NORMAL) {
-                    player.hurtServer(level, player.damageSources().starve(), 1.0F);
+                    player.hurtServer(level, player.damageSources().starve(), player.level().purpurConfig().hungerStarvationDamage); // Purpur - Configurable hunger starvation damage
                 }
                 this.tickTimer = 0;
             }

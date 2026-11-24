@@ -29,5 +29,9 @@ setblock 2 101 12 minecraft:weeping_vines
 setblock 2 101 13 minecraft:composter
 setblock 15 101 15 minecraft:campfire
 summon minecraft:frog 3 102 4
+summon minecraft:pig 5 102 3
+effect give @e[type=minecraft:frog] minecraft:poison 10
+effect give @e[type=minecraft:pig] minecraft:wither 10
+effect give @e[type=minecraft:frog] minecraft:regeneration 10
 wait 20
 tps

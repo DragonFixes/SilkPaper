@@ -15,6 +15,6 @@ public class MixinRegenerationMobEffect {
 
     @Redirect(method = "applyEffectTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;heal(F)V"))
     private void silkard_heal(LivingEntity mob, float amount) {
-        mob.heal(amount, org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason.MAGIC_REGEN); // CraftBukkit
+        mob.heal(mob.level().purpurConfig().entityHealthRegenAmount, org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason.MAGIC_REGEN); // CraftBukkit // Purpur - Config MobEffect by world
     }
 }
