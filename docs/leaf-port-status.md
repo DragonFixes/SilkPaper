@@ -24,8 +24,14 @@ patches rewrite earlier ones.
 | Features shared with entities | partial | block and item sides are done; the entity sides are missing: mob griefing override (about 40 mobs), multiple babies (about 25 animals), display names from item forms (`ArmorStand`, `ItemFrame`, `Painting`, `AbstractBoat`) |
 | Menu, food and effect options | done | anvil (Anvil API events, unsafe enchants, colors, cumulative cost; one overwrite at priority 500 so other mods can still inject), grindstone (kept enchants, strip attributes/name, Paper BlockExpEvent, GrindstoneTakeResultEvent), enchanting table lapis, binding with weakness, poison/wither/regen/saturation/hunger amounts, starvation damage, armor limit, milk and bad omen. Burp delay and volume belong to the player batch |
 | Player, server, command and world options | missing | `ServerLevel`, `ServerPlayer`, `ServerGamePacketListenerImpl`, AFK, sleep, spawners, commands, ender chest rows |
-| AFK system | missing | |
+| AFK system | done | idle players turn AFK instead of being kicked unless idle kick is on and they lack purpur.bypassIdleKick; PlayerAFKEvent, broadcasts, tab list tag, Leaf's AFK title, no collisions, sleeping, mob targeting, nearby-player checks. Missing: AFK players still activate entities, because Paper's entity activation range is not ported (see below); Leaf's /afk command cooldown |
 | Ridable and controllable mobs (`MoveControllerWASD`, per-mob `ridable`) | missing | ported last |
+
+## Paper features missing underneath Leaf
+
+| Feature | Status | Note |
+|---|---|---|
+| Entity Activation Range 2.0 (`paper-server/patches/features/0004`) | missing | only `ActivationType` is ported; Leaf's activation patches and the AFK and idle settings depend on it |
 
 ## minecraft-patches
 
