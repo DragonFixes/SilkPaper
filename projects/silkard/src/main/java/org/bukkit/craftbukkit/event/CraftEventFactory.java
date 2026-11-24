@@ -1028,8 +1028,8 @@ public class CraftEventFactory {
             dropAllItems(drops, item -> victim.spawnAtLocation(level, item));
         };
 
-        if (delayedDrops) {
-            dropAll.run(); // TODO Silkard - LivingEntity has no post-death task queue, so delayed drops run at once
+        if (delayedDrops && victim instanceof com.mohistmc.silkard.paper.server.DeathCapture capture) {
+            capture.silkard$postDeathEventTasks().add(dropAll); // drops spawn once the death goes through
         } else {
             dropAll.run();
         }

@@ -12,7 +12,11 @@
     "MixinPaperBeaconBlockEntity",
     "MixinPaperBlockStateBase",
     "MixinPaperServerTickTime",
-    "MixinPaperRaid"
+    "MixinPaperRaid",
+    "MixinPaperEntityDeathDrops",
+    "MixinPaperLivingEntityDeath",
+    "MixinPaperLivingEntityDeathInvoker",
+    "MixinPaperServerPlayerDeath"
   ],
   "injectors": {
     "defaultRequire": 1
