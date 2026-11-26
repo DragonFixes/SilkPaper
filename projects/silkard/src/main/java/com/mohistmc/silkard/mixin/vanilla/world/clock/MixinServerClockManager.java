@@ -65,6 +65,19 @@ public abstract class MixinServerClockManager implements ContextServerClockManag
         return this.silkard$level != null ? this.silkard$level.getGameTime() : this.server.overworld().getGameTime();
     }
 
+    // CraftBukkit - per-world game rules. The client advances its clocks at the sent rate, so a
+    // world that does not advance time must send a paused clock, or the client drifts away from
+    // the server's time (mobs burning while the client shows night).
+    @Overwrite
+    public ClientboundSetTimePacket createFullSyncPacket() {
+        if (this.silkard$level == null) {
+            return new ClientboundSetTimePacket(this.getGameTime(), net.minecraft.util.Util.mapValues(this.clocks, clock -> clock.packNetworkState(this.server)));
+        }
+        boolean advanceTime = this.silkard$level.getGameRules().get(GameRules.ADVANCE_TIME);
+        return new ClientboundSetTimePacket(this.getGameTime(), net.minecraft.util.Util.mapValues(this.clocks, clock ->
+            new ClockNetworkState(clock.totalTicks(), clock.partialTick(), clock.isPaused() || !advanceTime ? 0.0F : clock.rate())));
+    }
+
     @Overwrite
     private void modifyClock(Holder<WorldClock> clock, Consumer<? super ServerClockManager.ServerClockInstance> action) {
         this.silkard$modifyClock(clock, action, null);

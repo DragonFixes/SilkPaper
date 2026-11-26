@@ -135,6 +135,11 @@ public abstract class MixinServerLevel implements ContextServerLevel {
         }
         cir.setReturnValue(this.clockManager);
     }
+    // CraftBukkit - sleeping through the night skips this world's clock, not the server-wide one
+    @Redirect(method = "tick", require = 1, at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;clockManager()Lnet/minecraft/world/clock/ServerClockManager;"))
+    private ServerClockManager silkard$sleepLevelClock(MinecraftServer server) {
+        return ((ServerLevel) (Object) this).clockManager();
+    }
     // CraftBukkit end
 
     public void setWeatherParameters(int clearTime, int rainTime, boolean raining, boolean thundering) {
