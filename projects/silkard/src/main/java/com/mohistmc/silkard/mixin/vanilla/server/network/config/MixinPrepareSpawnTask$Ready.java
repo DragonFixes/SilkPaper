@@ -27,11 +27,18 @@ public class MixinPrepareSpawnTask$Ready {
 
     @Shadow @Final private PrepareSpawnTask this$0;
 
-    // CraftBukkit - reuse the player created during login
+    // CraftBukkit - reuse the player created during login. It was built in the overworld before
+    // the saved dimension was known, so it moves into the resolved spawn level (Paper does the
+    // same with setServerLevel); otherwise players logging out in another world rejoin at their
+    // saved coordinates in the overworld.
     @Redirect(method = "spawn", at = @At(value = "NEW", target = "(Lnet/minecraft/server/MinecraftServer;Lnet/minecraft/server/level/ServerLevel;Lcom/mojang/authlib/GameProfile;Lnet/minecraft/server/level/ClientInformation;)Lnet/minecraft/server/level/ServerPlayer;"))
     private ServerPlayer silkard$reusePlayer(MinecraftServer server, ServerLevel level, GameProfile profile, ClientInformation information) {
         ServerPlayer player = ((ContextPrepareSpawnTask) (Object) this.this$0).silkard$player();
-        return player != null ? player : new ServerPlayer(server, level, profile, information);
+        if (player == null) {
+            return new ServerPlayer(server, level, profile, information);
+        }
+        player.setServerLevel(level);
+        return player;
     }
 
     // CraftBukkit - load data through the reused player
