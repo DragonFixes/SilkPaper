@@ -79,7 +79,14 @@ public final class CraftCompat {
             return true;
         }
         try {
-            return server.dispatchCommand(sender, commandLine);
+            if (server.dispatchCommand(sender, commandLine)) {
+                return true;
+            }
+            // Nothing in the tree matched. Paper's console runs every line through the vanilla
+            // dispatcher, which reports the unknown command (and fires UnknownCommandEvent) itself.
+            server.getServer().getCommands().performPrefixedCommand(
+                org.bukkit.craftbukkit.command.VanillaCommandWrapper.getListener(sender), commandLine);
+            return false;
         } catch (Exception ex) {
             server.getLogger().log(java.util.logging.Level.WARNING, "Unexpected exception while parsing console command \"" + commandLine + '"', ex);
             return false;

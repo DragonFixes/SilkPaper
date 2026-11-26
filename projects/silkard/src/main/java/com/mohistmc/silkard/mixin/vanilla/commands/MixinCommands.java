@@ -68,6 +68,17 @@ public abstract class MixinCommands implements ContextCommands {
     @org.spongepowered.asm.mixin.injection.Inject(method = "<init>", at = @org.spongepowered.asm.mixin.injection.At("RETURN"))
     private void silkard$registerExtraCommands(org.spongepowered.asm.mixin.injection.callback.CallbackInfo ci) {
         com.mohistmc.silkard.commands.SilkardCommands.registerVanilla(this.dispatcher);
+        // Paper - Brigadier Command API: legacy minecraft namespace commands, as flattened redirects
+        for (final com.mojang.brigadier.tree.CommandNode<CommandSourceStack> node : new java.util.ArrayList<>(this.dispatcher.getRoot().getChildren())) {
+            com.mojang.brigadier.tree.CommandNode<CommandSourceStack> flattenedAliasTarget = node;
+            while (flattenedAliasTarget.getRedirect() != null) flattenedAliasTarget = flattenedAliasTarget.getRedirect();
+
+            this.dispatcher.register(
+                com.mojang.brigadier.builder.LiteralArgumentBuilder.<CommandSourceStack>literal("minecraft:" + node.getName())
+                    .executes(flattenedAliasTarget.getCommand())
+                    .requires(flattenedAliasTarget.getRequirement())
+                    .redirect(flattenedAliasTarget));
+        }
     }
 
     // CraftBukkit start
@@ -183,7 +194,13 @@ public abstract class MixinCommands implements ContextCommands {
                 return CommandSyntaxException.BUILT_IN_EXCEPTIONS.dispatcherUnknownCommand().createWithContext(command.getReader());
             });
         } catch (CommandSyntaxException commandsyntaxexception) {
-            sender.sendFailure(ComponentUtils.fromMessage(commandsyntaxexception.getRawMessage()));
+            // Paper start - Add UnknownCommandEvent: the message is built here and sent only if the event keeps it
+            final net.kyori.adventure.text.Component message = net.kyori.adventure.text.Component.text()
+                .color(net.kyori.adventure.text.format.NamedTextColor.RED)
+                .append(io.papermc.paper.command.brigadier.MessageComponentSerializer.message().deserialize(commandsyntaxexception.getRawMessage()))
+                .build();
+            net.kyori.adventure.text.Component detail = null;
+            // Paper end - Add UnknownCommandEvent
             if (commandsyntaxexception.getInput() != null && commandsyntaxexception.getCursor() >= 0) {
                 int i = Math.min(commandsyntaxexception.getInput().length(), commandsyntaxexception.getCursor());
                 MutableComponent mutablecomponent = Component.empty().withStyle(ChatFormatting.GRAY).withStyle((style) -> {
@@ -202,9 +219,24 @@ public abstract class MixinCommands implements ContextCommands {
                 }
 
                 mutablecomponent.append(Component.translatable("command.context.here").withStyle(ChatFormatting.RED, ChatFormatting.ITALIC));
-                sender.sendFailure(mutablecomponent);
+                detail = io.papermc.paper.adventure.PaperAdventure.asAdventure(mutablecomponent);
             }
 
+            // Leaf - configurable unknown command message (MiniMessage with <message> and <detail>)
+            final String format = org.dreeam.leaf.config.modules.misc.UnknownCommandMessage.unknownCommandMessage;
+            final net.kyori.adventure.text.Component full;
+            if (format == null || format.equalsIgnoreCase("default")) {
+                full = detail == null ? message : message.append(net.kyori.adventure.text.Component.newline()).append(detail);
+            } else {
+                full = net.kyori.adventure.text.minimessage.MiniMessage.miniMessage().deserialize(format,
+                    net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.component("message", message),
+                    net.kyori.adventure.text.minimessage.tag.resolver.Placeholder.component("detail", detail == null ? net.kyori.adventure.text.Component.empty() : detail));
+            }
+            org.bukkit.event.command.UnknownCommandEvent event = new org.bukkit.event.command.UnknownCommandEvent((io.papermc.paper.command.brigadier.CommandSourceStack) (Object) sender, commandString, full);
+            org.bukkit.Bukkit.getServer().getPluginManager().callEvent(event);
+            if (event.message() != null) {
+                sender.sendFailure(io.papermc.paper.adventure.PaperAdventure.asVanilla(event.message()));
+            }
             return null;
         }
     }
