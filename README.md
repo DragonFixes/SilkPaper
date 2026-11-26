@@ -123,3 +123,13 @@ Every script is a `.ps1` with a `.bat` launcher beside it. Run
 ## 📜 License
 
 SilkPaper keeps the licenses of the projects it builds on; see [LICENSE](LICENSE).
+
+## 🙏 Credits
+
+SilkPaper is built on [Silkard](https://github.com/MohistMC/Silkard) by
+[MohistMC](https://github.com/MohistMC). Silkard did the hard part of running the Bukkit and
+Spigot API on Fabric, and SilkPaper would not exist without it. Thanks also to the
+[Paper](https://github.com/PaperMC/Paper), [Purpur](https://github.com/PurpurMC/Purpur),
+[Gale](https://github.com/Dreeam-qwq/Gale), [Leaf](https://github.com/Winds-Studio/Leaf),
+[Spigot](https://www.spigotmc.org/) and [Fabric](https://fabricmc.net/) teams, whose code
+SilkPaper ports and runs.
