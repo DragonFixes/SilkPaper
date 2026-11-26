@@ -28,7 +28,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * <p>
  * Paper also passes a {@code modern} flag to the {@code Commands} constructor so the
  * {@code minecraft:} aliases are node copies rather than redirects; vanilla's constructor is kept
- * here, so the aliases keep CraftBukkit's behaviour.
+ * here, so {@code MixinCommands} builds the aliases as CraftBukkit's flattened redirects.
+ * <p>
+ * Regular (non-bootstrap) plugins get the {@code COMMANDS} event later, from
+ * {@code MixinMinecraftServer} once they are enabled.
  */
 @Mixin(ReloadableServerResources.class)
 public abstract class MixinPaperReloadableServerResources {

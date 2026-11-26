@@ -605,6 +605,10 @@ public abstract class MixinMinecraftServer extends net.minecraft.util.thread.Ree
         loader.prepareInitialWorlds();
 
         this.server.enablePlugins(org.bukkit.plugin.PluginLoadOrder.POSTWORLD);
+        io.papermc.paper.command.brigadier.PaperCommands.INSTANCE.setValid(); // Paper - reset invalid state for event fire below
+        io.papermc.paper.plugin.lifecycle.event.LifecycleEventRunner.INSTANCE.callReloadableRegistrarEvent(io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents.COMMANDS, io.papermc.paper.command.brigadier.PaperCommands.INSTANCE, org.bukkit.plugin.Plugin.class, io.papermc.paper.plugin.lifecycle.event.registrar.ReloadableRegistrarEvent.Cause.INITIAL); // Paper - call commands event for regular plugins
+        this.server.getCommandMap().registerServerAliases(); // Paper - relocate initial CommandMap#registerServerAliases() call
+        ((org.bukkit.craftbukkit.help.SimpleHelpMap) this.server.getHelpMap()).initializeCommands();
         org.purpurmc.purpur.task.BossBarTask.startAll(); // Purpur - tps/ram/compass bar tasks
         // Paper - start the watchdog once startup work is done, so world loading cannot trip it
         org.spigotmc.WatchdogThread.doStart(org.spigotmc.SpigotConfig.timeoutTime, org.spigotmc.SpigotConfig.restartOnCrash);
@@ -612,6 +616,30 @@ public abstract class MixinMinecraftServer extends net.minecraft.util.thread.Ree
         this.server.getPluginManager().callEvent(new ServerLoadEvent(ServerLoadEvent.LoadType.STARTUP));
         ((com.mohistmc.silkard.injected.server.network.ContextServerConnectionListener) this.connection).acceptConnections(); // CraftBukkit
     }
+
+    // Paper start - brigadier command API: a data pack reload builds a new command tree. Bukkit
+    // command-map commands live only in the dispatcher, so they move over before the old tree is
+    // dropped; regular plugins then register their Brigadier commands into it again, and players
+    // get the refreshed tree.
+    @Inject(method = "lambda$reloadResources$4", at = @At("HEAD"), require = 1)
+    private void paper$moveBukkitCommands(java.util.Collection<String> selectedPacks, MinecraftServer.ReloadableResources newResources, CallbackInfo ci) {
+        io.papermc.paper.command.brigadier.PaperBrigadier.moveBukkitCommands(((MinecraftServer) (Object) this).getCommands(), newResources.managers().getCommands());
+    }
+
+    @Inject(method = "lambda$reloadResources$4", at = @At("TAIL"), require = 1)
+    private void paper$reloadPluginCommands(java.util.Collection<String> selectedPacks, MinecraftServer.ReloadableResources newResources, CallbackInfo ci) {
+        if (this.server == null) {
+            return;
+        }
+        io.papermc.paper.command.brigadier.PaperCommands.INSTANCE.setValid(); // reset invalid state for event fire below
+        io.papermc.paper.plugin.lifecycle.event.LifecycleEventRunner.INSTANCE.callReloadableRegistrarEvent(io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents.COMMANDS, io.papermc.paper.command.brigadier.PaperCommands.INSTANCE, org.bukkit.plugin.Plugin.class, io.papermc.paper.plugin.lifecycle.event.registrar.ReloadableRegistrarEvent.Cause.RELOAD); // call commands event for regular plugins
+        final org.bukkit.craftbukkit.help.SimpleHelpMap helpMap = (org.bukkit.craftbukkit.help.SimpleHelpMap) this.server.getHelpMap();
+        helpMap.clear();
+        helpMap.initializeGeneralTopics();
+        helpMap.initializeCommands();
+        this.server.syncCommands(); // Refresh commands after event
+    }
+    // Paper end - brigadier command API
 
     @Override
     public void createLevel(
