@@ -65,6 +65,11 @@ public final class SilkTestFunctions implements TestFunctionLoader {
         register.accept(key("los_zombie_targets_visible_villager"), MobAiTests::zombieTargetsVisibleVillager);
         register.accept(key("sort_sensor_memory_nearest_first"), MobAiTests::sensorMemoryNearestFirst);
         register.accept(key("look_interact_villager_targets_player"), MobAiTests::villagerTargetsNearbyPlayer);
+        register.accept(key("dropper_drops_into_up_column"), DropperTests::dropsIntoUpColumn);
+        register.accept(key("dropper_drops_into_down_column"), DropperTests::dropsIntoDownColumn);
+        register.accept(key("dropper_drops_into_water"), DropperTests::dropsIntoWater);
+        register.accept(key("dropper_drops_down_into_up_column"), DropperTests::dropsDownIntoUpColumn);
+        register.accept(key("dropper_drops_down_into_down_column"), DropperTests::dropsDownIntoDownColumn);
     }
 
     // A hopper above a chest pulls a dropped item in and pushes it down into the chest.

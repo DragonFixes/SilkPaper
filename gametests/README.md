@@ -2,7 +2,7 @@
 
 Vanilla GameTest-framework tests that run inside a full SilkPaper server, so they exercise the
 CraftBukkit, Paper, Purpur and Leaf code a production server runs. They pin vanilla and Paper
-behaviour down (hoppers, redstone, selectors, villager POI and brains, pathfinding, inside-block
+behaviour down (hoppers, droppers, redstone, selectors, villager POI and brains, pathfinding, inside-block
 effects, entity tracking, targeting, the Allies API) so a mixin that breaks it fails the run.
 
 The tests and the fake-player harness are ported from FastPaper's gameplay-parity tests. FastPaper's
