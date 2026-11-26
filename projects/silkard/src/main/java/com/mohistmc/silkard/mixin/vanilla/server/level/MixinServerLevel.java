@@ -276,6 +276,9 @@ public abstract class MixinServerLevel implements ContextServerLevel {
         this.scheduledEvents = dimension == net.minecraft.world.level.Level.OVERWORLD
             ? server.getScheduledEvents()
             : savedDataStorage.computeIfAbsent(TimerQueue.TYPE);
+        // CraftBukkit - the constructor registers the Bukkit world; plugins that build levels
+        // themselves (Worlds) look it up with Bukkit.getWorld right after construction.
+        ((org.bukkit.craftbukkit.CraftServer) org.bukkit.Bukkit.getServer()).addWorld(this.getWorld());
     }
 
     // Paper - per-level scheduledEvents: each level runs its own queue against its own clock. The

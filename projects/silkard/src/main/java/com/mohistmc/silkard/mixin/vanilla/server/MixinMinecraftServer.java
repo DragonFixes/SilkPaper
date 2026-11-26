@@ -680,7 +680,6 @@ public abstract class MixinMinecraftServer extends net.minecraft.util.thread.Ree
             this.commandStorage = new CommandStorage(globalData);
             this.stopwatches = globalData.computeIfAbsent(Stopwatches.TYPE);
         }
-        this.server.addWorld(((ContextLevel) serverLevel).getWorld());
         this.addLevel(serverLevel);
         this.initWorld(serverLevel, (org.bukkit.WorldCreator) null);
     }

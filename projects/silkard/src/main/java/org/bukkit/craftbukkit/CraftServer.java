@@ -1233,7 +1233,6 @@ public final class CraftServer implements Server {
             biomeProvider,
             savedDataStorage,
             loadedWorldData);
-        addWorld(internal.getWorld());
 
         if (!(worlds.containsKey(name.toLowerCase(Locale.ROOT)))) {
             return null;
