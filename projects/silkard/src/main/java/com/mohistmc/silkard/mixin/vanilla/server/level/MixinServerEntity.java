@@ -44,11 +44,13 @@ public class MixinServerEntity implements ContextServerEntity {
         return this.silkard$trackedPlayers;
     }
 
-    // CraftBukkit - send passenger updates to the entity itself as well
+    // CraftBukkit - send passenger updates to the entity itself as well. Only the passengers
+    // packet: echoing a player's own movement, rotation or motion packets back to them makes
+    // the client replay stale positions and velocity (a second jump, rubber-banding).
     @Redirect(method = "sendChanges", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerEntity$Synchronizer;sendToTrackingPlayers(Lnet/minecraft/network/protocol/Packet;)V"))
     private void silkard$sendPassengers(ServerEntity.Synchronizer synchronizer, Packet<? super net.minecraft.network.protocol.game.ClientGamePacketListener> packet) {
         synchronizer.sendToTrackingPlayers(packet);
-        if (this.entity instanceof ServerPlayer player) {
+        if (packet instanceof net.minecraft.network.protocol.game.ClientboundSetPassengersPacket && this.entity instanceof ServerPlayer player) {
             player.connection.send(packet);
         }
     }
@@ -66,7 +68,8 @@ public class MixinServerEntity implements ContextServerEntity {
     // CraftBukkit - PlayerVelocityEvent
     @Redirect(method = "sendChanges", at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/Entity;syncVelocity:Z", opcode = org.objectweb.asm.Opcodes.GETFIELD))
     private boolean silkard$playerVelocity(Entity entity) {
-        if (entity instanceof ServerPlayer) {
+        // the event describes a velocity about to be sent, so it fires only when one is
+        if (entity.syncVelocity && entity instanceof ServerPlayer) {
             Player player = (Player) entity.getBukkitEntity();
             org.bukkit.util.Vector velocity = player.getVelocity();
             PlayerVelocityEvent event = new PlayerVelocityEvent(player, velocity.clone());
