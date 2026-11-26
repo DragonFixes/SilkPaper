@@ -50,6 +50,12 @@ public final class SysoutCatcher {
         @Override
         public void println(@Nullable final String line) {
             final Class<?> clazz = STACK_WALKER.getCallerClass();
+            // The console sender prints messages sent to the console through System.out; they are
+            // console output, not stray prints, so they go out untagged.
+            if (org.bukkit.command.ConsoleCommandSender.class.isAssignableFrom(clazz)) {
+                Bukkit.getLogger().log(this.level, line);
+                return;
+            }
             try {
                 final JavaPlugin plugin = JavaPlugin.getProvidingPlugin(clazz);
 
