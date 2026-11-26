@@ -31,6 +31,7 @@ as a mixin.
 | `projects/silkard/src/paper-api/java/` | Vendored Paper + Purpur + Leaf API (do not edit directly) |
 | `patches/paper-api/` | SilkPaper's changes to the vendored API, re-applied by `sync-leaf-api` |
 | `paper-api-upstream.properties` | Leaf and Paper commits the API was synced from |
+| `libs/maven/` | Bundled spark (`spark-paper`, `spark-api`) built from the [DragonFixes spark fork](https://github.com/DragonFixes/spark) by `sync-spark`; versions end in the fork commit and are set in `gradle.properties`. Do not edit by hand |
 | `projects/silkard/src/main/java/com/mohistmc/silkard/gametest/` | In-server gameplay tests and their runner (see `gametests/README.md`) |
 | `gametests/` | Test datapack (`test_instance` and structures) for the gameplay tests |
 | `scripts/` | Helper scripts (see below) |
@@ -79,6 +80,7 @@ installed JDK 25 (`{USERPROFILE}\.jdks`, `Program Files\Java`, Adoptium, Zulu, .
 | `game-test` | Runs the gameplay tests in `gametests\packs` on the deployed jar in `deploy\game-test` (flat world), and fails if a required test fails or the server logs an error |
 | `sync-upstream` | Fetches `upstream` and `origin`, fast-forwards the `26.3` mirror, reports drift, optionally merges a ref (never pushes) |
 | `sync-leaf-api` | Re-vendors the Paper/Purpur/Leaf API from a Leaf checkout and re-applies `patches\paper-api` |
+| `sync-spark` | Builds the bundled spark from the spark fork and vendors it into `libs\maven` |
 | `clean` | `gradlew clean`; `-Deploy` also deletes the deployed jars |
 
 ```powershell
@@ -110,6 +112,10 @@ scripts\sync-upstream.bat -Merge upstream/26.3         # merge Silkard into the 
 scripts\sync-upstream.bat -Merge upstream/26.3 -Force  # skip the confirmation prompt
 
 scripts\sync-leaf-api.bat -Clone                       # clone Leaf ver/26.3 and re-vendor the API
+
+scripts\sync-spark.bat                                 # build ..\..\Fixes\Spark and vendor it
+scripts\sync-spark.bat -SparkDir D:\src\spark -Force   # another checkout, no prompt
+scripts\sync-spark.bat -DryRun
 
 scripts\clean.bat -DryRun
 scripts\clean.bat -Deploy

@@ -33,7 +33,13 @@ repositories {
 		url = 'https://repo.papermc.io/repository/maven-public/'
 	}
 	maven {
-		// Leaf's snapshot repository: ConfigurationMaster-API and the spark builds Leaf targets
+		// spark-paper and spark-api built from the DragonFixes spark fork (scripts/sync-spark.ps1)
+		name = 'vendoredSpark'
+		url = rootProject.file('libs/maven').toURI()
+		content { includeModule 'me.lucko', 'spark-paper'; includeModule 'me.lucko', 'spark-api' }
+	}
+	maven {
+		// Leaf's snapshot repository: ConfigurationMaster-API
 		name = 'leafmc'
 		url = 'https://maven.leafmc.one/snapshots/'
 	}
@@ -107,8 +113,8 @@ dependencies {
 	include(implementation("ca.spottedleaf.leafpile:concurrentutil"))
 	include(implementation("ca.spottedleaf.leafpile:converter"))
 	include(implementation("ca.spottedleaf.leafpile:ioutil"))
-	include(implementation("me.lucko:spark-api:0.1-dev-284ead8-20260826.125727-1"))
-	include(implementation("me.lucko:spark-paper:1.10-dev-284ead8-20260826.125812-1"))
+	include(implementation("me.lucko:spark-api:${project.spark_api_version}"))
+	include(implementation("me.lucko:spark-paper:${project.spark_paper_version}"))
 	include(implementation("org.yaml:snakeyaml:2.6"))
 	include(implementation("org.jline:jline:3.30.4"))
 	include(implementation("org.apache.logging.log4j:log4j-iostreams:2.25.2"))
