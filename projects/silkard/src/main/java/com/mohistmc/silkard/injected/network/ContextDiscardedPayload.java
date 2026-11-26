@@ -1,7 +1,6 @@
 package com.mohistmc.silkard.injected.network;
 
 import com.mohistmc.silkard.util.ContextStateException;
-import io.netty.buffer.ByteBuf;
 
 /**
  * @author Mgazul
@@ -9,11 +8,11 @@ import io.netty.buffer.ByteBuf;
  */
 public interface ContextDiscardedPayload {
 
-    default ByteBuf silkard$data() {
+    default byte[] data() {
         throw new ContextStateException("Not implemented");
     }
 
-    default void silkard$data(ByteBuf data) {
+    default void silkard$data(byte[] data) {
         throw new ContextStateException("Not implemented");
     }
 }

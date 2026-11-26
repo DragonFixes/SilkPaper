@@ -4,7 +4,6 @@ import com.mohistmc.silkard.injected.network.ContextDiscardedPayload;
 import com.mohistmc.silkard.injected.server.ContextMinecraftServer;
 import com.mohistmc.silkard.injected.server.level.ContextServerPlayer;
 import com.mohistmc.silkard.injected.server.network.ContextServerCommonPacketListenerImpl;
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelFutureListener;
 import java.util.concurrent.ExecutionException;
 import net.minecraft.ChatFormatting;
@@ -157,11 +156,11 @@ public abstract class MixinServerCommonPacketListenerImpl implements ContextServ
         }
         PacketUtils.ensureRunningOnSameThread(packet, (ServerCommonPacketListenerImpl) (Object) this, player.level());
         Identifier identifier = packet.payload().type().id();
-        ByteBuf payload = ((ContextDiscardedPayload) (Object) discarded).silkard$data();
+        byte[] payload = ((ContextDiscardedPayload) (Object) discarded).data();
 
         if (identifier.equals(silkard$CUSTOM_REGISTER)) {
             try {
-                String channels = payload.toString(com.google.common.base.Charsets.UTF_8);
+                String channels = new String(payload, java.nio.charset.StandardCharsets.UTF_8);
                 for (String channel : channels.split("\0")) {
                     com.mohistmc.silkard.paper.paper.PluginMessages.registerChannel(this.connection, getCraftPlayer(), channel);
                 }
@@ -171,7 +170,7 @@ public abstract class MixinServerCommonPacketListenerImpl implements ContextServ
             }
         } else if (identifier.equals(silkard$CUSTOM_UNREGISTER)) {
             try {
-                String channels = payload.toString(com.google.common.base.Charsets.UTF_8);
+                String channels = new String(payload, java.nio.charset.StandardCharsets.UTF_8);
                 for (String channel : channels.split("\0")) {
                     com.mohistmc.silkard.paper.paper.PluginMessages.unregisterChannel(this.connection, getCraftPlayer(), channel);
                 }
@@ -181,9 +180,7 @@ public abstract class MixinServerCommonPacketListenerImpl implements ContextServ
             }
         } else {
             try {
-                byte[] data = new byte[payload.readableBytes()];
-                payload.readBytes(data);
-                cserver.getMessenger().dispatchIncomingMessage(player.getBukkitEntity(), identifier.toString(), data);
+                cserver.getMessenger().dispatchIncomingMessage(player.getBukkitEntity(), identifier.toString(), payload);
             } catch (Exception ex) {
                 LOGGER.error("Couldn't dispatch custom payload", ex);
                 this.disconnect(Component.literal("Invalid custom payload!"));
