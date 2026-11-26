@@ -468,8 +468,10 @@ public final class SilkardPlatformHooks implements PlatformHooks {
 
     @Override
     public int getSendViewDistance(final ServerPlayer player) {
-        // vanilla sends every chunk it loads for a player
-        return this.getViewDistance(player);
+        // vanilla sends every chunk it loads for a player, up to the player's API limit
+        final int distance = this.getViewDistance(player);
+        final int limit = ((org.bukkit.craftbukkit.entity.CraftPlayer) player.getBukkitEntity()).getSendDistanceLimit();
+        return limit < 0 ? distance : Math.min(distance, limit);
     }
 
     @Override

@@ -49,6 +49,16 @@ public abstract class MixinChunkMap implements ContextChunkMap {
                 .upgradeChunkTag(tag, -1, silkard$dataFixContextTag(), net.minecraft.SharedConstants.getCurrentVersion().dataVersion().version(), null, this.level);
     }
 
+    // Paper - per-player view distance. Vanilla loads chunks around players at the server view
+    // distance, so a player's own limit can only lower the radius of chunks sent to them.
+    @org.spongepowered.asm.mixin.injection.Inject(method = "getPlayerViewDistance", at = @org.spongepowered.asm.mixin.injection.At("RETURN"), cancellable = true)
+    private void silkard$playerViewDistance(net.minecraft.server.level.ServerPlayer player, org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable<Integer> cir) {
+        final int limit = ((org.bukkit.craftbukkit.entity.CraftPlayer) player.getBukkitEntity()).getSendDistanceLimit();
+        if (limit >= 0 && limit < cir.getReturnValueI()) {
+            cir.setReturnValue(limit);
+        }
+    }
+
     @Unique
     private net.minecraft.nbt.CompoundTag silkard$dataFixContextTag() {
         net.minecraft.nbt.CompoundTag tag = new net.minecraft.nbt.CompoundTag();

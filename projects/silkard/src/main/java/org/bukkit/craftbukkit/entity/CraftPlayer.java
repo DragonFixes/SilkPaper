@@ -3353,14 +3353,40 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
     }
     // Spigot end
 
+    // Per-player limits set through the API, -1 when unset. The chunk system loads chunks around
+    // players at the world's view distance, so these only lower the radius of chunks sent.
+    private int viewDistanceOverride = -1;
+    private int sendViewDistanceOverride = -1;
+
+    /** The radius ChunkMap may send this player, or -1 for no per-player limit. */
+    public int getSendDistanceLimit() {
+        if (this.viewDistanceOverride < 0) {
+            return this.sendViewDistanceOverride;
+        }
+        return this.sendViewDistanceOverride < 0 ? this.viewDistanceOverride : Math.min(this.viewDistanceOverride, this.sendViewDistanceOverride);
+    }
+
+    private void sendChunkRadius() {
+        if (this.getHandle().connection == null) {
+            return;
+        }
+        // the client keeps chunks out to the radius the server last sent it
+        this.getHandle().connection.send(new net.minecraft.network.protocol.game.ClientboundSetChunkCacheRadiusPacket(this.getSendViewDistance()));
+    }
+
     @Override
     public int getViewDistance() {
-        return ca.spottedleaf.moonrise.common.PlatformHooks.get().getViewDistance(this.getHandle());
+        final int worldDistance = com.mohistmc.silkard.paper.server.FeatureHooks.getViewDistance(this.getHandle().level());
+        return this.viewDistanceOverride < 0 ? worldDistance : Math.min(this.viewDistanceOverride, worldDistance);
     }
 
     @Override
     public void setViewDistance(final int viewDistance) {
-        throw new UnsupportedOperationException("Per-player view distance is not supported"); // TODO Silkard - needs the Moonrise chunk system
+        if (viewDistance != -1 && (viewDistance < 2 || viewDistance > 32)) {
+            throw new IllegalArgumentException("View distance " + viewDistance + " is out of range of [2, 32]");
+        }
+        this.viewDistanceOverride = viewDistance;
+        this.sendChunkRadius();
     }
 
     @Override
@@ -3380,7 +3406,11 @@ public class CraftPlayer extends CraftHumanEntity implements Player, PluginMessa
 
     @Override
     public void setSendViewDistance(final int viewDistance) {
-        throw new UnsupportedOperationException("Per-player send view distance is not supported"); // TODO Silkard - needs the Moonrise chunk system
+        if (viewDistance != -1 && (viewDistance < 0 || viewDistance > 32)) {
+            throw new IllegalArgumentException("Send view distance " + viewDistance + " is out of range of [0, 32]");
+        }
+        this.sendViewDistanceOverride = viewDistance;
+        this.sendChunkRadius();
     }
 
     // Paper start - entity effect API
