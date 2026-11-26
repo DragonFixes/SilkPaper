@@ -1516,8 +1516,8 @@ public class CraftWorld extends CraftRegionAccessor implements World {
 
     @Override
     public Path getWorldPath() {
-        // Each Silkard world keeps its own storage folder (Bukkit layout), not a dimension folder of the main world.
-        return this.world.silkard_storageSource().getLevelPath(LevelResource.ROOT).getParent();
+        // Paper layout: every world is a dimension of the main save, stored in world/dimensions/<namespace>/<path>.
+        return this.world.silkard_storageSource().getDimensionPath(this.world.dimension());
     }
 
     @Override
