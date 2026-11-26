@@ -136,6 +136,10 @@ public class MixinServerGamePacketListenerImpl implements ContextServerGamePacke
         try {
             return craftServer.dispatchCommand(player, command);
         } catch (org.bukkit.command.CommandException ex) {
+            if (ex.getCause() instanceof com.mojang.brigadier.exceptions.CommandSyntaxException) {
+                // Bad arguments: the vanilla path re-parses and shows the player the usual red error.
+                return false;
+            }
             player.sendMessage(org.bukkit.ChatColor.RED + "An internal error occurred while attempting to perform this command");
             org.bukkit.Bukkit.getLogger().log(java.util.logging.Level.SEVERE, null, ex);
             return true;

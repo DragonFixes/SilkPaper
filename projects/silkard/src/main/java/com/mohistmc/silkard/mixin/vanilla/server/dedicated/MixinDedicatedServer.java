@@ -300,7 +300,13 @@ public abstract class MixinDedicatedServer extends MinecraftServer implements Co
             }
             consoleinput = new net.minecraft.server.ConsoleInput(event.getCommand(), consoleinput.source);
 
-            com.mohistmc.silkard.bukkit.CraftCompat.dispatchServerCommand(craftServer, consoleSender, consoleinput.msg);
+            if (consoleSender instanceof org.bukkit.conversations.Conversable conversable && conversable.isConversing()) {
+                conversable.acceptConversationInput(consoleinput.msg);
+                continue;
+            }
+            // Paper - Bukkit commands are dispatcher nodes too, so the vanilla dispatcher runs every
+            // console line and reports unknown commands and bad arguments itself.
+            this.getCommands().performPrefixedCommand(consoleinput.source, consoleinput.msg);
         }
         // CraftBukkit end
     }
