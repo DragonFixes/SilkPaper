@@ -31,7 +31,8 @@ PlayerToggleSprintEvent, PlayerToggleFlightEvent, PlayerItemHeldEvent, PlayerSwa
 PlayerArmSwingEvent, PlayerInteractEvent for left clicks on air, InventoryCreativeEvent,
 VehicleEnterEvent, VehicleExitEvent, EntityMountEvent, EntityDismountEvent, EntityResurrectEvent,
 PlayerItemConsumeEvent, PlayerArmorChangeEvent, EntityEquipmentChangedEvent, PlayerTradeEvent and
-PlayerPurchaseEvent (trades with plugin merchants also count their uses now).
+PlayerPurchaseEvent (trades with plugin merchants also count their uses now), UnknownCommandEvent
+(players and console; the console message is checked by boot-test).
 
 These are boot-tested with `-MixinAudit` only (the injections apply); none has been checked
 in game yet. Riding and totems also run in `scripts/ride-smoke.txt`; consume, armor and trade
@@ -55,7 +56,6 @@ place and the armor stand drop check fails, on builds before and after the ridin
 | ServerTickStartEvent, ServerTickEndEvent | MinecraftServer |
 | PlayerSpawnLocationEvent, AsyncPlayerSpawnLocationEvent | PrepareSpawnTask |
 | PlayerPostRespawnEvent, PlayerServerFullCheckEvent, ProfileWhitelistVerifyEvent | PlayerList |
-| UnknownCommandEvent | Commands |
 | PlayerEditBookEvent, PlayerRecipeBookClickEvent, PlayerRecipeBookSettingsChangeEvent, PlayerBundleItemSelectEvent | ServerGamePacketListenerImpl (factory helpers) |
 | LingeringPotionSplashEvent, WaterBottleSplash | ThrownLingeringPotion, AbstractThrownPotion (factory helpers) |
 | BlockPreDispenseEvent, BlockFailedDispenseEvent | DispenserBlock, DropperBlock (factory helpers) |
