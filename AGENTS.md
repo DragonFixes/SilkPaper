@@ -66,6 +66,11 @@ Keep it there, not in the vendored API.
 Each script in `scripts/` is a `.ps1` (all logic) with a `.bat` launcher that forwards its
 arguments. Run them from any directory; paths resolve from the repository root.
 
+The build and the server need Java 25+. Scripts that run Gradle or the server pick a JDK with
+`scripts\lib\JavaHome.ps1`: `JAVA_HOME` if it is 25+, else the `java` on PATH, else the newest
+installed JDK 25 (`{USERPROFILE}\.jdks`, `Program Files\Java`, Adoptium, Zulu, ...). They set
+`JAVA_HOME` for Gradle themselves, so they work from a shell where `java` is an older JDK.
+
 | Script | What it does |
 |---|---|
 | `build-deploy` | Deletes `deploy\*.jar`, runs `gradlew jar`, copies `build\libs\*-server.jar` into `deploy\` |

@@ -40,10 +40,13 @@ $root = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $deploy = Join-Path $root 'deploy'
 $libs = Join-Path $root 'build\libs'
 $gradlew = Join-Path $root 'gradlew.bat'
+. (Join-Path $PSScriptRoot 'lib\JavaHome.ps1')
 
 function Invoke-Gradle([string[]]$GradleArgs) {
     Write-Host "> gradlew $($GradleArgs -join ' ')" -ForegroundColor Cyan
     if ($DryRun) { return }
+    # fabric-loom needs Gradle itself to run on Java 25+, not only the toolchain.
+    $null = Use-SilkPaperJdk
     Push-Location $root
     try {
         & $gradlew @GradleArgs

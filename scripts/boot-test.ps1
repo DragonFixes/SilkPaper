@@ -55,7 +55,7 @@
     fails the test even when its class does not load during a normal startup.
 
 .PARAMETER Java
-    Java executable to use. Default "java" from PATH.
+    Java executable to use. Default: a JDK 25+ from JAVA_HOME, PATH or the installed JDKs (scripts\lib\JavaHome.ps1).
 
 .EXAMPLE
     PS> .\scripts\boot-test.ps1
@@ -85,10 +85,12 @@ param(
     [ValidateRange(1, 100)]
     [int]$StallPolls = 2,
     [switch]$MixinAudit,
-    [string]$Java = 'java'
+    [string]$Java = ''
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'lib\JavaHome.ps1')
+if (-not $Java) { $Java = Use-SilkPaperJdk }
 $root = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $deploy = Join-Path $root 'deploy'
 if (-not $ServerDir) { $ServerDir = Join-Path $deploy 'boot-test' }

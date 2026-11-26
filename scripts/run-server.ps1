@@ -26,7 +26,7 @@
     Minecraft EULA (https://aka.ms/MinecraftEULA).
 
 .PARAMETER Java
-    Java executable to use. Default "java" from PATH.
+    Java executable to use. Default: a JDK 25+ from JAVA_HOME, PATH or the installed JDKs (scripts\lib\JavaHome.ps1).
 
 .PARAMETER DryRun
     Print the java command without starting the server.
@@ -49,11 +49,13 @@ param(
     [switch]$Gui,
     [string]$ServerDir,
     [switch]$AcceptEula,
-    [string]$Java = 'java',
+    [string]$Java = '',
     [switch]$DryRun
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'lib\JavaHome.ps1')
+if (-not $Java) { $Java = Use-SilkPaperJdk }
 $root = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $deploy = Join-Path $root 'deploy'
 if (-not $ServerDir) { $ServerDir = Join-Path $deploy 'server' }

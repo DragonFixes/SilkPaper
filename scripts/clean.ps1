@@ -39,6 +39,9 @@ $deployDir = Join-Path $root 'deploy'
 try {
     Write-Host '> gradlew clean' -ForegroundColor Cyan
     if (-not $DryRun) {
+        . (Join-Path $PSScriptRoot 'lib\JavaHome.ps1')
+        # fabric-loom needs Gradle itself to run on Java 25+, even for clean.
+        $null = Use-SilkPaperJdk
         Push-Location $root
         try {
             & (Join-Path $root 'gradlew.bat') clean

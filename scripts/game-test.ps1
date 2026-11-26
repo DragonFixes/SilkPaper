@@ -47,7 +47,7 @@
     stall. Default 4 (60 seconds); some tests are quiet for a while.
 
 .PARAMETER Java
-    Java executable to use. Default "java" from PATH.
+    Java executable to use. Default: a JDK 25+ from JAVA_HOME, PATH or the installed JDKs (scripts\lib\JavaHome.ps1).
 
 .EXAMPLE
     PS> .\scripts\game-test.ps1
@@ -71,10 +71,12 @@ param(
     [int]$TimeoutSeconds = 900,
     [ValidateRange(1, 100)]
     [int]$StallPolls = 4,
-    [string]$Java = 'java'
+    [string]$Java = ''
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'lib\JavaHome.ps1')
+if (-not $Java) { $Java = Use-SilkPaperJdk }
 $root = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $deploy = Join-Path $root 'deploy'
 $packs = Join-Path $root 'gametests\packs'

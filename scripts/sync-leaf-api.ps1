@@ -34,7 +34,7 @@
     Leaf branch, tag or commit to clone with -Clone. Default: ver/26.3.
 
 .PARAMETER JavaHome
-    JDK 25+ used for the Leaf build with -Clone. Default: $env:JAVA_HOME.
+    JDK 25+ used for the Leaf build with -Clone. Default: a JDK 25+ from JAVA_HOME, PATH or the installed JDKs (scripts\lib\JavaHome.ps1).
 
 .PARAMETER SkipPatches
     Copy the upstream API only, without applying patches/paper-api.
@@ -59,7 +59,7 @@ param(
     [string] $LeafDir,
     [switch] $Clone,
     [string] $Ref = 'ver/26.3',
-    [string] $JavaHome = $env:JAVA_HOME,
+    [string] $JavaHome,
     [switch] $SkipPatches,
     [switch] $DryRun,
     [switch] $Force
@@ -84,7 +84,8 @@ try {
             Invoke-Git -c core.longpaths=true clone --depth 1 --branch $Ref https://github.com/Winds-Studio/Leaf.git $LeafDir
             Push-Location $LeafDir
             try {
-                if ($JavaHome) { $env:JAVA_HOME = $JavaHome }
+                if (-not $JavaHome) { . (Join-Path $PSScriptRoot 'lib\JavaHome.ps1'); $JavaHome = Find-SilkPaperJdk }
+                $env:JAVA_HOME = $JavaHome
                 # paperweight commits inside its work trees; give it an identity and
                 # keep git from garbage-collecting objects it still references.
                 $env:GIT_CONFIG_COUNT = '4'
