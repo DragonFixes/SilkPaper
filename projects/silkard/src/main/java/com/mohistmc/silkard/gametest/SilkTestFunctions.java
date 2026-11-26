@@ -70,6 +70,7 @@ public final class SilkTestFunctions implements TestFunctionLoader {
         register.accept(key("dropper_drops_into_water"), DropperTests::dropsIntoWater);
         register.accept(key("dropper_drops_down_into_up_column"), DropperTests::dropsDownIntoUpColumn);
         register.accept(key("dropper_drops_down_into_down_column"), DropperTests::dropsDownIntoDownColumn);
+        register.accept(key("relight_direct_section_writes"), RelightTests::relightsDirectSectionWrites);
     }
 
     // A hopper above a chest pulls a dropped item in and pushes it down into the chest.
