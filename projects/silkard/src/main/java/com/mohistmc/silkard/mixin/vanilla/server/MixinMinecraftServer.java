@@ -605,6 +605,8 @@ public abstract class MixinMinecraftServer extends net.minecraft.util.thread.Ree
         loader.prepareInitialWorlds();
 
         this.server.enablePlugins(org.bukkit.plugin.PluginLoadOrder.POSTWORLD);
+        this.server.spark.registerCommandBeforePlugins(this.server); // Paper - spark
+        this.server.spark.enableAfterPlugins(this.server); // Paper - spark
         io.papermc.paper.command.brigadier.PaperCommands.INSTANCE.setValid(); // Paper - reset invalid state for event fire below
         io.papermc.paper.plugin.lifecycle.event.LifecycleEventRunner.INSTANCE.callReloadableRegistrarEvent(io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents.COMMANDS, io.papermc.paper.command.brigadier.PaperCommands.INSTANCE, org.bukkit.plugin.Plugin.class, io.papermc.paper.plugin.lifecycle.event.registrar.ReloadableRegistrarEvent.Cause.INITIAL); // Paper - call commands event for regular plugins
         this.server.getCommandMap().registerServerAliases(); // Paper - relocate initial CommandMap#registerServerAliases() call
@@ -801,6 +803,7 @@ public abstract class MixinMinecraftServer extends net.minecraft.util.thread.Ree
         // CraftBukkit start
         if (this.server != null) {
             org.purpurmc.purpur.task.BossBarTask.stopAll(); // Purpur
+            this.server.spark.disable(); // Paper - spark
             this.server.disablePlugins();
         }
         // CraftBukkit end
@@ -1060,6 +1063,30 @@ public abstract class MixinMinecraftServer extends net.minecraft.util.thread.Ree
         while ((task = this.processQueue.poll()) != null) {
             task.run();
         }
+        // the paused branch returns right after tickConnection, so the spark tick ends here
+        this.server.spark.executeMainThreadTasks(); // Paper - spark
+        this.server.spark.tickEnd((System.nanoTime() - this.silkard$sparkTickStart) / 1000000D); // Paper - spark
+    }
+
+    @Unique
+    private long silkard$sparkTickStart;
+
+    @Inject(method = "tickServer", at = @At("HEAD"))
+    private void silkard$sparkTickStart(BooleanSupplier haveTime, CallbackInfo ci) {
+        if (this.server == null) {
+            return;
+        }
+        this.silkard$sparkTickStart = System.nanoTime();
+        this.server.spark.tickStart(); // Paper - spark
+    }
+
+    @Inject(method = "tickServer", at = @At("TAIL"))
+    private void silkard$sparkTickEnd(BooleanSupplier haveTime, CallbackInfo ci) {
+        if (this.server == null) {
+            return;
+        }
+        this.server.spark.executeMainThreadTasks(); // Paper - spark
+        this.server.spark.tickEnd((System.nanoTime() - this.silkard$sparkTickStart) / 1000000D); // Paper - spark
     }
 
     // CraftBukkit - ctor TAIL: options/worldLoader/vanillaCommandDispatcher/terminal/shutdown hook

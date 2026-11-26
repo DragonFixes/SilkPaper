@@ -160,6 +160,8 @@ public final class PaperBootstrap {
         paperConfigurations.initializeWorldDefaultsConfiguration(dedicatedServer.registryAccess());
         galeConfigurations.initializeGlobalConfiguration(dedicatedServer.registryAccess());
         galeConfigurations.initializeWorldDefaultsConfiguration(dedicatedServer.registryAccess());
+        final io.papermc.paper.SparksFly spark = ((org.bukkit.craftbukkit.CraftServer) org.bukkit.Bukkit.getServer()).spark;
+        spark.enableEarlyIfRequested(); // Paper - spark
 
         purpurConfigFile = optionFile(options, "purpur-settings", new File(PaperConfigurations.CONFIG_DIR, "purpur.yml"));
         migrateRootPurpurConfig(purpurConfigFile);
@@ -167,6 +169,7 @@ public final class PaperBootstrap {
         PurpurConfig.registerCommands();
 
         io.papermc.paper.command.PaperCommands.registerCommands(dedicatedServer);
+        spark.registerCommandBeforePlugins(org.bukkit.Bukkit.getServer()); // Paper - spark
         org.dreeam.leaf.command.LeafCommands.registerCommands(dedicatedServer);
     }
 
